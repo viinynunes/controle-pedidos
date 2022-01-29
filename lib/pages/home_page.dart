@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/pages/client/client_list_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -53,17 +54,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Scaffold(
-          appBar: AppBar(
-            title: const Text('Clientes'),
-            centerTitle: true,
-          ),
-          drawer: CustomDrawer(
-            pageController: _pageController,
-          ),
-          body: Container(
-            color: Colors.deepPurple,
-          ),
-        ),
+            appBar: AppBar(
+              title: const Text('Clientes'),
+              centerTitle: true,
+            ),
+            drawer: CustomDrawer(
+              pageController: _pageController,
+            ),
+            body: const ClientListPage()),
       ],
     );
   }

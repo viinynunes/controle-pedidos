@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/model/user_model.dart';
-import 'package:controle_pedidos/pages/LoginPage.dart';
+import 'package:controle_pedidos/pages/login_page.dart';
 import 'package:controle_pedidos/utils/utils.dart';
 import 'package:controle_pedidos/widgets/tiles/drawer_tile.dart';
 import 'package:flutter/material.dart';
