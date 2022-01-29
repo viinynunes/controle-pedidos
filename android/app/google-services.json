@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "242675882008",
+    "project_id": "controle-de-pedidos-ca8b2",
+    "storage_bucket": "controle-de-pedidos-ca8b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242675882008:android:0468e8d19ec8b9b4f18b6d",
+        "android_client_info": {
+          "package_name": "br.com.nunesv.controle_pedidos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "242675882008-s84hj3u761r5s9p4btaelemrk7d0c7d3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.nunesv.controle_pedidos",
+            "certificate_hash": "027ef4b4ed2953fc4ceb2f9d6a84e73cd3fb6bd8"
+          }
+        },
+        {
+          "client_id": "242675882008-knrtjfskjitc7r4lfo1h915rf23tqecv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrwBYj68TgioX9dkNTwTsaBfThzu_rKT8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "242675882008-knrtjfskjitc7r4lfo1h915rf23tqecv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
