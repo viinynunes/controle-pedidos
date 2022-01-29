@@ -86,6 +86,15 @@ class _LoginPageState extends State<LoginPage> {
                             return 'A senha deve conter no minimo 6 caracteres';
                           }
                         },
+                        onFieldSubmitted: (e){
+                          if (_formKey.currentState!.validate()) {
+                            model.signIn(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                onSuccess: onSuccess,
+                                onError: onError);
+                          }
+                        },
                       ),
                       const SizedBox(
                         height: 25,
