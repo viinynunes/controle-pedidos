@@ -1,21 +1,12 @@
+import 'package:controle_pedidos/pages/LoginPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MaterialApp(
-    home: InitializePage(),
+    home: LoginPage(),
   ));
 }
 
-class InitializePage extends StatelessWidget {
-  const InitializePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pedidos'),
-        centerTitle: true,
-      ),
-    );
-  }
-}
