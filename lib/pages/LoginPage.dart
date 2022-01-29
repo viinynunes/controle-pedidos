@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/model/user_model.dart';
 import 'package:controle_pedidos/pages/home_page.dart';
+import 'package:controle_pedidos/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -16,34 +17,12 @@ class _LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  Widget _buildBackground() {
-    return Container(
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-        stops: [
-          -0.098,
-          0.015,
-          0.12,
-          0.90,
-        ],
-        begin: Alignment.bottomRight,
-        end: Alignment.topLeft,
-        colors: [
-          Color(0xFF19293e),
-          Color(0xFF030f12),
-          Color(0xFF10231f),
-          Color(0xFF31648c),
-        ],
-      )),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          _buildBackground(),
+          Utils.buildBackground(),
           ScopedModelDescendant<UserModel>(
             builder: (context, child, model) {
               if (model.isLoading) {

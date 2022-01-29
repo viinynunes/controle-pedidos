@@ -16,7 +16,7 @@ void main() async {
                 home: const LoginPage(),
                 theme: ThemeData(
                   primarySwatch: Colors.deepPurple,
-                  primaryColor: Colors.red,
+                  primaryColor: Colors.white,
                   inputDecorationTheme: const InputDecorationTheme(
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),

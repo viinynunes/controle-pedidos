@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,13 +9,62 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('a'),
-        centerTitle: true,
-      ),
+    return PageView(
+      controller: _pageController,
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Pedidos'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
+          body: Container(
+            color: Colors.red,
+          ),
+        ),
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Controle'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
+          body: Container(
+            color: Colors.blue,
+          ),
+        ),
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Produtos'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
+          body: Container(
+            color: Colors.orange,
+          ),
+        ),
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Clientes'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
+          body: Container(
+            color: Colors.deepPurple,
+          ),
+        ),
+      ],
     );
   }
 }
