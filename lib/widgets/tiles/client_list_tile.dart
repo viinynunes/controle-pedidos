@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/client_data.dart';
+import 'package:controle_pedidos/pages/client/client_registration_page.dart';
 import 'package:flutter/material.dart';
 
 class ClientListTile extends StatelessWidget {
@@ -21,7 +22,9 @@ class ClientListTile extends StatelessWidget {
       direction: DismissDirection.startToEnd,
       movementDuration: const Duration(seconds: 3),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ClientRegistrationPage(client: client,)));
+        },
         child: Card(
             child: SizedBox(
           height: 80,
