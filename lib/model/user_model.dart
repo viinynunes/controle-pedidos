@@ -36,6 +36,14 @@ class UserModel extends Model {
     });
   }
 
+  void signOut({required VoidCallback onLogout}) async {
+    await _auth.signOut();
+    userData = {};
+    firebaseUser = null;
+    onLogout();
+    notifyListeners();
+  }
+
   Future<void> _loadCurrentUser() async {
     firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {

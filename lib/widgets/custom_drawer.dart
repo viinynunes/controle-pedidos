@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/model/user_model.dart';
+import 'package:controle_pedidos/pages/LoginPage.dart';
 import 'package:controle_pedidos/utils/utils.dart';
 import 'package:controle_pedidos/widgets/tiles/drawer_tile.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class CustomDrawer extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  model.userData['name'],
+                                  model.userData['name'] ?? '',
                                   style: const TextStyle(
                                       fontSize: 24,
                                       color: Colors.white,
@@ -42,7 +43,15 @@ class CustomDrawer extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    model.signOut(
+                                        onLogout: () =>
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const LoginPage())));
+                                  },
                                   icon: const Icon(
                                     Icons.logout,
                                     color: Colors.white,
@@ -55,7 +64,7 @@ class CustomDrawer extends StatelessWidget {
                         ),
                         Positioned(
                           child: Text(
-                            model.userData['company'],
+                            model.userData['company'] ?? '',
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 14),
                           ),
