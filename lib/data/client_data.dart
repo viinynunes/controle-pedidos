@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClientData {
+
+  ClientData.empty();
+
   ClientData(
       {required this.id,
       required this.name,
@@ -8,12 +11,20 @@ class ClientData {
       required this.email,
       required this.address});
 
-  ClientData.fromMap(DocumentSnapshot snapshot) {
+  ClientData.fromDocSnapshot(DocumentSnapshot snapshot) {
     id = snapshot.id;
     name = snapshot.get('name');
     phone = snapshot.get('phone');
     email = snapshot.get('email');
     address = snapshot.get('address');
+  }
+
+  ClientData.fromMap(Map<String, dynamic> map){
+    id = map['id'];
+    name = map['name'];
+    phone = map['phone'];
+    email = map['email'];
+    address = map['address'];
   }
 
   late String id;

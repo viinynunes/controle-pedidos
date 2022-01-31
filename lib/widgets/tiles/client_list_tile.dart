@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
 import 'package:flutter/material.dart';
@@ -10,20 +11,23 @@ class ClientListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      onDismissed: (e){},
+      onDismissed: (e) {},
       key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
       background: Container(
         color: Colors.red,
         child: const Align(
           alignment: Alignment(-0.9, 0),
-          child: Icon(Icons.delete_forever, color: Colors.white,),
+          child: Icon(
+            Icons.delete_forever,
+            color: Colors.white,
+          ),
         ),
       ),
       direction: DismissDirection.startToEnd,
       movementDuration: const Duration(seconds: 3),
       child: InkWell(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ClientRegistrationPage(client: client,)));
+          _showClientRegistrationPage(client, context);
         },
         child: Card(
             child: SizedBox(
@@ -45,5 +49,14 @@ class ClientListTile extends StatelessWidget {
         )),
       ),
     );
+  }
+
+  void _showClientRegistrationPage(ClientData? client, context) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ClientRegistrationPage(
+                  client: client,
+                )));
   }
 }

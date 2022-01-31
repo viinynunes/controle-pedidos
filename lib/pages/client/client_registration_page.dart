@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/client_data.dart';
 import 'package:flutter/material.dart';
 
@@ -18,14 +19,23 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
 
   final _formKey = GlobalKey<FormState>();
 
+  late ClientData newClientData;
+
   @override
   void initState() {
     super.initState();
 
-    _nameController.text = widget.client?.name ?? '';
-    _emailController.text = widget.client?.email ?? '';
-    _phoneController.text = widget.client?.phone ?? '';
-    _addressController.text = widget.client?.address ?? '';
+    if (widget.client == null){
+      newClientData = ClientData.empty();
+    } else {
+      newClientData = ClientData.fromMap(widget.client!.toMap());
+      _nameController.text = newClientData.name;
+      _emailController.text = newClientData.email ?? '';
+      _phoneController.text = newClientData.phone  ?? '';
+      _addressController.text = newClientData.address ?? '';
+    }
+
+
   }
 
   @override
@@ -38,7 +48,17 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if (_formKey.currentState!.validate()){
+
+            if (widget.client == null) {
+              FirebaseFirestore.instance.collection('clients').doc().set(_getClientData());
+            }else {
+              FirebaseFirestore.instance.collection('clients').doc(newClientData.id).update(_getClientData());
+            }
+              Navigator.pop(context);
+          }
+        },
         child: const Icon(Icons.save),
       ),
       body: Form(
@@ -56,7 +76,12 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
                 ),
-                validator: (e) {},
+                validator: (e) {
+                  if (_nameController.text.isEmpty) {
+                    return 'Campo Obrigatório';
+                  }
+                },
+                textInputAction: TextInputAction.next,
               ),
               const SizedBox(
                 height: 20,
@@ -70,7 +95,15 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
                 ),
-                validator: (e) {},
+                validator: (text) {
+                  bool regValida = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(text!);
+                  if (text.isNotEmpty && !regValida) {
+                    return 'Email Inválido';
+                  }
+                },
+                textInputAction: TextInputAction.next,
               ),
               const SizedBox(
                 height: 20,
@@ -84,8 +117,9 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
                 ),
-                validator: (e) {},
+                textInputAction: TextInputAction.next,
               ),
+
               const SizedBox(
                 height: 20,
               ),
@@ -98,12 +132,22 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
                 ),
-                validator: (e) {},
+                textInputAction: TextInputAction.next,
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Map<String, dynamic> _getClientData(){
+    return {
+      'name' : _nameController.text,
+      'email': _emailController.text,
+      'phone': _phoneController.text,
+      'address': _addressController.text
+    };
+
   }
 }
