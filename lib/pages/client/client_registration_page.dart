@@ -3,9 +3,9 @@ import 'package:controle_pedidos/data/client_data.dart';
 import 'package:flutter/material.dart';
 
 class ClientRegistrationPage extends StatefulWidget {
-  ClientRegistrationPage({Key? key, this.client}) : super(key: key);
+  const ClientRegistrationPage({Key? key, this.client}) : super(key: key);
 
-  ClientData? client;
+  final ClientData? client;
 
   @override
   _ClientRegistrationPageState createState() => _ClientRegistrationPageState();

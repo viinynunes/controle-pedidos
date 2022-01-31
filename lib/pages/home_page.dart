@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/pages/client/client_list_page.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
@@ -32,7 +30,53 @@ class _HomePageState extends State<HomePage> {
             color: Colors.red,
           ),
         ),
-        ClientListPage(pageController: _pageController,),
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Controle'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
+          body: Container(
+            color: Colors.red,
+          ),
+        ),
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Produtos'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
+          body: Container(
+            color: Colors.red,
+          ),
+        ),
+        Scaffold(
+
+          appBar: AppBar(
+            title: const Text('Clientes'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ClientRegistrationPage()));
+              });
+            },
+            child: const Icon(
+              Icons.add,
+              size: 40,
+            ),
+          ),
+          body: const ClientListPage(),
+        )
       ],
     );
   }
