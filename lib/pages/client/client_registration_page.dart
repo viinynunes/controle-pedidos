@@ -149,5 +149,6 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
     newClientData.email = _emailController.text;
     newClientData.phone = _phoneController.text;
     newClientData.address = _addressController.text;
+    newClientData.enabled = true;
   }
 }

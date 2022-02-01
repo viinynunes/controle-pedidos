@@ -32,6 +32,7 @@ class ClientData {
   String? phone;
   String? email;
   String? address;
+  bool? enabled;
 
   Map<String, dynamic> toMap() {
     return {
@@ -40,6 +41,7 @@ class ClientData {
       'phone': phone,
       'email': email,
       'address': address,
+      'enabled': enabled
     };
   }
 }

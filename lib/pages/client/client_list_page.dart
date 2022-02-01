@@ -30,7 +30,7 @@ class _ClientListPageState extends State<ClientListPage> {
     return ScopedModelDescendant<ClientModel>(
       builder: (context, child, model) {
         return FutureBuilder<List<ClientData>>(
-          future: model.getAllClients(),
+          future: model.getEnabledClients(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(
@@ -50,7 +50,7 @@ class _ClientListPageState extends State<ClientListPage> {
                           SlidableAction(
                             onPressed: (e) {
                               setState(() {
-                                model.deleteClient(snapshot.data![index].id!);
+                                model.disableClient(snapshot.data![index]);
                               });
                             },
                             icon: Icons.delete_forever,

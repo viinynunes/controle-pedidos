@@ -13,20 +13,23 @@ class ClientModel extends Model {
     FirebaseFirestore.instance.collection('clients').doc(client.id).update(client.toMap());
   }
 
-  void deleteClient(String id){
-    FirebaseFirestore.instance.collection('clients').doc(id).delete();
+  void disableClient(ClientData client){
+    client.enabled = false;
+    FirebaseFirestore.instance.collection('clients').doc(client.id).update(client.toMap());
   }
 
   Future<ClientData> getOneClient(String id){
     return FirebaseFirestore.instance.collection('clients').doc(id).get().then((value) => ClientData.fromDocSnapshot(value));
   }
 
-  Future<List<ClientData>> getAllClients() async {
+  Future<List<ClientData>> getEnabledClients() async {
     isLoading = true;
     List<ClientData> clientList = [];
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('clients').get();
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('clients').where('enabled').get();
     for (DocumentSnapshot e in snapshot.docs) {
-      clientList.add(ClientData.fromDocSnapshot(e));
+      if(e.get('enabled')){
+        clientList.add(ClientData.fromDocSnapshot(e));
+      }
     }
     isLoading = false;
     notifyListeners();
