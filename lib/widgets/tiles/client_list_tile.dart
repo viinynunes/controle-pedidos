@@ -1,62 +1,53 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
 import 'package:flutter/material.dart';
 
-class ClientListTile extends StatelessWidget {
+class ClientListTile extends StatefulWidget {
   const ClientListTile({Key? key, required this.client}) : super(key: key);
 
   final ClientData client;
 
   @override
-  Widget build(BuildContext context) {
-    return Dismissible(
-      onDismissed: (e) {},
-      key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
-      background: Container(
-        color: Colors.red,
-        child: const Align(
-          alignment: Alignment(-0.9, 0),
-          child: Icon(
-            Icons.delete_forever,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      direction: DismissDirection.startToEnd,
-      movementDuration: const Duration(seconds: 3),
-      child: InkWell(
-        onTap: () {
-          _showClientRegistrationPage(client, context);
-        },
-        child: Card(
-            child: SizedBox(
-          height: 80,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    client.name,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ),
-                const Icon(Icons.edit),
-              ],
-            ),
-          ),
-        )),
-      ),
-    );
-  }
+  _ClientListTileState createState() => _ClientListTileState();
+}
 
-  void _showClientRegistrationPage(ClientData? client, context) async {
+class _ClientListTileState extends State<ClientListTile> {
+
+  void _showClientRegistrationPage(ClientData? client) async {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => ClientRegistrationPage(
-                  client: client,
-                )));
+              client: client,
+            )));
   }
+
+  @override
+  Widget build(BuildContext context) {
+    ClientData client = widget.client;
+    return InkWell(
+      onTap: () {
+        _showClientRegistrationPage(client);
+      },
+      child: Card(
+          child: SizedBox(
+        height: 80,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  client.name,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          ),
+        ),
+      )),
+    );
+  }
+
+
 }
