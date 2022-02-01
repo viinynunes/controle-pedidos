@@ -55,6 +55,7 @@ class _ClientListPageState extends State<ClientListPage> {
                             },
                             icon: Icons.delete_forever,
                             label: 'Apagar',
+                            backgroundColor: Colors.red,
                           ),
                           SlidableAction(
                             onPressed: (e) {
@@ -64,6 +65,7 @@ class _ClientListPageState extends State<ClientListPage> {
                             },
                             icon: Icons.edit,
                             label: 'Editar',
+                            backgroundColor: Colors.deepPurple,
                           )
                         ],
                       ),
