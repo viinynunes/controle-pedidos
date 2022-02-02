@@ -9,8 +9,10 @@ import 'client_registration_page.dart';
 
 class ClientListPage extends StatefulWidget {
   const ClientListPage({
-    Key? key,
+    Key? key, this.search,
   }) : super(key: key);
+
+  final String? search;
 
   @override
   _ClientListPageState createState() => _ClientListPageState();
@@ -29,8 +31,13 @@ class _ClientListPageState extends State<ClientListPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ClientModel>(
       builder: (context, child, model) {
+        if (model.isLoading){
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return FutureBuilder<List<ClientData>>(
-          future: model.getEnabledClients(),
+          future: model.getFilteredClients(search: widget.search),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(
