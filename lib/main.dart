@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/user_model.dart';
+import 'package:controle_pedidos/pages/home_page.dart';
 import 'package:controle_pedidos/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ void main() async {
           return ScopedModel<ClientModel>(
             model: ClientModel(),
             child: MaterialApp(
-              home: const LoginPage(),
+              home: model.isLoggedIn() ? const HomePage() : const LoginPage(),
               theme: ThemeData(
                 primarySwatch: Colors.deepPurple,
                 primaryColor: Colors.white,

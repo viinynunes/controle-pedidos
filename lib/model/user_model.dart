@@ -18,6 +18,10 @@ class UserModel extends Model {
     _loadCurrentUser();
   }
 
+  bool isLoggedIn(){
+    return firebaseUser != null;
+  }
+
   void signIn(
       {required String email, required String password, required VoidCallback onSuccess, required VoidCallback onError}) async {
     isLoading = true;
