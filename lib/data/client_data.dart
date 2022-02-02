@@ -4,13 +4,6 @@ class ClientData {
 
   ClientData.empty();
 
-  ClientData(
-      {required this.id,
-      required this.name,
-      required this.phone,
-      required this.email,
-      required this.address});
-
   ClientData.fromDocSnapshot(DocumentSnapshot snapshot) {
     id = snapshot.id;
     name = snapshot.get('name');
