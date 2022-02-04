@@ -22,7 +22,7 @@ class EstablishmentData {
   late String name;
   late bool enabled;
 
-  late List<ProviderData> providerList;
+  late List<ProviderData>? providerList;
 
   Map<String, dynamic> toMap(){
     return {
