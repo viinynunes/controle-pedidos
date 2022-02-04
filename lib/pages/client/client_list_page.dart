@@ -9,7 +9,8 @@ import 'client_registration_page.dart';
 
 class ClientListPage extends StatefulWidget {
   const ClientListPage({
-    Key? key, this.search,
+    Key? key,
+    this.search,
   }) : super(key: key);
 
   final String? search;
@@ -24,14 +25,15 @@ class _ClientListPageState extends State<ClientListPage> {
         context,
         MaterialPageRoute(
             builder: (context) => ClientRegistrationPage(
-              client: client,
-            )));
+                  client: client,
+                )));
   }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ClientModel>(
       builder: (context, child, model) {
-        if (model.isLoading){
+        if (model.isLoading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -49,34 +51,35 @@ class _ClientListPageState extends State<ClientListPage> {
                 itemBuilder: (context, index) {
                   var item = snapshot.data![index];
                   return Slidable(
-                      key: const ValueKey(0),
-                      startActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        dismissible: null,
-                        children: [
-                          SlidableAction(
-                            onPressed: (e) {
-                              setState(() {
-                                model.disableClient(snapshot.data![index]);
-                              });
-                            },
-                            icon: Icons.delete_forever,
-                            label: 'Apagar',
-                            backgroundColor: Colors.red,
-                          ),
-                          SlidableAction(
-                            onPressed: (e) {
-                              setState(() {
-                                _showClientRegistrationPage(item);
-                              });
-                            },
-                            icon: Icons.edit,
-                            label: 'Editar',
-                            backgroundColor: Colors.deepPurple,
-                          )
-                        ],
-                      ),
-                      child: ClientListTile(client: item));
+                    key: const ValueKey(0),
+                    startActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      dismissible: null,
+                      children: [
+                        SlidableAction(
+                          onPressed: (e) {
+                            setState(() {
+                              model.disableClient(snapshot.data![index]);
+                            });
+                          },
+                          icon: Icons.delete_forever,
+                          label: 'Apagar',
+                          backgroundColor: Colors.red,
+                        ),
+                        SlidableAction(
+                          onPressed: (e) {
+                            setState(() {
+                              _showClientRegistrationPage(item);
+                            });
+                          },
+                          icon: Icons.edit,
+                          label: 'Editar',
+                          backgroundColor: Colors.deepPurple,
+                        )
+                      ],
+                    ),
+                    child: ClientListTile(client: item),
+                  );
                 },
               );
             }
@@ -84,7 +87,5 @@ class _ClientListPageState extends State<ClientListPage> {
         );
       },
     );
-
   }
-
 }

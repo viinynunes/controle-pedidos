@@ -8,7 +8,6 @@ class EstablishmentData {
   EstablishmentData.fromDocSnapshot(DocumentSnapshot snapshot){
     id = snapshot.id;
     name = snapshot.get('name');
-    providerList = snapshot.get('providers');
     enabled = snapshot.get('enabled');
   }
 
