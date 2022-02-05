@@ -7,14 +7,14 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'establishment_registration_page.dart';
 
-class EstablishmentList extends StatefulWidget {
-  const EstablishmentList({Key? key}) : super(key: key);
+class EstablishmentListPage extends StatefulWidget {
+  const EstablishmentListPage({Key? key}) : super(key: key);
 
   @override
-  _EstablishmentListState createState() => _EstablishmentListState();
+  _EstablishmentListPageState createState() => _EstablishmentListPageState();
 }
 
-class _EstablishmentListState extends State<EstablishmentList> {
+class _EstablishmentListPageState extends State<EstablishmentListPage> {
   void _showClientRegistrationPage(EstablishmentData? estab) async {
     Navigator.push(
         context,

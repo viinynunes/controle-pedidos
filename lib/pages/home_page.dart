@@ -2,8 +2,10 @@ import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
 import 'package:controle_pedidos/pages/client/client_list_page.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
-import 'package:controle_pedidos/pages/establishment/establishmentList.dart';
+import 'package:controle_pedidos/pages/establishment/establishment_list_page.dart';
 import 'package:controle_pedidos/pages/establishment/establishment_registration_page.dart';
+import 'package:controle_pedidos/pages/product/product_list_page.dart';
+import 'package:controle_pedidos/pages/provider/provider_list_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -18,7 +20,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _pageController = PageController();
   String? search;
+  int _registrationPageIndex = 0;
 
+  static const List<Widget> _registrationPageElements = <Widget>[
+    ProductListPage(),
+    ProviderListPage(),
+    EstablishmentListPage(),
+  ];
+  
   @override
   Widget build(BuildContext context) {
     return PageView(
@@ -51,17 +60,40 @@ class _HomePageState extends State<HomePage> {
         ),
         ScopedModelDescendant<EstablishmentModel>(
           builder: (context, child, model) => Scaffold(
-              appBar: AppBar(
-                title: const Text('CADASTROS'),
-                centerTitle: true,
-              ),
-              drawer: CustomDrawer(
-                pageController: _pageController,
-              ),
-              floatingActionButton: FloatingActionButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const EstablishmentRegistrationPage()));
-              }, child: const Icon(Icons.add),),
-              body: const EstablishmentList()),
+            appBar: AppBar(
+              title: const Text('CADASTROS'),
+              centerTitle: true,
+            ),
+            drawer: CustomDrawer(
+              pageController: _pageController,
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const EstablishmentRegistrationPage()));
+              },
+              child: const Icon(Icons.add),
+            ),
+            body: _registrationPageElements.elementAt(_registrationPageIndex),//const EstablishmentList(),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.account_balance_sharp), label: 'Produtos'),
+                BottomNavigationBarItem(icon: Icon(Icons.sports_handball_outlined), label: 'Fornecedores'),
+                BottomNavigationBarItem(icon: Icon(Icons.production_quantity_limits), label: 'Estabelecimentos'),
+              ],
+              currentIndex: _registrationPageIndex,
+              selectedItemColor: Colors.deepPurple,
+              onTap: (index){
+                setState(() {
+                  _registrationPageIndex = index;
+                });
+
+              },
+            ),
+          ),
         ),
         ScopedModelDescendant<ClientModel>(
           builder: (context, child, model) => Scaffold(
