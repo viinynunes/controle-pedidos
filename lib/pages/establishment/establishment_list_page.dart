@@ -33,50 +33,66 @@ class _EstablishmentListPageState extends State<EstablishmentListPage> {
           child: CircularProgressIndicator(),
         );
       }
-      return FutureBuilder<List<EstablishmentData>>(
-          future: model.getEnabledEstablishments(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) => Slidable(
-                  key: const ValueKey(0),
-                  startActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    dismissible: null,
-                    children: [
-                      SlidableAction(
-                        onPressed: (e) {
-                          setState(() {
-                            model.disableEstablishment(snapshot.data![index]);
-                          });
-                        },
-                        icon: Icons.delete_forever,
-                        label: 'Apagar',
-                        backgroundColor: Colors.red,
-                      ),
-                      SlidableAction(
-                        onPressed: (e) {
-                          setState(() {
-                            _showClientRegistrationPage(snapshot.data![index]);
-                          });
-                        },
-                        icon: Icons.edit,
-                        label: 'Editar',
-                        backgroundColor: Colors.deepPurple,
-                      )
-                    ],
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Estabelecimentos'),
+          centerTitle: true,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                    const EstablishmentRegistrationPage()));
+          },
+          child: const Icon(Icons.add),
+        ),
+        body: FutureBuilder<List<EstablishmentData>>(
+            future: model.getEnabledEstablishments(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) => Slidable(
+                    key: const ValueKey(0),
+                    startActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      dismissible: null,
+                      children: [
+                        SlidableAction(
+                          onPressed: (e) {
+                            setState(() {
+                              model.disableEstablishment(snapshot.data![index]);
+                            });
+                          },
+                          icon: Icons.delete_forever,
+                          label: 'Apagar',
+                          backgroundColor: Colors.red,
+                        ),
+                        SlidableAction(
+                          onPressed: (e) {
+                            setState(() {
+                              _showClientRegistrationPage(snapshot.data![index]);
+                            });
+                          },
+                          icon: Icons.edit,
+                          label: 'Editar',
+                          backgroundColor: Colors.deepPurple,
+                        )
+                      ],
+                    ),
+                    child: EstablishmentListTile(
+                        establishment: snapshot.data![index]),
                   ),
-                  child: EstablishmentListTile(
-                      establishment: snapshot.data![index]),
-                ),
-              );
-            }
-          });
+                );
+              }
+            }),
+      );
     });
   }
 }

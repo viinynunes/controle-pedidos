@@ -9,9 +9,8 @@ class ProviderData {
     id = snapshot.id;
     name = snapshot.get('name');
     location = snapshot.get('location');
-    productList = snapshot.get('products');
     enabled = snapshot.get('enabled');
-    establishment = snapshot.get('establishment');
+    establishment = EstablishmentData.fromMap(snapshot.get('establishment'));
   }
 
   ProviderData.fromMap(Map<String, dynamic> map) {
@@ -19,7 +18,7 @@ class ProviderData {
     name = map['name'];
     location = map['location'];
     enabled = map['enabled'];
-    establishment = map['establishment'];
+    establishment = EstablishmentData.fromMap(map['establishment']);
   }
 
   String? id;
@@ -27,7 +26,7 @@ class ProviderData {
   late String location;
   late bool enabled;
 
-  late EstablishmentData establishment;
+  EstablishmentData? establishment;
 
   late List<ProductData>? productList;
 
@@ -37,7 +36,7 @@ class ProviderData {
       'name': name,
       'location': location,
       'enabled': enabled,
-      'establishment': establishment
+      'establishment': establishment?.toMap()
     };
   }
 }

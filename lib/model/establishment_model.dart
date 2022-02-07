@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/establishment_data.dart';
+import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class EstablishmentModel extends Model {
@@ -7,6 +8,9 @@ class EstablishmentModel extends Model {
       FirebaseFirestore.instance.collection('establishments');
 
   bool isLoading = false;
+
+  static EstablishmentModel of(BuildContext context) =>
+      ScopedModel.of<EstablishmentModel>(context);
 
   void createEstablishment(EstablishmentData establishment) {
     isLoading = true;
