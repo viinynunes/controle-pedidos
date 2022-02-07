@@ -145,7 +145,6 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
     } else {
       _selectedEstablishment = _establishmentList.firstWhere((element) => element.id == provider.establishment!.id);
     }
-    //_selectedEstablishment = _establishmentList.first;
     setState(() {});
   }
 

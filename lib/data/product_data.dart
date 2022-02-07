@@ -9,7 +9,7 @@ class ProductData {
     name = snapshot.get('name');
     category = snapshot.get('category');
     enabled = snapshot.get('enabled');
-    provider = snapshot.get('provider');
+    provider = ProviderData.fromMap(snapshot.get('provider'));
   }
 
   ProductData.fromMap(Map<String, dynamic> map) {
@@ -17,7 +17,7 @@ class ProductData {
     name = map['name'];
     category = map['category'];
     enabled = map['enabled'];
-    provider = map['provider'];
+    provider = ProviderData.fromMap(map['provider']);
   }
 
   String? id;
@@ -33,7 +33,7 @@ class ProductData {
       'name': name,
       'category': category,
       'enabled': enabled,
-      'provider': provider,
+      'provider': provider.toMap(),
     };
   }
 }
