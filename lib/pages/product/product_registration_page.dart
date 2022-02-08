@@ -135,6 +135,11 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                           borderSide: const BorderSide(),
                           borderRadius: (BorderRadius.circular(16))),
                     ),
+                    validator: (e){
+                      if (e == null){
+                        return 'Campo Obrigatório';
+                      }
+                    },
                     onChanged: (e) {
                       setState(() {
                         _selectedProvider = e;
