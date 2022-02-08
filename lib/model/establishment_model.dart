@@ -49,4 +49,18 @@ class EstablishmentModel extends Model {
     notifyListeners();
     return estabList;
   }
+
+  Future<List<EstablishmentData>> getAllEstablishments() async {
+    isLoading = true;
+    List<EstablishmentData> estabList = [];
+    final snapshot =
+        await firebaseEstablishments.orderBy('name', descending: false).get();
+
+    for (DocumentSnapshot e in snapshot.docs) {
+      estabList.add(EstablishmentData.fromDocSnapshot(e));
+    }
+    isLoading = false;
+    notifyListeners();
+    return estabList;
+  }
 }

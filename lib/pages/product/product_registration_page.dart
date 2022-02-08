@@ -46,7 +46,12 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
     var dropDownItems = _providerList
         .map(
           (e) => DropdownMenuItem(
-            child: Text(e.name),
+            child: Text(
+              e.enabled == true ? e.name : e.name + ' - FORNECEDOR APAGADO',
+              style: (TextStyle(
+                color: e.enabled == false ? Colors.red : Colors.black,
+              )),
+            ),
             value: e,
           ),
         )
@@ -135,8 +140,8 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                           borderSide: const BorderSide(),
                           borderRadius: (BorderRadius.circular(16))),
                     ),
-                    validator: (e){
-                      if (e == null){
+                    validator: (e) {
+                      if (e == null) {
                         return 'Campo Obrigatório';
                       }
                     },
@@ -153,10 +158,18 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () async {
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderRegistrationPage()));
-                            _getProvidersList();
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ProviderRegistrationPage()));
+                          _getProvidersList();
                         },
-                        child: const Text('Criar novo fornecedor', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        child: const Text(
+                          'Criar novo fornecedor',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -170,10 +183,11 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
   }
 
   void _getProvidersList({ProductData? product}) async {
-    _providerList = await ProviderModel.of(context).getEnabledProviders();
     if (product == null) {
+      _providerList = await ProviderModel.of(context).getEnabledProviders();
       _selectedProvider = _providerList.first;
     } else {
+      _providerList = await ProviderModel.of(context).getAllProviders();
       _selectedProvider = _providerList
           .firstWhere((element) => element.id == product.provider.id);
     }

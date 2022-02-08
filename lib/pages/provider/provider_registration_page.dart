@@ -1,4 +1,3 @@
-
 import 'package:controle_pedidos/data/establishment_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
@@ -47,7 +46,14 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
   Widget build(BuildContext context) {
     var dropDownItems = _establishmentList
         .map((e) => DropdownMenuItem(
-              child: Text(e.name),
+              child: Text(
+                e.enabled == true
+                    ? e.name
+                    : e.name + ' - ESTABELECIMENTO APAGADO',
+                style: (TextStyle(
+                  color: e.enabled == false ? Colors.red : Colors.black,
+                )),
+              ),
               value: e,
             ))
         .toList();
@@ -132,8 +138,8 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                           borderSide: const BorderSide(),
                           borderRadius: (BorderRadius.circular(16))),
                     ),
-                    validator: (e){
-                      if (e == null){
+                    validator: (e) {
+                      if (e == null) {
                         return 'Campo Obrigatório';
                       }
                     },
@@ -150,10 +156,18 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () async {
-                          await Navigator.push(context, MaterialPageRoute(builder: (context) => const EstablishmentRegistrationPage()));
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EstablishmentRegistrationPage()));
                           _getEstabList();
                         },
-                        child: const Text('Criar novo Estabelecimento', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        child: const Text(
+                          'Criar novo Estabelecimento',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -167,13 +181,19 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
   }
 
   void _getEstabList({ProviderData? provider}) async {
-    _establishmentList =
-        await EstablishmentModel.of(context).getEnabledEstablishments();
     if (provider == null) {
+      _establishmentList =
+          await EstablishmentModel.of(context).getEnabledEstablishments();
       _selectedEstablishment = _establishmentList.first;
     } else {
-      _selectedEstablishment = _establishmentList.firstWhere((element) => element.id == provider.establishment!.id);
+      _establishmentList =
+          await EstablishmentModel.of(context).getAllEstablishments();
+      _selectedEstablishment = _establishmentList
+          .firstWhere((element) => element.id == provider.establishment!.id);
     }
+
+    if (provider == null) {
+    } else {}
     setState(() {});
   }
 
