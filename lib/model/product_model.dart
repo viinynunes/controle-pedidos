@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/product_data.dart';
+import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('products');
 
   bool isLoading = true;
+
+  static ProductModel of(BuildContext context) => ScopedModel.of<ProductModel>(context);
 
   void createProduct(ProductData product) {
     isLoading = true;
