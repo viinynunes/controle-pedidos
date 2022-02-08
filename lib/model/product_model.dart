@@ -6,7 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 class ProductModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('products');
 
-  bool isLoading = true;
+  bool isLoading = false;
 
   static ProductModel of(BuildContext context) => ScopedModel.of<ProductModel>(context);
 
@@ -32,16 +32,26 @@ class ProductModel extends Model {
     notifyListeners();
   }
 
-  Future<List<ProductData>> getAllEnabledProducts() async {
+  Future<List<ProductData>> getFilteredEnabledProducts({String? search}) async {
     isLoading = true;
     List<ProductData> productList = [];
     final snapshot = await firebaseCollection
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false)
         .get();
-    for (DocumentSnapshot e in snapshot.docs) {
-      productList.add(ProductData.fromDocSnapshot(e));
+    if(search != null){
+      for (DocumentSnapshot e in snapshot.docs) {
+        String name = e.get('name');
+        if (name.toLowerCase().contains(search.toLowerCase())){
+          productList.add(ProductData.fromDocSnapshot(e));
+        }
+      }
+    } else {
+      for (DocumentSnapshot e in snapshot.docs){
+        productList.add(ProductData.fromDocSnapshot(e));
+      }
     }
+
 
     isLoading = false;
     notifyListeners();

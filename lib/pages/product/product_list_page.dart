@@ -15,8 +15,10 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
+  bool isSearching = false;
+  String? search;
 
-
+  final _searchFocus = FocusNode();
 
   void _showProductRegistrationPage({ProductData? product}) {
     Navigator.push(
@@ -32,66 +34,104 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ProductModel>(
-      builder: (context, child, model) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Produtos'),
-          centerTitle: true,
-        ),
-        drawer: const CustomDrawer(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _showProductRegistrationPage();
-          },
-          child: const Icon(Icons.add),
-        ),
-        body: FutureBuilder<List<ProductData>>(
-          future: model.getAllEnabledProducts(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    var product = snapshot.data![index];
-                    return Slidable(
-                      key: const ValueKey(0),
-                        startActionPane: ActionPane(
-                          dismissible: null,
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (e) {
-                                setState(() {
-                                  model.disableProduct(product);
-                                });
-                              },
-                              icon: Icons.delete_forever,
-                              backgroundColor: Colors.red,
-                              label: 'Apagar',
-                            ),
-                            SlidableAction(
-                              onPressed: (e) {
-                                setState(() {
-                                  _showProductRegistrationPage(product: product);
-                                });
-                              },
-                              icon: Icons.edit,
-                              backgroundColor: Colors.deepPurple,
-                              label: 'Editar',
-                            ),
-                          ],
-                        ),
-                        child: ProductListTile(
-                      product: product,
-                    ));
+      builder: (context, child, model) {
+        return Scaffold(
+          appBar: AppBar(
+            title: isSearching
+                ? TextField(
+                    focusNode: _searchFocus,
+                    decoration: const InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        hintText: 'Pesquisar',
+                        hintStyle: TextStyle(color: Colors.white)),
+                    style: const TextStyle(color: Colors.white, fontSize: 22),
+                    onChanged: (text) async {
+                      await model.getFilteredEnabledProducts(search: text);
+                      if (text.isEmpty) {
+                        search = null;
+                      } else {
+                        search = text;
+                      }
+                    },
+                  )
+                : const Text('Produtos'),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    if (isSearching) {
+                      isSearching = false;
+                      search = null;
+                    } else {
+                      isSearching = true;
+                      _searchFocus.requestFocus();
+                    }
                   });
-            }
-          },
-        ),
-      ),
+                },
+                icon: isSearching
+                    ? const Icon(Icons.cancel)
+                    : const Icon(Icons.search),
+              ),
+            ],
+          ),
+          drawer: const CustomDrawer(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _showProductRegistrationPage();
+            },
+            child: const Icon(Icons.add),
+          ),
+          body: FutureBuilder<List<ProductData>>(
+            future: model.getFilteredEnabledProducts(search: search),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      var product = snapshot.data![index];
+                      return Slidable(
+                          key: const ValueKey(0),
+                          startActionPane: ActionPane(
+                            dismissible: null,
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (e) {
+                                  setState(() {
+                                    model.disableProduct(product);
+                                  });
+                                },
+                                icon: Icons.delete_forever,
+                                backgroundColor: Colors.red,
+                                label: 'Apagar',
+                              ),
+                              SlidableAction(
+                                onPressed: (e) {
+                                  setState(() {
+                                    _showProductRegistrationPage(
+                                        product: product);
+                                  });
+                                },
+                                icon: Icons.edit,
+                                backgroundColor: Colors.deepPurple,
+                                label: 'Editar',
+                              ),
+                            ],
+                          ),
+                          child: ProductListTile(
+                            product: product,
+                          ));
+                    });
+              }
+            },
+          ),
+        );
+      },
     );
   }
 }
