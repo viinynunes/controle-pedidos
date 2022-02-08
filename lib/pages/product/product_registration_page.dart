@@ -2,6 +2,7 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
+import 'package:controle_pedidos/pages/provider/provider_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -61,9 +62,9 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            if (_formKey.currentState!.validate()){
+            if (_formKey.currentState!.validate()) {
               _getFields();
-              if (widget.product == null){
+              if (widget.product == null) {
                 model.createProduct(newProduct);
               } else {
                 model.updateProduct(newProduct);
@@ -126,12 +127,13 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                     style: const TextStyle(fontSize: 20, color: Colors.black),
                     isExpanded: true,
                     decoration: InputDecoration(
-                      label: Text('Fornecedor', style: TextStyle(fontSize: 20),),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(),
-                        borderRadius: (BorderRadius.circular(16))
+                      label: const Text(
+                        'Fornecedor',
+                        style: TextStyle(fontSize: 20),
                       ),
-
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(),
+                          borderRadius: (BorderRadius.circular(16))),
                     ),
                     onChanged: (e) {
                       setState(() {
@@ -139,6 +141,19 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       });
                     },
                     value: _selectedProvider,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: () async {
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderRegistrationPage()));
+                            _getProvidersList();
+                        },
+                        child: const Text('Criar novo fornecedor', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -160,7 +175,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
     setState(() {});
   }
 
-  void _getFields(){
+  void _getFields() {
     newProduct.name = _nameController.text;
     newProduct.category = _categoryController.text;
     newProduct.provider = _selectedProvider!;
