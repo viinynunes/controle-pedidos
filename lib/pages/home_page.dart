@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/model/client_model.dart';
+import 'package:controle_pedidos/model/drawer_page_controller.dart';
 import 'package:controle_pedidos/pages/client/client_list_page.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
 import 'package:controle_pedidos/pages/establishment/establishment_list_page.dart';
@@ -16,7 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _pageController = PageController();
   String? search;
   int _registrationPageIndex = 0;
 
@@ -28,6 +28,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _pageController = DrawerPageController.of(context).pageController;
+
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
@@ -37,9 +39,7 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Pedidos'),
             centerTitle: true,
           ),
-          drawer: CustomDrawer(
-            pageController: _pageController,
-          ),
+          drawer: const CustomDrawer(),
           body: Container(
             color: Colors.red,
           ),
@@ -49,22 +49,19 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Controle'),
             centerTitle: true,
           ),
-          drawer: CustomDrawer(
-            pageController: _pageController,
-          ),
+          drawer: const CustomDrawer(),
           body: Container(
             color: Colors.red,
           ),
         ),
         Scaffold(
-            drawer: CustomDrawer(
-              pageController: _pageController,
-            ),
+            drawer: const CustomDrawer(),
             body: _registrationPageElements.elementAt(_registrationPageIndex),
             bottomNavigationBar: BottomNavigationBar(
               items: const [
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.production_quantity_limits), label: 'Produtos'),
+                    icon: Icon(Icons.production_quantity_limits),
+                    label: 'Produtos'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.sports_handball_outlined),
                     label: 'Fornecedores'),
@@ -100,9 +97,7 @@ class _HomePageState extends State<HomePage> {
               ),
               centerTitle: true,
             ),
-            drawer: CustomDrawer(
-              pageController: _pageController,
-            ),
+            drawer: const CustomDrawer(),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 setState(() {

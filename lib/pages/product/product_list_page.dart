@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/product_registration_page.dart';
+import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/product_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -37,6 +37,7 @@ class _ProductListPageState extends State<ProductListPage> {
           title: const Text('Produtos'),
           centerTitle: true,
         ),
+        drawer: const CustomDrawer(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _showProductRegistrationPage();

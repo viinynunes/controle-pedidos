@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
 import 'package:controle_pedidos/pages/provider/provider_registration_page.dart';
+import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/provider_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -33,6 +34,7 @@ class _ProviderListPageState extends State<ProviderListPage> {
           title: const Text('Fornecedores'),
           centerTitle: true,
         ),
+        drawer: const CustomDrawer(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _showProviderRegistrationPage();

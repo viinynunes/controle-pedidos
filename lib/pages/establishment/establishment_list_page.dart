@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/data/establishment_data.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
+import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/establishment_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -38,6 +39,7 @@ class _EstablishmentListPageState extends State<EstablishmentListPage> {
           title: const Text('Estabelecimentos'),
           centerTitle: true,
         ),
+        drawer: const CustomDrawer(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
