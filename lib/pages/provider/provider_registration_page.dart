@@ -3,6 +3,7 @@ import 'package:controle_pedidos/data/establishment_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
+import 'package:controle_pedidos/pages/establishment/establishment_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -117,16 +118,39 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  DropdownButton<EstablishmentData>(
+                  DropdownButtonFormField<EstablishmentData>(
                     items: dropDownItems,
-                    isExpanded: true,
                     elevation: 10,
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      label: const Text(
+                        'Estabelecimento',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(),
+                          borderRadius: (BorderRadius.circular(16))),
+                    ),
                     onChanged: (e) {
                       setState(() {
                         _selectedEstablishment = e;
                       });
                     },
                     value: _selectedEstablishment,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: () async {
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) => const EstablishmentRegistrationPage()));
+                          _getEstabList();
+                        },
+                        child: const Text('Criar novo Estabelecimento', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                      ),
+                    ),
                   ),
                 ],
               ),
