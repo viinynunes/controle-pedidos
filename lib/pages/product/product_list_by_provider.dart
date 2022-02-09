@@ -21,7 +21,7 @@ class _ProductListByProviderState extends State<ProductListByProvider> {
   @override
   void initState() {
     super.initState();
-    _setProductList(widget.provider);
+    _setProductList();
   }
 
   @override
@@ -38,20 +38,27 @@ class _ProductListByProviderState extends State<ProductListByProvider> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return ListView.builder(
-                itemCount: productList.length,
-                itemBuilder: (context, index) {
-                  var product = productList[index];
-                  return ProductListTile(product: product);
-                });
+            return RefreshIndicator(
+              onRefresh: _setProductList,
+              child: ListView.builder(
+                  itemCount: productList.length,
+                  itemBuilder: (context, index) {
+                    var product = productList[index];
+                    return ProductListTile(product: product);
+                  }),
+            );
           }
         },
       ),
     );
   }
 
-  void _setProductList(ProviderData provider) async {
-    productList = await ProductModel.of(context)
-        .getEnabledProductsFromProvider(provider: provider);
+  Future<void> _setProductList() async {
+    final list = await ProductModel.of(context)
+        .getEnabledProductsFromProvider(provider: widget.provider);
+
+    setState(() {
+      productList = list;
+    });
   }
 }

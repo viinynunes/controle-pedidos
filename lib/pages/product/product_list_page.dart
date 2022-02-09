@@ -4,7 +4,6 @@ import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/product_list_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -94,38 +93,8 @@ class _ProductListPageState extends State<ProductListPage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       var product = snapshot.data![index];
-                      return Slidable(
-                          key: const ValueKey(0),
-                          startActionPane: ActionPane(
-                            dismissible: null,
-                            motion: const ScrollMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (e) {
-                                  setState(() {
-                                    model.disableProduct(product);
-                                  });
-                                },
-                                icon: Icons.delete_forever,
-                                backgroundColor: Colors.red,
-                                label: 'Apagar',
-                              ),
-                              SlidableAction(
-                                onPressed: (e) {
-                                  setState(() {
-                                    _showProductRegistrationPage(
-                                        product: product);
-                                  });
-                                },
-                                icon: Icons.edit,
-                                backgroundColor: Colors.deepPurple,
-                                label: 'Editar',
-                              ),
-                            ],
-                          ),
-                          child: ProductListTile(
-                            product: product,
-                          ));
+                      return ProductListTile(
+                            product: product);
                     });
               }
             },
