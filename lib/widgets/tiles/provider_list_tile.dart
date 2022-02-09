@@ -47,10 +47,9 @@ class ProviderListTile extends StatelessWidget {
                     style: const TextStyle(fontSize: 14),
                   ),
                 ),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child:Icon(Icons.arrow_right),
-                )
+                Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: const Icon(Icons.arrow_right)),
               ],
             ),
           ),
