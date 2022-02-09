@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/provider_data.dart';
+import 'package:controle_pedidos/pages/product/product_list_by_provider.dart';
 import 'package:flutter/material.dart';
 
 class ProviderListTile extends StatelessWidget {
@@ -9,7 +10,13 @@ class ProviderListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ProductListByProvider(provider: provider)));
+      },
       child: Card(
         child: SizedBox(
           height: 80,
@@ -18,7 +25,7 @@ class ProviderListTile extends StatelessWidget {
             child: Row(
               children: [
                 Flexible(
-                  flex: 3,
+                  flex: 4,
                   fit: FlexFit.tight,
                   child: Text(
                     provider.name,
@@ -26,7 +33,7 @@ class ProviderListTile extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  flex: 2,
+                  flex: 3,
                   fit: FlexFit.tight,
                   child: Text(
                     provider.location,
@@ -34,11 +41,15 @@ class ProviderListTile extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text(
                     provider.establishment!.name,
                     style: const TextStyle(fontSize: 14),
                   ),
+                ),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child:Icon(Icons.arrow_right),
                 )
               ],
             ),

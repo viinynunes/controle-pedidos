@@ -6,15 +6,23 @@ import 'package:controle_pedidos/widgets/tiles/drawer_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({Key? key})
-      : super(key: key);
+class CustomDrawer extends StatefulWidget {
+  const CustomDrawer({Key? key}) : super(key: key);
 
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    final pageController = DrawerPageController.of(context).pageController;
+    PageController pageController =
+        DrawerPageController.of(context).pageController;
 
     return Drawer(
       elevation: 3,

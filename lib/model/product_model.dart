@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/product_data.dart';
+import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -52,6 +53,27 @@ class ProductModel extends Model {
       }
     }
 
+
+    isLoading = false;
+    notifyListeners();
+    return productList;
+  }
+
+  Future<List<ProductData>> getEnabledProductsFromProvider(
+      {required ProviderData provider}) async {
+    isLoading = true;
+    List<ProductData> productList = [];
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('enabled', isEqualTo: true)
+        .where('provider.id', isEqualTo: provider.id)
+        .orderBy('name', descending: false)
+        .get();
+
+    for (var e in snapshot.docs) {
+      productList.add(ProductData.fromDocSnapshot(e));
+    }
 
     isLoading = false;
     notifyListeners();
