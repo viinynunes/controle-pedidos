@@ -21,6 +21,10 @@ class OrderData {
     creationDate = map['creationDate'];
     client = ClientData.fromMap(map['client']);
     enabled = map['enabled'];
+    var itemListMap = map['orderItemList'];
+    for (var e in itemListMap){
+      orderItemList!.add(OrderItemData.fromMap(e));
+    }
   }
 
   String? id;
@@ -35,7 +39,7 @@ class OrderData {
       'creationDate': creationDate,
       'enabled': enabled,
       'client': client.toMap(),
-
+      'orderItemList': orderItemList!.map((e) => e.toMap()),
     };
   }
 }
