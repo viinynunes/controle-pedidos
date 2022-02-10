@@ -14,7 +14,7 @@ class OrderModel extends Model {
 
   void createOrder(OrderData order) async {
     isLoading = true;
-    var x = await firebaseCollection.add(order.toMap());
+    var x = await firebaseCollection.add(order.toResumedMap());
     order.id = x.id;
     for (var e in order.orderItemList!) {
       firebaseCollection
@@ -34,7 +34,7 @@ class OrderModel extends Model {
       await e.reference.delete();
     }
     for (var e in order.orderItemList!) {
-      firebaseCollection
+      await firebaseCollection
           .doc(order.id)
           .collection('orderItems')
           .doc()
