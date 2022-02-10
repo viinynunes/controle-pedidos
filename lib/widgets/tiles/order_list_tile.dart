@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 
 class OrderListTile extends StatelessWidget {
   const OrderListTile({Key? key, required this.order}) : super(key: key);
@@ -9,6 +10,7 @@ class OrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat('dd-MM-yyyy - HH:mm');
     return Slidable(
       key: const ValueKey(0),
       startActionPane: ActionPane(
@@ -36,14 +38,14 @@ class OrderListTile extends StatelessWidget {
           child: Row(
             children: [
               Flexible(
-                flex: 3,
+                flex: 2,
                 fit: FlexFit.tight,
                 child: Text(
-                  order.creationDate.toString(),
+                  dateFormat.format(order.creationDate),
                 ),
               ),
               Flexible(
-                flex: 2,
+                flex: 3,
                 fit: FlexFit.tight,
                 child: Text(
                   order.client.name,
