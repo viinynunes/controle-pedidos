@@ -12,23 +12,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class OrderPage extends StatefulWidget {
-  OrderPage({Key? key, this.client}) : super(key: key);
+class OrderRegistrationPage extends StatefulWidget {
+  OrderRegistrationPage({Key? key, this.order}) : super(key: key);
 
-  ClientData? client;
+  OrderData? order;
 
   @override
-  _OrderPageState createState() => _OrderPageState();
+  _OrderRegistrationPageState createState() => _OrderRegistrationPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   List<ClientData> clientList = [];
   List<ProductData> productList = [];
 
   List<OrderItemData> orderItemList = [];
 
-  late OrderData order;
+  late OrderData newOrder;
 
+  ClientData? client;
   ProductData? _selectedProduct;
   OrderItemData? orderItem;
 
@@ -43,6 +44,10 @@ class _OrderPageState extends State<OrderPage> {
     _setClientList();
     _setProductList();
     _quantityController.text = '1';
+
+    if (widget.order != null) {
+      newOrder = OrderData.fromMap(widget.order!.toMap());
+    }
   }
 
   @override
@@ -57,7 +62,8 @@ class _OrderPageState extends State<OrderPage> {
                 onPressed: () {
                   if (orderItemList.isNotEmpty) {
                     _setOrder();
-                    model.createOrder(order);
+                    model.createOrder(newOrder);
+                    Navigator.pop(context, newOrder);
                   }
                 },
                 icon: const Icon(Icons.save))
@@ -87,7 +93,7 @@ class _OrderPageState extends State<OrderPage> {
                 SizedBox(
                   height: 60,
                   child: DropdownSearch<ClientData>(
-                    selectedItem: widget.client,
+                    selectedItem: client,
                     showSearchBox: true,
                     items: clientList,
                     dropdownSearchDecoration: const InputDecoration(
@@ -95,7 +101,7 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                     onChanged: (e) {
                       setState(() {
-                        widget.client = e;
+                        client = e!;
                       });
                     },
                     validator: (e) {
@@ -253,8 +259,12 @@ class _OrderPageState extends State<OrderPage> {
         product: _selectedProduct!);
   }
 
-  void _setOrder(){
-    order = OrderData.fields(client: widget.client!, creationDate: DateTime.now(), enabled: true, orderItemList: orderItemList);
+  void _setOrder() {
+    newOrder = OrderData.fields(
+        client: client!,
+        creationDate: DateTime.now(),
+        enabled: true,
+        orderItemList: orderItemList);
   }
 
   void _clearFields() {
