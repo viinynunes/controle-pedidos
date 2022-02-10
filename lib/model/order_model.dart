@@ -10,9 +10,13 @@ class OrderModel extends Model {
 
   static OrderModel of(BuildContext context) => ScopedModel.of<OrderModel>(context);
 
-  void createOrder(OrderData order){
+  void createOrder(OrderData order) async {
     isLoading = true;
-    firebaseCollection.doc().set(order.toMap());
+    var x = await firebaseCollection.add(order.toMap());
+    order.id = x.id;
+    for (var e in order.orderItemList){
+      firebaseCollection.doc(order.id).collection('orderItems').doc().set(e.toMap());
+    }
     isLoading = false;
     notifyListeners();
   }

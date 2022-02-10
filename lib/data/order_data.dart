@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/client_data.dart';
+import 'package:controle_pedidos/data/order_item_data.dart';
 
 class OrderData {
-  OrderData({required this.client, required this.creationDate, required this.enabled});
+  OrderData({required this.client, required this.creationDate, required this.enabled, required this.orderItemList});
 
   OrderData.fromDocSnapshot(DocumentSnapshot snapshot) {
     id = snapshot.get('id');
@@ -21,6 +22,7 @@ class OrderData {
   late DateTime creationDate;
   late ClientData client;
   late bool enabled;
+  late List<OrderItemData> orderItemList;
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,6 +30,7 @@ class OrderData {
       'creationDate': creationDate,
       'enabled': enabled,
       'client': client.toMap(),
+
     };
   }
 }

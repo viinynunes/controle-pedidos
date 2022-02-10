@@ -254,7 +254,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   void _setOrder(){
-    order = OrderData(client: widget.client!, creationDate: DateTime.now(), enabled: true);
+    order = OrderData(client: widget.client!, creationDate: DateTime.now(), enabled: true, orderItemList: orderItemList);
   }
 
   void _clearFields() {
