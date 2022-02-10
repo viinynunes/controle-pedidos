@@ -6,7 +6,6 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
-import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +49,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
       newOrder = OrderData.fromMap(widget.order!.toMap());
       client = newOrder.client;
       _setOrderItemList();
+    }else {
+      newOrder = OrderData();
     }
   }
 
