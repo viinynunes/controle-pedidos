@@ -32,36 +32,60 @@ class OrderListTile extends StatelessWidget {
         ],
       ),
       child: InkWell(
+        splashColor: Theme.of(context).primaryColor,
         onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: Text(
-                  dateFormat.format(order.creationDate),
+          padding: const EdgeInsets.fromLTRB(2, 3, 2, 3),
+          child: Container(
+            color: Colors.grey.withOpacity(0.2),
+            height: 40,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: Text(
+                    dateFormat.format(order.creationDate),
+                    style: _getStyle(),
+                  ),
                 ),
-              ),
-              Flexible(
-                flex: 3,
-                fit: FlexFit.tight,
-                child: Text(
-                  order.client.name,
+                Flexible(
+                  flex: 4,
+                  fit: FlexFit.tight,
+                  child: Text(
+                    order.client.name,
+                    style: _getStyle(),
+                  ),
                 ),
-              ),
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Text(
-                  order.orderItemList!.length.toString(),
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: Text(
+                    order.orderItemList!.length.toString(),
+                    style: _getStyle(),
+                  ),
                 ),
-              ),
-            ],
+                const Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: Icon(
+                    Icons.remove_red_eye_outlined,
+                    size: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  TextStyle _getStyle() {
+    return const TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
     );
   }
 }
