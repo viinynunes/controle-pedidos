@@ -20,6 +20,7 @@ class OrderData {
     id = map['id'];
     creationDate = map['creationDate'];
     client = ClientData.fromMap(map['client']);
+    enabled = map['enabled'];
   }
 
   String? id;
