@@ -42,4 +42,13 @@ class OrderData {
       'orderItemList': orderItemList!.map((e) => e.toMap()),
     };
   }
+
+  Map<String, dynamic> toResumedMap() {
+    return {
+      'id': id,
+      'creationDate': creationDate,
+      'enabled': enabled,
+      'client': client.toMap(),
+    };
+  }
 }

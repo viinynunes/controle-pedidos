@@ -1,3 +1,4 @@
+
 import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/data/order_item_data.dart';
@@ -47,6 +48,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
     if (widget.order != null) {
       newOrder = OrderData.fromMap(widget.order!.toMap());
+      client = newOrder.client;
+      _setOrderItemList();
     }
   }
 
@@ -62,7 +65,11 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 onPressed: () {
                   if (orderItemList.isNotEmpty) {
                     _setOrder();
-                    model.createOrder(newOrder);
+                    if (widget.order == null){
+                      model.createOrder(newOrder);
+                    }else {
+                      model.updateOrder(newOrder);
+                    }
                     Navigator.pop(context, newOrder);
                   }
                 },
@@ -82,7 +89,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
           },
           child: const Icon(Icons.add),
         ),
-        drawer: const CustomDrawer(),
         body: Form(
           key: _formKey,
           child: Padding(
@@ -253,6 +259,13 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     });
   }
 
+  void _setOrderItemList() {
+    setState(() {
+      orderItemList = newOrder.orderItemList!;
+    });
+
+  }
+
   void _setOrderItem() {
     orderItem = OrderItemData(
         quantity: int.parse(_quantityController.text),
@@ -260,11 +273,10 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   }
 
   void _setOrder() {
-    newOrder = OrderData.fields(
-        client: client!,
-        creationDate: DateTime.now(),
-        enabled: true,
-        orderItemList: orderItemList);
+    newOrder.client = client!;
+    newOrder.creationDate = DateTime.now();
+    newOrder.enabled = true;
+    newOrder.orderItemList = orderItemList;
   }
 
   void _clearFields() {

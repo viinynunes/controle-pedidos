@@ -27,9 +27,19 @@ class OrderModel extends Model {
     notifyListeners();
   }
 
-  void updateOrder(OrderData order) {
+  void updateOrder(OrderData order) async {
     isLoading = true;
-    firebaseCollection.doc(order.id).update(order.toMap());
+    final snap = await firebaseCollection.doc(order.id).collection('orderItems').get();
+    for (DocumentSnapshot e in snap.docs){
+      await e.reference.delete();
+    }
+    for (var e in order.orderItemList!) {
+      firebaseCollection
+          .doc(order.id)
+          .collection('orderItems')
+          .doc()
+          .set(e.toMap());
+    }
     isLoading = false;
     notifyListeners();
   }
