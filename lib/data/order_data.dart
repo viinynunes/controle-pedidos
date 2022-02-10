@@ -3,11 +3,15 @@ import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/data/order_item_data.dart';
 
 class OrderData {
-  OrderData({required this.client, required this.creationDate, required this.enabled, required this.orderItemList});
+
+  OrderData();
+
+  OrderData.fields({required this.client, required this.creationDate, required this.enabled, required this.orderItemList});
 
   OrderData.fromDocSnapshot(DocumentSnapshot snapshot) {
-    id = snapshot.get('id');
-    creationDate = snapshot.get('creationDate');
+    id = snapshot.id;
+    Timestamp timeStamp = snapshot.get('creationDate');
+    creationDate = DateTime.parse(timeStamp.toDate().toString());
     client = ClientData.fromMap(snapshot.get('client'));
     enabled = snapshot.get('enabled');
   }
@@ -22,7 +26,7 @@ class OrderData {
   late DateTime creationDate;
   late ClientData client;
   late bool enabled;
-  late List<OrderItemData> orderItemList;
+  List<OrderItemData>? orderItemList = [];
 
   Map<String, dynamic> toMap() {
     return {
