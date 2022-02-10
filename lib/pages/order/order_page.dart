@@ -1,8 +1,10 @@
 import 'package:controle_pedidos/data/client_data.dart';
+import 'package:controle_pedidos/data/order_item_data.dart';
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
+import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
@@ -19,16 +21,22 @@ class _OrderPageState extends State<OrderPage> {
   List<ClientData> clientList = [];
   List<ProductData> productList = [];
 
+  List<OrderItemData> orderItemList = [];
 
   ProductData? _selectedProduct;
+  OrderItemData? orderItem;
+
+  final _quantityController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  final _quantityFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _setClientList();
     _setProductList();
+    _quantityController.text = '1';
   }
 
   @override
@@ -39,7 +47,16 @@ class _OrderPageState extends State<OrderPage> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            _setOrderItem();
+            setState(() {
+              orderItemList.add(orderItem!);
+              _clearFields();
+              _quantityFocus.requestFocus();
+            });
+          }
+        },
         child: const Icon(Icons.add),
       ),
       drawer: const CustomDrawer(),
@@ -76,8 +93,11 @@ class _OrderPageState extends State<OrderPage> {
                   children: [
                     SizedBox(
                       width: 80,
-                      height: 60,
+                      //Quantity
                       child: TextFormField(
+                        focusNode: _quantityFocus,
+                        controller: _quantityController,
+                        textAlign: TextAlign.center,
                         decoration: InputDecoration(
                           labelText: 'Quantidade',
                           enabledBorder: OutlineInputBorder(
@@ -93,11 +113,20 @@ class _OrderPageState extends State<OrderPage> {
                         ),
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
+                        validator: (e) {
+                          var regExp =
+                              RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
+                                  .hasMatch(e!);
+                          if (_quantityController.text.isEmpty || !regExp) {
+                            return 'Quantidade Inválida';
+                          }
+                        },
                       ),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
+                    //Product
                     Expanded(
                       child: SizedBox(
                         child: DropdownSearch<ProductData>(
@@ -122,6 +151,11 @@ class _OrderPageState extends State<OrderPage> {
                               _selectedProduct = e;
                             });
                           },
+                          validator: (e) {
+                            if (e == null) {
+                              return 'Selecione um produto';
+                            }
+                          },
                         ),
                       ),
                     )
@@ -131,6 +165,18 @@ class _OrderPageState extends State<OrderPage> {
               const SizedBox(
                 height: 10,
               ),
+              //Line with a ListView that contains the order items
+              Expanded(
+                child: ListView.builder(
+                  itemCount: orderItemList.length,
+                  itemBuilder: (context, index) {
+                    var orderItem = orderItemList[index];
+                    return OrderItemTile(
+                      orderItem: orderItem,
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
@@ -152,5 +198,16 @@ class _OrderPageState extends State<OrderPage> {
     setState(() {
       clientList = list;
     });
+  }
+
+  void _setOrderItem() {
+    orderItem = OrderItemData(
+        quantity: int.parse(_quantityController.text),
+        product: _selectedProduct!);
+  }
+
+  void _clearFields(){
+    _quantityController.text = '1';
+    _selectedProduct = null;
   }
 }
