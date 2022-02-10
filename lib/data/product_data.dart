@@ -36,4 +36,9 @@ class ProductData {
       'provider': provider.toMap(),
     };
   }
+
+  @override
+  String toString() {
+    return name + '  -  ' + category + '  -  ' + provider.name;
+  }
 }

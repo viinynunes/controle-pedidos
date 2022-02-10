@@ -37,4 +37,30 @@ class ClientData {
       'enabled': enabled
     };
   }
+
+@override
+  String toString() {
+    return name;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ClientData &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          phone == other.phone &&
+          email == other.email &&
+          address == other.address &&
+          enabled == other.enabled;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      phone.hashCode ^
+      email.hashCode ^
+      address.hashCode ^
+      enabled.hashCode;
 }

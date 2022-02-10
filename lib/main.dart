@@ -33,7 +33,7 @@ void main() async {
                           model.isLoggedIn() ? const HomePage() : const LoginPage(),
                       theme: ThemeData(
                         primarySwatch: Colors.deepPurple,
-                        primaryColor: Colors.white,
+                        primaryColor: Colors.deepPurple,
                         inputDecorationTheme: const InputDecorationTheme(
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),

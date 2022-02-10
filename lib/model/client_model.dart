@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/client_data.dart';
+import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ClientModel extends Model {
   bool isLoading = false;
+
+  static ClientModel of(BuildContext context) => ScopedModel.of<ClientModel>(context);
 
   void createClient(ClientData client) {
     FirebaseFirestore.instance.collection('clients').doc().set(client.toMap());

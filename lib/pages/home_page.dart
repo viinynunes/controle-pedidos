@@ -3,6 +3,7 @@ import 'package:controle_pedidos/model/drawer_page_controller.dart';
 import 'package:controle_pedidos/pages/client/client_list_page.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
 import 'package:controle_pedidos/pages/establishment/establishment_list_page.dart';
+import 'package:controle_pedidos/pages/order/order_page.dart';
 import 'package:controle_pedidos/pages/product/product_list_page.dart';
 import 'package:controle_pedidos/pages/provider/provider_list_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
@@ -34,16 +35,7 @@ class _HomePageState extends State<HomePage> {
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
       children: [
-        Scaffold(
-          appBar: AppBar(
-            title: const Text('Pedidos'),
-            centerTitle: true,
-          ),
-          drawer: const CustomDrawer(),
-          body: Container(
-            color: Colors.red,
-          ),
-        ),
+        OrderPage(),
         Scaffold(
           appBar: AppBar(
             title: const Text('Controle'),
