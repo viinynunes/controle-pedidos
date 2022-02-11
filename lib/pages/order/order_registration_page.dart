@@ -58,7 +58,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     return ScopedModelDescendant<OrderModel>(
       builder: (context, child, model) => Scaffold(
         appBar: AppBar(
-          title: const Text('Pedido'),
+          title: Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
           centerTitle: true,
           actions: [
             IconButton(
@@ -178,7 +178,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                           child: DropdownSearch<ProductData>(
                             items: productList,
                             selectedItem: _selectedProduct,
-                            mode: Mode.BOTTOM_SHEET,
                             showSearchBox: true,
                             dropdownSearchDecoration: InputDecoration(
                               labelText: 'Selecione o produto',
