@@ -1,4 +1,3 @@
-
 import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/data/order_item_data.dart';
@@ -49,7 +48,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
       newOrder = OrderData.fromMap(widget.order!.toMap());
       client = newOrder.client;
       _setOrderItemList();
-    }else {
+    } else {
       newOrder = OrderData();
     }
   }
@@ -66,9 +65,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 onPressed: () {
                   if (orderItemList.isNotEmpty) {
                     _setOrder();
-                    if (widget.order == null){
+                    if (widget.order == null) {
                       model.createOrder(newOrder);
-                    }else {
+                    } else {
                       model.updateOrder(newOrder);
                     }
                     Navigator.pop(context, newOrder);
@@ -103,8 +102,20 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     selectedItem: client,
                     showSearchBox: true,
                     items: clientList,
-                    dropdownSearchDecoration: const InputDecoration(
-                      label: Text('Selecione o Cliente'),
+                    dropdownButtonBuilder: (_) => const SizedBox(child: null),
+                    dropdownBuilderSupportsNullItem: true,
+                    dropdownSearchDecoration: InputDecoration(
+                      labelText: 'Selecione o cliente',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
                     ),
                     onChanged: (e) {
                       setState(() {
@@ -124,13 +135,12 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 //Line with quantity and product
                 SizedBox(
                   child: SizedBox(
-                    height: 70,
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 65,
                           width: 80,
+                          //Quantity
                           child: TextFormField(
                             focusNode: _quantityFocus,
                             controller: _quantityController,
@@ -168,9 +178,10 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                           child: DropdownSearch<ProductData>(
                             items: productList,
                             selectedItem: _selectedProduct,
+                            mode: Mode.BOTTOM_SHEET,
                             showSearchBox: true,
                             dropdownSearchDecoration: InputDecoration(
-                              label: const Text('Selecione o produto'),
+                              labelText: 'Selecione o produto',
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).primaryColor),
@@ -182,6 +193,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5))),
                             ),
+                            dropdownButtonBuilder: (_) =>
+                                const SizedBox(child: null),
+                            dropdownBuilderSupportsNullItem: true,
                             onChanged: (e) {
                               setState(() {
                                 _selectedProduct = e;
@@ -198,8 +212,12 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                    onPressed: () {},
+                    child: const Text('Cadastrar novo produto'),
+                  ),
                 ),
                 //Line with a ListView that contains the order items
                 Expanded(
@@ -264,7 +282,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     setState(() {
       orderItemList = newOrder.orderItemList!;
     });
-
   }
 
   void _setOrderItem() {
