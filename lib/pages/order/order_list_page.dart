@@ -108,7 +108,9 @@ class _OrderListPageState extends State<OrderListPage> {
                                 motion: const ScrollMotion(),
                                 children: [
                                   SlidableAction(
-                                    onPressed: (e) {},
+                                    onPressed: (e) {
+                                      model.disableOrder(order);
+                                    },
                                     icon: Icons.delete_forever,
                                     backgroundColor: Colors.red,
                                     label: 'Apagar',
