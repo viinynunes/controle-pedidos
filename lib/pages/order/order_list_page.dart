@@ -19,7 +19,7 @@ class _OrderListPageState extends State<OrderListPage> {
   final dateFormat = DateFormat('dd-MM-yyyy');
   List<OrderData>? orderList = [];
 
-  DateTime? _selectedDate;
+  late DateTime _selectedDate;
 
   @override
   void initState() {
@@ -85,7 +85,7 @@ class _OrderListPageState extends State<OrderListPage> {
                       },
                       child: Row(
                         children: [
-                          Text(dateFormat.format(_selectedDate!)),
+                          Text(dateFormat.format(_selectedDate)),
                           const Icon(Icons.arrow_drop_down)
                         ],
                       )),
@@ -146,7 +146,7 @@ class _OrderListPageState extends State<OrderListPage> {
   }
 
   Future<void> _setOrderList() async {
-    final list = await OrderModel.of(context).getAllEnabledOrders();
+    final list = await OrderModel.of(context).getEnabledOrderFromData(_selectedDate);
     setState(() {
       orderList = list;
     });
