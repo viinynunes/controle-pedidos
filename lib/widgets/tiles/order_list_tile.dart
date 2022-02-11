@@ -11,7 +11,7 @@ class OrderListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final dateFormat = DateFormat('dd-MM-yyyy - HH:mm');
+    final dateFormat = DateFormat('dd-MM-yyyy');
 
     return InkWell(
       splashColor: Theme.of(context).primaryColor,
