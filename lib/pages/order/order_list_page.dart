@@ -5,6 +5,7 @@ import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/order_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class OrderListPage extends StatefulWidget {
@@ -15,11 +16,15 @@ class OrderListPage extends StatefulWidget {
 }
 
 class _OrderListPageState extends State<OrderListPage> {
+  final dateFormat = DateFormat('dd-MM-yyyy');
   List<OrderData>? orderList = [];
+
+  DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
+    _selectedDate = DateTime.now();
     _setOrderList();
   }
 
@@ -58,48 +63,80 @@ class _OrderListPageState extends State<OrderListPage> {
               child: CircularProgressIndicator(),
             );
           }
-          return FutureBuilder(
-            future: _setOrderList(),
-            builder: (context, snapshot) {
-                return ListView.builder(
-                  itemCount: orderList?.length,
-                  itemBuilder: (context, index) {
-                    var order = orderList?[index];
-                    if (order != null) {
-                      return Slidable(
-                        key: const ValueKey(0),
-                        startActionPane: ActionPane(
-                          dismissible: null,
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (e) {},
-                              icon: Icons.delete_forever,
-                              backgroundColor: Colors.red,
-                              label: 'Apagar',
-                            ),
-                            SlidableAction(
-                              onPressed: (e) {
-                                _showOrderRegistrationPage(order: order);
-                              },
-                              icon: Icons.edit,
-                              backgroundColor: Colors.deepPurple,
-                              label: 'Editar',
-                            ),
-                          ],
-                        ),
-                        child: OrderListTile(
-                          order: order,
-                          showOrderRegistrationPage: () {
-                            _showOrderRegistrationPage(order: order);
-                          },
-                        ),
-                      );
-                    }
-                    return Container();
-                  },
-                );
-              }
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime(2050))
+                            .then((value) {
+                          setState(() {
+                            if (value != null) {
+                              _selectedDate = value;
+                            }
+                          });
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Text(dateFormat.format(_selectedDate!)),
+                          const Icon(Icons.arrow_drop_down)
+                        ],
+                      )),
+                ],
+              ),
+              //List of Orders
+              FutureBuilder(
+                  future: _setOrderList(),
+                  builder: (context, snapshot) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: orderList?.length,
+                        itemBuilder: (context, index) {
+                          var order = orderList?[index];
+                          if (order != null) {
+                            return Slidable(
+                              key: const ValueKey(0),
+                              startActionPane: ActionPane(
+                                dismissible: null,
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (e) {},
+                                    icon: Icons.delete_forever,
+                                    backgroundColor: Colors.red,
+                                    label: 'Apagar',
+                                  ),
+                                  SlidableAction(
+                                    onPressed: (e) {
+                                      _showOrderRegistrationPage(order: order);
+                                    },
+                                    icon: Icons.edit,
+                                    backgroundColor: Colors.deepPurple,
+                                    label: 'Editar',
+                                  ),
+                                ],
+                              ),
+                              child: OrderListTile(
+                                order: order,
+                                showOrderRegistrationPage: () {
+                                  _showOrderRegistrationPage(order: order);
+                                },
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+                    );
+                  })
+            ],
           );
         },
       ),
