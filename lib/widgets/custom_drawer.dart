@@ -110,6 +110,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     pageController: pageController,
                     page: 3,
                   ),
+                  DrawerTile(
+                    icon: Icons.article,
+                    text: 'RELATÓRIOS',
+                    pageController: pageController,
+                    page: 4,
+                  ),
                 ],
               );
             },
