@@ -9,7 +9,9 @@ import 'package:scoped_model/scoped_model.dart';
 import 'establishment_registration_page.dart';
 
 class EstablishmentListPage extends StatefulWidget {
-  const EstablishmentListPage({Key? key}) : super(key: key);
+  const EstablishmentListPage({Key? key, required this.pageController}) : super(key: key);
+
+  final PageController pageController;
 
   @override
   _EstablishmentListPageState createState() => _EstablishmentListPageState();
@@ -39,7 +41,7 @@ class _EstablishmentListPageState extends State<EstablishmentListPage> {
           title: const Text('Estabelecimentos'),
           centerTitle: true,
         ),
-        drawer: const CustomDrawer(),
+        drawer: CustomDrawer(pageController: widget.pageController,),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(

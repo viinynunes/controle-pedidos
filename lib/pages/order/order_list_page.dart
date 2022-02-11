@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class OrderListPage extends StatefulWidget {
-  const OrderListPage({Key? key}) : super(key: key);
+  const OrderListPage({Key? key, required this.pageController}) : super(key: key);
+
+  final PageController pageController;
 
   @override
   _OrderListPageState createState() => _OrderListPageState();
@@ -49,7 +51,7 @@ class _OrderListPageState extends State<OrderListPage> {
         title: const Text('Pedidos'),
         centerTitle: true,
       ),
-      drawer: const CustomDrawer(),
+      drawer: CustomDrawer(pageController: widget.pageController,),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showOrderRegistrationPage();

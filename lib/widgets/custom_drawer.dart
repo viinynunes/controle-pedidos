@@ -1,4 +1,3 @@
-import 'package:controle_pedidos/model/drawer_page_controller.dart';
 import 'package:controle_pedidos/model/user_model.dart';
 import 'package:controle_pedidos/pages/login_page.dart';
 import 'package:controle_pedidos/utils/utils.dart';
@@ -7,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CustomDrawer extends StatefulWidget {
-  const CustomDrawer({Key? key}) : super(key: key);
+  const CustomDrawer({Key? key, required this.pageController}) : super(key: key);
+
+  final PageController pageController;
 
   @override
   _CustomDrawerState createState() => _CustomDrawerState();
@@ -21,8 +22,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    PageController pageController =
-        DrawerPageController.of(context).pageController;
+
+    final pageController = widget.pageController;
 
     return Drawer(
       elevation: 3,

@@ -8,7 +8,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProviderListPage extends StatefulWidget {
-  const ProviderListPage({Key? key}) : super(key: key);
+  const ProviderListPage({Key? key, required this.pageController}) : super(key: key);
+
+  final PageController pageController;
 
   @override
   _ProviderListPageState createState() => _ProviderListPageState();
@@ -34,7 +36,7 @@ class _ProviderListPageState extends State<ProviderListPage> {
           title: const Text('Fornecedores'),
           centerTitle: true,
         ),
-        drawer: const CustomDrawer(),
+        drawer: CustomDrawer(pageController: widget.pageController,),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _showProviderRegistrationPage();

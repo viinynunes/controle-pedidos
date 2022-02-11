@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductListPage extends StatefulWidget {
-  const ProductListPage({Key? key}) : super(key: key);
+  const ProductListPage({Key? key, required this.pageController}) : super(key: key);
+
+  final PageController pageController;
 
   @override
   _ProductListPageState createState() => _ProductListPageState();
@@ -74,7 +76,7 @@ class _ProductListPageState extends State<ProductListPage> {
               ),
             ],
           ),
-          drawer: const CustomDrawer(),
+          drawer: CustomDrawer(pageController: widget.pageController,),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               _showProductRegistrationPage();

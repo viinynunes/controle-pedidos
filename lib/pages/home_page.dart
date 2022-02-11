@@ -1,5 +1,4 @@
 import 'package:controle_pedidos/model/client_model.dart';
-import 'package:controle_pedidos/model/drawer_page_controller.dart';
 import 'package:controle_pedidos/pages/client/client_list_page.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
 import 'package:controle_pedidos/pages/establishment/establishment_list_page.dart';
@@ -20,34 +19,33 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? search;
   int _registrationPageIndex = 0;
-
-  final List<Widget> _registrationPageElements = <Widget>[
-    const ProductListPage(),
-    const ProviderListPage(),
-    const EstablishmentListPage(),
-  ];
+  final _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
-    final _pageController = DrawerPageController.of(context).pageController;
+
+    final List<Widget> _registrationPageElements = <Widget>[
+      ProductListPage(pageController: _pageController,),
+      ProviderListPage(pageController: _pageController,),
+      EstablishmentListPage(pageController: _pageController,),
+    ];
 
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
       children: [
-        const OrderListPage(),
+        OrderListPage(pageController: _pageController,),
         Scaffold(
           appBar: AppBar(
             title: const Text('Controle'),
             centerTitle: true,
           ),
-          drawer: const CustomDrawer(),
+          drawer: CustomDrawer(pageController: _pageController,),
           body: Container(
             color: Colors.red,
           ),
         ),
         Scaffold(
-            drawer: const CustomDrawer(),
             body: _registrationPageElements.elementAt(_registrationPageIndex),
             bottomNavigationBar: BottomNavigationBar(
               items: const [
@@ -89,7 +87,7 @@ class _HomePageState extends State<HomePage> {
               ),
               centerTitle: true,
             ),
-            drawer: const CustomDrawer(),
+            drawer: CustomDrawer(pageController: _pageController,),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 setState(() {
