@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/pages/reports/orders/report_orders_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,9 @@ class ReportHomePage extends StatelessWidget {
                 height: 50,
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
-                    onPressed: () {}, child: const Text('Pedidos')),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ReportOrdersPage()));
+                    }, child: const Text('Pedidos')),
               ),
             ),
             Padding(
