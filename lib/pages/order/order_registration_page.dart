@@ -37,6 +37,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   final _formKey = GlobalKey<FormState>();
   final _quantityFocus = FocusNode();
+  final _dialogSearchProductFocus = FocusNode();
 
   @override
   void initState() {
@@ -56,6 +57,64 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _showProductListDialog() async {
+      return showDialog(
+          context: context,
+          builder: (context) {
+            var filteredProducts = [];
+            return AlertDialog(
+              title: const Text(
+                'Selecione um produto',
+                textAlign: TextAlign.center,
+              ),
+              content: StatefulBuilder(
+                builder: (context, a) => SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      TextField(
+                        focusNode: _dialogSearchProductFocus,
+                        onChanged: (e) {
+                          if (e.isNotEmpty) {
+                            for (var p in productList) {
+                              if (p.name
+                                  .toLowerCase()
+                                  .contains(e.toLowerCase())) {
+                                setState(() {
+                                  filteredProducts.add(p);
+                                });
+                              }
+                            }
+                          }
+                        },
+                      ),
+                      SizedBox(
+                          height: 400,
+                          width: 400,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: productList.length,
+                            itemBuilder: (context, index) {
+                              _dialogSearchProductFocus.requestFocus();
+                              var product = productList[index];
+                              return ListTile(
+                                title: Text(product.toString()),
+                                onTap: () {
+                                  setState(() {
+                                    _selectedProduct = product;
+                                    Navigator.pop(context);
+                                  });
+                                },
+                              );
+                            },
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+    }
+
     void _showProductRegistrationPage({ProductData? product}) async {
       await Navigator.push(
         context,
@@ -101,12 +160,14 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              _setOrderItem();
-              setState(() {
-                orderItemList.add(orderItem!);
-                _clearFields();
-                _quantityFocus.requestFocus();
-              });
+              if (_selectedProduct != null) {
+                _setOrderItem();
+                setState(() {
+                  orderItemList.add(orderItem!);
+                  _clearFields();
+                  _quantityFocus.requestFocus();
+                });
+              }
             }
           },
           child: const Icon(Icons.add),
@@ -128,6 +189,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     dropdownBuilderSupportsNullItem: true,
                     dropdownSearchDecoration: InputDecoration(
                       labelText: 'Selecione o cliente',
+                      labelStyle: const TextStyle(color: Colors.black),
+                      filled: true,
+                      fillColor: Colors.white,
                       enabledBorder: OutlineInputBorder(
                           borderSide:
                               BorderSide(color: Theme.of(context).primaryColor),
@@ -168,6 +232,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             controller: _quantityController,
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
                               labelText: 'Quantidade',
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -197,44 +263,29 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                         ),
                         //Product
                         Expanded(
-                          child: DropdownSearch<ProductData>(
-                            items: productList,
-                            selectedItem: _selectedProduct,
-                            showSearchBox: true,
-                            dropdownSearchDecoration: InputDecoration(
-                              labelText: 'Selecione o produto',
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(5))),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(5))),
+                          child: SizedBox(
+                            height: 55,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _showProductListDialog();
+                              },
+                              child: Text(
+                                _selectedProduct == null
+                                    ? 'Selecione um produto'
+                                    : _selectedProduct.toString(),
+                                style: const TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                            dropdownButtonBuilder: (_) =>
-                                const SizedBox(child: null),
-                            dropdownBuilderSupportsNullItem: true,
-                            showClearButton: true,
-                            onChanged: (e) {
-                              setState(() {
-                                _selectedProduct = e;
-                              });
-                            },
-                            validator: (e) {
-                              if (e == null) {
-                                return 'Selecione um produto';
-                              }
-                            },
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 //Line with a ListView that contains the order items
                 Expanded(
                   child: ListView.builder(
