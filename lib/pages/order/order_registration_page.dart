@@ -72,11 +72,13 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
     return ScopedModelDescendant<OrderModel>(
       builder: (context, child, model) => Scaffold(
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           title:
               Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
           centerTitle: true,
           actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
             IconButton(
                 onPressed: () {
                   if (orderItemList.isNotEmpty) {
@@ -89,7 +91,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     Navigator.pop(context, newOrder);
                   }
                 },
-                icon: const Icon(Icons.save))
+                icon: const Icon(Icons.save)),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -227,15 +229,24 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                    onPressed: () {
-                      _showProductRegistrationPage();
-                    },
-                    child: const Text('Cadastrar novo produto'),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        _showProductRegistrationPage(product: _selectedProduct);
+                      },
+                      child: const Text('Editar produto'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _showProductRegistrationPage();
+                      },
+                      child: const Text('Novo produto'),
+                    ),
+                  ],
                 ),
+
                 //Line with a ListView that contains the order items
                 Expanded(
                   child: ListView.builder(
