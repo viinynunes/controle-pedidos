@@ -78,7 +78,11 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
               Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
           centerTitle: true,
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+            IconButton(
+                onPressed: () {
+                  _showProductRegistrationPage(product: _selectedProduct);
+                },
+                icon: const Icon(Icons.add)),
             IconButton(
                 onPressed: () {
                   if (orderItemList.isNotEmpty) {
@@ -230,24 +234,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        _showProductRegistrationPage(product: _selectedProduct);
-                      },
-                      child: const Text('Editar produto'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        _showProductRegistrationPage();
-                      },
-                      child: const Text('Novo produto'),
-                    ),
-                  ],
-                ),
-
+                const SizedBox(height: 10,),
                 //Line with a ListView that contains the order items
                 Expanded(
                   child: ListView.builder(
