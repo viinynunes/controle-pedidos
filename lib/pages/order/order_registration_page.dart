@@ -5,6 +5,7 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
+import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +13,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class OrderRegistrationPage extends StatefulWidget {
-  OrderRegistrationPage({Key? key, this.order}) : super(key: key);
+  const OrderRegistrationPage({Key? key, this.order}) : super(key: key);
 
-  OrderData? order;
+  final OrderData? order;
 
   @override
   _OrderRegistrationPageState createState() => _OrderRegistrationPageState();
@@ -55,10 +56,25 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    void _showProductRegistrationPage({ProductData? product}) async {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => product == null
+              ? const ProductRegistrationPage()
+              : ProductRegistrationPage(
+                  product: product,
+                ),
+        ),
+      );
+      await _setProductList();
+    }
+
     return ScopedModelDescendant<OrderModel>(
       builder: (context, child, model) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
+          title:
+              Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
           centerTitle: true,
           actions: [
             IconButton(
@@ -214,7 +230,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showProductRegistrationPage();
+                    },
                     child: const Text('Cadastrar novo produto'),
                   ),
                 ),
