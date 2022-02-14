@@ -213,6 +213,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             dropdownButtonBuilder: (_) =>
                                 const SizedBox(child: null),
                             dropdownBuilderSupportsNullItem: true,
+                            showClearButton: true,
                             onChanged: (e) {
                               setState(() {
                                 _selectedProduct = e;
