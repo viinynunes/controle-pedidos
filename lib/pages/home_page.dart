@@ -5,6 +5,7 @@ import 'package:controle_pedidos/pages/establishment/establishment_list_page.dar
 import 'package:controle_pedidos/pages/order/order_list_page.dart';
 import 'package:controle_pedidos/pages/product/product_list_page.dart';
 import 'package:controle_pedidos/pages/provider/provider_list_page.dart';
+import 'package:controle_pedidos/pages/reports/report_home.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -23,24 +24,33 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     final List<Widget> _registrationPageElements = <Widget>[
-      ProductListPage(pageController: _pageController,),
-      ProviderListPage(pageController: _pageController,),
-      EstablishmentListPage(pageController: _pageController,),
+      ProductListPage(
+        pageController: _pageController,
+      ),
+      ProviderListPage(
+        pageController: _pageController,
+      ),
+      EstablishmentListPage(
+        pageController: _pageController,
+      ),
     ];
 
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
       children: [
-        OrderListPage(pageController: _pageController,),
+        OrderListPage(
+          pageController: _pageController,
+        ),
         Scaffold(
           appBar: AppBar(
             title: const Text('Controle'),
             centerTitle: true,
           ),
-          drawer: CustomDrawer(pageController: _pageController,),
+          drawer: CustomDrawer(
+            pageController: _pageController,
+          ),
           body: Container(
             color: Colors.red,
           ),
@@ -87,7 +97,9 @@ class _HomePageState extends State<HomePage> {
               ),
               centerTitle: true,
             ),
-            drawer: CustomDrawer(pageController: _pageController,),
+            drawer: CustomDrawer(
+              pageController: _pageController,
+            ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 setState(() {
@@ -104,6 +116,9 @@ class _HomePageState extends State<HomePage> {
               search: search,
             ),
           ),
+        ),
+        ReportHomePage(
+          pageController: _pageController,
         ),
       ],
     );
