@@ -9,7 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class OrderListPage extends StatefulWidget {
-  const OrderListPage({Key? key, required this.pageController}) : super(key: key);
+  const OrderListPage({Key? key, required this.pageController})
+      : super(key: key);
 
   final PageController pageController;
 
@@ -22,6 +23,7 @@ class _OrderListPageState extends State<OrderListPage> {
   List<OrderData>? orderList = [];
 
   late DateTime _selectedDate;
+  bool loading = false;
 
   @override
   void initState() {
@@ -42,7 +44,9 @@ class _OrderListPageState extends State<OrderListPage> {
                       order: order,
                     )));
       if (recOrder != null) {
-        _setOrderList();
+        setState(() {
+          _setOrderList();
+        });
       }
     }
 
@@ -51,7 +55,9 @@ class _OrderListPageState extends State<OrderListPage> {
         title: const Text('Pedidos'),
         centerTitle: true,
       ),
-      drawer: CustomDrawer(pageController: widget.pageController,),
+      drawer: CustomDrawer(
+        pageController: widget.pageController,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showOrderRegistrationPage();
@@ -93,11 +99,11 @@ class _OrderListPageState extends State<OrderListPage> {
                       )),
                 ],
               ),
-              //List of Orders
-              FutureBuilder(
-                  future: _setOrderList(),
-                  builder: (context, snapshot) {
-                    return Expanded(
+              loading
+                  ? const CircularProgressIndicator()
+                  :
+                  //List of Orders
+                  Expanded(
                       child: ListView.builder(
                         itemCount: orderList?.length,
                         itemBuilder: (context, index) {
@@ -112,6 +118,7 @@ class _OrderListPageState extends State<OrderListPage> {
                                   SlidableAction(
                                     onPressed: (e) {
                                       model.disableOrder(order);
+                                      _setOrderList();
                                     },
                                     icon: Icons.delete_forever,
                                     backgroundColor: Colors.red,
@@ -138,8 +145,7 @@ class _OrderListPageState extends State<OrderListPage> {
                           return Container();
                         },
                       ),
-                    );
-                  })
+                    ),
             ],
           );
         },
@@ -148,9 +154,14 @@ class _OrderListPageState extends State<OrderListPage> {
   }
 
   Future<void> _setOrderList() async {
-    final list = await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
+    setState(() {
+      loading = true;
+    });
+    final list =
+        await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
     setState(() {
       orderList = list;
+      loading = false;
     });
   }
 }
