@@ -12,7 +12,7 @@ class OrderModel extends Model {
   static OrderModel of(BuildContext context) =>
       ScopedModel.of<OrderModel>(context);
 
-  void createOrder(OrderData order) async {
+  Future<void> createOrder(OrderData order) async {
     isLoading = true;
     order.creationDate = DateTime(order.creationDate.year,
         order.creationDate.month, order.creationDate.day);
@@ -29,7 +29,7 @@ class OrderModel extends Model {
     notifyListeners();
   }
 
-  void updateOrder(OrderData order) async {
+  Future<void> updateOrder(OrderData order) async {
     isLoading = true;
     final snap =
         await firebaseCollection.doc(order.id).collection('orderItems').get();
