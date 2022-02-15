@@ -14,7 +14,8 @@ class OrderModel extends Model {
 
   void createOrder(OrderData order) async {
     isLoading = true;
-    order.creationDate = DateTime(order.creationDate.year, order.creationDate.month, order.creationDate.day);
+    order.creationDate = DateTime(order.creationDate.year,
+        order.creationDate.month, order.creationDate.day);
     var x = await firebaseCollection.add(order.toResumedMap());
     order.id = x.id;
     for (var e in order.orderItemList!) {
@@ -78,13 +79,41 @@ class OrderModel extends Model {
     return orderList;
   }
 
-  Future<List<OrderData>> getEnabledOrderFromData(DateTime date) async {
+  Future<List<OrderData>> getEnabledOrderFromDate(DateTime date) async {
     isLoading = true;
     List<OrderData> orderList = [];
     var formDate = DateTime(date.year, date.month, date.day);
     final orderSnap = await firebaseCollection
         .where('enabled', isEqualTo: true)
         .where('creationDate', isEqualTo: formDate)
+        .get();
+
+    for (var e in orderSnap.docs) {
+      OrderData order = OrderData.fromDocSnapshot(e);
+      final orderItemSnap =
+          await firebaseCollection.doc(order.id).collection('orderItems').get();
+
+      for (var e in orderItemSnap.docs) {
+        order.orderItemList!.add(OrderItemData.fromDocSnapshot(e));
+      }
+      orderList.add(order);
+    }
+
+    isLoading = false;
+    notifyListeners();
+    return orderList;
+  }
+
+  Future<List<OrderData>> getEnabledOrdersBetweenDates(
+      DateTime iniDate, DateTime endDate) async {
+    isLoading = true;
+    List<OrderData> orderList = [];
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
+    final orderSnap = await firebaseCollection
+        .where('enabled', isEqualTo: true)
+        .where('creationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('creationDate', isLessThanOrEqualTo: endDate)
         .get();
 
     for (var e in orderSnap.docs) {
