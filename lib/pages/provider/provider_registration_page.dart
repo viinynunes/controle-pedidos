@@ -19,6 +19,8 @@ class ProviderRegistrationPage extends StatefulWidget {
 class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
   late ProviderData newProvider;
 
+  bool loading = false;
+
   final _nameController = TextEditingController();
   final _locationController = TextEditingController();
 
@@ -124,32 +126,35 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  DropdownButtonFormField<EstablishmentData>(
-                    items: dropDownItems,
-                    elevation: 10,
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                      label: const Text(
-                        'Estabelecimento',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(),
-                          borderRadius: (BorderRadius.circular(16))),
-                    ),
-                    validator: (e) {
-                      if (e == null) {
-                        return 'Campo Obrigatório';
-                      }
-                    },
-                    onChanged: (e) {
-                      setState(() {
-                        _selectedEstablishment = e;
-                      });
-                    },
-                    value: _selectedEstablishment,
-                  ),
+                  loading
+                      ? const LinearProgressIndicator()
+                      : DropdownButtonFormField<EstablishmentData>(
+                          items: dropDownItems,
+                          elevation: 10,
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.black),
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            label: const Text(
+                              'Estabelecimento',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(),
+                                borderRadius: (BorderRadius.circular(16))),
+                          ),
+                          validator: (e) {
+                            if (e == null) {
+                              return 'Campo Obrigatório';
+                            }
+                          },
+                          onChanged: (e) {
+                            setState(() {
+                              _selectedEstablishment = e;
+                            });
+                          },
+                          value: _selectedEstablishment,
+                        ),
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Align(
@@ -181,6 +186,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
   }
 
   void _getEstabList({ProviderData? provider}) async {
+    setState(() {
+      loading = true;
+    });
     if (provider == null) {
       _establishmentList =
           await EstablishmentModel.of(context).getEnabledEstablishments();
@@ -194,7 +202,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
 
     if (provider == null) {
     } else {}
-    setState(() {});
+    setState(() {
+      loading = false;
+    });
   }
 
   void _getFields() {
