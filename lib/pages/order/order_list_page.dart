@@ -37,7 +37,7 @@ class _OrderListPageState extends State<OrderListPage> {
           context,
           MaterialPageRoute(
               builder: (context) => order == null
-                  ? OrderRegistrationPage()
+                  ? const OrderRegistrationPage()
                   : OrderRegistrationPage(
                       order: order,
                     )));
@@ -148,7 +148,7 @@ class _OrderListPageState extends State<OrderListPage> {
   }
 
   Future<void> _setOrderList() async {
-    final list = await OrderModel.of(context).getEnabledOrderFromData(_selectedDate);
+    final list = await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
     setState(() {
       orderList = list;
     });
