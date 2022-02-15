@@ -21,6 +21,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
   final _categoryController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  bool loading = false;
 
   late ProductData newProduct;
   List<ProviderData> _providerList = [];
@@ -126,6 +127,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                   const SizedBox(
                     height: 30,
                   ),
+                  loading? const LinearProgressIndicator() :
                   DropdownButtonFormField<ProviderData>(
                     items: dropDownItems,
                     elevation: 10,
@@ -183,6 +185,9 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
   }
 
   void _getProvidersList({ProductData? product}) async {
+    setState(() {
+      loading = true;
+    });
     if (product == null) {
       _providerList = await ProviderModel.of(context).getEnabledProviders();
       _selectedProvider = _providerList.first;
@@ -191,7 +196,9 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
       _selectedProvider = _providerList
           .firstWhere((element) => element.id == product.provider.id);
     }
-    setState(() {});
+    setState(() {
+      loading = false;
+    });
   }
 
   void _getFields() {
