@@ -43,7 +43,6 @@ dependencies:
   dropdown_search: ^2.0.1
   intl: ^0.17.0
   path_provider: ^2.0.9
-  image_gallery_saver: ^1.7.1
   permission_handler: ^9.0.1
 
 dev_dependencies:
