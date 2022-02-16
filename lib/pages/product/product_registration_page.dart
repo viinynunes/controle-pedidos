@@ -120,7 +120,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       if (_categoryController.text.isEmpty) {
                         return 'Campo Obrigatório';
                       } else if (_categoryController.text.length > 3) {
-                        return 'Maxímo 3 caracteres';
+                        return 'Máxímo 3 caracteres';
                       }
                     },
                   ),
