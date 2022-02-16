@@ -97,16 +97,20 @@ class _ControlHomePageState extends State<ControlHomePage> {
             const SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: providersList.length,
-                itemBuilder: (context, index) {
-                  var item = providersList[index];
-                  return ListTile(title: Text(item.name),);
-                },
-              ),
-            )
+            loading
+                ? const LinearProgressIndicator()
+                : Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: providersList.length,
+                      itemBuilder: (context, index) {
+                        var item = providersList[index];
+                        return ListTile(
+                          title: Text(item.name),
+                        );
+                      },
+                    ),
+                  )
           ],
         ),
       ),
@@ -115,7 +119,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   Future<void> _setProviderList(DateTime iniDate, DateTime endDate) async {
     setState(() {
-      loading = false;
+      loading = true;
     });
 
     final list = await StockModel.of(context)
@@ -123,7 +127,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
     setState(() {
       providersList = list.toList();
-      loading = true;
+      loading = false;
     });
   }
 }
