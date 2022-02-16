@@ -25,6 +25,7 @@ class OrderRegistrationPage extends StatefulWidget {
 class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   List<ClientData> clientList = [];
   List<ProductData> productList = [];
+  bool loading = false;
 
   List<OrderItemData> orderItemList = [];
 
@@ -181,43 +182,47 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-                //Select Client
-                SizedBox(
-                  height: 60,
-                  child: DropdownSearch<ClientData>(
-                    selectedItem: client,
-                    showSearchBox: true,
-                    items: clientList,
-                    dropdownButtonBuilder: (_) => const SizedBox(child: null),
-                    dropdownBuilderSupportsNullItem: true,
-                    dropdownSearchDecoration: InputDecoration(
-                      labelText: 'Selecione o cliente',
-                      labelStyle: const TextStyle(color: Colors.black),
-                      filled: true,
-                      fillColor: Colors.white,
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).primaryColor),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                      border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).primaryColor),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                    ),
-                    onChanged: (e) {
-                      setState(() {
-                        client = e!;
-                      });
-                    },
-                    validator: (e) {
-                      if (e == null) {
-                        return 'Selecione o cliente';
-                      }
-                    },
-                  ),
-                ),
+                loading
+                    ? const LinearProgressIndicator()
+                    :
+                    //Select Client
+                    SizedBox(
+                        height: 60,
+                        child: DropdownSearch<ClientData>(
+                          selectedItem: client,
+                          showSearchBox: true,
+                          items: clientList,
+                          dropdownButtonBuilder: (_) =>
+                              const SizedBox(child: null),
+                          dropdownBuilderSupportsNullItem: true,
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: 'Selecione o cliente',
+                            labelStyle: const TextStyle(color: Colors.black),
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(5))),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(5))),
+                          ),
+                          onChanged: (e) {
+                            setState(() {
+                              client = e!;
+                            });
+                          },
+                          validator: (e) {
+                            if (e == null) {
+                              return 'Selecione o cliente';
+                            }
+                          },
+                        ),
+                      ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -264,23 +269,26 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                         const SizedBox(
                           width: 10,
                         ),
+
                         //Product
                         Expanded(
-                          child: SizedBox(
-                            height: 55,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _showProductListDialog();
-                              },
-                              child: Text(
-                                _selectedProduct == null
-                                    ? 'Selecione um produto'
-                                    : _selectedProduct.toString(),
-                                style: const TextStyle(fontSize: 16),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
+                          child: loading
+                              ? const Center(child: LinearProgressIndicator())
+                              : SizedBox(
+                                  height: 55,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _showProductListDialog();
+                                    },
+                                    child: Text(
+                                      _selectedProduct == null
+                                          ? 'Selecione um produto'
+                                          : _selectedProduct.toString(),
+                                      style: const TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
                         ),
                       ],
                     ),
@@ -333,18 +341,26 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   }
 
   Future<void> _setProductList() async {
+    setState(() {
+      loading = true;
+    });
     final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
     setState(() {
       productList = list;
+      loading = false;
     });
   }
 
   Future<void> _setClientList() async {
+    setState(() {
+      loading = true;
+    });
     final list = await ClientModel.of(context).getFilteredClients();
 
     setState(() {
       clientList = list;
+      loading = false;
     });
   }
 
