@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/provider_data.dart';
+import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,10 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   bool loading = false;
   List<ProviderData> providersList = [];
+  ProviderData? _selectedProvider;
+
+
+  List<StockData> stockList = [];
 
   @override
   void initState() {
@@ -31,10 +36,23 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var dropDownProvidersItems = providersList
+        .map(
+          (e) => DropdownMenuItem(
+            child: Text(e.name),
+            value: e,
+          ),
+        )
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Controle'),
         centerTitle: true,
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+        ],
       ),
       drawer: CustomDrawer(
         pageController: widget.pageController,
@@ -89,7 +107,10 @@ class _ControlHomePageState extends State<ControlHomePage> {
                     onPressed: () {
                       _setProviderList(iniDate, endDate);
                     },
-                    child: const Text('Carregar Fornecedores'),
+                    child: const Text(
+                      'Carregar Fornecedores',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ],
@@ -99,22 +120,70 @@ class _ControlHomePageState extends State<ControlHomePage> {
             ),
             loading
                 ? const LinearProgressIndicator()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: DropdownButtonFormField<ProviderData>(
+                          value: _selectedProvider,
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.black),
+                          decoration: InputDecoration(
+                            label: const Text(
+                              'Fornecedor',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(),
+                                borderRadius: (BorderRadius.circular(16))),
+                          ),
+                          items: dropDownProvidersItems,
+                          onChanged: (e) {
+                            setState(() {
+                              if (e != null) {
+                                _selectedProvider = e;
+                                _setStockListByProvider(
+                                    iniDate, endDate, _selectedProvider!);
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+            loading
+                ? const LinearProgressIndicator()
                 : Expanded(
                     child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: providersList.length,
+                      itemCount: stockList.length,
                       itemBuilder: (context, index) {
-                        var item = providersList[index];
+                        var stockIndex = stockList[index];
                         return ListTile(
-                          title: Text(item.name),
+                          title: Text(stockIndex.product.name),
                         );
                       },
                     ),
-                  )
+                  ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _setStockListByProvider(
+      DateTime iniDate, DateTime endDate, ProviderData provider) async {
+    setState(() {
+      loading = true;
+    });
+
+    final list = await StockModel.of(context)
+        .getAllStocksByDateAndProvider(iniDate, endDate, provider);
+
+    setState(() {
+      stockList = list;
+      loading = false;
+    });
   }
 
   Future<void> _setProviderList(DateTime iniDate, DateTime endDate) async {
