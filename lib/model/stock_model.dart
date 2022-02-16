@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
@@ -9,7 +8,8 @@ class StockModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('stock');
   bool loading = false;
 
-  static StockModel of(BuildContext context) => ScopedModel.of<StockModel>(context);
+  static StockModel of(BuildContext context) =>
+      ScopedModel.of<StockModel>(context);
 
 
   Future<StockData> createStockItem(StockData newStock) async {
@@ -48,9 +48,9 @@ class StockModel extends Model {
     return newStock;
   }
 
-  Future<Set<ProviderData>> getAllStockProvidersByDate(
-      DateTime iniDate, DateTime endDate) async {
-    Set<ProviderData> stockList = {};
+  Future<Set<ProviderData>> getAllStockProvidersByDate(DateTime iniDate,
+      DateTime endDate) async {
+    Set<ProviderData> providerList = {};
     loading = true;
 
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
@@ -61,10 +61,35 @@ class StockModel extends Model {
         .where('creationDate', isLessThanOrEqualTo: endDate)
         .get();
 
-    for (var e in snapStock.docs){
+    for (var e in snapStock.docs) {
       var stockIndex = StockData.fromMap(e.id, e.data());
 
-      stockList.add(ProviderData.fromMap(stockIndex.product.provider.toMap()));
+      providerList.add(
+          ProviderData.fromMap(stockIndex.product.provider.toMap()));
+    }
+
+    loading = false;
+    notifyListeners();
+
+    return providerList;
+  }
+
+  Future<List<StockData>> getAllStocksByDateAndProvider(DateTime iniDate,
+      DateTime endDate, ProviderData provider) async {
+    List<StockData> stockList = [];
+    loading = true;
+
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
+    final snapStock = await firebaseCollection
+        .where('creationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('creationDate', isLessThanOrEqualTo: endDate)
+        .where('product.provider.id', isEqualTo: provider.id)
+        .get();
+
+    for (var e in snapStock.docs) {
+      stockList.add(StockData.fromMap(e.id, e.data()));
     }
 
     loading = false;
