@@ -1,3 +1,5 @@
+import 'package:controle_pedidos/data/provider_data.dart';
+import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +17,9 @@ class ControlHomePage extends StatefulWidget {
 class _ControlHomePageState extends State<ControlHomePage> {
   final dateFormat = DateFormat('dd/MM/yyyy');
   late DateTime iniDate, endDate;
+
+  bool loading = false;
+  List<ProviderData> providersList = [];
 
   @override
   void initState() {
@@ -35,63 +40,90 @@ class _ControlHomePageState extends State<ControlHomePage> {
         pageController: widget.pageController,
       ),
       backgroundColor: Colors.grey[200],
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        showDatePicker(
-                                context: context,
-                                initialDate: iniDate,
-                                firstDate: DateTime(2015),
-                                lastDate: DateTime(2050))
-                            .then((value) {
-                          setState(() {
-                            if (value != null) {
-                              iniDate = value;
-                            }
-                          });
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      showDatePicker(
+                              context: context,
+                              initialDate: iniDate,
+                              firstDate: DateTime(2015),
+                              lastDate: DateTime(2050))
+                          .then((value) {
+                        setState(() {
+                          if (value != null) {
+                            iniDate = value;
+                          }
                         });
-                      },
-                      child: Text(dateFormat.format(iniDate))),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        showDatePicker(
-                                context: context,
-                                initialDate: endDate,
-                                firstDate: DateTime(2015),
-                                lastDate: DateTime(2050))
-                            .then((value) {
-                          setState(() {
-                            if (value != null) {
-                              endDate = value;
-                            }
-                          });
+                      });
+                    },
+                    child: Text(dateFormat.format(iniDate))),
+                const SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      showDatePicker(
+                              context: context,
+                              initialDate: endDate,
+                              firstDate: DateTime(2015),
+                              lastDate: DateTime(2050))
+                          .then((value) {
+                        setState(() {
+                          if (value != null) {
+                            endDate = value;
+                          }
                         });
-                      },
-                      child: Text(dateFormat.format(endDate))),
-                  const SizedBox(
-                    width: 10,
+                      });
+                    },
+                    child: Text(dateFormat.format(endDate))),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _setProviderList(iniDate, endDate);
+                    },
+                    child: const Text('Carregar Fornecedores'),
                   ),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Carregar Fornecedores'),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: providersList.length,
+                itemBuilder: (context, index) {
+                  var item = providersList[index];
+                  return ListTile(title: Text(item.name),);
+                },
+              ),
+            )
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _setProviderList(DateTime iniDate, DateTime endDate) async {
+    setState(() {
+      loading = false;
+    });
+
+    final list = await StockModel.of(context)
+        .getAllStockProvidersByDate(iniDate, endDate);
+
+    setState(() {
+      providersList = list.toList();
+      loading = true;
+    });
   }
 }
