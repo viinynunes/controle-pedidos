@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/data/order_item_data.dart';
+import 'package:controle_pedidos/data/stock_data.dart';
+import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -24,6 +26,9 @@ class OrderModel extends Model {
           .collection('orderItems')
           .doc()
           .set(e.toMap());
+
+      final stock = StockData(e.quantity, 0, DateTime.now(), e.product);
+      await StockModel().createStockItem(stock);
     }
     isLoading = false;
     notifyListeners();
