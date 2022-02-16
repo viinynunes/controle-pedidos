@@ -1,14 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/product_data.dart';
 
 class StockData {
 
-  StockData(this.id, this.total, this.left, this.creationDate, this.product);
+  StockData(this.total, this.left, this.creationDate, this.product);
 
-  StockData.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
+  StockData.fromMap(this.id, Map<String, dynamic> map) {
     total = map['total'];
     left = map['left'];
-    creationDate = map['creationDate'];
+    Timestamp timeStamp = map['creationDate'];
+    creationDate = DateTime.parse(timeStamp.toDate().toString());
     product = ProductData.fromMap(map['product']);
   }
 
