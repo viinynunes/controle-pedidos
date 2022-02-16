@@ -28,7 +28,7 @@ class ProviderData {
 
   EstablishmentData? establishment;
 
-  late List<ProductData>? productList;
+  List<ProductData>? productList;
 
   Map<String, dynamic> toMap() {
     return {
@@ -38,5 +38,22 @@ class ProviderData {
       'enabled': enabled,
       'establishment': establishment?.toMap()
     };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if(other is! ProviderData){
+      return false;
+    }
+    return name == (other).name;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '$name - $location';
   }
 }
