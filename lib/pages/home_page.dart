@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/pages/client/client_list_page.dart';
 import 'package:controle_pedidos/pages/client/client_registration_page.dart';
+import 'package:controle_pedidos/pages/control/control_home_page.dart';
 import 'package:controle_pedidos/pages/establishment/establishment_list_page.dart';
 import 'package:controle_pedidos/pages/order/order_list_page.dart';
 import 'package:controle_pedidos/pages/product/product_list_page.dart';
@@ -43,18 +44,7 @@ class _HomePageState extends State<HomePage> {
         OrderListPage(
           pageController: _pageController,
         ),
-        Scaffold(
-          appBar: AppBar(
-            title: const Text('Controle'),
-            centerTitle: true,
-          ),
-          drawer: CustomDrawer(
-            pageController: _pageController,
-          ),
-          body: Container(
-            color: Colors.red,
-          ),
-        ),
+        ControlHomePage(pageController: _pageController),
         Scaffold(
             body: _registrationPageElements.elementAt(_registrationPageIndex),
             bottomNavigationBar: BottomNavigationBar(
