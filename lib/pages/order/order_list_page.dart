@@ -87,6 +87,7 @@ class _OrderListPageState extends State<OrderListPage> {
                           setState(() {
                             if (value != null) {
                               _selectedDate = value;
+                              _setOrderList();
                             }
                           });
                         });
