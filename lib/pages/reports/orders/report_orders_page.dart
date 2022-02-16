@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/model/order_model.dart';
+import 'package:controle_pedidos/utils/export_to_pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,7 +33,9 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
         title: const Text('Pedidos'),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.refresh))
+          IconButton(onPressed: () {
+            createReport();
+          }, icon: const Icon(Icons.share))
         ],
       ),
       body: Padding(
@@ -130,5 +133,9 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
       orderList = list;
       loading = false;
     });
+  }
+
+  void createReport(){
+    ExportToPDF.createPDF(orderList);
   }
 }
