@@ -2,6 +2,7 @@ import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
+import 'package:controle_pedidos/widgets/tiles/stock_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -160,7 +161,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                       itemBuilder: (context, index) {
                         var stockIndex = stockList[index];
                         return ListTile(
-                          title: Text(stockIndex.product.name),
+                          title: StockListTile(stock: stockIndex,),
                         );
                       },
                     ),
@@ -189,6 +190,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
   Future<void> _setProviderList(DateTime iniDate, DateTime endDate) async {
     setState(() {
       loading = true;
+      _selectedProvider = null;
     });
 
     final list = await StockModel.of(context)
