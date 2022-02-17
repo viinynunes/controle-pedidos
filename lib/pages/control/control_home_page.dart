@@ -75,7 +75,10 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           .then((value) {
                         setState(() {
                           if (value != null) {
-                            iniDate = value;
+                            if (value != iniDate){
+                              stockList.clear();
+                              iniDate = value;
+                            }
                           }
                         });
                       });
@@ -94,7 +97,10 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           .then((value) {
                         setState(() {
                           if (value != null) {
-                            endDate = value;
+                            if (value != endDate){
+                              stockList.clear();
+                              endDate = value;
+                            }
                           }
                         });
                       });
