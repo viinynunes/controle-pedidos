@@ -161,7 +161,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                       itemBuilder: (context, index) {
                         var stockIndex = stockList[index];
                         return ListTile(
-                          title: StockListTile(stock: stockIndex,),
+                          title: StockListTile(stock: stockIndex, editable: iniDate == endDate,),
                         );
                       },
                     ),
@@ -189,6 +189,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   Future<void> _setProviderList(DateTime iniDate, DateTime endDate) async {
     setState(() {
+      stockList.clear();
       loading = true;
       _selectedProvider = null;
     });
