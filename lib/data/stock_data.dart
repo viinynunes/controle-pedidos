@@ -30,5 +30,17 @@ class StockData {
     };
   }
 
+  @override
+  bool operator ==(Object other) {
+    if(other is! StockData){
+      return false;
+    }
+    return id == (other).id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+
 
 }
