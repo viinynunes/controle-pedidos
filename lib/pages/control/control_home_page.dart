@@ -33,6 +33,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
     iniDate = DateTime.now();
     endDate = DateTime.now();
+
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
   }
 
   @override
@@ -77,6 +80,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           if (value != null) {
                             if (value != iniDate){
                               stockList.clear();
+                              _selectedProvider = null;
                               iniDate = value;
                             }
                           }
@@ -99,6 +103,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           if (value != null) {
                             if (value != endDate){
                               stockList.clear();
+                              _selectedProvider = null;
                               endDate = value;
                             }
                           }
@@ -127,7 +132,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
             ),
             loading
                 ? const LinearProgressIndicator()
-                : providersList.isEmpty ? Container() : Row(
+                : providersList.isEmpty ? const Center(child: Text('Nenhum fornecedor encontrado'),) : Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Flexible(
