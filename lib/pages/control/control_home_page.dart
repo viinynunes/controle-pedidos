@@ -120,7 +120,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
             ),
             loading
                 ? const LinearProgressIndicator()
-                : Row(
+                : providersList.isEmpty ? Container() : Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Flexible(
