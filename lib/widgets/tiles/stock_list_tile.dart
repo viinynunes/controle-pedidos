@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class StockListTile extends StatefulWidget {
-  const StockListTile({Key? key, required this.stock}) : super(key: key);
+  const StockListTile({Key? key, required this.stock, required this.editable}) : super(key: key);
 
   final StockData stock;
+  final bool editable;
 
   @override
   _StockListTileState createState() => _StockListTileState();
@@ -74,7 +75,7 @@ class _StockListTileState extends State<StockListTile> {
               child: SizedBox(
                 height: 30,
                 child: TextFormField(
-
+                  enabled: widget.editable? true : false,
                   textAlign: TextAlign.center,
                   controller: _stockInputController,
                   style: const TextStyle(fontSize: 15),
