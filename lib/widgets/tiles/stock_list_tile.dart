@@ -41,70 +41,72 @@ class _StockListTileState extends State<StockListTile> {
         child: InkWell(
       child: Form(
         key: _formKey,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            //Product Name
-            Flexible(
-              flex: 3,
-              fit: FlexFit.tight,
-              child: Text(stock.product.name),
-            ),
-            //Total From Order
-            Flexible(
-              flex: 3,
-              fit: FlexFit.tight,
-              child: Text(
-                stock.total.toString(),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            //Total Including stock
-            Flexible(
-              flex: 3,
-              fit: FlexFit.tight,
-              child: Text(
-                totalOrdered.toString(),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            //Stock
-            Flexible(
-              flex: 2,
-              fit: FlexFit.tight,
-              child: SizedBox(
-                height: 30,
-                width: 50,
-                child: TextFormField(
-                  enabled: widget.editable? true : false,
-                  textAlign: TextAlign.center,
-                  controller: _stockInputController,
-                  style: const TextStyle(fontSize: 15),
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple))),
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (e) {
-                    if (_formKey.currentState!.validate()) {
-                      _updateData();
-                    }
-                  },
-                  validator: (e) {
-                    var regExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
-                        .hasMatch(e!);
-                    if (_stockInputController.text.isEmpty || !regExp) {
-                      return '';
-                    }
-                  },
-                  enableInteractiveSelection: false,
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 1, right: 1),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //Product Name
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: Text(stock.product.name),
                 ),
-              ),
+                //Total From Order
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: Text(
+                    stock.total.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                //Total Including stock
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: Text(
+                    totalOrdered.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                //Stock
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: TextFormField(
+                    enabled: widget.editable? true : false,
+                    textAlign: TextAlign.center,
+                    controller: _stockInputController,
+                    style: const TextStyle(fontSize: 15),
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepPurple)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepPurple))),
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (e) {
+                      if (_formKey.currentState!.validate()) {
+                        _updateData();
+                      }
+                    },
+                    validator: (e) {
+                      var regExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
+                          .hasMatch(e!);
+                      if (_stockInputController.text.isEmpty || !regExp) {
+                        return '';
+                      }
+                    },
+                    enableInteractiveSelection: false,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     ));
