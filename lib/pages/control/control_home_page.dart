@@ -24,7 +24,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
   List<ProviderData> providersList = [];
   ProviderData? _selectedProvider;
 
-
   List<StockData> stockList = [];
 
   @override
@@ -78,7 +77,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           .then((value) {
                         setState(() {
                           if (value != null) {
-                            if (value != iniDate){
+                            if (value != iniDate) {
                               stockList.clear();
                               _selectedProvider = null;
                               iniDate = value;
@@ -101,7 +100,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           .then((value) {
                         setState(() {
                           if (value != null) {
-                            if (value != endDate){
+                            if (value != endDate) {
                               stockList.clear();
                               _selectedProvider = null;
                               endDate = value;
@@ -132,51 +131,88 @@ class _ControlHomePageState extends State<ControlHomePage> {
             ),
             loading
                 ? const LinearProgressIndicator()
-                : providersList.isEmpty ? const Center(child: Text('Nenhum fornecedor encontrado'),) : Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        fit: FlexFit.tight,
-                        child: DropdownButtonFormField<ProviderData>(
-                          value: _selectedProvider,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.black),
-                          decoration: InputDecoration(
-                            label: const Text(
-                              'Fornecedor',
-                              style: TextStyle(fontSize: 16),
+                : providersList.isEmpty
+                    ? const Center(
+                        child: Text('Nenhum fornecedor encontrado'),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: DropdownButtonFormField<ProviderData>(
+                              value: _selectedProvider,
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.black),
+                              decoration: InputDecoration(
+                                label: const Text(
+                                  'Fornecedor',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(),
+                                    borderRadius: (BorderRadius.circular(16))),
+                              ),
+                              items: dropDownProvidersItems,
+                              onChanged: (e) {
+                                setState(() {
+                                  if (e != null) {
+                                    _selectedProvider = e;
+                                    _setStockListByProvider(
+                                        iniDate, endDate, _selectedProvider!);
+                                  }
+                                });
+                              },
                             ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(),
-                                borderRadius: (BorderRadius.circular(16))),
                           ),
-                          items: dropDownProvidersItems,
-                          onChanged: (e) {
-                            setState(() {
-                              if (e != null) {
-                                _selectedProvider = e;
-                                _setStockListByProvider(
-                                    iniDate, endDate, _selectedProvider!);
-                              }
-                            });
-                          },
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
             loading
                 ? const LinearProgressIndicator()
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: stockList.length,
-                      itemBuilder: (context, index) {
-                        var stockIndex = stockList[index];
-                        return ListTile(
-                          title: StockListTile(stock: stockIndex, editable: iniDate == endDate,),
-                        );
-                      },
-                    ),
+                : SizedBox(
+                  height: 30,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                        children: const [
+                          Flexible(
+                            flex: 3,
+                            fit: FlexFit.tight,
+                            child: Text('Produto', textAlign: TextAlign.center,),
+                          ),
+                          Flexible(
+                            flex: 3,
+                            fit: FlexFit.tight,
+                            child: Text('Pedido', textAlign: TextAlign.center),
+                          ),
+                          Flexible(
+                            flex: 3,
+                            fit: FlexFit.tight,
+                            child: Text('Total', textAlign: TextAlign.center),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            fit: FlexFit.tight,
+                            child: Text('Sobra', textAlign: TextAlign.center),
+                          ),
+                        ],
+                      ),
                   ),
+                ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: stockList.length,
+                itemBuilder: (context, index) {
+                  var stockIndex = stockList[index];
+                  return ListTile(
+                    title: StockListTile(
+                      stock: stockIndex,
+                      editable: iniDate == endDate,
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
