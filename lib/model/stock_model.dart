@@ -11,7 +11,6 @@ class StockModel extends Model {
   static StockModel of(BuildContext context) =>
       ScopedModel.of<StockModel>(context);
 
-
   Future<StockData> createStockItem(StockData newStock) async {
     bool alreadyInStock = false;
 
@@ -48,8 +47,8 @@ class StockModel extends Model {
     return newStock;
   }
 
-  Future<Set<ProviderData>> getAllStockProvidersByDate(DateTime iniDate,
-      DateTime endDate) async {
+  Future<Set<ProviderData>> getAllStockProvidersByDate(
+      DateTime iniDate, DateTime endDate) async {
     Set<ProviderData> providerList = {};
     loading = true;
 
@@ -64,8 +63,8 @@ class StockModel extends Model {
     for (var e in snapStock.docs) {
       var stockIndex = StockData.fromMap(e.id, e.data());
 
-      providerList.add(
-          ProviderData.fromMap(stockIndex.product.provider.toMap()));
+      providerList
+          .add(ProviderData.fromMap(stockIndex.product.provider.toMap()));
     }
 
     loading = false;
@@ -74,28 +73,44 @@ class StockModel extends Model {
     return providerList;
   }
 
-  Future<List<StockData>> getAllStocksByDateAndProvider(DateTime iniDate,
-      DateTime endDate, ProviderData provider) async {
-    List<StockData> stockList = [];
+  Future<List<StockData>> getAllStocksByDateAndProvider(
+      DateTime iniDate, DateTime endDate, ProviderData provider) async {
+    List<StockData> stockUniqueList = [];
+    List<StockData> stockAllList = [];
     loading = true;
 
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
     final snapStock = await firebaseCollection
+        .where('product.provider.id', isEqualTo: provider.id)
         .where('creationDate', isGreaterThanOrEqualTo: iniDate)
         .where('creationDate', isLessThanOrEqualTo: endDate)
-        .where('product.provider.id', isEqualTo: provider.id)
         .get();
 
     for (var e in snapStock.docs) {
-      stockList.add(StockData.fromMap(e.id, e.data()));
+      stockAllList.add(StockData.fromMap(e.id, e.data()));
+    }
+
+    stockAllList.sort((a, b) =>
+        a.product.name.toLowerCase().compareTo(b.product.name.toLowerCase()));
+    StockData? lastStock;
+    for (var stockIndex in stockAllList) {
+      if (lastStock != null && stockIndex.product.id == lastStock.product.id) {
+        stockIndex.total += lastStock.total;
+        stockIndex.left += lastStock.left;
+
+        stockUniqueList.remove(lastStock);
+        stockUniqueList.add(stockIndex);
+      } else {
+        stockUniqueList.add(stockIndex);
+      }
+      lastStock = stockIndex;
     }
 
     loading = false;
     notifyListeners();
 
-    return stockList;
+    return stockUniqueList;
   }
-
 }
