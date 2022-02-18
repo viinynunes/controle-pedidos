@@ -60,9 +60,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
       drawer: CustomDrawer(
         pageController: widget.pageController,
       ),
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey[250],
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(5),
         child: Column(
           children: [
             Row(
@@ -145,9 +145,11 @@ class _ControlHomePageState extends State<ControlHomePage> {
                               style: const TextStyle(
                                   fontSize: 16, color: Colors.black),
                               decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
                                 label: const Text(
                                   'Fornecedor',
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(fontSize: 16, color: Colors.black),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(),
@@ -170,7 +172,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
             loading
                 ? const LinearProgressIndicator()
                 : SizedBox(
-                  height: 30,
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Row(
