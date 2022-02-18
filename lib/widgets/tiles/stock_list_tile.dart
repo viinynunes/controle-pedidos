@@ -1,10 +1,11 @@
 import 'package:controle_pedidos/data/stock_data.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class StockListTile extends StatefulWidget {
-  const StockListTile({Key? key, required this.stock, required this.editable}) : super(key: key);
+  const StockListTile({Key? key, required this.stock, required this.editable})
+      : super(key: key);
 
   final StockData stock;
   final bool editable;
@@ -31,7 +32,14 @@ class _StockListTileState extends State<StockListTile> {
   Widget build(BuildContext context) {
     StockData stock = widget.stock;
 
-    void _updateData() {
+    void _updateStockTotal() {
+      stock.left = int.parse(_stockInputController.text);
+      StockModel.of(context).updateStockItem(
+          stock,
+          () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Erro adicionar sobra'),
+                backgroundColor: Colors.red,
+              )));
       setState(() {
         totalOrdered = stock.total + int.parse(_stockInputController.text);
       });
@@ -78,7 +86,7 @@ class _StockListTileState extends State<StockListTile> {
                   flex: 2,
                   fit: FlexFit.tight,
                   child: TextFormField(
-                    enabled: widget.editable? true : false,
+                    enabled: widget.editable ? true : false,
                     textAlign: TextAlign.center,
                     controller: _stockInputController,
                     style: const TextStyle(fontSize: 15),
@@ -91,7 +99,7 @@ class _StockListTileState extends State<StockListTile> {
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (e) {
                       if (_formKey.currentState!.validate()) {
-                        _updateData();
+                        _updateStockTotal();
                       }
                     },
                     validator: (e) {

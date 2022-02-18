@@ -47,6 +47,18 @@ class StockModel extends Model {
     return newStock;
   }
 
+  Future<void> updateStockItem(StockData stock, VoidCallback onError) async {
+    loading = true;
+    try {
+      await firebaseCollection.doc(stock.id).update(stock.toMap());
+    } catch (e) {
+      onError();
+    }
+
+    loading = false;
+    notifyListeners();
+  }
+
   Future<Set<ProviderData>> getAllStockProvidersByDate(
       DateTime iniDate, DateTime endDate) async {
     Set<ProviderData> providerList = {};
