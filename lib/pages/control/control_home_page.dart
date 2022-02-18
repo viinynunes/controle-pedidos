@@ -160,6 +160,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                 setState(() {
                                   if (e != null) {
                                     _selectedProvider = e;
+                                    stockList.clear();
                                     _setStockListByProvider(
                                         iniDate, endDate, _selectedProvider!);
                                   }
