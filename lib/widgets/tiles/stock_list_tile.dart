@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/stock_data.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -46,7 +47,7 @@ class _StockListTileState extends State<StockListTile> {
           children: [
             //Product Name
             Flexible(
-              flex: 4,
+              flex: 3,
               fit: FlexFit.tight,
               child: Text(stock.product.name),
             ),
@@ -61,7 +62,7 @@ class _StockListTileState extends State<StockListTile> {
             ),
             //Total Including stock
             Flexible(
-              flex: 1,
+              flex: 3,
               fit: FlexFit.tight,
               child: Text(
                 totalOrdered.toString(),
@@ -74,6 +75,7 @@ class _StockListTileState extends State<StockListTile> {
               fit: FlexFit.tight,
               child: SizedBox(
                 height: 30,
+                width: 50,
                 child: TextFormField(
                   enabled: widget.editable? true : false,
                   textAlign: TextAlign.center,
@@ -95,7 +97,7 @@ class _StockListTileState extends State<StockListTile> {
                     var regExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
                         .hasMatch(e!);
                     if (_stockInputController.text.isEmpty || !regExp) {
-                      return 'Quantidade Inválida';
+                      return '';
                     }
                   },
                   enableInteractiveSelection: false,
