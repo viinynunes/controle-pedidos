@@ -3,11 +3,11 @@ import 'package:controle_pedidos/data/product_data.dart';
 
 class StockData {
 
-  StockData(this.total, this.left, this.creationDate, this.product);
+  StockData(this.total, this.totalOrdered, this.creationDate, this.product);
 
   StockData.fromMap(this.id, Map<String, dynamic> map) {
     total = map['total'];
-    left = map['left'];
+    totalOrdered = map['totalOrdered'];
     Timestamp timeStamp = map['creationDate'];
     creationDate = DateTime.parse(timeStamp.toDate().toString());
     product = ProductData.fromMap(map['product']);
@@ -15,7 +15,7 @@ class StockData {
 
   String? id;
   late int total;
-  late int left;
+  late int totalOrdered;
   late DateTime creationDate;
 
   late ProductData product;
@@ -24,7 +24,7 @@ class StockData {
     return {
       'id': id,
       'total': total,
-      'left': left,
+      'totalOrdered': totalOrdered,
       'creationDate': creationDate,
       'product': product.toMap(),
     };
