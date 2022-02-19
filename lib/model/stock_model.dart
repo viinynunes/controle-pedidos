@@ -110,7 +110,7 @@ class StockModel extends Model {
     for (var stockIndex in stockAllList) {
       if (lastStock != null && stockIndex.product.id == lastStock.product.id) {
         stockIndex.total += lastStock.total;
-        stockIndex.left += lastStock.left;
+        stockIndex.totalOrdered += lastStock.totalOrdered;
 
         stockUniqueList.remove(lastStock);
         stockUniqueList.add(stockIndex);

@@ -24,8 +24,8 @@ class _StockListTileState extends State<StockListTile> {
   void initState() {
     super.initState();
 
-    totalOrdered = widget.stock.total + widget.stock.left;
-    _stockInputController.text = widget.stock.left.toString();
+    int left = widget.stock.totalOrdered - widget.stock.total;
+    _stockInputController.text = left.toString();
   }
 
   @override
@@ -33,7 +33,7 @@ class _StockListTileState extends State<StockListTile> {
     StockData stock = widget.stock;
 
     void _updateStockTotal() {
-      stock.left = int.parse(_stockInputController.text);
+      stock.totalOrdered = int.parse(_stockInputController.text) + stock.total;
       StockModel.of(context).updateStockItem(
           stock,
           () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -77,7 +77,7 @@ class _StockListTileState extends State<StockListTile> {
                   flex: 3,
                   fit: FlexFit.tight,
                   child: Text(
-                    totalOrdered.toString(),
+                    stock.totalOrdered.toString(),
                     textAlign: TextAlign.center,
                   ),
                 ),
