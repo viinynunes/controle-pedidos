@@ -27,7 +27,7 @@ class OrderModel extends Model {
           .doc()
           .set(e.toMap());
 
-      final stock = StockData(e.quantity, 0, DateTime.now(), e.product);
+      final stock = StockData(e.quantity, e.quantity, DateTime.now(), e.product);
       await StockModel().createStockItem(stock);
     }
     isLoading = false;
