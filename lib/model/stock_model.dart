@@ -82,6 +82,9 @@ class StockModel extends Model {
             stockItem.total = stockItem.total - oldItem.quantity + newItem.quantity;
             firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
           }
+        } else {
+          StockData newStock = StockData(newItem.quantity, 0, orderNew.creationDate, newItem.product);
+          await createStockItem(newStock);
         }
       }
     }
