@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/data/order_data.dart';
+import 'package:controle_pedidos/data/order_item_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +59,32 @@ class StockModel extends Model {
 
     loading = false;
     notifyListeners();
+  }
+
+  Future<void> updateStockFromOrder(
+      OrderData orderNew, List<OrderItemData> orderItemsDB) async {
+    loading = true;
+
+    for (var newItem in orderNew.orderItemList!) {
+      for (var oldItem in orderItemsDB) {
+        if (oldItem.product.id == newItem.product.id) {
+          final snapStock = await firebaseCollection
+              .where('creationDate', isEqualTo: orderNew.creationDate)
+              .where('product.id', isEqualTo: oldItem.product.id)
+              .get();
+
+          var stockItem = StockData.fromMap(snapStock.docs.first.id, snapStock.docs.first.data());
+
+          if (newItem.quantity > oldItem.quantity){
+            stockItem.total = newItem.quantity + stockItem.total - oldItem.quantity;
+            firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
+          } else if (newItem.quantity < oldItem.quantity){
+            stockItem.total = stockItem.total - oldItem.quantity + newItem.quantity;
+            firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
+          }
+        }
+      }
+    }
   }
 
   Future<Set<ProviderData>> getAllStockProvidersByDate(
