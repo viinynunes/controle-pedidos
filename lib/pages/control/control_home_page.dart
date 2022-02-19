@@ -170,8 +170,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           ),
                         ],
                       ),
-            loading
-                ? const LinearProgressIndicator()
+            stockList.isEmpty
+                ? Container()
                 : SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.all(8),
