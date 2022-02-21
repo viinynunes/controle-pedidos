@@ -36,9 +36,11 @@ class OrderModel extends Model {
 
   Future<void> updateOrder(OrderData order) async {
     isLoading = true;
+    List<OrderItemData> orderItemsDB = [];
     final snap =
         await firebaseCollection.doc(order.id).collection('orderItems').get();
     for (DocumentSnapshot e in snap.docs) {
+      orderItemsDB.add(OrderItemData.fromDocSnapshot(e));
       await e.reference.delete();
     }
     for (var e in order.orderItemList!) {
@@ -48,6 +50,9 @@ class OrderModel extends Model {
           .doc()
           .set(e.toMap());
     }
+
+    StockModel().updateStockFromOrder(order, orderItemsDB);
+
     isLoading = false;
     notifyListeners();
   }
