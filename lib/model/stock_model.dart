@@ -67,23 +67,50 @@ class StockModel extends Model {
 
     for (var newItem in orderNew.orderItemList!) {
       for (var oldItem in orderItemsDB) {
-        if (oldItem.product.id == newItem.product.id) {
+        //Verifying if orderItem was deleted from previous order
+        if (!orderNew.orderItemList!.contains(oldItem)) {
+          final snapCollection = await firebaseCollection
+              .where('creationDate', isEqualTo: orderNew.creationDate)
+              .where('product.id', isEqualTo: oldItem.product.id)
+              .get();
+
+          final DocumentSnapshot snapDelete = snapCollection.docs.first;
+
+          StockData stockItem = StockData.fromMap(
+              snapDelete.id, snapDelete.data() as Map<String, dynamic>);
+
+          stockItem.total = stockItem.total - oldItem.quantity;
+
+          if (stockItem.total == 0 && stockItem.totalOrdered == 0) {
+            await snapDelete.reference.delete();
+          } else {
+            await firebaseCollection
+                .doc(snapDelete.id)
+                .update(stockItem.toMap());
+          }
+        } // Checking if product already was in previous order list.
+        // Case yes, verifies if the quantity changed and update into firebase
+        else if (oldItem.product.id == newItem.product.id) {
           final snapStock = await firebaseCollection
               .where('creationDate', isEqualTo: orderNew.creationDate)
               .where('product.id', isEqualTo: oldItem.product.id)
               .get();
 
-          var stockItem = StockData.fromMap(snapStock.docs.first.id, snapStock.docs.first.data());
+          var stockItem = StockData.fromMap(
+              snapStock.docs.first.id, snapStock.docs.first.data());
 
-          if (newItem.quantity > oldItem.quantity){
-            stockItem.total = newItem.quantity + stockItem.total - oldItem.quantity;
+          if (newItem.quantity > oldItem.quantity) {
+            stockItem.total =
+                newItem.quantity + stockItem.total - oldItem.quantity;
             firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
-          } else if (newItem.quantity < oldItem.quantity){
-            stockItem.total = stockItem.total - oldItem.quantity + newItem.quantity;
+          } else if (newItem.quantity < oldItem.quantity) {
+            stockItem.total =
+                stockItem.total - oldItem.quantity + newItem.quantity;
             firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
           }
         } else {
-          StockData newStock = StockData(newItem.quantity, 0, orderNew.creationDate, newItem.product);
+          StockData newStock = StockData(
+              newItem.quantity, 0, orderNew.creationDate, newItem.product);
           await createStockItem(newStock);
         }
       }
