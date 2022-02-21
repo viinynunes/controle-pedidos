@@ -37,8 +37,17 @@ class OrderItemData {
     };
   }
 
+
   @override
-  String toString() {
-    return super.toString();
+  bool operator ==(Object other) {
+    if (other is! OrderItemData) {
+     return false;
+    }
+
+    return id == (other).id;
   }
+
+  @override
+  int get hashCode => id.hashCode;
+
 }
