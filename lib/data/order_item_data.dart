@@ -44,7 +44,7 @@ class OrderItemData {
      return false;
     }
 
-    return id == (other).id;
+    return product.id == (other).product.id;
   }
 
   @override
