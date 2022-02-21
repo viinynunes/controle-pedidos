@@ -119,6 +119,28 @@ class StockModel extends Model {
     }
   }
 
+  Future<void> deleteFromOrder(OrderData order) async {
+    for (var orderItem in order.orderItemList!) {
+      final snapshot = await firebaseCollection
+          .where('creationDate', isEqualTo: order.creationDate)
+          .where('product.id', isEqualTo: orderItem.product.id)
+          .get();
+
+      DocumentSnapshot docToUpdate = snapshot.docs.first;
+
+      StockData stockItem = StockData.fromMap(
+          docToUpdate.id, docToUpdate.data() as Map<String, dynamic>);
+
+      stockItem.total = stockItem.total - orderItem.quantity;
+
+      if (stockItem.total == 0 && stockItem.totalOrdered == 0) {
+        await docToUpdate.reference.delete();
+      } else {
+        await firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
+      }
+    }
+  }
+
   Future<Set<ProviderData>> getAllStockProvidersByDate(
       DateTime iniDate, DateTime endDate) async {
     Set<ProviderData> providerList = {};

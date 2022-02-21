@@ -60,6 +60,7 @@ class OrderModel extends Model {
   void disableOrder(OrderData order) {
     isLoading = true;
     order.enabled = false;
+    StockModel().deleteFromOrder(order);
     firebaseCollection.doc(order.id).update(order.toResumedMap());
     isLoading = false;
     notifyListeners();
