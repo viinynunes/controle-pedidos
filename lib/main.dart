@@ -50,7 +50,8 @@ void main() async {
                           ),
                           localizationsDelegates: const [
                             GlobalMaterialLocalizations.delegate,
-                            GlobalWidgetsLocalizations.delegate
+                            GlobalWidgetsLocalizations.delegate,
+                            GlobalCupertinoLocalizations.delegate
                           ],
                           supportedLocales: const [
                             Locale('pt')
