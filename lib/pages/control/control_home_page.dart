@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
+import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/stock_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,17 @@ class _ControlHomePageState extends State<ControlHomePage> {
         centerTitle: true,
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ShareStockItemsByProvider(
+                            providerName: _selectedProvider!.name,
+                            stockList: stockList)));
+              },
+              icon: const Icon(Icons.share)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
         ],
       ),
       drawer: CustomDrawer(
@@ -149,7 +160,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                 fillColor: Colors.white,
                                 label: const Text(
                                   'Fornecedor',
-                                  style: TextStyle(fontSize: 16, color: Colors.black),
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.black),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(),
@@ -173,14 +185,17 @@ class _ControlHomePageState extends State<ControlHomePage> {
             stockList.isEmpty
                 ? Container()
                 : SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
                         children: const [
                           Flexible(
                             flex: 3,
                             fit: FlexFit.tight,
-                            child: Text('Produto', textAlign: TextAlign.center,),
+                            child: Text(
+                              'Produto',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                           Flexible(
                             flex: 3,
@@ -199,8 +214,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           ),
                         ],
                       ),
+                    ),
                   ),
-                ),
             Expanded(
               child: ListView.builder(
                 itemCount: stockList.length,
