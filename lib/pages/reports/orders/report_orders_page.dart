@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/pages/reports/orders/report_one_order_page.dart';
+import 'package:controle_pedidos/services/order_services.dart';
 import 'package:controle_pedidos/utils/export_to_pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +19,7 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
   bool loading = false;
 
   List<OrderData> orderList = [];
+  OrderServices orderServices = OrderServices();
 
   @override
   void initState() {
@@ -36,7 +38,10 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
         actions: [
           IconButton(
               onPressed: () {
-                createReport();
+                if (orderList.isNotEmpty) {
+                  var mergedList = orderServices.mergeOrdersBetweenDifferentDates(orderList);
+                  createReport(mergedList);
+                }
               },
               icon: const Icon(Icons.share))
         ],
@@ -144,7 +149,7 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
     });
   }
 
-  void createReport() {
-    ExportToPDF.createPDF(orderList);
+  void createReport(List<OrderData> mergedOrderList) {
+    ExportToPDF.createPDF(mergedOrderList);
   }
 }
