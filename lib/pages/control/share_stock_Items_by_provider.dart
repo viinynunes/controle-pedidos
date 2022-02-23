@@ -36,41 +36,43 @@ class _ShareStockItemsByProviderState extends State<ShareStockItemsByProvider> {
           key1 = key;
           return Container(
             color: Colors.white,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: Text(
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
                     widget.providerName,
-                    style: const TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Flexible(
-                  child: ListView.builder(
-                    itemCount: widget.stockList.length,
-                    itemBuilder: (context, index) {
-                      var item = widget.stockList[index];
-                      return Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text(item.totalOrdered.toString() +
-                                ' ' +
-                                item.product.category +
-                                ' ' +
-                                item.product.name),
-                          )
-                        ],
-                      );
-                    },
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-              ],
+                  Flexible(
+                    child: ListView.builder(
+                      itemCount: widget.stockList.length,
+                      itemBuilder: (context, index) {
+                        var item = widget.stockList[index];
+                        return Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(item.totalOrdered.toString() +
+                                  ' ' +
+                                  item.product.category +
+                                  ' ' +
+                                  item.product.name),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
