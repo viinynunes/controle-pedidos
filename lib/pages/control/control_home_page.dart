@@ -57,12 +57,14 @@ class _ControlHomePageState extends State<ControlHomePage> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
           IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ShareStockItemsByProvider(
-                            providerName: _selectedProvider!.name,
-                            stockList: stockList)));
+                if (_selectedProvider != null){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ShareStockItemsByProvider(
+                              providerName: _selectedProvider!.name,
+                              stockList: stockList)));
+                }
               },
               icon: const Icon(Icons.share)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
