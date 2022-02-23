@@ -138,6 +138,8 @@ class OrderModel extends Model {
       orderList.add(order);
     }
 
+    orderList.sort((a, b) => a.client.name.toLowerCase().compareTo(b.client.name.toLowerCase()));
+
     isLoading = false;
     notifyListeners();
     return orderList;
