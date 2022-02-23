@@ -3,10 +3,13 @@ import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/data/order_item_data.dart';
 
 class OrderData {
-
   OrderData();
 
-  OrderData.fields({required this.client, required this.creationDate, required this.enabled, required this.orderItemList});
+  OrderData.fields(
+      {required this.client,
+      required this.creationDate,
+      required this.enabled,
+      required this.orderItemList});
 
   OrderData.fromDocSnapshot(DocumentSnapshot snapshot) {
     id = snapshot.id;
@@ -22,7 +25,7 @@ class OrderData {
     client = ClientData.fromMap(map['client']);
     enabled = map['enabled'];
     var itemListMap = map['orderItemList'];
-    for (var e in itemListMap){
+    for (var e in itemListMap) {
       orderItemList!.add(OrderItemData.fromMap(e));
     }
   }
@@ -51,4 +54,14 @@ class OrderData {
       'client': client.toMap(),
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! OrderData) return false;
+
+    return client.name == (other).client.name;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }
