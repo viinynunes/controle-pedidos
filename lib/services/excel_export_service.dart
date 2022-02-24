@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
@@ -7,10 +8,11 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 import '../data/order_data.dart';
 
 class ExcelExportService {
+  final dateFormat = DateFormat('dd-MM-yyyy');
+
   void createAndOpenExcelToOrder(List<OrderData> orderList) async {
     final workbook = Workbook();
     final sheet = workbook.worksheets[0];
-
     int rowIndex = 1, columnIndex = 1;
 
     for (var order in orderList) {
@@ -36,6 +38,7 @@ class ExcelExportService {
                   item.product.name);
         }
 
+        sheet.autoFitColumn(columnIndex);
         rowIndex++;
       }
 
@@ -48,12 +51,12 @@ class ExcelExportService {
     final List<int> bytes = workbook.saveAsStream();
     workbook.dispose();
 
-    _saveAndOpenFile(bytes);
+    _saveAndOpenFile(bytes, 'pedidos ${dateFormat.format(DateTime.now())}');
   }
 
-  void _saveAndOpenFile(List<int> bytes) async {
+  void _saveAndOpenFile(List<int> bytes, String name) async {
     final path = (await getApplicationDocumentsDirectory()).path;
-    final fileName = '$path/ExcelExport.xlsx';
+    final fileName = '$path/$name.xlsx';
     final file = File(fileName);
 
     await file.writeAsBytes(bytes, flush: true);
