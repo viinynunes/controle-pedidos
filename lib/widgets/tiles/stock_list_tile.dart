@@ -16,6 +16,7 @@ class StockListTile extends StatefulWidget {
 
 class _StockListTileState extends State<StockListTile> {
   final _stockInputController = TextEditingController();
+  final _stockFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
 
   late int totalOrdered;
@@ -88,6 +89,8 @@ class _StockListTileState extends State<StockListTile> {
                   child: TextFormField(
                     enabled: widget.editable ? true : false,
                     textAlign: TextAlign.center,
+                    focusNode: _stockFocus,
+                    autofocus: true,
                     controller: _stockInputController,
                     style: const TextStyle(fontSize: 15),
                     decoration: const InputDecoration(
@@ -100,6 +103,8 @@ class _StockListTileState extends State<StockListTile> {
                     onFieldSubmitted: (e) {
                       if (_formKey.currentState!.validate()) {
                         _updateStockTotal();
+                        _stockInputController.selection = TextSelection(
+                            baseOffset: 0, extentOffset: _stockInputController.value.text.length);
                       }
                     },
                     validator: (e) {
@@ -108,6 +113,7 @@ class _StockListTileState extends State<StockListTile> {
                       if (_stockInputController.text.isEmpty || !regExp) {
                         return '';
                       }
+                      return null;
                     },
                     enableInteractiveSelection: false,
                   ),
