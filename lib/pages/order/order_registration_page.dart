@@ -6,6 +6,7 @@ import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/product_registration_page.dart';
+import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
 import 'package:controle_pedidos/utils/show_snack_bar.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -39,7 +40,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   final _formKey = GlobalKey<FormState>();
   final _quantityFocus = FocusNode();
-  final _dialogSearchProductFocus = FocusNode();
 
   @override
   void initState() {
@@ -59,64 +59,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _showProductListDialog() async {
-      return showDialog(
-          context: context,
-          builder: (context) {
-            var filteredProducts = [];
-            return AlertDialog(
-              title: const Text(
-                'Selecione um produto',
-                textAlign: TextAlign.center,
-              ),
-              content: StatefulBuilder(
-                builder: (context, a) => SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      TextField(
-                        focusNode: _dialogSearchProductFocus,
-                        onChanged: (e) {
-                          if (e.isNotEmpty) {
-                            for (var p in productList) {
-                              if (p.name
-                                  .toLowerCase()
-                                  .contains(e.toLowerCase())) {
-                                setState(() {
-                                  filteredProducts.add(p);
-                                });
-                              }
-                            }
-                          }
-                        },
-                      ),
-                      SizedBox(
-                          height: 400,
-                          width: 400,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: productList.length,
-                            itemBuilder: (context, index) {
-                              _dialogSearchProductFocus.requestFocus();
-                              var product = productList[index];
-                              return ListTile(
-                                title: Text(product.toString()),
-                                onTap: () {
-                                  setState(() {
-                                    _selectedProduct = product;
-                                    Navigator.pop(context);
-                                  });
-                                },
-                              );
-                            },
-                          )),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          });
-    }
-
     void _showProductRegistrationPage({ProductData? product}) async {
       await Navigator.push(
         context,
@@ -220,6 +162,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             if (e == null) {
                               return 'Selecione o cliente';
                             }
+                            return null;
                           },
                         ),
                       ),
@@ -263,6 +206,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               if (_quantityController.text.isEmpty || !regExp) {
                                 return 'Quantidade Inválida';
                               }
+                              return null;
                             },
                           ),
                         ),
@@ -277,8 +221,23 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               : SizedBox(
                                   height: 55,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      _showProductListDialog();
+                                    onPressed: () async {
+                                      final productFromDialog =
+                                          await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ShowProductListDialog(
+                                                        productList:
+                                                            productList,
+                                                      )));
+
+                                      if (productFromDialog != null &&
+                                          productFromDialog is ProductData) {
+                                        setState(() {
+                                          _selectedProduct = productFromDialog;
+                                        });
+                                      }
                                     },
                                     child: Text(
                                       _selectedProduct == null
@@ -378,7 +337,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   void _setOrder() {
     newOrder.client = client!;
-    newOrder.creationDate = widget.order == null ? DateTime.now() : widget.order!.creationDate;
+    newOrder.creationDate =
+        widget.order == null ? DateTime.now() : widget.order!.creationDate;
     newOrder.enabled = true;
     newOrder.orderItemList = orderItemList;
   }
