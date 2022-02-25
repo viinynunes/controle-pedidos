@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/data/order_item_data.dart';
+import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/services/report_establishment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +17,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
   final dateFormat = DateFormat('dd-MM-yyyy');
   late DateTime iniDate, endDate;
 
-  List<OrderItemData> orderItemList = [];
+  List<StockData> StockDataList = [];
 
   @override
   void initState() {
@@ -103,16 +103,16 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
               ),
               loading
                   ? const LinearProgressIndicator()
-                  : orderItemList.isEmpty
+                  : StockDataList.isEmpty
                       ? const Center(
                           child: Text('Lista Vazia'),
                         )
                       : Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: orderItemList.length,
+                            itemCount: StockDataList.length,
                             itemBuilder: (context, index) {
-                              var item = orderItemList[index];
+                              var item = StockDataList[index];
                               return Padding(
                                 padding: const EdgeInsets.all(6),
                                 child: Container(
@@ -123,7 +123,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                   child: Row(
                                     children: [
                                       Flexible(
-                                        flex: 4,
+                                        flex: 3,
                                         fit: FlexFit.tight,
                                         child: Text(item.product.provider.name),
                                       ),
@@ -133,14 +133,19 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                         child: Text(item.product.name, textAlign: TextAlign.justify,),
                                       ),
                                       Flexible(
-                                        flex: 2,
+                                        flex: 1,
                                         fit: FlexFit.tight,
                                         child: Text(item.product.category, textAlign: TextAlign.end,),
                                       ),
                                       Flexible(
                                         flex: 3,
                                         fit: FlexFit.tight,
-                                        child: Text(item.quantity.toString(), textAlign: TextAlign.end,),
+                                        child: Text(item.totalOrdered.toString(), textAlign: TextAlign.end,),
+                                      ),
+                                      Flexible(
+                                        flex: 3,
+                                        fit: FlexFit.tight,
+                                        child: Text((item.totalOrdered - item.total).toString(), textAlign: TextAlign.end,),
                                       ),
                                     ],
                                   ),
@@ -163,7 +168,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
         await service.mergeOrderItemsByProvider(context, iniDate, endDate);
 
     setState(() {
-      orderItemList = list;
+      StockDataList = list;
       loading = false;
     });
   }
