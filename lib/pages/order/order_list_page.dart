@@ -80,7 +80,7 @@ class _OrderListPageState extends State<OrderListPage> {
                       onPressed: () {
                         showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
+                                initialDate: _selectedDate,
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime(2050))
                             .then((value) {
