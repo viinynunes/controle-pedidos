@@ -1,9 +1,11 @@
+import 'package:controle_pedidos/pages/reports/establishments/report_establishment_page.dart';
 import 'package:controle_pedidos/pages/reports/orders/report_orders_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
 class ReportHomePage extends StatelessWidget {
-  const ReportHomePage({Key? key, required this.pageController}) : super(key: key);
+  const ReportHomePage({Key? key, required this.pageController})
+      : super(key: key);
 
   final PageController pageController;
 
@@ -14,7 +16,9 @@ class ReportHomePage extends StatelessWidget {
         title: const Text('Selecione o relatório'),
         centerTitle: true,
       ),
-      drawer: CustomDrawer(pageController: pageController,),
+      drawer: CustomDrawer(
+        pageController: pageController,
+      ),
       body: Center(
         child: Column(
           children: [
@@ -25,8 +29,12 @@ class ReportHomePage extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ReportOrdersPage()));
-                    }, child: const Text('Pedidos')),
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ReportOrdersPage()));
+                    },
+                    child: const Text('Pedidos')),
               ),
             ),
             Padding(
@@ -35,7 +43,14 @@ class ReportHomePage extends StatelessWidget {
                 height: 50,
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
-                    onPressed: () {}, child: const Text('Produtos')),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ReportEstablishmentPage()));
+                    },
+                    child: const Text('Estabelecimento')),
               ),
             )
           ],
