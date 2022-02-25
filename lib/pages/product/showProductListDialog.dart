@@ -95,7 +95,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
     if (search.isNotEmpty) {
       List<ProductData> xList = [];
       for (var element in filteredList) {
-        if (element.name.contains(search)) {
+        if (element.name.toLowerCase().contains(search.toLowerCase())) {
           xList.add(element);
         }
       }
