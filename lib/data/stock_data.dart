@@ -35,7 +35,7 @@ class StockData {
     if(other is! StockData){
       return false;
     }
-    return id == (other).id;
+    return id == (other).id || product.id == (other).product.id;
   }
 
   @override
