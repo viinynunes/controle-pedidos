@@ -3,6 +3,8 @@ import 'package:controle_pedidos/services/report_establishment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../services/excel_export_service.dart';
+
 class ReportEstablishmentPage extends StatefulWidget {
   const ReportEstablishmentPage({Key? key}) : super(key: key);
 
@@ -17,7 +19,9 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
   final dateFormat = DateFormat('dd-MM-yyyy');
   late DateTime iniDate, endDate;
 
-  List<StockData> StockDataList = [];
+  List<StockData> stockDataList = [];
+
+  ExcelExportService excelService = ExcelExportService();
 
   @override
   void initState() {
@@ -34,7 +38,11 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
           title: const Text('Relatório por estabelecimento'),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                if (stockDataList.isNotEmpty){
+                  createReport(stockDataList);
+                }
+              },
               icon: const Icon(Icons.share),
             ),
           ],
@@ -103,16 +111,16 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
               ),
               loading
                   ? const LinearProgressIndicator()
-                  : StockDataList.isEmpty
+                  : stockDataList.isEmpty
                       ? const Center(
                           child: Text('Lista Vazia'),
                         )
                       : Expanded(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: StockDataList.length,
+                            itemCount: stockDataList.length,
                             itemBuilder: (context, index) {
-                              var item = StockDataList[index];
+                              var item = stockDataList[index];
                               return Padding(
                                 padding: const EdgeInsets.all(6),
                                 child: Container(
@@ -168,8 +176,12 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
         await service.mergeOrderItemsByProvider(context, iniDate, endDate);
 
     setState(() {
-      StockDataList = list;
+      stockDataList = list;
       loading = false;
     });
+  }
+
+  void createReport(List<StockData> stockDataList) {
+    excelService.createAndOpenExcelToEstablishment(stockDataList);
   }
 }
