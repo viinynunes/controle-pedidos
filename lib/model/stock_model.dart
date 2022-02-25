@@ -207,4 +207,23 @@ class StockModel extends Model {
 
     return stockUniqueList;
   }
+
+  Future<List<StockData>> getStockBetweenDates(
+      DateTime iniDate, DateTime endDate) async {
+    List<StockData> stockList = [];
+
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
+    final stockSnap = await firebaseCollection
+        .where('creationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('creationDate', isLessThanOrEqualTo: endDate)
+        .get();
+
+    for (var e in stockSnap.docs){
+      stockList.add(StockData.fromMap(e.id, e.data()));
+    }
+
+    return stockList;
+  }
 }
