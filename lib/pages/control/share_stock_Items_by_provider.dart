@@ -26,9 +26,12 @@ class _ShareStockItemsByProviderState extends State<ShareStockItemsByProvider> {
         title: Text(widget.providerName),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () async {
-            await TransformWidgetToImage.getWidget(key1, widget.providerName);
-          }, icon: const Icon(Icons.share)),
+          IconButton(
+              onPressed: () async {
+                await TransformWidgetToImage.getWidget(
+                    key1, widget.providerName);
+              },
+              icon: const Icon(Icons.share)),
         ],
       ),
       body: WidgetToImage(
@@ -37,16 +40,17 @@ class _ShareStockItemsByProviderState extends State<ShareStockItemsByProvider> {
           return Container(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.only(left: 100, right: 100, top: 10),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(
                     height: 20,
                   ),
                   Text(
                     widget.providerName,
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 10,
@@ -56,17 +60,30 @@ class _ShareStockItemsByProviderState extends State<ShareStockItemsByProvider> {
                       itemCount: widget.stockList.length,
                       itemBuilder: (context, index) {
                         var item = widget.stockList[index];
-                        return Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(item.totalOrdered.toString() +
-                                  ' ' +
-                                  item.product.category +
-                                  ' ' +
-                                  item.product.name),
-                            )
-                          ],
+                        return Container(
+                          decoration: const BoxDecoration(
+                              border: Border(bottom: BorderSide(width: 0.5))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2, bottom: 2),
+                                  child: Text(
+                                    item.product.name + ' ',
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                Text(
+                                  item.totalOrdered.toString() +
+                                      '        ' +
+                                      item.product.category,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ],
+                            ),
+                          ),
                         );
                       },
                     ),
