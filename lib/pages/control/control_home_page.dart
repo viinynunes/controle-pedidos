@@ -27,6 +27,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   List<StockData> stockList = [];
 
+  final stockDefaultController = TextEditingController();
+  final stockDefaultNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +39,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
+    stockDefaultController.text = '0';
   }
 
   @override
@@ -57,7 +62,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
           IconButton(
               onPressed: () {
-                if (_selectedProvider != null){
+                if (_selectedProvider != null) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -152,6 +157,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Flexible(
+                            flex: 3,
                             fit: FlexFit.tight,
                             child: DropdownButtonFormField<ProviderData>(
                               value: _selectedProvider,
@@ -180,6 +186,49 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                   }
                                 });
                               },
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Form(
+                                    child: TextFormField(
+                                      controller: stockDefaultController,
+                                      focusNode: stockDefaultNode,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 20),
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        label: const Text(
+                                          'Sobra Padrão',
+                                          style: TextStyle(
+                                              fontSize: 16, color: Colors.black),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(),
+                                            borderRadius:
+                                                (BorderRadius.circular(16))),
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.next,
+                                      validator: (e) {
+                                        var regExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
+                                            .hasMatch(e!);
+                                        if (stockDefaultController.text.isEmpty || !regExp) {
+                                          return '';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
