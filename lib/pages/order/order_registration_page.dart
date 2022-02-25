@@ -40,6 +40,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   final _formKey = GlobalKey<FormState>();
   final _quantityFocus = FocusNode();
+  final _selectProductFocus = FocusNode();
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     } else {
       newOrder = OrderData();
     }
+    _quantityFocus.requestFocus();
   }
 
   @override
@@ -111,7 +113,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 setState(() {
                   orderItemList.add(orderItem!);
                   _clearFields();
-                  _quantityFocus.requestFocus();
                 });
               }
             }
@@ -156,6 +157,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                           onChanged: (e) {
                             setState(() {
                               client = e!;
+                              _quantityFocus.requestFocus();
+                              _quantityController.selection = TextSelection(
+                                  baseOffset: 0, extentOffset: _quantityController.value.text.length);
                             });
                           },
                           validator: (e) {
@@ -199,6 +203,25 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             ),
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (e) async {
+                              final productFromDialog = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ShowProductListDialog(
+                                            productList: productList,
+                                          )));
+
+                              if (productFromDialog != null &&
+                                  productFromDialog is ProductData) {
+                                setState(() {
+                                  _selectedProduct = productFromDialog;
+                                  _quantityFocus.requestFocus();
+                                  _quantityController.selection = TextSelection(
+                                      baseOffset: 0, extentOffset: _quantityController.value.text.length);
+                                });
+                              }
+                            },
                             validator: (e) {
                               var regExp =
                                   RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
@@ -221,6 +244,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               : SizedBox(
                                   height: 55,
                                   child: ElevatedButton(
+                                    focusNode: _selectProductFocus,
                                     onPressed: () async {
                                       final productFromDialog =
                                           await Navigator.push(
@@ -236,6 +260,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                           productFromDialog is ProductData) {
                                         setState(() {
                                           _selectedProduct = productFromDialog;
+                                          _quantityFocus.requestFocus();
                                         });
                                       }
                                     },
@@ -344,7 +369,11 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   }
 
   void _clearFields() {
+    _quantityFocus.requestFocus();
     _quantityController.text = '1';
+    _quantityController.selection = TextSelection(
+        baseOffset: 0, extentOffset: _quantityController.value.text.length);
+
     _selectedProduct = null;
   }
 }
