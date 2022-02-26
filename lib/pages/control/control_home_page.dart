@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/product_data.dart';
+import '../stockDefault/stock_default_list.dart';
 
 class ControlHomePage extends StatefulWidget {
   const ControlHomePage({Key? key, required this.pageController})
@@ -86,34 +87,45 @@ class _ControlHomePageState extends State<ControlHomePage> {
           PopupMenuButton(
             itemBuilder: (context) => [
               const PopupMenuItem(
-                value: EnumControlHomePage.item1,
+                value: EnumControlHomePage.addProduct,
+                child: Text('Adicionar Produto'),
+              ),
+              const PopupMenuItem(
+                value: EnumControlHomePage.loadDefaultStock,
                 child: Text('Carregar Produtos Padrão'),
               ),
               const PopupMenuItem(
-                value: EnumControlHomePage.item2,
-                child: Text('Adicionar Produto'),
+                value: EnumControlHomePage.editDefaultStock,
+                child: Text('Editar Produtos Padrão'),
               ),
             ],
             onSelected: (value) async {
-              if (value == EnumControlHomePage.item1) {
-              } else if (value == EnumControlHomePage.item2) {
+              if (value == EnumControlHomePage.addProduct) {
                 ProductData? _selectedProduct = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
                             ShowProductListDialog(productList: productList)));
 
-                if (_selectedProduct != null){
+                if (_selectedProduct != null) {
                   loading = true;
                   setState(() {
                     _selectedProvider = _selectedProduct.provider;
                   });
 
-                  await controlService.addEmptyProductInStock(_selectedProduct, context, iniDate, endDate);
+                  await controlService.addEmptyProductInStock(
+                      _selectedProduct, context, iniDate, endDate);
                   await _setProviderList(iniDate, endDate);
-                  _setStockListByProvider(iniDate, endDate, _selectedProduct.provider);
+                  _setStockListByProvider(
+                      iniDate, endDate, _selectedProduct.provider);
                   loading = false;
                 }
+              }
+              else if (value == EnumControlHomePage.loadDefaultStock){
+
+              }
+              else if (value == EnumControlHomePage.editDefaultStock){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const StockDefaultList()));
               }
             },
           ),
@@ -327,8 +339,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
                       onDelete: () async {
                         loading = true;
                         await StockModel.of(context).deleteStock(stockIndex);
-                        if (_selectedProvider != null){
-                          _setStockListByProvider(iniDate, endDate, _selectedProvider!);
+                        if (_selectedProvider != null) {
+                          _setStockListByProvider(
+                              iniDate, endDate, _selectedProvider!);
                         }
 
                         loading = false;
