@@ -4,7 +4,7 @@ import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:flutter/material.dart';
 
 class ControlService {
-  void addEmptyProductInStock(ProductData product, BuildContext context,
+  Future<void> addEmptyProductInStock(ProductData product, BuildContext context,
       DateTime iniDate, DateTime endDate) async {
     final list =
         await StockModel.of(context).getStockBetweenDates(iniDate, endDate);
