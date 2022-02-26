@@ -101,6 +101,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       if (_nameController.text.isEmpty) {
                         return 'Campo Obrigatório';
                       }
+                      return null;
                     },
                   ),
                   const SizedBox(
@@ -122,6 +123,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       } else if (_categoryController.text.length > 3) {
                         return 'Máxímo 3 caracteres';
                       }
+                      return null;
                     },
                   ),
                   const SizedBox(
@@ -146,6 +148,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       if (e == null) {
                         return 'Campo Obrigatório';
                       }
+                      return null;
                     },
                     onChanged: (e) {
                       setState(() {
@@ -206,5 +209,6 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
     newProduct.category = _categoryController.text;
     newProduct.provider = _selectedProvider!;
     newProduct.enabled = true;
+    newProduct.stockDefault = widget.product != null ? widget.product!.stockDefault : false;
   }
 }
