@@ -1,11 +1,17 @@
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
+import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
+import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
+import 'package:controle_pedidos/services/control_service.dart';
+import 'package:controle_pedidos/utils/enum_control_home_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/stock_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../../data/product_data.dart';
 
 class ControlHomePage extends StatefulWidget {
   const ControlHomePage({Key? key, required this.pageController})
@@ -21,11 +27,14 @@ class _ControlHomePageState extends State<ControlHomePage> {
   final dateFormat = DateFormat('dd/MM/yyyy');
   late DateTime iniDate, endDate;
 
+  ControlService controlService = ControlService();
+
   bool loading = false;
   List<ProviderData> providersList = [];
   ProviderData? _selectedProvider;
 
   List<StockData> stockList = [];
+  List<ProductData> productList = [];
 
   final stockDefaultController = TextEditingController();
   final stockDefaultNode = FocusNode();
@@ -41,6 +50,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
     stockDefaultController.text = '0';
+
+    _updateProductList();
   }
 
   @override
@@ -72,7 +83,34 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 }
               },
               icon: const Icon(Icons.share)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: EnumControlHomePage.item1,
+                child: Text('Carregar Produtos Padrão'),
+              ),
+              const PopupMenuItem(
+                value: EnumControlHomePage.item2,
+                child: Text('Adicionar Produto'),
+              ),
+            ],
+            onSelected: (value) async {
+              if (value == EnumControlHomePage.item1) {
+                print('Carregar produtos padrão');
+              } else if (value == EnumControlHomePage.item2) {
+                ProductData? _selectedProduct = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ShowProductListDialog(productList: productList)));
+
+                if (_selectedProduct != null){
+                  controlService.addEmptyProductInStock(_selectedProduct, context, iniDate, endDate);
+                  _setStockListByProvider(iniDate, endDate, _selectedProvider!);
+                }
+              }
+            },
+          ),
         ],
       ),
       drawer: CustomDrawer(
@@ -208,7 +246,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                         label: const Text(
                                           'Sobra Padrão',
                                           style: TextStyle(
-                                              fontSize: 16, color: Colors.black),
+                                              fontSize: 16,
+                                              color: Colors.black),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: const BorderSide(),
@@ -218,9 +257,12 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                       keyboardType: TextInputType.number,
                                       textInputAction: TextInputAction.next,
                                       validator: (e) {
-                                        var regExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
+                                        var regExp = RegExp(
+                                                r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
                                             .hasMatch(e!);
-                                        if (stockDefaultController.text.isEmpty || !regExp) {
+                                        if (stockDefaultController
+                                                .text.isEmpty ||
+                                            !regExp) {
                                           return '';
                                         }
                                         return null;
@@ -314,6 +356,18 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
     setState(() {
       providersList = list.toList();
+      loading = false;
+    });
+  }
+
+  void _updateProductList() async {
+    setState(() {
+      loading = true;
+    });
+    final list = await ProductModel.of(context).getFilteredEnabledProducts();
+
+    setState(() {
+      productList = list;
       loading = false;
     });
   }
