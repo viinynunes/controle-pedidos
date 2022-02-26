@@ -9,7 +9,8 @@ class ProductModel extends Model {
 
   bool isLoading = false;
 
-  static ProductModel of(BuildContext context) => ScopedModel.of<ProductModel>(context);
+  static ProductModel of(BuildContext context) =>
+      ScopedModel.of<ProductModel>(context);
 
   void createProduct(ProductData product) {
     isLoading = true;
@@ -40,19 +41,18 @@ class ProductModel extends Model {
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false)
         .get();
-    if(search != null){
+    if (search != null) {
       for (DocumentSnapshot e in snapshot.docs) {
         String name = e.get('name');
-        if (name.toLowerCase().contains(search.toLowerCase())){
+        if (name.toLowerCase().contains(search.toLowerCase())) {
           productList.add(ProductData.fromDocSnapshot(e));
         }
       }
     } else {
-      for (DocumentSnapshot e in snapshot.docs){
+      for (DocumentSnapshot e in snapshot.docs) {
         productList.add(ProductData.fromDocSnapshot(e));
       }
     }
-
 
     isLoading = false;
     notifyListeners();
@@ -77,6 +77,19 @@ class ProductModel extends Model {
 
     isLoading = false;
     notifyListeners();
+    return productList;
+  }
+
+  Future<List<ProductData>> getEnabledProductsByStockDefaultTrue() async {
+    List<ProductData> productList = [];
+
+    final snapshot =
+        await firebaseCollection.where('stockDefault', isEqualTo: true).get();
+
+    for (var e in snapshot.docs) {
+      productList.add(ProductData.fromDocSnapshot(e));
+    }
+
     return productList;
   }
 }
