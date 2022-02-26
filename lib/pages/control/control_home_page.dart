@@ -105,8 +105,11 @@ class _ControlHomePageState extends State<ControlHomePage> {
                             ShowProductListDialog(productList: productList)));
 
                 if (_selectedProduct != null){
-                  controlService.addEmptyProductInStock(_selectedProduct, context, iniDate, endDate);
+                  loading = true;
+                  await controlService.addEmptyProductInStock(_selectedProduct, context, iniDate, endDate);
+                  _selectedProvider = _selectedProduct.provider;
                   _setStockListByProvider(iniDate, endDate, _selectedProvider!);
+                  loading = false;
                 }
               }
             },
@@ -318,6 +321,15 @@ class _ControlHomePageState extends State<ControlHomePage> {
                     title: StockListTile(
                       stock: stockIndex,
                       editable: iniDate == endDate,
+                      onDelete: () async {
+                        loading = true;
+                        await StockModel.of(context).deleteStock(stockIndex);
+                        if (_selectedProvider != null){
+                          _setStockListByProvider(iniDate, endDate, _selectedProvider!);
+                        }
+
+                        loading = false;
+                      },
                     ),
                   );
                 },
