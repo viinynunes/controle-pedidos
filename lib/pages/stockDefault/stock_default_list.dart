@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/data/product_data.dart';
-import 'package:controle_pedidos/widgets/tiles/product_list_tile.dart';
+import 'package:controle_pedidos/services/stock_default_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/product_model.dart';
@@ -13,50 +13,182 @@ class StockDefaultList extends StatefulWidget {
 
 class _StockDefaultListState extends State<StockDefaultList> {
   bool loading = false;
-
+  bool? checked = true;
   List<ProductData> productList = [];
+  List<ProductData> productStockDefaultList = [];
+
+  StockDefaultService _stockDefaultService = StockDefaultService();
 
   @override
   void initState() {
     super.initState();
 
     _setProductList();
+    _setProductDefaultList();
+  }
+
+  void _updateStockDefaultProperty(ProductData product) {
+    ProductModel.of(context).updateProduct(product);
+    _setProductDefaultList();
+    _setProductList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Editar Produtos Padrão'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Form(
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Produtos',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(),
-                  ),
-                ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Editar Produtos Padrão'),
+        ),
+        bottomNavigationBar: const TabBar(
+          tabs: [
+            Tab(
+              child: Text(
+                'Produtos Padrão',
+                style: TextStyle(color: Colors.black),
+              ),
+              icon: Icon(
+                Icons.check_box_outlined,
+                color: Colors.black,
               ),
             ),
-            const SizedBox(
-              height: 10,
+            Tab(
+              child: Text(
+                'Todos Produtos',
+                style: TextStyle(color: Colors.black),
+              ),
+              icon: Icon(
+                Icons.list,
+                color: Colors.black,
+              ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: productList.length,
-                itemBuilder: (context, index) {
-                  var item = productList[index];
+          ],
+        ),
+        body: TabBarView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Form(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Produtos',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: productStockDefaultList.length,
+                      itemBuilder: (context, index) {
+                        var item = productStockDefaultList[index];
 
-                  return ProductListTile(product: item);
-                },
+                        return CheckboxListTile(
+                          key: Key(item.id.toString()),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: item.stockDefault,
+                          onChanged: (e) {
+                            if (e != null) {
+                              setState(() {
+                                item.stockDefault = e;
+                                _updateStockDefaultProperty(item);
+                              });
+                            }
+                          },
+                          title: Row(
+                            children: [
+                              Flexible(
+                                flex: 2,
+                                fit: FlexFit.tight,
+                                child: Text(item.name),
+                              ),
+                              Flexible(
+                                flex: 2,
+                                fit: FlexFit.tight,
+                                child: Text(
+                                  item.provider.name,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Form(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Produtos',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: productList.length,
+                      itemBuilder: (context, index) {
+                        var item = productList[index];
+
+                        return CheckboxListTile(
+                          key: Key(item.id.toString()),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: item.stockDefault,
+                          onChanged: (e) {
+                            if (e != null) {
+                              setState(() {
+                                item.stockDefault = e;
+                                _updateStockDefaultProperty(item);
+                              });
+                            }
+                          },
+                          title: Row(
+                            children: [
+                              Flexible(
+                                flex: 2,
+                                fit: FlexFit.tight,
+                                child: Text(item.name),
+                              ),
+                              Flexible(
+                                flex: 2,
+                                fit: FlexFit.tight,
+                                child: Text(
+                                  item.provider.name,
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -72,8 +204,26 @@ class _StockDefaultListState extends State<StockDefaultList> {
 
     final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
+    _stockDefaultService.orderProductsByProviderAndName(list);
+
     setState(() {
       productList = list;
+      loading = false;
+    });
+  }
+
+  void _setProductDefaultList() async {
+    setState(() {
+      loading = true;
+    });
+
+    final list =
+        await ProductModel.of(context).getEnabledProductsByStockDefaultTrue();
+
+    _stockDefaultService.orderProductsByProviderAndName(list);
+
+    setState(() {
+      productStockDefaultList = list;
       loading = false;
     });
   }
