@@ -96,7 +96,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
             ],
             onSelected: (value) async {
               if (value == EnumControlHomePage.item1) {
-                print('Carregar produtos padrão');
               } else if (value == EnumControlHomePage.item2) {
                 ProductData? _selectedProduct = await Navigator.push(
                     context,
@@ -106,9 +105,13 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
                 if (_selectedProduct != null){
                   loading = true;
+                  setState(() {
+                    _selectedProvider = _selectedProduct.provider;
+                  });
+
                   await controlService.addEmptyProductInStock(_selectedProduct, context, iniDate, endDate);
-                  _selectedProvider = _selectedProduct.provider;
-                  _setStockListByProvider(iniDate, endDate, _selectedProvider!);
+                  await _setProviderList(iniDate, endDate);
+                  _setStockListByProvider(iniDate, endDate, _selectedProduct.provider);
                   loading = false;
                 }
               }
