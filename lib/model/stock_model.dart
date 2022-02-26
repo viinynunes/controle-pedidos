@@ -141,6 +141,17 @@ class StockModel extends Model {
     }
   }
 
+  Future<void> deleteStock(StockData stock) async {
+    final snap = await firebaseCollection
+        .where('creationDate', isEqualTo: stock.creationDate)
+        .where('product.id', isEqualTo: stock.product.id)
+        .get();
+
+    DocumentSnapshot stockItem = snap.docs.first;
+
+    await stockItem.reference.delete();
+  }
+
   Future<Set<ProviderData>> getAllStockProvidersByDate(
       DateTime iniDate, DateTime endDate) async {
     Set<ProviderData> providerList = {};
@@ -220,7 +231,7 @@ class StockModel extends Model {
         .where('creationDate', isLessThanOrEqualTo: endDate)
         .get();
 
-    for (var e in stockSnap.docs){
+    for (var e in stockSnap.docs) {
       stockList.add(StockData.fromMap(e.id, e.data()));
     }
 
