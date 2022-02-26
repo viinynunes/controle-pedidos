@@ -1,1 +1,1 @@
-enum EnumControlHomePage { item1, item2 }
+enum EnumControlHomePage { loadDefaultStock, addProduct, editDefaultStock }
