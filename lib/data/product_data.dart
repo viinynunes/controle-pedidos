@@ -9,6 +9,7 @@ class ProductData {
     name = snapshot.get('name');
     category = snapshot.get('category');
     enabled = snapshot.get('enabled');
+    stockDefault = snapshot.get('stockDefault');
     provider = ProviderData.fromMap(snapshot.get('provider'));
   }
 
@@ -17,6 +18,7 @@ class ProductData {
     name = map['name'];
     category = map['category'];
     enabled = map['enabled'];
+    stockDefault = map['stockDefault'];
     provider = ProviderData.fromMap(map['provider']);
   }
 
@@ -24,6 +26,7 @@ class ProductData {
   late String name;
   late String category;
   late bool enabled;
+  late bool stockDefault;
 
   late ProviderData provider;
 
@@ -33,6 +36,7 @@ class ProductData {
       'name': name,
       'category': category,
       'enabled': enabled,
+      'stockDefault': stockDefault,
       'provider': provider.toMap(),
     };
   }
