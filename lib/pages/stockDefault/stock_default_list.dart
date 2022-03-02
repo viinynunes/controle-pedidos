@@ -22,15 +22,10 @@ class _StockDefaultListState extends State<StockDefaultList> {
   @override
   void initState() {
     super.initState();
-
-    _setProductList();
-    _setProductDefaultList();
   }
 
   void _updateStockDefaultProperty(ProductData product) {
     ProductModel.of(context).updateProduct(product);
-    _setProductDefaultList();
-    _setProductList();
   }
 
   @override
@@ -87,44 +82,56 @@ class _StockDefaultListState extends State<StockDefaultList> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: productStockDefaultList.length,
-                      itemBuilder: (context, index) {
-                        var item = productStockDefaultList[index];
+                  FutureBuilder<List<ProductData>>(
+                    future: _setProductDefaultList(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: productStockDefaultList.length,
+                            itemBuilder: (context, index) {
+                              var item = productStockDefaultList[index];
 
-                        return CheckboxListTile(
-                          key: Key(item.id.toString()),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: item.stockDefault,
-                          onChanged: (e) {
-                            if (e != null) {
-                              setState(() {
-                                item.stockDefault = e;
-                                _updateStockDefaultProperty(item);
-                              });
-                            }
-                          },
-                          title: Row(
-                            children: [
-                              Flexible(
-                                flex: 2,
-                                fit: FlexFit.tight,
-                                child: Text(item.name),
-                              ),
-                              Flexible(
-                                flex: 2,
-                                fit: FlexFit.tight,
-                                child: Text(
-                                  item.provider.name,
-                                  textAlign: TextAlign.end,
+                              return CheckboxListTile(
+                                key: Key(item.id.toString()),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                value: item.stockDefault,
+                                onChanged: (e) {
+                                  if (e != null) {
+                                    setState(() {
+                                      item.stockDefault = e;
+                                      _updateStockDefaultProperty(item);
+                                    });
+                                  }
+                                },
+                                title: Row(
+                                  children: [
+                                    Flexible(
+                                      flex: 2,
+                                      fit: FlexFit.tight,
+                                      child: Text(item.name),
+                                    ),
+                                    Flexible(
+                                      flex: 2,
+                                      fit: FlexFit.tight,
+                                      child: Text(
+                                        item.provider.name,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         );
-                      },
-                    ),
+                      }
+                    },
                   ),
                 ],
               ),
@@ -149,44 +156,56 @@ class _StockDefaultListState extends State<StockDefaultList> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: productList.length,
-                      itemBuilder: (context, index) {
-                        var item = productList[index];
+                  FutureBuilder<List<ProductData>>(
+                    future: _setProductList(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: productList.length,
+                            itemBuilder: (context, index) {
+                              var item = productList[index];
 
-                        return CheckboxListTile(
-                          key: Key(item.id.toString()),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: item.stockDefault,
-                          onChanged: (e) {
-                            if (e != null) {
-                              setState(() {
-                                item.stockDefault = e;
-                                _updateStockDefaultProperty(item);
-                              });
-                            }
-                          },
-                          title: Row(
-                            children: [
-                              Flexible(
-                                flex: 2,
-                                fit: FlexFit.tight,
-                                child: Text(item.name),
-                              ),
-                              Flexible(
-                                flex: 2,
-                                fit: FlexFit.tight,
-                                child: Text(
-                                  item.provider.name,
-                                  textAlign: TextAlign.end,
+                              return CheckboxListTile(
+                                key: Key(item.id.toString()),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                value: item.stockDefault,
+                                onChanged: (e) {
+                                  if (e != null) {
+                                    setState(() {
+                                      item.stockDefault = e;
+                                      _updateStockDefaultProperty(item);
+                                    });
+                                  }
+                                },
+                                title: Row(
+                                  children: [
+                                    Flexible(
+                                      flex: 2,
+                                      fit: FlexFit.tight,
+                                      child: Text(item.name),
+                                    ),
+                                    Flexible(
+                                      flex: 2,
+                                      fit: FlexFit.tight,
+                                      child: Text(
+                                        item.provider.name,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         );
-                      },
-                    ),
+                      }
+                    },
                   ),
                 ],
               ),
@@ -197,7 +216,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
     );
   }
 
-  void _setProductList() async {
+  Future<List<ProductData>> _setProductList() async {
     setState(() {
       loading = true;
     });
@@ -210,9 +229,11 @@ class _StockDefaultListState extends State<StockDefaultList> {
       productList = list;
       loading = false;
     });
+
+    return productList;
   }
 
-  void _setProductDefaultList() async {
+  Future<List<ProductData>> _setProductDefaultList() async {
     setState(() {
       loading = true;
     });
@@ -226,5 +247,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
       productStockDefaultList = list;
       loading = false;
     });
+
+    return productStockDefaultList;
   }
 }
