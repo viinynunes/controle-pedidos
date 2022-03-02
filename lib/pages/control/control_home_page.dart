@@ -122,7 +122,14 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 }
               }
               else if (value == EnumControlHomePage.loadDefaultStock){
-
+                setState(() {
+                  loading = true;
+                });
+                await controlService.loadEmptyProductsListInStock(context);
+                _setProviderList(iniDate, endDate);
+                setState(() {
+                  loading = false;
+                });
               }
               else if (value == EnumControlHomePage.editDefaultStock){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const StockDefaultList()));
