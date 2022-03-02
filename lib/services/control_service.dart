@@ -18,10 +18,10 @@ class ControlService {
   }
 
   Future<void> loadEmptyProductsListInStock(BuildContext context) async {
-    final list = await ProductModel.of(context).getEnabledProductsByStockDefaultTrue();
+    final list =
+        await ProductModel.of(context).getEnabledProductsByStockDefaultTrue();
 
-    for (var product in list){
-
+    for (var product in list) {
       StockData newStock = StockData(0, 0, DateTime.now(), product);
 
       await StockModel.of(context).createStockItem(newStock);
