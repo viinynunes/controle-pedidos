@@ -17,7 +17,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
   List<ProductData> productList = [];
   List<ProductData> productStockDefaultList = [];
 
-  StockDefaultService _stockDefaultService = StockDefaultService();
+  final _stockDefaultService = StockDefaultService();
 
   @override
   void initState() {
