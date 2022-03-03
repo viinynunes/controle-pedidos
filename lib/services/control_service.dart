@@ -27,4 +27,11 @@ class ControlService {
       await StockModel.of(context).createStockItem(newStock);
     }
   }
+
+  Future<void> updateTotalOrderedInAllStockByProvider(BuildContext context, List<StockData> stockList, int left) async {
+    for (var stock in stockList){
+      stock.totalOrdered = stock.total + left;
+      await StockModel.of(context).updateStockItem(stock, () {});
+    }
+  }
 }

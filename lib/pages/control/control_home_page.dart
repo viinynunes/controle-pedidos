@@ -51,7 +51,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
     stockDefaultController.text = '0';
-
+    stockDefaultController.selection = TextSelection(
+        baseOffset: 0, extentOffset: stockDefaultController.value.text.length);
     _updateProductList();
   }
 
@@ -71,7 +72,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
         title: const Text('Controle'),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
           IconButton(
               onPressed: () {
                 if (_selectedProvider != null) {
@@ -120,8 +120,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                       iniDate, endDate, _selectedProduct.provider);
                   loading = false;
                 }
-              }
-              else if (value == EnumControlHomePage.loadDefaultStock){
+              } else if (value == EnumControlHomePage.loadDefaultStock) {
                 setState(() {
                   loading = true;
                 });
@@ -130,9 +129,11 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 setState(() {
                   loading = false;
                 });
-              }
-              else if (value == EnumControlHomePage.editDefaultStock){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const StockDefaultList()));
+              } else if (value == EnumControlHomePage.editDefaultStock) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const StockDefaultList()));
               }
             },
           ),
@@ -214,7 +215,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 ? const LinearProgressIndicator()
                 : providersList.isEmpty
                     ? const Center(
-                        child: Text('Nenhum fornecedor encontrado'),
+                        child: Text('Busque por fornecedores'),
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -246,6 +247,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                     stockList.clear();
                                     _setStockListByProvider(
                                         iniDate, endDate, _selectedProvider!);
+                                    stockDefaultNode.requestFocus();
                                   }
                                 });
                               },
@@ -263,6 +265,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                     child: TextFormField(
                                       controller: stockDefaultController,
                                       focusNode: stockDefaultNode,
+                                      enabled: iniDate == endDate,
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(fontSize: 20),
                                       decoration: InputDecoration(
@@ -291,6 +294,26 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                           return '';
                                         }
                                         return null;
+                                      },
+                                      onFieldSubmitted: (e) async {
+                                        setState(() {
+                                          loading = true;
+                                        });
+                                        int left = int.parse(
+                                            stockDefaultController.text);
+
+                                        await controlService
+                                            .updateTotalOrderedInAllStockByProvider(
+                                                context, stockList, left);
+
+                                        if (_selectedProvider != null) {
+                                          await _setStockListByProvider(iniDate,
+                                              endDate, _selectedProvider!);
+                                        }
+
+                                        setState(() {
+                                          loading = false;
+                                        });
                                       },
                                     ),
                                   ),
@@ -334,30 +357,36 @@ class _ControlHomePageState extends State<ControlHomePage> {
                       ),
                     ),
                   ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: stockList.length,
-                itemBuilder: (context, index) {
-                  var stockIndex = stockList[index];
-                  return ListTile(
-                    title: StockListTile(
-                      stock: stockIndex,
-                      editable: iniDate == endDate,
-                      onDelete: () async {
-                        loading = true;
-                        await StockModel.of(context).deleteStock(stockIndex);
-                        if (_selectedProvider != null) {
-                          _setStockListByProvider(
-                              iniDate, endDate, _selectedProvider!);
-                        }
-
-                        loading = false;
+            loading
+                ? Container()
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: stockList.length,
+                      itemBuilder: (context, index) {
+                        var stockIndex = stockList[index];
+                        return ListTile(
+                          title: StockListTile(
+                            stock: stockIndex,
+                            editable: iniDate == endDate,
+                            onDelete: () async {
+                              await StockModel.of(context)
+                                  .deleteStock(stockIndex);
+                              setState(() {
+                                loading = true;
+                              });
+                              if (_selectedProvider != null) {
+                                _setStockListByProvider(
+                                    iniDate, endDate, _selectedProvider!);
+                              }
+                              setState(() {
+                                loading = false;
+                              });
+                            },
+                          ),
+                        );
                       },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),
