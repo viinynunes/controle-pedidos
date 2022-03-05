@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/pages/order/order_registration_page.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/order_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +56,7 @@ class _OrderListPageState extends State<OrderListPage> {
         title: const Text('Pedidos'),
         centerTitle: true,
       ),
+      backgroundColor: CustomColors.backgroundColor,
       drawer: CustomDrawer(
         pageController: widget.pageController,
       ),

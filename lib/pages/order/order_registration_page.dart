@@ -7,6 +7,7 @@ import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/show_snack_bar.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -77,7 +78,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
     return ScopedModelDescendant<OrderModel>(
       builder: (context, child, model) => Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: CustomColors.backgroundColor,
         appBar: AppBar(
           title:
               Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
@@ -134,15 +135,28 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                         child: DropdownSearch<ClientData>(
                           selectedItem: client,
                           showSearchBox: true,
+                          searchFieldProps: TextFieldProps(),
                           items: clientList,
+                          popupItemBuilder: (context, item, e) {
+                            return ListTile(
+                              title: Text(
+                                item.name,
+                                style: const TextStyle(
+                                    color: CustomColors.textColorTile),
+                              ),
+                            );
+                          },
                           dropdownButtonBuilder: (_) =>
                               const SizedBox(child: null),
                           dropdownBuilderSupportsNullItem: true,
+                          popupBackgroundColor: CustomColors.backgroundColor,
+                          popupElevation: 10,
                           dropdownSearchDecoration: InputDecoration(
                             labelText: 'Selecione o cliente',
-                            labelStyle: const TextStyle(color: Colors.black),
+                            labelStyle: const TextStyle(
+                                color: CustomColors.textColorTile),
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: CustomColors.backgroundTile,
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Theme.of(context).primaryColor),
@@ -159,7 +173,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               client = e!;
                               _quantityFocus.requestFocus();
                               _quantityController.selection = TextSelection(
-                                  baseOffset: 0, extentOffset: _quantityController.value.text.length);
+                                  baseOffset: 0,
+                                  extentOffset:
+                                      _quantityController.value.text.length);
                             });
                           },
                           validator: (e) {
@@ -188,8 +204,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: CustomColors.backgroundTile,
                               labelText: 'Quantidade',
+                              labelStyle: const TextStyle(color: CustomColors.textColorTile),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).primaryColor),
@@ -201,6 +218,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5))),
                             ),
+                            style: const TextStyle(color: CustomColors.textColorTile),
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
                             onFieldSubmitted: (e) async {
@@ -218,7 +236,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                   _selectedProduct = productFromDialog;
                                   _quantityFocus.requestFocus();
                                   _quantityController.selection = TextSelection(
-                                      baseOffset: 0, extentOffset: _quantityController.value.text.length);
+                                      baseOffset: 0,
+                                      extentOffset: _quantityController
+                                          .value.text.length);
                                 });
                               }
                             },

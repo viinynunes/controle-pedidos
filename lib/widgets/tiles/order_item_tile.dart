@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/order_item_data.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 class OrderItemTile extends StatelessWidget {
@@ -9,14 +10,15 @@ class OrderItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: CustomColors.backgroundTile,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            Flexible(flex: 4, fit: FlexFit.tight, child: Text(orderItem.product.name)),
-            Flexible(flex: 3, fit: FlexFit.tight, child: Text(orderItem.product.category)),
-            Flexible(flex: 2, fit: FlexFit.tight, child: Text(orderItem.product.provider.name)),
-            Flexible(flex: 1, fit: FlexFit.tight, child: Text(orderItem.quantity.toString())),
+            Flexible(flex: 4, fit: FlexFit.tight, child: Text(orderItem.product.name, style: const TextStyle(color: CustomColors.textColorTile),)),
+            Flexible(flex: 3, fit: FlexFit.tight, child: Text(orderItem.product.category, style: const TextStyle(color: CustomColors.textColorTile),)),
+            Flexible(flex: 2, fit: FlexFit.tight, child: Text(orderItem.product.provider.name, style: const TextStyle(color: CustomColors.textColorTile),)),
+            Flexible(flex: 1, fit: FlexFit.tight, child: Text(orderItem.quantity.toString(), style: const TextStyle(color: CustomColors.textColorTile),)),
           ],
         ),
       ),

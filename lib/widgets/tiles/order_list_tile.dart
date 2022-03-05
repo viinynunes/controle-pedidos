@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/order_data.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,7 +22,7 @@ class OrderListTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(2, 3, 2, 3),
         child: Container(
-          color: Colors.grey.withOpacity(0.2),
+          color: CustomColors.backgroundTile,
           height: 40,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,6 +57,7 @@ class OrderListTile extends StatelessWidget {
                 child: Icon(
                   Icons.remove_red_eye_outlined,
                   size: 16,
+                  color: CustomColors.textColorTile,
                 ),
               ),
             ],
@@ -69,6 +71,7 @@ class OrderListTile extends StatelessWidget {
     return const TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.bold,
+      color: CustomColors.textColorTile
     );
   }
 }
