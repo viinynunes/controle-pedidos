@@ -48,6 +48,7 @@ dependencies:
   pdf: ^3.7.1
   share_plus: ^3.1.0
   syncfusion_flutter_xlsio: ^19.4.53-beta
+  rect_getter: ^1.1.0
 
 dev_dependencies:
   flutter_test:
