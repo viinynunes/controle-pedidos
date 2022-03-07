@@ -121,7 +121,7 @@ class _OrderListPageState extends State<OrderListPage> {
                                   SlidableAction(
                                     onPressed: (e) {
                                       model.disableOrder(order);
-                                      _setOrderList();
+                                      orderList?.remove(order);
                                     },
                                     icon: Icons.delete_forever,
                                     backgroundColor: Colors.red,
