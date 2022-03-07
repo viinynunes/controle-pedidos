@@ -20,6 +20,12 @@ class _OrderItemTileState extends State<OrderItemTile> {
   @override
   void initState() {
     super.initState();
+
+    if (widget.orderItem.note == null){
+      hasNote = false;
+    }else {
+      hasNote = true;
+    }
   }
 
   @override
