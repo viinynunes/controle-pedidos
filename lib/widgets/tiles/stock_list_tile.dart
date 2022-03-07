@@ -8,11 +8,13 @@ class StockListTile extends StatefulWidget {
       {Key? key,
       required this.stock,
       required this.editable,
+        required this.selected,
       required this.onDelete})
       : super(key: key);
 
   final StockData stock;
   final bool editable;
+  final bool selected;
 
   final VoidCallback onDelete;
 
@@ -74,10 +76,11 @@ class _StockListTileState extends State<StockListTile> {
           ],
         ),
         child: InkWell(
+          focusColor: widget.selected ? Colors.blue : Colors.white,
           child: Form(
             key: _formKey,
             child: Container(
-              color: Colors.white,
+              color: widget.selected ? Colors.blue : Colors.white,
               child: Padding(
                 padding: const EdgeInsets.only(left: 1, right: 1),
                 child: Row(

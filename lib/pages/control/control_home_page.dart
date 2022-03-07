@@ -35,6 +35,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
   ProviderData? _selectedProvider;
 
   List<StockData> stockList = [];
+  Set<StockData> selectedStockListToShare = {};
   List<ProductData> productList = [];
 
   final stockDefaultController = TextEditingController();
@@ -80,7 +81,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
                       MaterialPageRoute(
                           builder: (context) => ShareStockItemsByProvider(
                               providerName: _selectedProvider!.name,
-                              stockList: stockList)));
+                              stockList: selectedStockListToShare.isEmpty
+                                  ? stockList
+                                  : selectedStockListToShare.toList())));
                 }
               },
               icon: const Icon(Icons.share)),
@@ -364,24 +367,37 @@ class _ControlHomePageState extends State<ControlHomePage> {
                       itemCount: stockList.length,
                       itemBuilder: (context, index) {
                         var stockIndex = stockList[index];
-                        return ListTile(
-                          title: StockListTile(
-                            stock: stockIndex,
-                            editable: iniDate == endDate,
-                            onDelete: () async {
-                              await StockModel.of(context)
-                                  .deleteStock(stockIndex);
-                              setState(() {
-                                loading = true;
-                              });
-                              if (_selectedProvider != null) {
-                                _setStockListByProvider(
-                                    iniDate, endDate, _selectedProvider!);
+                        return InkWell(
+                          onLongPress: () {
+                            setState(() {
+                              if (selectedStockListToShare
+                                  .contains(stockIndex)) {
+                                selectedStockListToShare.remove(stockIndex);
+                              } else {
+                                selectedStockListToShare.add(stockIndex);
                               }
-                              setState(() {
-                                loading = false;
-                              });
-                            },
+                            });
+                          },
+                          child: ListTile(
+                            title: StockListTile(
+                              stock: stockIndex,
+                              editable: iniDate == endDate,
+                              selected: selectedStockListToShare.contains(stockIndex),
+                              onDelete: () async {
+                                await StockModel.of(context)
+                                    .deleteStock(stockIndex);
+                                setState(() {
+                                  loading = true;
+                                });
+                                if (_selectedProvider != null) {
+                                  _setStockListByProvider(
+                                      iniDate, endDate, _selectedProvider!);
+                                }
+                                setState(() {
+                                  loading = false;
+                                });
+                              },
+                            ),
                           ),
                         );
                       },
