@@ -13,6 +13,7 @@ import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:rect_getter/rect_getter.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class OrderRegistrationPage extends StatefulWidget {
@@ -36,8 +37,11 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   ClientData? client;
   ProductData? _selectedProduct;
   OrderItemData? orderItem;
+  String? note;
 
   final _quantityController = TextEditingController();
+  final _rectKey = RectGetter.createGlobalKey();
+  final _noteController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   final _quantityFocus = FocusNode();
@@ -58,6 +62,40 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
       newOrder = OrderData();
     }
     _quantityFocus.requestFocus();
+  }
+
+  _showPopUpMenu(Rect rect) async {
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+          rect.left + 5, rect.top + 40, rect.right, rect.bottom),
+      items: [
+        PopupMenuItem(
+          child: SizedBox(
+            width: 500,
+            child: TextField(
+              controller: _noteController,
+              decoration: const InputDecoration(
+                labelText: 'Observação',
+                labelStyle: TextStyle(color: CustomColors.textColorTile),
+              ),
+              style: const TextStyle(color: CustomColors.textColorTile),
+              onSubmitted: (value) {
+                if (_noteController.text.isNotEmpty) {
+                  setState(() {
+                    note = _noteController.text;
+                  });
+                }
+                _noteController.text = '';
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+      ],
+      elevation: 8,
+      color: CustomColors.backgroundTile,
+    );
   }
 
   @override
@@ -206,7 +244,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               filled: true,
                               fillColor: CustomColors.backgroundTile,
                               labelText: 'Quantidade',
-                              labelStyle: const TextStyle(color: CustomColors.textColorTile),
+                              labelStyle: const TextStyle(
+                                  color: CustomColors.textColorTile),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).primaryColor),
@@ -218,7 +257,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5))),
                             ),
-                            style: const TextStyle(color: CustomColors.textColorTile),
+                            style: const TextStyle(
+                                color: CustomColors.textColorTile),
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
                             onFieldSubmitted: (e) async {
@@ -264,34 +304,64 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               : SizedBox(
                                   height: 55,
                                   child: ElevatedButton(
-                                    focusNode: _selectProductFocus,
-                                    onPressed: () async {
-                                      final productFromDialog =
-                                          await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ShowProductListDialog(
-                                                        productList:
-                                                            productList,
-                                                      )));
+                                      focusNode: _selectProductFocus,
+                                      onPressed: () async {
+                                        final productFromDialog =
+                                            await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ShowProductListDialog(
+                                                          productList:
+                                                              productList,
+                                                        )));
 
-                                      if (productFromDialog != null &&
-                                          productFromDialog is ProductData) {
-                                        setState(() {
-                                          _selectedProduct = productFromDialog;
-                                          _quantityFocus.requestFocus();
-                                        });
-                                      }
-                                    },
-                                    child: Text(
-                                      _selectedProduct == null
-                                          ? 'Selecione um produto'
-                                          : _selectedProduct.toString(),
-                                      style: const TextStyle(fontSize: 16),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
+                                        if (productFromDialog != null &&
+                                            productFromDialog is ProductData) {
+                                          setState(() {
+                                            _selectedProduct =
+                                                productFromDialog;
+                                            _quantityFocus.requestFocus();
+                                          });
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            flex: 3,
+                                            fit: FlexFit.tight,
+                                            child: Text(
+                                              _selectedProduct == null
+                                                  ? 'Selecione um produto'
+                                                  : _selectedProduct.toString(),
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          RectGetter(
+                                            key: _rectKey,
+                                            child: Flexible(
+                                              flex: 1,
+                                              fit: FlexFit.loose,
+                                              child: IconButton(
+                                                onPressed: () {
+                                                  var rect =
+                                                      RectGetter.getRectFromKey(
+                                                          _rectKey);
+                                                  _showPopUpMenu(rect!);
+                                                },
+                                                icon: const Icon(Icons.note),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )),
                                 ),
                         ),
                       ],
@@ -331,6 +401,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                         ),
                         child: OrderItemTile(
                           orderItem: orderItem,
+                          onRefresh: () {},
                         ),
                       );
                     },
@@ -377,7 +448,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   void _setOrderItem() {
     orderItem = OrderItemData(
         quantity: int.parse(_quantityController.text),
-        product: _selectedProduct!);
+        product: _selectedProduct!,
+        note: note);
   }
 
   void _setOrder() {
@@ -393,6 +465,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     _quantityController.text = '1';
     _quantityController.selection = TextSelection(
         baseOffset: 0, extentOffset: _quantityController.value.text.length);
+    _noteController.text = '';
+    note = null;
 
     _selectedProduct = null;
   }
