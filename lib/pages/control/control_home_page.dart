@@ -5,6 +5,7 @@ import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
 import 'package:controle_pedidos/services/control_service.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_control_home_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/stock_list_tile.dart';
@@ -145,9 +146,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
       drawer: CustomDrawer(
         pageController: widget.pageController,
       ),
-      backgroundColor: Colors.grey[250],
+      backgroundColor: CustomColors.backgroundColor,
       body: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(4),
         child: Column(
           children: [
             Row(
@@ -218,7 +219,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 ? const LinearProgressIndicator()
                 : providersList.isEmpty
                     ? const Center(
-                        child: Text('Busque por fornecedores'),
+                        child: Text('Busque por fornecedores', style: TextStyle(color: CustomColors.textColorTile),),
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -229,19 +230,20 @@ class _ControlHomePageState extends State<ControlHomePage> {
                             child: DropdownButtonFormField<ProviderData>(
                               value: _selectedProvider,
                               style: const TextStyle(
-                                  fontSize: 16, color: Colors.black),
+                                  fontSize: 16, color: CustomColors.textColorTile),
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: Colors.white,
+                                fillColor: CustomColors.backgroundTile,
                                 label: const Text(
                                   'Fornecedor',
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.black),
+                                      fontSize: 16, color: CustomColors.textColorTile),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(),
                                     borderRadius: (BorderRadius.circular(16))),
                               ),
+                              dropdownColor: CustomColors.backgroundTile,
                               items: dropDownProvidersItems,
                               onChanged: (e) {
                                 setState(() {
@@ -270,18 +272,18 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                       focusNode: stockDefaultNode,
                                       enabled: iniDate == endDate,
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 20),
+                                      style: const TextStyle(fontSize: 20, color: CustomColors.textColorTile),
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Colors.white,
+                                        fillColor: CustomColors.backgroundTile,
                                         label: const Text(
                                           'Sobra Padrão',
                                           style: TextStyle(
                                               fontSize: 16,
-                                              color: Colors.black),
+                                              color: CustomColors.textColorTile),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(),
+                                            borderSide: BorderSide(color: Theme.of(context).primaryColor),
                                             borderRadius:
                                                 (BorderRadius.circular(16))),
                                       ),
@@ -332,29 +334,33 @@ class _ControlHomePageState extends State<ControlHomePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Row(
-                        children: const [
+                        children: [
                           Flexible(
                             flex: 3,
                             fit: FlexFit.tight,
                             child: Text(
                               'Produto',
                               textAlign: TextAlign.center,
+                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
                             ),
                           ),
                           Flexible(
                             flex: 3,
                             fit: FlexFit.tight,
-                            child: Text('Pedido', textAlign: TextAlign.center),
+                            child: Text('Pedido', textAlign: TextAlign.center,
+                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
                           ),
                           Flexible(
                             flex: 3,
                             fit: FlexFit.tight,
-                            child: Text('Total', textAlign: TextAlign.center),
+                            child: Text('Total', textAlign: TextAlign.center,
+                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
                           ),
                           Flexible(
                             flex: 2,
                             fit: FlexFit.tight,
-                            child: Text('Sobra', textAlign: TextAlign.center),
+                            child: Text('Sobra', textAlign: TextAlign.center,
+                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
                           ),
                         ],
                       ),

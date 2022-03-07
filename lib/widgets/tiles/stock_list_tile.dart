@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -8,7 +9,7 @@ class StockListTile extends StatefulWidget {
       {Key? key,
       required this.stock,
       required this.editable,
-        required this.selected,
+      required this.selected,
       required this.onDelete})
       : super(key: key);
 
@@ -76,13 +77,17 @@ class _StockListTileState extends State<StockListTile> {
           ],
         ),
         child: InkWell(
-          focusColor: widget.selected ? Colors.blue : Colors.white,
+          highlightColor: Colors.deepPurple,
           child: Form(
             key: _formKey,
             child: Container(
-              color: widget.selected ? Colors.blue : Colors.white,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color:
+                    widget.selected ? Colors.deepPurple.withOpacity(0.8) : CustomColors.backgroundTile,
+              ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 1, right: 1),
+                padding: const EdgeInsets.only(left: 5, right: 1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,7 +96,10 @@ class _StockListTileState extends State<StockListTile> {
                     Flexible(
                       flex: 3,
                       fit: FlexFit.tight,
-                      child: Text(stock.product.name),
+                      child: Text(
+                        stock.product.name,
+                        style: _textStyle(),
+                      ),
                     ),
                     //Total From Order
                     Flexible(
@@ -100,6 +108,7 @@ class _StockListTileState extends State<StockListTile> {
                       child: Text(
                         stock.total.toString(),
                         textAlign: TextAlign.center,
+                        style: _textStyle(),
                       ),
                     ),
                     //Total Including stock
@@ -109,6 +118,7 @@ class _StockListTileState extends State<StockListTile> {
                       child: Text(
                         stock.totalOrdered.toString(),
                         textAlign: TextAlign.center,
+                        style: _textStyle(),
                       ),
                     ),
                     //Stock
@@ -121,7 +131,8 @@ class _StockListTileState extends State<StockListTile> {
                         focusNode: _stockFocus,
                         autofocus: true,
                         controller: _stockInputController,
-                        style: const TextStyle(fontSize: 15),
+                        style: const TextStyle(
+                            fontSize: 15, color: CustomColors.textColorTile),
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(
                                 borderSide:
@@ -158,5 +169,9 @@ class _StockListTileState extends State<StockListTile> {
             ),
           ),
         ));
+  }
+
+  TextStyle _textStyle() {
+    return const TextStyle(color: CustomColors.textColorTile);
   }
 }
