@@ -128,15 +128,15 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 },
                 icon: const Icon(Icons.add)),
             IconButton(
-                onPressed: () async {
+                onPressed: () {
                   if (orderItemList.isNotEmpty) {
                     _setOrder();
                     if (widget.order == null) {
                       ShowSnackBar.showSnackBar(context, 'Salvando Pedido');
-                      await model.createOrder(newOrder);
+                      model.createOrder(newOrder);
                     } else {
                       ShowSnackBar.showSnackBar(context, 'Salvando Pedido');
-                      await model.updateOrder(newOrder);
+                      model.updateOrder(newOrder);
                     }
                     Navigator.pop(context, newOrder);
                   }
@@ -456,6 +456,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     newOrder.client = client!;
     newOrder.creationDate =
         widget.order == null ? DateTime.now() : widget.order!.creationDate;
+    newOrder.lengthOrderItemList = orderItemList.length;
     newOrder.enabled = true;
     newOrder.orderItemList = orderItemList;
   }

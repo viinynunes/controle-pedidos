@@ -28,7 +28,7 @@ class OrderModel extends Model {
           .set(e.toMap());
 
       final stock = StockData(e.quantity, 0, DateTime.now(), e.product);
-      await StockModel().createStockItem(stock);
+      StockModel().createStockItem(stock);
     }
     isLoading = false;
     notifyListeners();
@@ -37,6 +37,7 @@ class OrderModel extends Model {
   Future<void> updateOrder(OrderData order) async {
     isLoading = true;
     List<OrderItemData> orderItemsDB = [];
+    firebaseCollection.doc(order.id).update(order.toResumedMap());
     final snap =
         await firebaseCollection.doc(order.id).collection('orderItems').get();
     for (DocumentSnapshot e in snap.docs) {

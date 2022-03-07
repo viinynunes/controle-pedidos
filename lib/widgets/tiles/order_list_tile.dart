@@ -47,7 +47,7 @@ class OrderListTile extends StatelessWidget {
                 flex: 2,
                 fit: FlexFit.tight,
                 child: Text(
-                  order.orderItemList!.length.toString(),
+                  order.lengthOrderItemList.toString(),
                   style: _getStyle(),
                 ),
               ),
