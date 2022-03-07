@@ -55,6 +55,11 @@ class _OrderListPageState extends State<OrderListPage> {
       appBar: AppBar(
         title: const Text('Pedidos'),
         centerTitle: true,
+        actions: [
+          IconButton(onPressed: () async {
+            await _setOrderList();
+          }, icon: const Icon(Icons.refresh),),
+        ],
       ),
       backgroundColor: CustomColors.backgroundColor,
       drawer: CustomDrawer(
