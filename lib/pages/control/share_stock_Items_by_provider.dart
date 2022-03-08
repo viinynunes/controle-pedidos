@@ -68,18 +68,21 @@ class _ShareStockItemsByProviderState extends State<ShareStockItemsByProvider> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 2, bottom: 2),
+                                Flexible(
+                                  flex: 2,
                                   child: Text(
                                     item.product.name + ' ',
                                     textAlign: TextAlign.start,
                                   ),
                                 ),
-                                Text(
-                                  item.totalOrdered.toString() +
-                                      '        ' +
-                                      item.product.category,
-                                  textAlign: TextAlign.end,
+                                Flexible(
+                                  flex: 1,
+                                  child: Text(
+                                    item.totalOrdered.toString() +
+                                        '        ' +
+                                        item.product.category,
+                                    textAlign: TextAlign.end,
+                                  ),
                                 ),
                               ],
                             ),
