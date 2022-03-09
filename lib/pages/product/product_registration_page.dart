@@ -70,12 +70,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               _getFields();
-              if (widget.product == null) {
-                model.createProduct(newProduct);
-              } else {
-                model.updateProduct(newProduct);
-              }
-              Navigator.pop(context);
+              Navigator.pop(context, newProduct);
             }
           },
           child: const Icon(Icons.save),
