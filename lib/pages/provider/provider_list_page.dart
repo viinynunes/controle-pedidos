@@ -20,7 +20,6 @@ class ProviderListPage extends StatefulWidget {
 class _ProviderListPageState extends State<ProviderListPage> {
   bool loading = false;
   bool isSearching = false;
-  String? search;
 
   List<ProviderData> providerList = [];
   List<ProviderData> secondaryProviderList = [];
@@ -71,7 +70,6 @@ class _ProviderListPageState extends State<ProviderListPage> {
                   if (isSearching) {
                     _clearSearchFromSecondaryList();
                     isSearching = false;
-                    search = null;
                   } else {
                     isSearching = true;
                     _searchFocus.requestFocus();

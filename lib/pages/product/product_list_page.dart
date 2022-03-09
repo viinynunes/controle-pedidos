@@ -22,7 +22,6 @@ class _ProductListPageState extends State<ProductListPage> {
 
   bool isSearching = false;
   bool loading = false;
-  String? search;
   List<ProductData> productList = [];
   List<ProductData> secondaryProductList = [];
 
@@ -84,7 +83,6 @@ class _ProductListPageState extends State<ProductListPage> {
                 if (isSearching) {
                   _clearSearchFromSecondaryList();
                   isSearching = false;
-                  search = null;
                 } else {
                   isSearching = true;
                   _searchFocus.requestFocus();
@@ -123,7 +121,7 @@ class _ProductListPageState extends State<ProductListPage> {
       loading = true;
     });
     final list = await ProductModel.of(context)
-        .getFilteredEnabledProducts(search: search);
+        .getFilteredEnabledProducts();
 
     setState(() {
       productList = list;
