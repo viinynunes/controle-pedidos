@@ -19,9 +19,13 @@ class ProviderListPage extends StatefulWidget {
 
 class _ProviderListPageState extends State<ProviderListPage> {
   bool loading = false;
+  bool isSearching = false;
+  String? search;
 
   List<ProviderData> providerList = [];
   List<ProviderData> secondaryProviderList = [];
+
+  final _searchFocus = FocusNode();
 
   @override
   void initState() {
@@ -45,59 +49,91 @@ class _ProviderListPageState extends State<ProviderListPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ProviderModel>(
       builder: (context, child, model) => Scaffold(
-          appBar: AppBar(
-            title: const Text('Fornecedores'),
-            centerTitle: true,
-          ),
-          drawer: CustomDrawer(
-            pageController: widget.pageController,
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _showProviderRegistrationPage();
-            },
-            child: const Icon(Icons.add),
-          ),
-          body: loading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemCount: secondaryProviderList.length,
-                  itemBuilder: (context, index) {
-                    var provider = secondaryProviderList[index];
-                    return Slidable(
-                        key: const ValueKey(0),
-                        startActionPane: ActionPane(
-                          dismissible: null,
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (e) {
-                                setState(() {
-                                  model.disableProvider(provider);
-                                });
-                              },
-                              icon: Icons.delete_forever,
-                              backgroundColor: Colors.red,
-                              label: 'Apagar',
-                            ),
-                            SlidableAction(
-                              onPressed: (e) {
-                                setState(() {
-                                  _showProviderRegistrationPage(
-                                      provider: provider);
-                                });
-                              },
-                              icon: Icons.edit,
-                              backgroundColor: Colors.deepPurple,
-                              label: 'Editar',
-                            ),
-                          ],
-                        ),
-                        child: ProviderListTile(provider: provider));
+        appBar: AppBar(
+          title: isSearching
+              ? TextField(
+                  focusNode: _searchFocus,
+                  decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      hintText: 'Pesquisar',
+                      hintStyle: TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white, fontSize: 22),
+                  onChanged: (text) async {
+                    _filterProviders(text);
                   },
-                )),
+                )
+              : const Text('Fornecedores'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  if (isSearching) {
+                    _clearSearchFromSecondaryList();
+                    isSearching = false;
+                    search = null;
+                  } else {
+                    isSearching = true;
+                    _searchFocus.requestFocus();
+                  }
+                });
+              },
+              icon: isSearching
+                  ? const Icon(Icons.cancel)
+                  : const Icon(Icons.search),
+            ),
+          ],
+        ),
+        drawer: CustomDrawer(
+          pageController: widget.pageController,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _showProviderRegistrationPage();
+          },
+          child: const Icon(Icons.add),
+        ),
+        body: loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                itemCount: secondaryProviderList.length,
+                itemBuilder: (context, index) {
+                  var provider = secondaryProviderList[index];
+                  return Slidable(
+                      key: const ValueKey(0),
+                      startActionPane: ActionPane(
+                        dismissible: null,
+                        motion: const ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (e) {
+                              setState(() {
+                                model.disableProvider(provider);
+                              });
+                            },
+                            icon: Icons.delete_forever,
+                            backgroundColor: Colors.red,
+                            label: 'Apagar',
+                          ),
+                          SlidableAction(
+                            onPressed: (e) {
+                              setState(() {
+                                _showProviderRegistrationPage(
+                                    provider: provider);
+                              });
+                            },
+                            icon: Icons.edit,
+                            backgroundColor: Colors.deepPurple,
+                            label: 'Editar',
+                          ),
+                        ],
+                      ),
+                      child: ProviderListTile(provider: provider));
+                },
+              ),
+      ),
     );
   }
 
@@ -112,6 +148,35 @@ class _ProviderListPageState extends State<ProviderListPage> {
       providerList = list;
       secondaryProviderList.addAll(providerList);
       loading = false;
+    });
+  }
+
+  void _filterProviders(String search) {
+    List<ProviderData> changeList = [];
+    changeList.addAll(providerList);
+
+    if (search.isNotEmpty){
+      List<ProviderData> filteredList = [];
+      for (var provider in changeList){
+        if (provider.name.toLowerCase().contains(search.toLowerCase())){
+          filteredList.add(provider);
+        }
+      }
+
+      setState(() {
+        secondaryProviderList.clear();
+        secondaryProviderList.addAll(filteredList);
+      });
+      return;
+    } else {
+      _clearSearchFromSecondaryList();
+    }
+  }
+
+  void _clearSearchFromSecondaryList() {
+    setState(() {
+      secondaryProviderList.clear();
+      secondaryProviderList.addAll(providerList);
     });
   }
 }
