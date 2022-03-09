@@ -8,7 +8,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProviderListPage extends StatefulWidget {
-  const ProviderListPage({Key? key, required this.pageController}) : super(key: key);
+  const ProviderListPage({Key? key, required this.pageController})
+      : super(key: key);
 
   final PageController pageController;
 
@@ -17,6 +18,18 @@ class ProviderListPage extends StatefulWidget {
 }
 
 class _ProviderListPageState extends State<ProviderListPage> {
+  bool loading = false;
+
+  List<ProviderData> providerList = [];
+  List<ProviderData> secondaryProviderList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _updateProviderList();
+  }
+
   void _showProviderRegistrationPage({ProviderData? provider}) async {
     Navigator.push(
         context,
@@ -32,64 +45,73 @@ class _ProviderListPageState extends State<ProviderListPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ProviderModel>(
       builder: (context, child, model) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Fornecedores'),
-          centerTitle: true,
-        ),
-        drawer: CustomDrawer(pageController: widget.pageController,),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _showProviderRegistrationPage();
-          },
-          child: const Icon(Icons.add),
-        ),
-        body: FutureBuilder<List<ProviderData>>(
-          future: model.getEnabledProviders(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  var provider = snapshot.data![index];
-                  return Slidable(
-                      key: const ValueKey(0),
-                      startActionPane: ActionPane(
-                        dismissible: null,
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (e) {
-                              setState(() {
-                                model.disableProvider(provider);
-                              });
-                            },
-                            icon: Icons.delete_forever,
-                            backgroundColor: Colors.red,
-                            label: 'Apagar',
-                          ),
-                          SlidableAction(
-                            onPressed: (e) {
-                              setState(() {
-                                _showProviderRegistrationPage(provider: provider);
-                              });
-                            },
-                            icon: Icons.edit,
-                            backgroundColor: Colors.deepPurple,
-                            label: 'Editar',
-                          ),
-                        ],
-                      ),
-                      child: ProviderListTile(provider: provider));
-                },
-              );
-            }
-          },
-        ),
-      ),
+          appBar: AppBar(
+            title: const Text('Fornecedores'),
+            centerTitle: true,
+          ),
+          drawer: CustomDrawer(
+            pageController: widget.pageController,
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _showProviderRegistrationPage();
+            },
+            child: const Icon(Icons.add),
+          ),
+          body: loading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView.builder(
+                  itemCount: secondaryProviderList.length,
+                  itemBuilder: (context, index) {
+                    var provider = secondaryProviderList[index];
+                    return Slidable(
+                        key: const ValueKey(0),
+                        startActionPane: ActionPane(
+                          dismissible: null,
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (e) {
+                                setState(() {
+                                  model.disableProvider(provider);
+                                });
+                              },
+                              icon: Icons.delete_forever,
+                              backgroundColor: Colors.red,
+                              label: 'Apagar',
+                            ),
+                            SlidableAction(
+                              onPressed: (e) {
+                                setState(() {
+                                  _showProviderRegistrationPage(
+                                      provider: provider);
+                                });
+                              },
+                              icon: Icons.edit,
+                              backgroundColor: Colors.deepPurple,
+                              label: 'Editar',
+                            ),
+                          ],
+                        ),
+                        child: ProviderListTile(provider: provider));
+                  },
+                )),
     );
+  }
+
+  Future<void> _updateProviderList() async {
+    setState(() {
+      loading = true;
+    });
+
+    final list = await ProviderModel.of(context).getAllProviders();
+
+    setState(() {
+      providerList = list;
+      secondaryProviderList.addAll(providerList);
+      loading = false;
+    });
   }
 }
