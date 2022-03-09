@@ -81,6 +81,7 @@ class _ProductListPageState extends State<ProductListPage> {
             onPressed: () {
               setState(() {
                 if (isSearching) {
+                  _clearSearchFromSecondaryList();
                   isSearching = false;
                   search = null;
                 } else {
@@ -146,10 +147,14 @@ class _ProductListPageState extends State<ProductListPage> {
       });
       return;
     } else {
-      setState(() {
-        secondaryProductList.clear();
-        secondaryProductList.addAll(productList);
-      });
+      _clearSearchFromSecondaryList();
     }
+  }
+
+  void _clearSearchFromSecondaryList(){
+    setState(() {
+      secondaryProductList.clear();
+      secondaryProductList.addAll(productList);
+    });
   }
 }
