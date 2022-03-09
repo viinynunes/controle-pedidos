@@ -3,6 +3,7 @@ import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
 import 'package:controle_pedidos/pages/provider/provider_registration_page.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -50,7 +51,9 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
             child: Text(
               e.enabled == true ? e.name : e.name + ' - FORNECEDOR APAGADO',
               style: (TextStyle(
-                color: e.enabled == false ? Colors.red : Colors.black,
+                color: e.enabled == false
+                    ? Colors.red
+                    : CustomColors.textColorTile,
               )),
             ),
             value: e,
@@ -75,6 +78,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
           },
           child: const Icon(Icons.save),
         ),
+        backgroundColor: CustomColors.backgroundColor,
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -85,13 +89,16 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                 children: [
                   TextFormField(
                     controller: _nameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      counterText: '',
                       labelText: 'Nome',
-                      enabledBorder: OutlineInputBorder(
+                      labelStyle: _getStyle(),
+                      enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.blueGrey),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                     ),
+                    style: _getStyle(),
                     validator: (e) {
                       if (_nameController.text.isEmpty) {
                         return 'Campo Obrigatório';
@@ -105,13 +112,17 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                   TextFormField(
                     controller: _categoryController,
                     maxLength: 3,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Categoria',
-                      enabledBorder: OutlineInputBorder(
+                      labelStyle: _getStyle(),
+                      counterStyle:
+                          const TextStyle(color: CustomColors.textColorTile),
+                      enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.blueGrey),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                     ),
+                    style: _getStyle(),
                     validator: (e) {
                       if (_categoryController.text.isEmpty) {
                         return 'Campo Obrigatório';
@@ -124,34 +135,39 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  loading? const LinearProgressIndicator() :
-                  DropdownButtonFormField<ProviderData>(
-                    items: dropDownItems,
-                    elevation: 10,
-                    style: const TextStyle(fontSize: 20, color: Colors.black),
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                      label: const Text(
-                        'Fornecedor',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(),
-                          borderRadius: (BorderRadius.circular(16))),
-                    ),
-                    validator: (e) {
-                      if (e == null) {
-                        return 'Campo Obrigatório';
-                      }
-                      return null;
-                    },
-                    onChanged: (e) {
-                      setState(() {
-                        _selectedProvider = e;
-                      });
-                    },
-                    value: _selectedProvider,
-                  ),
+                  loading
+                      ? const LinearProgressIndicator()
+                      : DropdownButtonFormField<ProviderData>(
+                          value: _selectedProvider,
+                          items: dropDownItems,
+                          elevation: 10,
+                          style: const TextStyle(fontSize: 20),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: CustomColors.backgroundTile,
+                            label: const Text(
+                              'Fornecedor',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: CustomColors.textColorTile),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(),
+                                borderRadius: (BorderRadius.circular(16))),
+                          ),
+                          dropdownColor: CustomColors.backgroundTile,
+                          validator: (e) {
+                            if (e == null) {
+                              return 'Campo Obrigatório';
+                            }
+                            return null;
+                          },
+                          onChanged: (e) {
+                            setState(() {
+                              _selectedProvider = e;
+                            });
+                          },
+                        ),
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Align(
@@ -168,7 +184,9 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                         child: const Text(
                           'Criar novo fornecedor',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: CustomColors.textColorTile),
                         ),
                       ),
                     ),
@@ -204,6 +222,11 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
     newProduct.category = _categoryController.text;
     newProduct.provider = _selectedProvider!;
     newProduct.enabled = true;
-    newProduct.stockDefault = widget.product != null ? widget.product!.stockDefault : false;
+    newProduct.stockDefault =
+        widget.product != null ? widget.product!.stockDefault : false;
+  }
+
+  TextStyle _getStyle() {
+    return const TextStyle(color: CustomColors.textColorTile);
   }
 }

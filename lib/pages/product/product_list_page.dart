@@ -2,6 +2,7 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/services/product_service.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/product_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +106,7 @@ class _ProductListPageState extends State<ProductListPage> {
         },
         child: const Icon(Icons.add),
       ),
+      backgroundColor: CustomColors.backgroundColor,
       body: ListView.builder(
         shrinkWrap: true,
         itemCount: secondaryProductList.length,
@@ -151,7 +153,7 @@ class _ProductListPageState extends State<ProductListPage> {
     }
   }
 
-  void _clearSearchFromSecondaryList(){
+  void _clearSearchFromSecondaryList() {
     setState(() {
       secondaryProductList.clear();
       secondaryProductList.addAll(productList);

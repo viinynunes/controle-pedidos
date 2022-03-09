@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/product_registration_page.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -46,40 +47,38 @@ class ProductListTile extends StatelessWidget {
               ),
             ],
           ),
-          child: InkWell(
-            onTap: () {},
-            child: Card(
-              child: SizedBox(
-                height: 80,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 3,
-                        fit: FlexFit.tight,
-                        child: Text(
-                          product.name,
-                          style: const TextStyle(fontSize: 20),
-                        ),
+          child: Card(
+            color: CustomColors.backgroundTile,
+            child: SizedBox(
+              height: 80,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      fit: FlexFit.tight,
+                      child: Text(
+                        product.name,
+                        style: const TextStyle(fontSize: 20, color: CustomColors.textColorTile),
                       ),
-                      Flexible(
-                        flex: 2,
-                        fit: FlexFit.tight,
-                        child: Text(
-                          product.category,
-                          style: const TextStyle(fontSize: 14),
-                        ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      fit: FlexFit.tight,
+                      child: Text(
+                        product.category,
+                        style: const TextStyle(fontSize: 14, color: CustomColors.textColorTile),
                       ),
-                      Flexible(
-                        flex: 1,
-                        child: Text(
-                          product.provider.name,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: Text(
+                        product.provider.name,
+                        style: const TextStyle(fontSize: 14, color: CustomColors.textColorTile),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
