@@ -17,13 +17,13 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
-
   final productService = ProductService();
 
   bool isSearching = false;
   bool loading = false;
   String? search;
   List<ProductData> productList = [];
+  List<ProductData> secondaryProductList = [];
 
   final _searchFocus = FocusNode();
 
@@ -71,11 +71,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     hintStyle: TextStyle(color: Colors.white)),
                 style: const TextStyle(color: Colors.white, fontSize: 22),
                 onChanged: (text) async {
-                  if (text.isEmpty) {
-                    search = null;
-                  } else {
-                    search = text;
-                  }
+                  _filterProduct(text);
                 },
               )
             : const Text('Produtos'),
@@ -110,9 +106,9 @@ class _ProductListPageState extends State<ProductListPage> {
       ),
       body: ListView.builder(
         shrinkWrap: true,
-        itemCount: productList.length,
+        itemCount: secondaryProductList.length,
         itemBuilder: (context, index) {
-          var product = productList[index];
+          var product = secondaryProductList[index];
           return ProductListTile(product: product);
         },
       ),
@@ -128,7 +124,32 @@ class _ProductListPageState extends State<ProductListPage> {
 
     setState(() {
       productList = list;
+      secondaryProductList.addAll(productList);
       loading = false;
     });
+  }
+
+  void _filterProduct(String search) {
+    List<ProductData> changeList = [];
+    changeList.addAll(productList);
+    if (search.isNotEmpty) {
+      List<ProductData> filteredList = [];
+      for (var product in changeList) {
+        if (product.name.toLowerCase().contains(search.toLowerCase())) {
+          filteredList.add(product);
+        }
+      }
+
+      setState(() {
+        secondaryProductList.clear();
+        secondaryProductList.addAll(filteredList);
+      });
+      return;
+    } else {
+      setState(() {
+        secondaryProductList.clear();
+        secondaryProductList.addAll(productList);
+      });
+    }
   }
 }
