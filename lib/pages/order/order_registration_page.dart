@@ -8,7 +8,6 @@ import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
-import 'package:controle_pedidos/utils/show_snack_bar.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -128,16 +127,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 },
                 icon: const Icon(Icons.add)),
             IconButton(
-                onPressed: () {
+                onPressed: () async {
                   if (orderItemList.isNotEmpty) {
                     _setOrder();
-                    if (widget.order == null) {
-                      ShowSnackBar.showSnackBar(context, 'Salvando Pedido');
-                      model.createOrder(newOrder);
-                    } else {
-                      ShowSnackBar.showSnackBar(context, 'Salvando Pedido');
-                      model.updateOrder(newOrder);
-                    }
                     Navigator.pop(context, newOrder);
                   }
                 },

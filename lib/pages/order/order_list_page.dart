@@ -21,16 +21,21 @@ class OrderListPage extends StatefulWidget {
 
 class _OrderListPageState extends State<OrderListPage> {
   final dateFormat = DateFormat('dd-MM-yyyy');
-  List<OrderData>? orderList = [];
+  List<OrderData> orderList = [];
 
   late DateTime _selectedDate;
   bool loading = false;
+  bool loadOrdersFirst = true;
 
   @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
-    _setOrderList();
+
+    if (loadOrdersFirst) {
+      _setOrderList();
+      loadOrdersFirst = false;
+    }
   }
 
   @override
@@ -45,9 +50,14 @@ class _OrderListPageState extends State<OrderListPage> {
                       order: order,
                     )));
       if (recOrder != null) {
-        setState(() {
-          _setOrderList();
-        });
+        if (order == null) {
+          OrderModel.of(context).createOrder(recOrder);
+          setState(() {
+            orderList.add(recOrder);
+          });
+        } else {
+          await OrderModel.of(context).updateOrder(recOrder);
+        }
       }
     }
 
@@ -56,9 +66,12 @@ class _OrderListPageState extends State<OrderListPage> {
         title: const Text('Pedidos'),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () async {
-            await _setOrderList();
-          }, icon: const Icon(Icons.refresh),),
+          IconButton(
+            onPressed: () async {
+              await _setOrderList();
+            },
+            icon: const Icon(Icons.refresh),
+          ),
         ],
       ),
       backgroundColor: CustomColors.backgroundColor,
@@ -113,44 +126,41 @@ class _OrderListPageState extends State<OrderListPage> {
                   //List of Orders
                   Expanded(
                       child: ListView.builder(
-                        itemCount: orderList?.length,
+                        itemCount: orderList.length,
                         itemBuilder: (context, index) {
-                          var order = orderList?[index];
-                          if (order != null) {
-                            return Slidable(
-                              key: const ValueKey(0),
-                              startActionPane: ActionPane(
-                                dismissible: null,
-                                motion: const ScrollMotion(),
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (e) {
-                                      model.disableOrder(order);
-                                      orderList?.remove(order);
-                                    },
-                                    icon: Icons.delete_forever,
-                                    backgroundColor: Colors.red,
-                                    label: 'Apagar',
-                                  ),
-                                  SlidableAction(
-                                    onPressed: (e) {
-                                      _showOrderRegistrationPage(order: order);
-                                    },
-                                    icon: Icons.edit,
-                                    backgroundColor: Colors.deepPurple,
-                                    label: 'Editar',
-                                  ),
-                                ],
-                              ),
-                              child: OrderListTile(
-                                order: order,
-                                showOrderRegistrationPage: () {
-                                  _showOrderRegistrationPage(order: order);
-                                },
-                              ),
-                            );
-                          }
-                          return Container();
+                          var order = orderList[index];
+                          return Slidable(
+                            key: const ValueKey(0),
+                            startActionPane: ActionPane(
+                              dismissible: null,
+                              motion: const ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (e) {
+                                    model.disableOrder(order);
+                                    orderList.remove(order);
+                                  },
+                                  icon: Icons.delete_forever,
+                                  backgroundColor: Colors.red,
+                                  label: 'Apagar',
+                                ),
+                                SlidableAction(
+                                  onPressed: (e) {
+                                    _showOrderRegistrationPage(order: order);
+                                  },
+                                  icon: Icons.edit,
+                                  backgroundColor: Colors.deepPurple,
+                                  label: 'Editar',
+                                ),
+                              ],
+                            ),
+                            child: OrderListTile(
+                              order: order,
+                              showOrderRegistrationPage: () {
+                                _showOrderRegistrationPage(order: order);
+                              },
+                            ),
+                          );
                         },
                       ),
                     ),
