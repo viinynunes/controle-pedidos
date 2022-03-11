@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/tiles/product_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -31,6 +32,7 @@ class _ProductListByProviderState extends State<ProductListByProvider> {
         title: Text(widget.provider.name),
         centerTitle: true,
       ),
+      backgroundColor: CustomColors.backgroundColor,
       body: ScopedModelDescendant<ProductModel>(
         builder: (context, child, model) {
           if (model.isLoading) {
@@ -38,15 +40,22 @@ class _ProductListByProviderState extends State<ProductListByProvider> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return RefreshIndicator(
-              onRefresh: _setProductList,
-              child: ListView.builder(
-                  itemCount: productList.length,
-                  itemBuilder: (context, index) {
-                    var product = productList[index];
-                    return ProductListTile(product: product);
-                  }),
-            );
+            return productList.isEmpty
+                ? const Center(
+                    child: Text(
+                      ('Nenhum producto encontrado'),
+                      style: TextStyle(color: CustomColors.textColorTile),
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _setProductList,
+                    child: ListView.builder(
+                        itemCount: productList.length,
+                        itemBuilder: (context, index) {
+                          var product = productList[index];
+                          return ProductListTile(product: product);
+                        }),
+                  );
           }
         },
       ),
