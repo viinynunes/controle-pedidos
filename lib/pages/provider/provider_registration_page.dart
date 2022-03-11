@@ -3,6 +3,7 @@ import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
 import 'package:controle_pedidos/pages/establishment/establishment_registration_page.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -53,7 +54,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                     ? e.name
                     : e.name + ' - ESTABELECIMENTO APAGADO',
                 style: (TextStyle(
-                  color: e.enabled == false ? Colors.red : Colors.black,
+                  color: e.enabled == false ? Colors.red : CustomColors.textColorTile,
                 )),
               ),
               value: e,
@@ -72,16 +73,12 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               _getFields();
-              if (widget.provider == null) {
-                model.createProvider(newProvider);
-              } else {
-                model.updateProvider(newProvider);
-              }
-              Navigator.pop(context);
+              Navigator.pop(context, newProvider);
             }
           },
           child: const Icon(Icons.save),
         ),
+        backgroundColor: CustomColors.backgroundColor,
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -92,13 +89,15 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                 children: [
                   TextFormField(
                     controller: _nameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Nome',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blueGrey),
+                      labelStyle: _getStyle(),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                     ),
+                    style: _getStyle(),
                     validator: (e) {
                       if (_nameController.text.isEmpty) {
                         return 'Campo Obrigatório';
@@ -110,13 +109,15 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                   ),
                   TextFormField(
                     controller: _locationController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Localização',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blueGrey),
+                      labelStyle: _getStyle(),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                     ),
+                    style: _getStyle(),
                     validator: (e) {
                       if (_locationController.text.isEmpty) {
                         return 'Campo Obrigatório';
@@ -132,17 +133,18 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                           items: dropDownItems,
                           elevation: 10,
                           style: const TextStyle(
-                              fontSize: 20, color: Colors.black),
+                              fontSize: 20, color: Colors.white),
                           isExpanded: true,
                           decoration: InputDecoration(
                             label: const Text(
                               'Estabelecimento',
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(fontSize: 20, color: CustomColors.textColorTile),
                             ),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(),
                                 borderRadius: (BorderRadius.circular(16))),
                           ),
+                          dropdownColor: CustomColors.backgroundTile,
                           validator: (e) {
                             if (e == null) {
                               return 'Campo Obrigatório';
@@ -171,7 +173,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                         child: const Text(
                           'Criar novo Estabelecimento',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold, color: CustomColors.textColorTile),
                         ),
                       ),
                     ),
@@ -212,5 +214,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
     newProvider.location = _locationController.text;
     newProvider.establishment = _selectedEstablishment;
     newProvider.enabled = true;
+  }
+
+  TextStyle _getStyle() {
+    return const TextStyle(color: CustomColors.textColorTile);
   }
 }
