@@ -7,6 +7,7 @@ import 'package:controle_pedidos/pages/order/order_list_page.dart';
 import 'package:controle_pedidos/pages/product/product_list_page.dart';
 import 'package:controle_pedidos/pages/provider/provider_list_page.dart';
 import 'package:controle_pedidos/pages/reports/report_home.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -48,19 +49,32 @@ class _HomePageState extends State<HomePage> {
         Scaffold(
             body: _registrationPageElements.elementAt(_registrationPageIndex),
             bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: CustomColors.bottomNavigationBarColor,
+              selectedItemColor: Colors.deepPurple,
+              unselectedItemColor: CustomColors.textColorTile,
+              currentIndex: _registrationPageIndex,
+              elevation: 10,
               items: const [
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.production_quantity_limits),
+                    icon: Icon(
+                      Icons.production_quantity_limits,
+                      color: CustomColors.textColorTile,
+                    ),
                     label: 'Produtos'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.sports_handball_outlined),
+                    icon: Icon(
+                      Icons.sports_handball_outlined,
+                      color: CustomColors.textColorTile,
+                    ),
                     label: 'Fornecedores'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.account_balance_sharp),
+                    icon: Icon(
+                      Icons.account_balance_sharp,
+                      color: CustomColors.textColorTile,
+                    ),
                     label: 'Estabelecimentos'),
               ],
-              currentIndex: _registrationPageIndex,
-              selectedItemColor: Colors.deepPurple,
+
               onTap: (index) {
                 setState(() {
                   _registrationPageIndex = index;
