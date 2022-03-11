@@ -41,9 +41,7 @@ class _ProviderListPageState extends State<ProviderListPage> {
     final recProv = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => provider == null
-                ? const ProviderRegistrationPage()
-                : ProviderRegistrationPage(
+            builder: (context) => ProviderRegistrationPage(
                     provider: provider,
                   )));
 
