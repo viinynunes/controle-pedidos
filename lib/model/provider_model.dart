@@ -18,9 +18,9 @@ class ProviderModel extends Model {
     notifyListeners();
   }
 
-  void updateProvider(ProviderData provider) {
+  Future<void> updateProvider(ProviderData provider) async {
     isLoading = true;
-    firebaseCollection.doc(provider.id).update(provider.toMap());
+    await firebaseCollection.doc(provider.id).update(provider.toMap());
     isLoading = false;
     notifyListeners();
   }
