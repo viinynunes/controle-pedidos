@@ -2,6 +2,7 @@ import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
 import 'package:controle_pedidos/pages/provider/provider_registration_page.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/provider_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -118,6 +119,7 @@ class _ProviderListPageState extends State<ProviderListPage> {
           },
           child: const Icon(Icons.add),
         ),
+        backgroundColor: CustomColors.backgroundColor,
         body: loading
             ? const Center(
                 child: CircularProgressIndicator(),
