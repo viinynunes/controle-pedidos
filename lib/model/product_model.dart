@@ -19,9 +19,9 @@ class ProductModel extends Model {
     notifyListeners();
   }
 
-  void updateProduct(ProductData product) {
+  Future<void> updateProduct(ProductData product) async {
     isLoading = true;
-    firebaseCollection.doc(product.id).update(product.toMap());
+    await firebaseCollection.doc(product.id).update(product.toMap());
     isLoading = false;
     notifyListeners();
   }
