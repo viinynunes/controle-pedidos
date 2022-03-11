@@ -1,15 +1,16 @@
 import 'package:controle_pedidos/data/establishment_data.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
+import 'package:controle_pedidos/services/establishment_service.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/establishment_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 import 'establishment_registration_page.dart';
 
 class EstablishmentListPage extends StatefulWidget {
-  const EstablishmentListPage({Key? key, required this.pageController}) : super(key: key);
+  const EstablishmentListPage({Key? key, required this.pageController})
+      : super(key: key);
 
   final PageController pageController;
 
@@ -18,85 +19,102 @@ class EstablishmentListPage extends StatefulWidget {
 }
 
 class _EstablishmentListPageState extends State<EstablishmentListPage> {
-  void _showClientRegistrationPage(EstablishmentData? estab) async {
-    Navigator.push(
+  final service = EstablishmentService();
+  List<EstablishmentData> estabList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getEstabList();
+  }
+
+  void _showClientRegistrationPage({EstablishmentData? estab}) async {
+    final recEstab = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => EstablishmentRegistrationPage(
                   establishment: estab,
                 )));
+
+    if (recEstab != null) {
+      if (estab != null) {
+        setState(() {
+          EstablishmentModel.of(context).updateEstablishment(recEstab);
+          estabList.remove(estab);
+        });
+      } else {
+        EstablishmentModel.of(context).createEstablishment(recEstab);
+      }
+    }
+    setState(() {
+      estabList.add(recEstab);
+      service.sortEstablishmentsByName(estabList);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<EstablishmentModel>(
-        builder: (context, child, model) {
-      if (model.isLoading) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-      return Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Estabelecimentos'),
           centerTitle: true,
         ),
-        drawer: CustomDrawer(pageController: widget.pageController,),
+        drawer: CustomDrawer(
+          pageController: widget.pageController,
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                    const EstablishmentRegistrationPage()));
+            _showClientRegistrationPage();
           },
           child: const Icon(Icons.add),
         ),
-        body: FutureBuilder<List<EstablishmentData>>(
-            future: model.getEnabledEstablishments(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) => Slidable(
-                    key: const ValueKey(0),
-                    startActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      dismissible: null,
-                      children: [
-                        SlidableAction(
-                          onPressed: (e) {
-                            setState(() {
-                              model.disableEstablishment(snapshot.data![index]);
-                            });
-                          },
-                          icon: Icons.delete_forever,
-                          label: 'Apagar',
-                          backgroundColor: Colors.red,
-                        ),
-                        SlidableAction(
-                          onPressed: (e) {
-                            setState(() {
-                              _showClientRegistrationPage(snapshot.data![index]);
-                            });
-                          },
-                          icon: Icons.edit,
-                          label: 'Editar',
-                          backgroundColor: Colors.deepPurple,
-                        )
-                      ],
-                    ),
-                    child: EstablishmentListTile(
-                        establishment: snapshot.data![index]),
+        body: ListView.builder(
+          itemCount: estabList.length,
+          itemBuilder: (context, index) {
+            var item = estabList[index];
+            return Slidable(
+              key: const ValueKey(0),
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                dismissible: null,
+                children: [
+                  SlidableAction(
+                    onPressed: (e) {
+                      setState(() {
+                        EstablishmentModel.of(context)
+                            .disableEstablishment(item);
+                        estabList.remove(item);
+                      });
+                    },
+                    icon: Icons.delete_forever,
+                    label: 'Apagar',
+                    backgroundColor: Colors.red,
                   ),
-                );
-              }
-            }),
-      );
+                  SlidableAction(
+                    onPressed: (e) {
+                      setState(() {
+                        _showClientRegistrationPage(estab: item);
+                      });
+                    },
+                    icon: Icons.edit,
+                    label: 'Editar',
+                    backgroundColor: Colors.deepPurple,
+                  )
+                ],
+              ),
+              child: EstablishmentListTile(establishment: item),
+            );
+          },
+        ));
+  }
+
+  void _getEstabList() async {
+    final list =
+        await EstablishmentModel.of(context).getEnabledEstablishments();
+
+    setState(() {
+      estabList = list;
     });
   }
 }
