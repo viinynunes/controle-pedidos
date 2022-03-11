@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
 import 'package:controle_pedidos/pages/provider/provider_registration_page.dart';
+import 'package:controle_pedidos/services/provider_service.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/provider_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class ProviderListPage extends StatefulWidget {
 }
 
 class _ProviderListPageState extends State<ProviderListPage> {
+  final providerService = ProviderService();
+
   bool loading = false;
   bool isSearching = false;
 
@@ -34,7 +37,7 @@ class _ProviderListPageState extends State<ProviderListPage> {
   }
 
   void _showProviderRegistrationPage({ProviderData? provider}) async {
-    Navigator.push(
+    final recProv = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => provider == null
@@ -42,6 +45,30 @@ class _ProviderListPageState extends State<ProviderListPage> {
                 : ProviderRegistrationPage(
                     provider: provider,
                   )));
+
+    setState(() {
+      loading = true;
+    });
+
+    if (recProv != null) {
+      if (provider != null) {
+        await ProviderModel.of(context).updateProvider(recProv);
+        setState(() {
+          secondaryProviderList.remove(provider);
+          secondaryProviderList.add(recProv);
+        });
+      } else {
+        setState(() {
+          ProviderModel.of(context).createProvider(recProv);
+          secondaryProviderList.add(recProv);
+        });
+      }
+    }
+    providerService.sortProviderListByName(secondaryProviderList);
+
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -153,10 +180,10 @@ class _ProviderListPageState extends State<ProviderListPage> {
     List<ProviderData> changeList = [];
     changeList.addAll(providerList);
 
-    if (search.isNotEmpty){
+    if (search.isNotEmpty) {
       List<ProviderData> filteredList = [];
-      for (var provider in changeList){
-        if (provider.name.toLowerCase().contains(search.toLowerCase())){
+      for (var provider in changeList) {
+        if (provider.name.toLowerCase().contains(search.toLowerCase())) {
           filteredList.add(provider);
         }
       }
