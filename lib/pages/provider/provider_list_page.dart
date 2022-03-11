@@ -136,6 +136,7 @@ class _ProviderListPageState extends State<ProviderListPage> {
                             onPressed: (e) {
                               setState(() {
                                 model.disableProvider(provider);
+                                secondaryProviderList.remove(provider);
                               });
                             },
                             icon: Icons.delete_forever,
@@ -167,7 +168,7 @@ class _ProviderListPageState extends State<ProviderListPage> {
       loading = true;
     });
 
-    final list = await ProviderModel.of(context).getAllProviders();
+    final list = await ProviderModel.of(context).getEnabledProviders();
 
     setState(() {
       providerList = list;
