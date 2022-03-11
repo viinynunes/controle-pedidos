@@ -1,26 +1,18 @@
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
-import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductListTile extends StatelessWidget {
-  const ProductListTile({Key? key, required this.product}) : super(key: key);
+  const ProductListTile({Key? key, required this.product, required this.showRegistrationPage}) : super(key: key);
 
   final ProductData product;
+  final VoidCallback showRegistrationPage;
 
   @override
   Widget build(BuildContext context) {
-    void _showProductRegistrationPage({required ProductData product}) async {
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductRegistrationPage(
-                    product: product,
-                  )));
-    }
 
     return ScopedModelDescendant<ProductModel>(
       builder: (context, child, model) => Slidable(
@@ -39,7 +31,7 @@ class ProductListTile extends StatelessWidget {
               ),
               SlidableAction(
                 onPressed: (e) {
-                  _showProductRegistrationPage(product: product);
+                  showRegistrationPage();
                 },
                 icon: Icons.edit,
                 backgroundColor: Colors.deepPurple,
