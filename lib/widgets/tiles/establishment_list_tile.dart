@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/establishment_data.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 class EstablishmentListTile extends StatelessWidget {
@@ -9,21 +10,20 @@ class EstablishmentListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Card(
-        child: SizedBox(
-          height: 80,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Text(
-                  establishment.name,
-                  style: const TextStyle(fontSize: 20),
-                ))
-              ],
-            ),
+    return Card(
+      color: CustomColors.backgroundTile,
+      child: SizedBox(
+        height: 80,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text(
+                establishment.name,
+                style: const TextStyle(fontSize: 20, color: CustomColors.textColorTile),
+              ))
+            ],
           ),
         ),
       ),

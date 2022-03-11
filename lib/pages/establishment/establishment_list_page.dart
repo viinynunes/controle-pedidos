@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/establishment_data.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
 import 'package:controle_pedidos/services/establishment_service.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/establishment_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,7 @@ class _EstablishmentListPageState extends State<EstablishmentListPage> {
           },
           child: const Icon(Icons.add),
         ),
+        backgroundColor: CustomColors.backgroundColor,
         body: ListView.builder(
           itemCount: estabList.length,
           itemBuilder: (context, index) {

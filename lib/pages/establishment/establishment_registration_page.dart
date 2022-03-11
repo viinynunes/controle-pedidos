@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/establishment_data.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 class EstablishmentRegistrationPage extends StatefulWidget {
@@ -51,6 +52,7 @@ class _EstablishmentRegistrationPageState
         },
         child: const Icon(Icons.save),
       ),
+      backgroundColor: CustomColors.backgroundColor,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -60,10 +62,12 @@ class _EstablishmentRegistrationPageState
               controller: _nameController,
               decoration: const InputDecoration(
                   labelText: 'Nome',
+                  labelStyle: TextStyle(color: CustomColors.textColorTile),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey),
+                    borderSide: BorderSide(color: Colors.deepPurple),
                     borderRadius: BorderRadius.all(Radius.circular(16)),
                   )),
+              style: const TextStyle(color: CustomColors.textColorTile),
               validator: (text) {
                 if (_nameController.text.isEmpty) {
                   return 'Campo Obrigatório';
