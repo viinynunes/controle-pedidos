@@ -37,25 +37,36 @@ class _ProductListPageState extends State<ProductListPage> {
     final recProduct = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => product == null
-            ? const ProductRegistrationPage()
-            : ProductRegistrationPage(
-                product: product,
-              ),
+        builder: (context) => ProductRegistrationPage(
+          product: product,
+        ),
       ),
     );
 
+    setState(() {
+      loading = true;
+    });
+
     if (recProduct != null) {
       if (product != null) {
-        ProductModel.of(context).updateProduct(recProduct);
-      } else {
         setState(() {
-          ProductModel.of(context).createProduct(recProduct);
-          productList.add(recProduct);
-          productService.sortProductsByName(productList);
+          ProductModel.of(context).updateProduct(recProduct);
+          secondaryProductList.remove(product);
         });
+
+      } else {
+        ProductModel.of(context).createProduct(recProduct);
       }
+      setState(() {
+        secondaryProductList.add(recProduct);
+      });
     }
+
+    productService.sortProductsByName(secondaryProductList);
+
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -110,7 +121,12 @@ class _ProductListPageState extends State<ProductListPage> {
         itemCount: secondaryProductList.length,
         itemBuilder: (context, index) {
           var product = secondaryProductList[index];
-          return ProductListTile(product: product);
+          return ProductListTile(
+            product: product,
+            showRegistrationPage: () {
+              _showProductRegistrationPage(product: product);
+            },
+          );
         },
       ),
     );
@@ -120,8 +136,7 @@ class _ProductListPageState extends State<ProductListPage> {
     setState(() {
       loading = true;
     });
-    final list = await ProductModel.of(context)
-        .getFilteredEnabledProducts();
+    final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
     setState(() {
       productList = list;
