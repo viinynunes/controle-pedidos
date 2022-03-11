@@ -1,5 +1,4 @@
 import 'package:controle_pedidos/data/establishment_data.dart';
-import 'package:controle_pedidos/pages/establishment/establishment_registration_page.dart';
 import 'package:flutter/material.dart';
 
 class EstablishmentListTile extends StatelessWidget {
