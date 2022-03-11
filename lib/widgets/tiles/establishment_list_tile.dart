@@ -10,18 +10,7 @@ class EstablishmentListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _showEstablishmentRegistrationPage(EstablishmentData? estab) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  EstablishmentRegistrationPage(establishment: estab)));
-    }
-
     return InkWell(
-      onTap: () {
-        _showEstablishmentRegistrationPage(establishment);
-      },
       child: Card(
         child: SizedBox(
           height: 80,
