@@ -105,16 +105,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     page: 2,
                   ),
                   DrawerTile(
-                    icon: Icons.account_circle_outlined,
-                    text: 'CLIENTES',
-                    pageController: pageController,
-                    page: 3,
-                  ),
-                  DrawerTile(
                     icon: Icons.article,
                     text: 'RELATÓRIOS',
                     pageController: pageController,
-                    page: 4,
+                    page: 3,
                   ),
                 ],
               );

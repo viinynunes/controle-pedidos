@@ -16,7 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? search;
   int _registrationPageIndex = 0;
   final _pageController = PageController();
 
@@ -24,6 +23,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final List<Widget> _registrationPageElements = <Widget>[
       ProductListPage(
+        pageController: _pageController,
+      ),
+      ClientListPage(
         pageController: _pageController,
       ),
       ProviderListPage(
@@ -45,6 +47,7 @@ class _HomePageState extends State<HomePage> {
         Scaffold(
             body: _registrationPageElements.elementAt(_registrationPageIndex),
             bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               backgroundColor: CustomColors.bottomNavigationBarColor,
               selectedItemColor: Colors.deepPurple,
               unselectedItemColor: CustomColors.textColorTile,
@@ -57,6 +60,12 @@ class _HomePageState extends State<HomePage> {
                       color: CustomColors.textColorTile,
                     ),
                     label: 'Produtos'),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.account_circle_outlined,
+                      color: CustomColors.textColorTile,
+                    ),
+                    label: 'Clientes'),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.sports_handball_outlined,
@@ -76,9 +85,6 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             )),
-        ClientListPage(
-          pageController: _pageController,
-        ),
         ReportHomePage(
           pageController: _pageController,
         ),
