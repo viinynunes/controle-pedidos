@@ -5,6 +5,7 @@ import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
 import 'package:controle_pedidos/services/control_service.dart';
+import 'package:controle_pedidos/services/provider_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_control_home_page.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
@@ -439,6 +440,10 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
     final list = await StockModel.of(context)
         .getAllStockProvidersByDate(iniDate, endDate);
+
+    final service = ProviderService();
+
+    service.sortProviderListByEstablishmentAndRegistration(list.toList());
 
     setState(() {
       providersList = list.toList();
