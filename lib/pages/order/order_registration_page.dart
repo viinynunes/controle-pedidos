@@ -141,10 +141,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
             if (_formKey.currentState!.validate()) {
               if (_selectedProduct != null) {
                 _setOrderItem();
-                setState(() {
-                  orderItemList.add(orderItem!);
-                  _clearFields();
-                });
               }
             }
           },
@@ -438,10 +434,30 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   }
 
   void _setOrderItem() {
-    orderItem = OrderItemData(
-        quantity: int.parse(_quantityController.text),
-        product: _selectedProduct!,
-        note: note);
+    OrderItemData verifyOrderItem =
+        OrderItemData(quantity: 0, product: _selectedProduct!);
+    if (orderItemList.contains(verifyOrderItem)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(milliseconds: 1500),
+          backgroundColor: CustomColors.backgroundTile,
+          content: Text(
+            'O produto já esta na lista',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+        ),
+      );
+    } else {
+      orderItem = OrderItemData(
+          quantity: int.parse(_quantityController.text),
+          product: _selectedProduct!,
+          note: note);
+      setState(() {
+        orderItemList.add(orderItem!);
+        _clearFields();
+      });
+    }
   }
 
   void _setOrder() {
