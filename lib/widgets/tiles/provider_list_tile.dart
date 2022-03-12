@@ -45,7 +45,7 @@ class ProviderListTile extends StatelessWidget {
                 Flexible(
                   flex: 2,
                   child: Text(
-                    provider.establishment!.name,
+                    provider.establishment.name,
                     style: const TextStyle(fontSize: 14, color: CustomColors.textColorTile),
                   ),
                 ),
