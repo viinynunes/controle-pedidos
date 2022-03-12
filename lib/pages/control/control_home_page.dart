@@ -240,7 +240,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                       fontSize: 16, color: CustomColors.textColorTile),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(),
+                                    borderSide: const BorderSide(color: Colors.deepPurple),
                                     borderRadius: (BorderRadius.circular(16))),
                               ),
                               dropdownColor: CustomColors.backgroundTile,
