@@ -88,6 +88,11 @@ class ExcelExportService {
 
       columnIndex++;
 
+      sheet.getRangeByIndex(rowIndex, columnIndex)
+      .setText(lastProvider.location);
+
+      columnIndex++;
+
       sheet.getRangeByIndex(rowIndex, columnIndex).setText(
           stockItem.product.category +
               '   ' +
@@ -107,7 +112,7 @@ class ExcelExportService {
       sheet.autoFitColumn(columnInitValue);
       if (rowIndex > 60) {
         rowIndex = 1;
-        columnInitValue = columnInitValue + 5;
+        columnInitValue = columnInitValue + 6;
       }
     }
 
