@@ -102,6 +102,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                       if (_nameController.text.isEmpty) {
                         return 'Campo Obrigatório';
                       }
+                      return null;
                     },
                   ),
                   const SizedBox(
@@ -122,6 +123,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                       if (_locationController.text.isEmpty) {
                         return 'Campo Obrigatório';
                       }
+                      return null;
                     },
                   ),
                   const SizedBox(
@@ -149,6 +151,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                             if (e == null) {
                               return 'Campo Obrigatório';
                             }
+                            return null;
                           },
                           onChanged: (e) {
                             setState(() {
@@ -199,7 +202,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
       _establishmentList =
           await EstablishmentModel.of(context).getAllEstablishments();
       _selectedEstablishment = _establishmentList
-          .firstWhere((element) => element.id == provider.establishment!.id);
+          .firstWhere((element) => element.id == provider.establishment.id);
     }
 
     if (provider == null) {
@@ -212,7 +215,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
   void _getFields() {
     newProvider.name = _nameController.text;
     newProvider.location = _locationController.text;
-    newProvider.establishment = _selectedEstablishment;
+    newProvider.establishment = _selectedEstablishment!;
     newProvider.enabled = true;
     newProvider.registrationDate = widget.provider == null ? DateTime.now() : widget.provider!.registrationDate;
   }
