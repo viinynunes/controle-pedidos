@@ -3,6 +3,7 @@ import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/pages/reports/orders/report_one_order_page.dart';
 import 'package:controle_pedidos/services/excel_export_service.dart';
 import 'package:controle_pedidos/services/order_services.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -49,6 +50,7 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
               icon: const Icon(Icons.share))
         ],
       ),
+      backgroundColor: CustomColors.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -126,9 +128,12 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
                               builder: (context) =>
                                   ReportOneOrderPage(order: order)));
                     },
-                    title: Text(dateFormat.format(order.creationDate) +
-                        ' - ' +
-                        order.client.name),
+                    title: Text(
+                      dateFormat.format(order.creationDate) +
+                          ' - ' +
+                          order.client.name,
+                      style: const TextStyle(color: CustomColors.textColorTile),
+                    ),
                   );
                 },
               ),
