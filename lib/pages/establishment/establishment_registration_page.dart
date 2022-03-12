@@ -83,6 +83,7 @@ class _EstablishmentRegistrationPageState
 
   void _getFields() {
     newEstablishment.name = _nameController.text;
+    newEstablishment.registrationDate = widget.establishment == null ? DateTime.now() : widget.establishment!.registrationDate;
     newEstablishment.enabled = true;
   }
 }
