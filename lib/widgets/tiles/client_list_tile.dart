@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/client_data.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 class ClientListTile extends StatefulWidget {
@@ -15,6 +16,7 @@ class _ClientListTileState extends State<ClientListTile> {
   Widget build(BuildContext context) {
     ClientData client = widget.client;
     return Card(
+      color: CustomColors.backgroundTile,
         child: SizedBox(
       height: 80,
       child: Padding(
@@ -24,7 +26,7 @@ class _ClientListTileState extends State<ClientListTile> {
             Expanded(
               child: Text(
                 client.name,
-                style: const TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20, color: CustomColors.textColorTile),
               ),
             ),
           ],

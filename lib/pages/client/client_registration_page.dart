@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/client_data.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 class ClientRegistrationPage extends StatefulWidget {
@@ -53,6 +54,7 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
         },
         child: const Icon(Icons.save),
       ),
+      backgroundColor: CustomColors.backgroundColor,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -62,13 +64,15 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Nome',
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueGrey),
+                    labelStyle: _getStyle(),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                   ),
+                  style: _getStyle(),
                   validator: (e) {
                     if (_nameController.text.isEmpty) {
                       return 'Campo Obrigatório';
@@ -82,13 +86,15 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                 ),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Email',
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueGrey),
+                    labelStyle: _getStyle(),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                   ),
+                  style: _getStyle(),
                   validator: (text) {
                     bool regValida = RegExp(
                             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -105,13 +111,15 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                 ),
                 TextFormField(
                   controller: _phoneController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Telefone',
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueGrey),
+                    labelStyle: _getStyle(),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                   ),
+                  style: _getStyle(),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(
@@ -119,13 +127,15 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                 ),
                 TextFormField(
                   controller: _addressController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Endereço',
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blueGrey),
+                    labelStyle: _getStyle(),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                   ),
+                  style: _getStyle(),
                   textInputAction: TextInputAction.next,
                 ),
               ],
@@ -142,5 +152,9 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
     newClientData.phone = _phoneController.text;
     newClientData.address = _addressController.text;
     newClientData.enabled = true;
+  }
+
+  TextStyle _getStyle(){
+    return const TextStyle(color: CustomColors.textColorTile);
   }
 }

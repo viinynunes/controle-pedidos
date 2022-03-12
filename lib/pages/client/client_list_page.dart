@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/client_data.dart';
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/services/client_service.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/tiles/client_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -84,9 +85,9 @@ class _ClientListPageState extends State<ClientListPage> {
         },
         child: const Icon(
           Icons.add,
-          size: 40,
         ),
       ),
+      backgroundColor: CustomColors.backgroundColor,
       body: ListView.builder(
         itemCount: secondaryClientList.length,
         itemBuilder: (context, index) {
