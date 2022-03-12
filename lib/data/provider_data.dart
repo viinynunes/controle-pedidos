@@ -30,7 +30,7 @@ class ProviderData {
   late DateTime registrationDate;
   late bool enabled;
 
-  EstablishmentData? establishment;
+  late EstablishmentData establishment;
 
   List<ProductData>? productList;
 
@@ -41,7 +41,7 @@ class ProviderData {
       'location': location,
       'registrationDate' : registrationDate,
       'enabled': enabled,
-      'establishment': establishment?.toMap()
+      'establishment': establishment.toMap()
     };
   }
 
