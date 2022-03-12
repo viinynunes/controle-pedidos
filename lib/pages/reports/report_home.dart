@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/pages/reports/establishments/report_establishment_page.dart';
 import 'package:controle_pedidos/pages/reports/orders/report_orders_page.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class ReportHomePage extends StatelessWidget {
       drawer: CustomDrawer(
         pageController: pageController,
       ),
+      backgroundColor: CustomColors.backgroundColor,
       body: Center(
         child: Column(
           children: [
