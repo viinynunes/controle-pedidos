@@ -15,7 +15,8 @@ class EstablishmentData {
   EstablishmentData.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     name = map['name'];
-    registrationDate = map['registrationDate'];
+    Timestamp timestamp = map['registrationDate'];
+    registrationDate = DateTime.parse(timestamp.toDate().toString());
     enabled = map['enabled'];
   }
 
