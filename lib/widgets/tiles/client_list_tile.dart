@@ -11,7 +11,6 @@ class ClientListTile extends StatefulWidget {
 }
 
 class _ClientListTileState extends State<ClientListTile> {
-
   @override
   Widget build(BuildContext context) {
     ClientData client = widget.client;
@@ -33,6 +32,4 @@ class _ClientListTileState extends State<ClientListTile> {
       ),
     ));
   }
-
-
 }
