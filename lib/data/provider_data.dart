@@ -9,6 +9,8 @@ class ProviderData {
     id = snapshot.id;
     name = snapshot.get('name');
     location = snapshot.get('location');
+    Timestamp timeStamp = snapshot.get('registrationDate');
+    registrationDate = DateTime.parse(timeStamp.toDate().toString());
     enabled = snapshot.get('enabled');
     establishment = EstablishmentData.fromMap(snapshot.get('establishment'));
   }
@@ -17,6 +19,7 @@ class ProviderData {
     id = map['id'];
     name = map['name'];
     location = map['location'];
+    registrationDate = map['registrationDate'];
     enabled = map['enabled'];
     establishment = EstablishmentData.fromMap(map['establishment']);
   }
@@ -24,6 +27,7 @@ class ProviderData {
   String? id;
   late String name;
   late String location;
+  late DateTime registrationDate;
   late bool enabled;
 
   EstablishmentData? establishment;
@@ -35,6 +39,7 @@ class ProviderData {
       'id': id,
       'name': name,
       'location': location,
+      'registrationDate' : registrationDate,
       'enabled': enabled,
       'establishment': establishment?.toMap()
     };

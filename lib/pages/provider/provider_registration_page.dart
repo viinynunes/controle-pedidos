@@ -214,6 +214,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
     newProvider.location = _locationController.text;
     newProvider.establishment = _selectedEstablishment;
     newProvider.enabled = true;
+    newProvider.registrationDate = widget.provider == null ? DateTime.now() : widget.provider!.registrationDate;
   }
 
   TextStyle _getStyle() {
