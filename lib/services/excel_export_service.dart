@@ -44,7 +44,7 @@ class ExcelExportService {
         rowIndex++;
       }
 
-      if (rowIndex >= 6) {
+      if (rowIndex >= 60) {
         rowIndex = 1;
         columnIndex = columnIndex + 2;
       }
@@ -105,7 +105,7 @@ class ExcelExportService {
           .setText((stockItem.totalOrdered - stockItem.total).toString());
 
       sheet.autoFitColumn(columnInitValue);
-      if (rowIndex > 11) {
+      if (rowIndex > 60) {
         rowIndex = 1;
         columnInitValue = columnInitValue + 5;
       }
