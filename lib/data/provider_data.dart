@@ -19,7 +19,8 @@ class ProviderData {
     id = map['id'];
     name = map['name'];
     location = map['location'];
-    registrationDate = map['registrationDate'];
+    Timestamp timeStamp = map['registrationDate'];
+    registrationDate = DateTime.parse(timeStamp.toDate().toString());
     enabled = map['enabled'];
     establishment = EstablishmentData.fromMap(map['establishment']);
   }
