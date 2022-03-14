@@ -19,8 +19,14 @@ class ProviderData {
     id = map['id'];
     name = map['name'];
     location = map['location'];
-    Timestamp timeStamp = map['registrationDate'];
-    registrationDate = DateTime.parse(timeStamp.toDate().toString());
+    var date = map['registrationDate'];
+    if (date is Timestamp){
+      Timestamp timeStamp = map['registrationDate'];
+      registrationDate = DateTime.parse(timeStamp.toDate().toString());
+    } else {
+      registrationDate = date;
+    }
+
     enabled = map['enabled'];
     establishment = EstablishmentData.fromMap(map['establishment']);
   }
@@ -40,7 +46,7 @@ class ProviderData {
       'id': id,
       'name': name,
       'location': location,
-      'registrationDate' : registrationDate,
+      'registrationDate': registrationDate,
       'enabled': enabled,
       'establishment': establishment.toMap()
     };
@@ -48,7 +54,7 @@ class ProviderData {
 
   @override
   bool operator ==(Object other) {
-    if(other is! ProviderData){
+    if (other is! ProviderData) {
       return false;
     }
     return name == (other).name;
