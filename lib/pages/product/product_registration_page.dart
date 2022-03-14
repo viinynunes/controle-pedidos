@@ -22,6 +22,8 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
   final _nameController = TextEditingController();
   final _categoryController = TextEditingController();
 
+  final _nameFocus = FocusNode();
+
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
@@ -42,6 +44,8 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
       _categoryController.text = newProduct.category;
       _getProvidersList(product: newProduct);
     }
+
+    _nameFocus.requestFocus();
   }
 
   @override
@@ -90,6 +94,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                 children: [
                   TextFormField(
                     controller: _nameController,
+                    focusNode: _nameFocus,
                     decoration: InputDecoration(
                       counterText: '',
                       labelText: 'Nome',
