@@ -3,6 +3,8 @@ import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../services/provider_service.dart';
+
 class ProviderModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('providers');
 
@@ -58,6 +60,8 @@ class ProviderModel extends Model {
     for (DocumentSnapshot e in snapshot.docs) {
       providerList.add(ProviderData.fromDocSnapshot(e));
     }
+    final service = ProviderService();
+    service.sortProviderListByEstablishmentAndRegistration(providerList);
     isLoading = false;
     notifyListeners();
     return providerList;
