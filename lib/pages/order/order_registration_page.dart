@@ -5,7 +5,6 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
-import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
@@ -26,6 +25,9 @@ class OrderRegistrationPage extends StatefulWidget {
 }
 
 class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
+
+  final productService = ProductService();
+
   List<ClientData> clientList = [];
   List<ProductData> productList = [];
   bool loading = false;
@@ -101,41 +103,17 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     void _showProductRegistrationPage({ProductData? product}) async {
-      final recProduct = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProductRegistrationPage(
-            product: product,
-          ),
-        ),
-      );
 
-      setState(() {
-        loading = true;
-      });
+      var recProduct = await productService.createOrUpdate(product: product, productList: productList, context: context);
 
-      if (recProduct != null) {
-        if (product != null) {
-          setState(() {
-            ProductModel.of(context).updateProduct(recProduct);
-            productList.remove(product);
-          });
-
-        } else {
-          ProductModel.of(context).createProduct(recProduct);
-        }
-        setState(() {
-          productList.add(recProduct);
-          _selectedProduct = recProduct;
-        });
+      if (recProduct != null){
+        _selectedProduct = recProduct;
       }
 
-      final productService = ProductService();
-      productService.sortProductsByName(productList);
-
       setState(() {
-        loading = false;
+        productService.sortProductsByName(productList);
       });
+
       await _setProductList();
     }
 
