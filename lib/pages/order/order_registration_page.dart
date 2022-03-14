@@ -103,11 +103,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => product == null
-              ? const ProductRegistrationPage()
-              : ProductRegistrationPage(
-                  product: product,
-                ),
+          builder: (context) => ProductRegistrationPage(
+            product: product,
+          ),
         ),
       );
       await _setProductList();
