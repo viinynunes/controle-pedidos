@@ -297,6 +297,11 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                   height: 55,
                                   child: ElevatedButton(
                                       focusNode: _selectProductFocus,
+                                      onLongPress: (){
+                                        setState(() {
+                                          _selectedProduct = null;
+                                        });
+                                      },
                                       onPressed: () async {
                                         final productFromDialog =
                                             await Navigator.push(
