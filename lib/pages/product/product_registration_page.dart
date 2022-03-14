@@ -106,6 +106,8 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       }
                       return null;
                     },
+                    keyboardType: TextInputType.url,
+                    textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(
                     height: 20,
@@ -132,6 +134,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       }
                       return null;
                     },
+                    textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(
                     height: 30,
