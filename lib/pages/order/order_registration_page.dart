@@ -142,22 +142,23 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
               icon: const Icon(Icons.save),
             ),
             PopupMenuButton(
+              color: CustomColors.backgroundTile,
               itemBuilder: (context) => [
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.addProduct,
-                  child: Text('Adicionar Produto'),
+                  child: Text('Adicionar Produto', style: TextStyle(color: CustomColors.textColorTile),),
                 ),
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.editProduct,
-                  child: Text('Editar Produto'),
+                  child: Text('Editar Produto', style: TextStyle(color: CustomColors.textColorTile),),
                 ),
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.addClient,
-                  child: Text('Adicionar Cliente'),
+                  child: Text('Adicionar Cliente', style: TextStyle(color: CustomColors.textColorTile),),
                 ),
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.editClient,
-                  child: Text('Editar Cliente'),
+                  child: Text('Editar Cliente', style: TextStyle(color: CustomColors.textColorTile),),
                 ),
               ],
               onSelected: (value) async {

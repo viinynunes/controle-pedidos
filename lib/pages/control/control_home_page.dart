@@ -90,18 +90,19 @@ class _ControlHomePageState extends State<ControlHomePage> {
               },
               icon: const Icon(Icons.share)),
           PopupMenuButton(
+            color: CustomColors.backgroundTile,
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: EnumControlHomePage.addProduct,
-                child: Text('Adicionar Produto'),
+                child: Text('Adicionar Produto', style: TextStyle(color: CustomColors.textColorTile),),
               ),
               const PopupMenuItem(
                 value: EnumControlHomePage.loadDefaultStock,
-                child: Text('Carregar Produtos Padrão'),
+                child: Text('Carregar Produtos Padrão', style: TextStyle(color: CustomColors.textColorTile),),
               ),
               const PopupMenuItem(
                 value: EnumControlHomePage.editDefaultStock,
-                child: Text('Editar Produtos Padrão'),
+                child: Text('Editar Produtos Padrão', style: TextStyle(color: CustomColors.textColorTile),),
               ),
             ],
             onSelected: (value) async {
