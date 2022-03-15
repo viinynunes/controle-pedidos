@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../widgets/custom_drawer.dart';
-import 'client_registration_page.dart';
 
 class ClientListPage extends StatefulWidget {
   const ClientListPage({
@@ -23,8 +22,11 @@ class ClientListPage extends StatefulWidget {
 
 class _ClientListPageState extends State<ClientListPage> {
   final service = ClientService();
+
   List<ClientData> clientList = [];
   List<ClientData> secondaryClientList = [];
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -34,29 +36,16 @@ class _ClientListPageState extends State<ClientListPage> {
   }
 
   void _showClientRegistrationPage({ClientData? client}) async {
-    final recClient = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ClientRegistrationPage(
-                  client: client,
-                )));
-
-    if (recClient != null) {
-      if (client != null) {
-        setState(() {
-          ClientModel.of(context).updateClient(recClient);
-          secondaryClientList.remove(client);
-        });
-      } else {
-        ClientModel.of(context).createClient(recClient);
-      }
-      setState(() {
-        secondaryClientList.add(recClient);
-      });
-    }
+    setState(() {
+      loading = true;
+    });
+    await service.createOrUpdate(
+        client: client, clientList: clientList, context: context);
 
     setState(() {
+      _getClientList();
       service.sortClientsByName(secondaryClientList);
+      loading = false;
     });
   }
 
@@ -133,6 +122,7 @@ class _ClientListPageState extends State<ClientListPage> {
 
     setState(() {
       clientList = list;
+      secondaryClientList.clear();
       secondaryClientList.addAll(clientList);
     });
   }
