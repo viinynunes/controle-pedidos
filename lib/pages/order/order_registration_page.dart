@@ -155,20 +155,38 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                   value: EnumOrderRegistrationPage.addClient,
                   child: Text('Adicionar Cliente'),
                 ),
+                const PopupMenuItem(
+                  value: EnumOrderRegistrationPage.editClient,
+                  child: Text('Editar Cliente'),
+                ),
               ],
               onSelected: (value) async {
                 if (value == EnumOrderRegistrationPage.addProduct) {
                   _showProductRegistrationPage();
-                }
-                else if (value == EnumOrderRegistrationPage.editProduct) {
+                } else if (value == EnumOrderRegistrationPage.editProduct) {
                   if (_selectedProduct == null) {
                     _showSnackBarError('Nenhum produto selecionado');
                   } else {
                     _showProductRegistrationPage(product: _selectedProduct);
                   }
-                }
-                else if (value == EnumOrderRegistrationPage.addClient){
-                  clientService.createOrUpdate(clientList: clientList, context: context);
+                } else if (value == EnumOrderRegistrationPage.addClient) {
+                  clientService.createOrUpdate(
+                      clientList: clientList, context: context);
+                } else if (value == EnumOrderRegistrationPage.editClient) {
+                  if (client == null) {
+                    _showSnackBarError('Nenhum cliente selecionado');
+                  } else {
+                    final recClient = await clientService.createOrUpdate(
+                        client: client,
+                        clientList: clientList,
+                        context: context);
+
+                    if (recClient != null){
+                      setState(() {
+                        client = recClient;
+                      });
+                    }
+                  }
                 }
               },
             ),

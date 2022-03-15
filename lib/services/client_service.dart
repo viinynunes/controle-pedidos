@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../data/client_data.dart';
 
 class ClientService {
-  Future<ClientData> createOrUpdate(
+  Future<ClientData?> createOrUpdate(
       {ClientData? client,
       required List<ClientData> clientList,
       required BuildContext context}) async {
