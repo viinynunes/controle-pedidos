@@ -146,19 +146,31 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
               itemBuilder: (context) => [
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.addProduct,
-                  child: Text('Adicionar Produto', style: TextStyle(color: CustomColors.textColorTile),),
+                  child: Text(
+                    'Adicionar Produto',
+                    style: TextStyle(color: CustomColors.textColorTile),
+                  ),
                 ),
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.editProduct,
-                  child: Text('Editar Produto', style: TextStyle(color: CustomColors.textColorTile),),
+                  child: Text(
+                    'Editar Produto',
+                    style: TextStyle(color: CustomColors.textColorTile),
+                  ),
                 ),
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.addClient,
-                  child: Text('Adicionar Cliente', style: TextStyle(color: CustomColors.textColorTile),),
+                  child: Text(
+                    'Adicionar Cliente',
+                    style: TextStyle(color: CustomColors.textColorTile),
+                  ),
                 ),
                 const PopupMenuItem(
                   value: EnumOrderRegistrationPage.editClient,
-                  child: Text('Editar Cliente', style: TextStyle(color: CustomColors.textColorTile),),
+                  child: Text(
+                    'Editar Cliente',
+                    style: TextStyle(color: CustomColors.textColorTile),
+                  ),
                 ),
               ],
               onSelected: (value) async {
@@ -182,7 +194,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                         clientList: clientList,
                         context: context);
 
-                    if (recClient != null){
+                    if (recClient != null) {
                       setState(() {
                         client = recClient;
                       });
@@ -217,6 +229,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                         height: 35,
                         width: MediaQuery.of(context).size.width,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.deepPurple.withOpacity(0.4),
+                          ),
                           onLongPress: () {
                             setState(() {
                               client = null;
@@ -324,6 +339,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               : SizedBox(
                                   height: 55,
                                   child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.deepPurple
+                                              .withOpacity(0.4)),
                                       focusNode: _selectProductFocus,
                                       onLongPress: () {
                                         setState(() {
