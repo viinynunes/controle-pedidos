@@ -1,6 +1,5 @@
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
-import 'package:controle_pedidos/pages/product/product_registration_page.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
@@ -34,37 +33,15 @@ class _ProductListPageState extends State<ProductListPage> {
   }
 
   void _showProductRegistrationPage({ProductData? product}) async {
-    final recProduct = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProductRegistrationPage(
-          product: product,
-        ),
-      ),
-    );
-
     setState(() {
       loading = true;
     });
-
-    if (recProduct != null) {
-      if (product != null) {
-        setState(() {
-          ProductModel.of(context).updateProduct(recProduct);
-          secondaryProductList.remove(product);
-        });
-
-      } else {
-        ProductModel.of(context).createProduct(recProduct);
-      }
-      setState(() {
-        secondaryProductList.add(recProduct);
-      });
-    }
-
-    productService.sortProductsByName(secondaryProductList);
+    await productService.createOrUpdate(
+        product: product, productList: productList, context: context);
 
     setState(() {
+      _updateProductList();
+      productService.sortProductsByName(secondaryProductList);
       loading = false;
     });
   }
