@@ -10,11 +10,12 @@ import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_order_registration_page.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:rect_getter/rect_getter.dart';
 import 'package:scoped_model/scoped_model.dart';
+
+import '../client/show_client_list_dialog.dart';
 
 class OrderRegistrationPage extends StatefulWidget {
   const OrderRegistrationPage({Key? key, this.order}) : super(key: key);
@@ -128,8 +129,12 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
             IconButton(
               onPressed: () async {
                 if (orderItemList.isNotEmpty) {
-                  _setOrder();
-                  Navigator.pop(context, newOrder);
+                  if (client == null) {
+                    _showSnackBarError('Selecione o cliente');
+                  } else {
+                    _setOrder();
+                    Navigator.pop(context, newOrder);
+                  }
                 }
               },
               icon: const Icon(Icons.save),
@@ -185,59 +190,34 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     :
                     //Select Client
                     SizedBox(
-                        height: 60,
-                        child: DropdownSearch<ClientData>(
-                          selectedItem: client,
-                          showSearchBox: true,
-                          searchFieldProps: TextFieldProps(),
-                          items: clientList,
-                          popupItemBuilder: (context, item, e) {
-                            return ListTile(
-                              title: Text(
-                                item.name,
-                                style: const TextStyle(
-                                    color: CustomColors.textColorTile),
-                              ),
-                            );
-                          },
-                          dropdownButtonBuilder: (_) =>
-                              const SizedBox(child: null),
-                          dropdownBuilderSupportsNullItem: true,
-                          popupBackgroundColor: CustomColors.backgroundColor,
-                          popupElevation: 10,
-                          dropdownSearchDecoration: InputDecoration(
-                            labelText: 'Selecione o cliente',
-                            labelStyle: const TextStyle(
-                                color: CustomColors.textColorTile),
-                            filled: true,
-                            fillColor: CustomColors.backgroundTile,
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(5))),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(5))),
-                          ),
-                          onChanged: (e) {
+                        height: 35,
+                        width: MediaQuery.of(context).size.width,
+                        child: ElevatedButton(
+                          onLongPress: () {
                             setState(() {
-                              client = e!;
-                              _quantityFocus.requestFocus();
-                              _quantityController.selection = TextSelection(
-                                  baseOffset: 0,
-                                  extentOffset:
-                                      _quantityController.value.text.length);
+                              client = null;
                             });
                           },
-                          validator: (e) {
-                            if (e == null) {
-                              return 'Selecione o cliente';
-                            }
-                            return null;
+                          onPressed: () async {
+                            final selectedClient = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShowClientListDialog(
+                                    clientList: clientList),
+                              ),
+                            );
+                            setState(() {
+                              if (selectedClient != null) {
+                                client = selectedClient;
+                              }
+                            });
                           },
+                          child: Text(
+                            client == null
+                                ? 'Selecione o cliente'
+                                : client!.name,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                 const SizedBox(
@@ -483,7 +463,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     }
   }
 
-  _showSnackBarError(String text){
+  _showSnackBarError(String text) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(milliseconds: 1500),
