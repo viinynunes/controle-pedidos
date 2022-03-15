@@ -8,6 +8,7 @@ import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
+import 'package:controle_pedidos/utils/enum_order_registration_page.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,6 @@ class OrderRegistrationPage extends StatefulWidget {
 }
 
 class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
-
   final productService = ProductService();
 
   List<ClientData> clientList = [];
@@ -103,10 +103,10 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     void _showProductRegistrationPage({ProductData? product}) async {
+      var recProduct = await productService.createOrUpdate(
+          product: product, productList: productList, context: context);
 
-      var recProduct = await productService.createOrUpdate(product: product, productList: productList, context: context);
-
-      if (recProduct != null){
+      if (recProduct != null) {
         _selectedProduct = recProduct;
       }
 
@@ -126,18 +126,42 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
           centerTitle: true,
           actions: [
             IconButton(
-                onPressed: () {
-                  _showProductRegistrationPage(product: _selectedProduct);
-                },
-                icon: const Icon(Icons.add)),
-            IconButton(
-                onPressed: () async {
-                  if (orderItemList.isNotEmpty) {
-                    _setOrder();
-                    Navigator.pop(context, newOrder);
+              onPressed: () async {
+                if (orderItemList.isNotEmpty) {
+                  _setOrder();
+                  Navigator.pop(context, newOrder);
+                }
+              },
+              icon: const Icon(Icons.save),
+            ),
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: EnumOrderRegistrationPage.addProduct,
+                  child: Text('Adicionar Produto'),
+                ),
+                const PopupMenuItem(
+                  value: EnumOrderRegistrationPage.editProduct,
+                  child: Text('Editar Produto'),
+                ),
+                const PopupMenuItem(
+                  value: EnumOrderRegistrationPage.addClient,
+                  child: Text('Adicionar Cliente'),
+                ),
+              ],
+              onSelected: (value) async {
+                if (value == EnumOrderRegistrationPage.addProduct) {
+                  _showProductRegistrationPage();
+                }
+                if (value == EnumOrderRegistrationPage.editProduct) {
+                  if (_selectedProduct == null) {
+                    _showSnackBarError('Nenhum produto selecionado');
+                  } else {
+                    _showProductRegistrationPage(product: _selectedProduct);
                   }
-                },
-                icon: const Icon(Icons.save)),
+                }
+              },
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -297,7 +321,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                   height: 55,
                                   child: ElevatedButton(
                                       focusNode: _selectProductFocus,
-                                      onLongPress: (){
+                                      onLongPress: () {
                                         setState(() {
                                           _selectedProduct = null;
                                         });
@@ -446,17 +470,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     OrderItemData verifyOrderItem =
         OrderItemData(quantity: 0, product: _selectedProduct!);
     if (orderItemList.contains(verifyOrderItem)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          duration: Duration(milliseconds: 1500),
-          backgroundColor: CustomColors.backgroundTile,
-          content: Text(
-            'O produto já esta na lista',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.red, fontSize: 18),
-          ),
-        ),
-      );
+      _showSnackBarError('O produto já esta na lista');
     } else {
       orderItem = OrderItemData(
           quantity: int.parse(_quantityController.text),
@@ -467,6 +481,20 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
         _clearFields();
       });
     }
+  }
+
+  _showSnackBarError(String text){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(milliseconds: 1500),
+        backgroundColor: CustomColors.backgroundTile,
+        content: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.red, fontSize: 18),
+        ),
+      ),
+    );
   }
 
   void _setOrder() {
