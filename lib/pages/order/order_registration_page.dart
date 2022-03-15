@@ -6,6 +6,7 @@ import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
+import 'package:controle_pedidos/services/client_service.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_order_registration_page.dart';
@@ -28,6 +29,7 @@ class OrderRegistrationPage extends StatefulWidget {
 
 class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   final productService = ProductService();
+  final clientService = ClientService();
 
   List<ClientData> clientList = [];
   List<ProductData> productList = [];
@@ -158,12 +160,15 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 if (value == EnumOrderRegistrationPage.addProduct) {
                   _showProductRegistrationPage();
                 }
-                if (value == EnumOrderRegistrationPage.editProduct) {
+                else if (value == EnumOrderRegistrationPage.editProduct) {
                   if (_selectedProduct == null) {
                     _showSnackBarError('Nenhum produto selecionado');
                   } else {
                     _showProductRegistrationPage(product: _selectedProduct);
                   }
+                }
+                else if (value == EnumOrderRegistrationPage.addClient){
+                  clientService.createOrUpdate(clientList: clientList, context: context);
                 }
               },
             ),
