@@ -18,11 +18,17 @@ class _StockDefaultListState extends State<StockDefaultList> {
   List<ProductData> productList = [];
   List<ProductData> productStockDefaultList = [];
 
+  List<ProductData> filteredProductList = [];
+  List<ProductData> filteredProductStockDefaultList = [];
+
   final _stockDefaultService = StockDefaultService();
 
   @override
   void initState() {
     super.initState();
+
+    _setProductList();
+    _setProductDefaultList();
   }
 
   void _updateStockDefaultProperty(ProductData product) {
@@ -36,6 +42,15 @@ class _StockDefaultListState extends State<StockDefaultList> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Editar Produtos Padrão'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                _setProductList();
+                _setProductDefaultList();
+              },
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
         ),
         backgroundColor: CustomColors.backgroundColor,
         bottomNavigationBar: const TabBar(
@@ -62,43 +77,44 @@ class _StockDefaultListState extends State<StockDefaultList> {
             ),
           ],
         ),
-        body: TabBarView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
+        body: loading
+            ? const Center(child: CircularProgressIndicator())
+            : TabBarView(
                 children: [
-                  Form(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Produtos',
-                        labelStyle: TextStyle(color: CustomColors.textColorTile),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Form(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Produtos',
+                              labelStyle: const TextStyle(
+                                  color: CustomColors.textColorTile),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                            style: const TextStyle(
+                                color: CustomColors.textColorTile),
+                            onChanged: (text) {
+                              _filterProductStockDefaultList(text);
+                            },
+                          ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(),
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      style: const TextStyle(color: CustomColors.textColorTile),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  FutureBuilder<List<ProductData>>(
-                    future: _setProductDefaultList(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        return Expanded(
+                        Expanded(
                           child: ListView.builder(
-                            itemCount: productStockDefaultList.length,
+                            itemCount: filteredProductStockDefaultList.length,
                             itemBuilder: (context, index) {
-                              var item = productStockDefaultList[index];
+                              var item = filteredProductStockDefaultList[index];
 
                               return CheckboxListTile(
                                 key: Key(item.id.toString()),
@@ -109,17 +125,25 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                   if (e != null) {
                                     setState(() {
                                       item.stockDefault = e;
+                                      filteredProductStockDefaultList
+                                          .remove(item);
                                       _updateStockDefaultProperty(item);
+                                      _setProductList();
                                     });
                                   }
                                 },
-                                side: const BorderSide(color: CustomColors.textColorTile),
+                                side: const BorderSide(
+                                    color: CustomColors.textColorTile),
                                 title: Row(
                                   children: [
                                     Flexible(
                                       flex: 2,
                                       fit: FlexFit.tight,
-                                      child: Text(item.name, style: const TextStyle(color: CustomColors.textColorTile),),
+                                      child: Text(
+                                        item.name,
+                                        style: const TextStyle(
+                                            color: CustomColors.textColorTile),
+                                      ),
                                     ),
                                     Flexible(
                                       flex: 2,
@@ -127,7 +151,8 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                       child: Text(
                                         item.provider.name,
                                         textAlign: TextAlign.end,
-                                        style: const TextStyle(color: CustomColors.textColorTile),
+                                        style: const TextStyle(
+                                            color: CustomColors.textColorTile),
                                       ),
                                     ),
                                   ],
@@ -135,49 +160,44 @@ class _StockDefaultListState extends State<StockDefaultList> {
                               );
                             },
                           ),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Form(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Produtos',
-                        labelStyle: TextStyle(color: CustomColors.textColorTile),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(),
-                        ),
-                      ),
-                      style: const TextStyle(color: CustomColors.textColorTile),
+                        )
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  FutureBuilder<List<ProductData>>(
-                    future: _setProductList(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        return Expanded(
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Form(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Produtos',
+                              labelStyle: const TextStyle(
+                                  color: CustomColors.textColorTile),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                            style: const TextStyle(
+                                color: CustomColors.textColorTile),
+                            onChanged: (text) {
+                              _filterProductList(text);
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
                           child: ListView.builder(
-                            itemCount: productList.length,
+                            itemCount: filteredProductList.length,
                             itemBuilder: (context, index) {
-                              var item = productList[index];
-
+                              var item = filteredProductList[index];
                               return CheckboxListTile(
                                 key: Key(item.id.toString()),
                                 controlAffinity:
@@ -188,16 +208,22 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                     setState(() {
                                       item.stockDefault = e;
                                       _updateStockDefaultProperty(item);
+                                      _setProductDefaultList();
                                     });
                                   }
                                 },
-                                side: const BorderSide(color: CustomColors.textColorTile),
+                                side: const BorderSide(
+                                    color: CustomColors.textColorTile),
                                 title: Row(
                                   children: [
                                     Flexible(
                                       flex: 2,
                                       fit: FlexFit.tight,
-                                      child: Text(item.name, style: const TextStyle(color: CustomColors.textColorTile),),
+                                      child: Text(
+                                        item.name,
+                                        style: const TextStyle(
+                                            color: CustomColors.textColorTile),
+                                      ),
                                     ),
                                     Flexible(
                                       flex: 2,
@@ -205,7 +231,8 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                       child: Text(
                                         item.provider.name,
                                         textAlign: TextAlign.end,
-                                        style: const TextStyle(color: CustomColors.textColorTile),
+                                        style: const TextStyle(
+                                            color: CustomColors.textColorTile),
                                       ),
                                     ),
                                   ],
@@ -213,15 +240,12 @@ class _StockDefaultListState extends State<StockDefaultList> {
                               );
                             },
                           ),
-                        );
-                      }
-                    },
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -237,6 +261,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
 
     setState(() {
       productList = list;
+      filteredProductList.addAll(productList);
       loading = false;
     });
 
@@ -255,9 +280,58 @@ class _StockDefaultListState extends State<StockDefaultList> {
 
     setState(() {
       productStockDefaultList = list;
+      filteredProductStockDefaultList.clear();
+      filteredProductStockDefaultList.addAll(productStockDefaultList);
       loading = false;
     });
 
     return productStockDefaultList;
+  }
+
+  void _filterProductList(String search) {
+    List<ProductData> auxList = [];
+    auxList.addAll(productList);
+    if (search.isNotEmpty) {
+      List<ProductData> _filteredList = [];
+      for (var p in auxList) {
+        if (p.name.toLowerCase().contains(search.toLowerCase()) ||
+            p.provider.name.toLowerCase().contains(search.toLowerCase())) {
+          _filteredList.add(p);
+        }
+      }
+      setState(() {
+        filteredProductList.clear();
+        filteredProductList.addAll(_filteredList);
+      });
+      return;
+    } else {
+      setState(() {
+        filteredProductList.clear();
+        filteredProductList.addAll(productList);
+      });
+    }
+  }
+
+  void _filterProductStockDefaultList(String search) {
+    List<ProductData> auxList = [];
+    auxList.addAll(productStockDefaultList);
+    if (search.isNotEmpty) {
+      List<ProductData> _filteredList = [];
+      for (var p in auxList) {
+        if (p.name.toLowerCase().contains(search.toLowerCase())) {
+          _filteredList.add(p);
+        }
+      }
+      setState(() {
+        filteredProductStockDefaultList.clear();
+        filteredProductStockDefaultList.addAll(_filteredList);
+      });
+      return;
+    } else {
+      setState(() {
+        filteredProductStockDefaultList.clear();
+        filteredProductStockDefaultList.addAll(productList);
+      });
+    }
   }
 }
