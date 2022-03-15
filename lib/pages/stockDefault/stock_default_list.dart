@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/services/stock_default_service.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/product_model.dart';
@@ -36,26 +37,27 @@ class _StockDefaultListState extends State<StockDefaultList> {
         appBar: AppBar(
           title: const Text('Editar Produtos Padrão'),
         ),
+        backgroundColor: CustomColors.backgroundColor,
         bottomNavigationBar: const TabBar(
           tabs: [
             Tab(
               child: Text(
                 'Produtos Padrão',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: CustomColors.textColorTile),
               ),
               icon: Icon(
                 Icons.check_box_outlined,
-                color: Colors.black,
+                color: CustomColors.textColorTile,
               ),
             ),
             Tab(
               child: Text(
                 'Todos Produtos',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: CustomColors.textColorTile),
               ),
               icon: Icon(
                 Icons.list,
-                color: Colors.black,
+                color: CustomColors.textColorTile,
               ),
             ),
           ],
@@ -70,6 +72,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
                     child: TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Produtos',
+                        labelStyle: TextStyle(color: CustomColors.textColorTile),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(),
                         ),
@@ -77,6 +80,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
                           borderSide: BorderSide(),
                         ),
                       ),
+                      style: const TextStyle(color: CustomColors.textColorTile),
                     ),
                   ),
                   const SizedBox(
@@ -109,12 +113,13 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                     });
                                   }
                                 },
+                                side: const BorderSide(color: CustomColors.textColorTile),
                                 title: Row(
                                   children: [
                                     Flexible(
                                       flex: 2,
                                       fit: FlexFit.tight,
-                                      child: Text(item.name),
+                                      child: Text(item.name, style: const TextStyle(color: CustomColors.textColorTile),),
                                     ),
                                     Flexible(
                                       flex: 2,
@@ -122,6 +127,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                       child: Text(
                                         item.provider.name,
                                         textAlign: TextAlign.end,
+                                        style: const TextStyle(color: CustomColors.textColorTile),
                                       ),
                                     ),
                                   ],
@@ -144,6 +150,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
                     child: TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Produtos',
+                        labelStyle: TextStyle(color: CustomColors.textColorTile),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(),
                         ),
@@ -151,6 +158,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
                           borderSide: BorderSide(),
                         ),
                       ),
+                      style: const TextStyle(color: CustomColors.textColorTile),
                     ),
                   ),
                   const SizedBox(
@@ -183,12 +191,13 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                     });
                                   }
                                 },
+                                side: const BorderSide(color: CustomColors.textColorTile),
                                 title: Row(
                                   children: [
                                     Flexible(
                                       flex: 2,
                                       fit: FlexFit.tight,
-                                      child: Text(item.name),
+                                      child: Text(item.name, style: const TextStyle(color: CustomColors.textColorTile),),
                                     ),
                                     Flexible(
                                       flex: 2,
@@ -196,6 +205,7 @@ class _StockDefaultListState extends State<StockDefaultList> {
                                       child: Text(
                                         item.provider.name,
                                         textAlign: TextAlign.end,
+                                        style: const TextStyle(color: CustomColors.textColorTile),
                                       ),
                                     ),
                                   ],
