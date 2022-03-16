@@ -1,6 +1,5 @@
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
-import 'package:controle_pedidos/pages/provider/provider_registration_page.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
@@ -38,34 +37,16 @@ class _ProviderListPageState extends State<ProviderListPage> {
   }
 
   void _showProviderRegistrationPage({ProviderData? provider}) async {
-    final recProv = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ProviderRegistrationPage(
-                    provider: provider,
-                  )));
 
     setState(() {
       loading = true;
     });
 
-    if (recProv != null) {
-      if (provider != null) {
-        await ProviderModel.of(context).updateProvider(recProv);
-        setState(() {
-          secondaryProviderList.remove(provider);
-          secondaryProviderList.add(recProv);
-        });
-      } else {
-        setState(() {
-          ProviderModel.of(context).createProvider(recProv);
-          secondaryProviderList.add(recProv);
-        });
-      }
-    }
-    providerService.sortProviderListByName(secondaryProviderList);
+    await providerService.createOrUpdate(provider: provider, providerList: providerList, context: context);
 
     setState(() {
+      _updateProviderList();
+      providerService.sortProviderListByName(secondaryProviderList);
       loading = false;
     });
   }
