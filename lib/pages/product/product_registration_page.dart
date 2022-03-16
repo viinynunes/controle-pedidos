@@ -184,7 +184,8 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () async {
-                          await providerService.createOrUpdate(providerList: _providerList, context: context);
+                          await providerService.createOrUpdate(
+                              providerList: _providerList, context: context);
                           _getProvidersList();
                         },
                         child: const Text(
@@ -212,16 +213,16 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
     });
     if (product == null) {
       _providerList = await ProviderModel.of(context).getEnabledProviders();
-      providerService.sortProviderListByEstablishmentAndRegistration(_providerList);
+      providerService
+          .sortProviderListByEstablishmentAndRegistration(_providerList);
       _selectedProvider = _providerList.first;
     } else {
       _providerList = await ProviderModel.of(context).getAllProviders();
-      providerService.sortProviderListByEstablishmentAndRegistration(_providerList);
+      providerService
+          .sortProviderListByEstablishmentAndRegistration(_providerList);
       _selectedProvider = _providerList
           .firstWhere((element) => element.id == product.provider.id);
     }
-
-
 
     setState(() {
       loading = false;
