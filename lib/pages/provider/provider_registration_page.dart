@@ -3,6 +3,7 @@ import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/establishment_model.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
 import 'package:controle_pedidos/pages/establishment/establishment_registration_page.dart';
+import 'package:controle_pedidos/services/establishment_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -19,6 +20,8 @@ class ProviderRegistrationPage extends StatefulWidget {
 
 class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
   late ProviderData newProvider;
+
+  final estabService = EstablishmentService();
 
   bool loading = false;
 
@@ -54,7 +57,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                     ? e.name
                     : e.name + ' - ESTABELECIMENTO APAGADO',
                 style: (TextStyle(
-                  color: e.enabled == false ? Colors.red : CustomColors.textColorTile,
+                  color: e.enabled == false
+                      ? Colors.red
+                      : CustomColors.textColorTile,
                 )),
               ),
               value: e,
@@ -140,7 +145,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                           decoration: InputDecoration(
                             label: const Text(
                               'Estabelecimento',
-                              style: TextStyle(fontSize: 20, color: CustomColors.textColorTile),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: CustomColors.textColorTile),
                             ),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(),
@@ -176,7 +183,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                         child: const Text(
                           'Criar novo Estabelecimento',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold, color: CustomColors.textColorTile),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: CustomColors.textColorTile),
                         ),
                       ),
                     ),
@@ -197,16 +206,18 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
     if (provider == null) {
       _establishmentList =
           await EstablishmentModel.of(context).getEnabledEstablishments();
+      estabService.sortEstablishmentByRegistrationDate(_establishmentList);
       _selectedEstablishment = _establishmentList.first;
     } else {
       _establishmentList =
           await EstablishmentModel.of(context).getAllEstablishments();
+      estabService.sortEstablishmentByRegistrationDate(_establishmentList);
       _selectedEstablishment = _establishmentList
           .firstWhere((element) => element.id == provider.establishment.id);
     }
 
-    if (provider == null) {
-    } else {}
+
+
     setState(() {
       loading = false;
     });
@@ -217,7 +228,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
     newProvider.location = _locationController.text;
     newProvider.establishment = _selectedEstablishment!;
     newProvider.enabled = true;
-    newProvider.registrationDate = widget.provider == null ? DateTime.now() : widget.provider!.registrationDate;
+    newProvider.registrationDate = widget.provider == null
+        ? DateTime.now()
+        : widget.provider!.registrationDate;
   }
 
   TextStyle _getStyle() {
