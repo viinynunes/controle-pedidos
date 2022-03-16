@@ -92,7 +92,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
     var dropDownProvidersItems = providersList
         .map(
           (e) => DropdownMenuItem(
-            child: Text(e.name),
+            child: Text(e.name + ' - ' + e.location),
             value: e,
           ),
         )
