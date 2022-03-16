@@ -10,7 +10,8 @@ class StockListTile extends StatefulWidget {
       required this.stock,
       required this.editable,
       required this.selected,
-      required this.onDelete})
+      required this.onDelete,
+      required this.onEdit})
       : super(key: key);
 
   final StockData stock;
@@ -18,6 +19,7 @@ class StockListTile extends StatefulWidget {
   final bool selected;
 
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   @override
   _StockListTileState createState() => _StockListTileState();
@@ -74,6 +76,14 @@ class _StockListTileState extends State<StockListTile> {
               backgroundColor: Colors.red,
               label: 'Apagar',
             ),
+            SlidableAction(
+              onPressed: (e) {
+                widget.onEdit();
+              },
+              icon: Icons.edit,
+              backgroundColor: Colors.blueAccent,
+              label: 'Editar',
+            ),
           ],
         ),
         child: InkWell(
@@ -83,8 +93,9 @@ class _StockListTileState extends State<StockListTile> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color:
-                    widget.selected ? Colors.deepPurple.withOpacity(0.8) : CustomColors.backgroundTile,
+                color: widget.selected
+                    ? Colors.deepPurple.withOpacity(0.8)
+                    : CustomColors.backgroundTile,
               ),
               child: Padding(
                 padding: const EdgeInsets.only(left: 5, right: 1),

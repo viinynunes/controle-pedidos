@@ -34,4 +34,8 @@ class ControlService {
       await StockModel.of(context).updateStockItem(stock, () {});
     }
   }
+
+  Future<void> updateStockItem(BuildContext context, StockData stockItem) async{
+    StockModel.of(context).updateStockItem(stockItem, () { });
+  }
 }

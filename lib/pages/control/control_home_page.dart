@@ -5,6 +5,7 @@ import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
 import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
 import 'package:controle_pedidos/services/control_service.dart';
+import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_control_home_page.dart';
@@ -30,7 +31,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
   final dateFormat = DateFormat('dd/MM/yyyy');
   late DateTime iniDate, endDate;
 
-  ControlService controlService = ControlService();
+  final controlService = ControlService();
+  final productService = ProductService();
 
   bool loading = false;
   List<ProviderData> providersList = [];
@@ -61,6 +63,31 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    void _updateProductAndStockItem(StockData stockItem) async {
+      setState(() {
+        loading = true;
+      });
+
+      final lastProvider = stockItem.product.provider;
+
+      ProductData? recProd = await productService.createOrUpdate(
+          product: stockItem.product,
+          productList: [stockItem.product],
+          context: context);
+
+      if (recProd != null) {
+        stockItem.product = recProd;
+
+        await controlService.updateStockItem(context, stockItem);
+
+        setState(() {
+          _setProviderList(iniDate, endDate);
+          _setStockListByProvider(iniDate, endDate, lastProvider);
+          loading = false;
+        });
+      }
+    }
+
     var dropDownProvidersItems = providersList
         .map(
           (e) => DropdownMenuItem(
@@ -94,15 +121,24 @@ class _ControlHomePageState extends State<ControlHomePage> {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: EnumControlHomePage.addProduct,
-                child: Text('Adicionar Produto', style: TextStyle(color: CustomColors.textColorTile),),
+                child: Text(
+                  'Adicionar Produto',
+                  style: TextStyle(color: CustomColors.textColorTile),
+                ),
               ),
               const PopupMenuItem(
                 value: EnumControlHomePage.loadDefaultStock,
-                child: Text('Carregar Produtos Padrão', style: TextStyle(color: CustomColors.textColorTile),),
+                child: Text(
+                  'Carregar Produtos Padrão',
+                  style: TextStyle(color: CustomColors.textColorTile),
+                ),
               ),
               const PopupMenuItem(
                 value: EnumControlHomePage.editDefaultStock,
-                child: Text('Editar Produtos Padrão', style: TextStyle(color: CustomColors.textColorTile),),
+                child: Text(
+                  'Editar Produtos Padrão',
+                  style: TextStyle(color: CustomColors.textColorTile),
+                ),
               ),
             ],
             onSelected: (value) async {
@@ -221,7 +257,10 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 ? const LinearProgressIndicator()
                 : providersList.isEmpty
                     ? const Center(
-                        child: Text('Busque por fornecedores', style: TextStyle(color: CustomColors.textColorTile),),
+                        child: Text(
+                          'Busque por fornecedores',
+                          style: TextStyle(color: CustomColors.textColorTile),
+                        ),
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -232,17 +271,20 @@ class _ControlHomePageState extends State<ControlHomePage> {
                             child: DropdownButtonFormField<ProviderData>(
                               value: _selectedProvider,
                               style: const TextStyle(
-                                  fontSize: 16, color: CustomColors.textColorTile),
+                                  fontSize: 16,
+                                  color: CustomColors.textColorTile),
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: CustomColors.backgroundTile,
                                 label: const Text(
                                   'Fornecedor',
                                   style: TextStyle(
-                                      fontSize: 16, color: CustomColors.textColorTile),
+                                      fontSize: 16,
+                                      color: CustomColors.textColorTile),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.deepPurple),
+                                    borderSide: const BorderSide(
+                                        color: Colors.deepPurple),
                                     borderRadius: (BorderRadius.circular(16))),
                               ),
                               dropdownColor: CustomColors.backgroundTile,
@@ -274,7 +316,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                       focusNode: stockDefaultNode,
                                       enabled: iniDate == endDate,
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 20, color: CustomColors.textColorTile),
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          color: CustomColors.textColorTile),
                                       decoration: InputDecoration(
                                         filled: true,
                                         fillColor: CustomColors.backgroundTile,
@@ -282,10 +326,13 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                           'Sobra Padrão',
                                           style: TextStyle(
                                               fontSize: 16,
-                                              color: CustomColors.textColorTile),
+                                              color:
+                                                  CustomColors.textColorTile),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
                                             borderRadius:
                                                 (BorderRadius.circular(16))),
                                       ),
@@ -343,26 +390,43 @@ class _ControlHomePageState extends State<ControlHomePage> {
                             child: Text(
                               'Produto',
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                           Flexible(
                             flex: 3,
                             fit: FlexFit.tight,
-                            child: Text('Pedido', textAlign: TextAlign.center,
-                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
+                            child: Text(
+                              'Pedido',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Flexible(
                             flex: 3,
                             fit: FlexFit.tight,
-                            child: Text('Total', textAlign: TextAlign.center,
-                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
+                            child: Text(
+                              'Total',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Flexible(
                             flex: 2,
                             fit: FlexFit.tight,
-                            child: Text('Sobra', textAlign: TextAlign.center,
-                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),),
+                            child: Text(
+                              'Sobra',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ],
                       ),
@@ -390,7 +454,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
                             title: StockListTile(
                               stock: stockIndex,
                               editable: iniDate == endDate,
-                              selected: selectedStockListToShare.contains(stockIndex),
+                              selected:
+                                  selectedStockListToShare.contains(stockIndex),
                               onDelete: () async {
                                 await StockModel.of(context)
                                     .deleteStock(stockIndex);
@@ -403,6 +468,11 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                 }
                                 setState(() {
                                   loading = false;
+                                });
+                              },
+                              onEdit: () async {
+                                setState(() {
+                                  _updateProductAndStockItem(stockIndex);
                                 });
                               },
                             ),
