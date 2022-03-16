@@ -212,15 +212,16 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
     });
     if (product == null) {
       _providerList = await ProviderModel.of(context).getEnabledProviders();
+      providerService.sortProviderListByEstablishmentAndRegistration(_providerList);
       _selectedProvider = _providerList.first;
     } else {
       _providerList = await ProviderModel.of(context).getAllProviders();
+      providerService.sortProviderListByEstablishmentAndRegistration(_providerList);
       _selectedProvider = _providerList
           .firstWhere((element) => element.id == product.provider.id);
     }
 
-    final service = ProviderService();
-    service.sortProviderListByEstablishmentAndRegistration(_providerList);
+
 
     setState(() {
       loading = false;
