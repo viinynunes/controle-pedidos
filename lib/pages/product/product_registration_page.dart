@@ -2,7 +2,6 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
-import 'package:controle_pedidos/pages/provider/provider_registration_page.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +20,8 @@ class ProductRegistrationPage extends StatefulWidget {
 class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
   final _nameController = TextEditingController();
   final _categoryController = TextEditingController();
+
+  final providerService = ProviderService();
 
   final _nameFocus = FocusNode();
 
@@ -183,11 +184,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ProviderRegistrationPage()));
+                          await providerService.createOrUpdate(providerList: _providerList, context: context);
                           _getProvidersList();
                         },
                         child: const Text(
