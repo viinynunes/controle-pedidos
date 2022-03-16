@@ -33,6 +33,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   final controlService = ControlService();
   final productService = ProductService();
+  final providerService = ProviderService();
 
   bool loading = false;
   List<ProviderData> providersList = [];
@@ -512,12 +513,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
     final list = await StockModel.of(context)
         .getAllStockProvidersByDate(iniDate, endDate);
 
-    final service = ProviderService();
-
-    service.sortProviderListByEstablishmentAndRegistration(list.toList());
-
     setState(() {
       providersList = list.toList();
+      providerService.sortProviderListByEstablishmentAndRegistration(providersList);
       loading = false;
     });
   }
