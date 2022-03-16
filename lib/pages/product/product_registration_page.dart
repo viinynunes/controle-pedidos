@@ -55,7 +55,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
         .map(
           (e) => DropdownMenuItem(
             child: Text(
-              e.enabled == true ? e.name : e.name + ' - FORNECEDOR APAGADO',
+              e.enabled == true ? e.name + ' - ' + e.location : e.name + ' - ' + e.location + ' - FORNECEDOR APAGADO',
               style: (TextStyle(
                 color: e.enabled == false
                     ? Colors.red
