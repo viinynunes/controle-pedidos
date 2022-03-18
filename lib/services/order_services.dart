@@ -13,11 +13,20 @@ class OrderServices {
           if (previousOrder.orderItemList!.contains(item)) {
             var equal = previousOrder.orderItemList!.singleWhere(
                 (element) => element.product.id == item.product.id);
-            item.quantity += equal.quantity;
-            previousOrder.orderItemList!.remove(equal);
-
+            if (equal.note == null && item.note == null ||
+                item.note != null && equal.note == null) {
+              item.quantity += equal.quantity;
+              previousOrder.orderItemList!.remove(equal);
+              previousOrder.orderItemList!.add(item);
+            } else if (equal.note != null && item.note == null) {
+              equal.quantity += item.quantity;
+              previousOrder.orderItemList!.remove(equal);
+              previousOrder.orderItemList!.add(equal);
+            } else if (equal.note != null && item.note != null) {
+              previousOrder.orderItemList!.add(item);
+            }
           }
-          previousOrder.orderItemList!.add(item);
+
           newOrderList.remove(previousOrder);
           _sortOrderItems(previousOrder.orderItemList!);
           newOrderList.add(previousOrder);
@@ -32,16 +41,18 @@ class OrderServices {
     return newOrderList;
   }
 
-  void _sortOrderItems(List<OrderItemData> orderItemList){
+  void _sortOrderItems(List<OrderItemData> orderItemList) {
     orderItemList.sort((a, b) {
-      int compare = a.product.category.toLowerCase().compareTo(b.product.category.toLowerCase());
+      int compare = a.product.category
+          .toLowerCase()
+          .compareTo(b.product.category.toLowerCase());
 
       if (compare == 0) {
         var name1 = a.product.name.toLowerCase();
         var name2 = b.product.name.toLowerCase();
 
         return name1.compareTo(name2);
-      }else {
+      } else {
         return compare;
       }
     });
