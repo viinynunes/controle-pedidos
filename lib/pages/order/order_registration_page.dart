@@ -253,7 +253,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             });
                           },
                           onPressed: () async {
-
                             await showDialog(
                                 context: context,
                                 builder: (context) {
@@ -415,11 +414,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               },
                               icon: Icons.delete_forever,
                               backgroundColor: Colors.red,
-                            ),
-                            SlidableAction(
-                              onPressed: (e) {},
-                              icon: Icons.edit,
-                              backgroundColor: Colors.deepPurple,
                             ),
                           ],
                         ),
