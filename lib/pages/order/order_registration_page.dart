@@ -253,18 +253,19 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             });
                           },
                           onPressed: () async {
-                            final selectedClient = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ShowClientListDialog(
-                                    clientList: clientList),
-                              ),
-                            );
-                            setState(() {
-                              if (selectedClient != null) {
-                                client = selectedClient;
-                              }
-                            });
+
+                            await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ShowClientListDialog(
+                                    clientList: clientList,
+                                    selectedClient: (c) {
+                                      setState(() {
+                                        client = c;
+                                      });
+                                    },
+                                  );
+                                });
                           },
                           child: Text(
                             client == null
