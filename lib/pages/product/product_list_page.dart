@@ -117,6 +117,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
     setState(() {
       productList = list;
+      secondaryProductList.clear();
       secondaryProductList.addAll(productList);
       loading = false;
     });
