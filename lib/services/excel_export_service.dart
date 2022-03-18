@@ -29,7 +29,7 @@ class ExcelExportService {
                   item.product.category +
                   ' ' +
                   item.product.name +
-                  ' ' +
+                  ' - ' +
                   item.note!);
         } else {
           sheet.getRangeByIndex(rowIndex, columnIndex).setText(
