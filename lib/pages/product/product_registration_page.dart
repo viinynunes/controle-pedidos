@@ -2,6 +2,7 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/provider_model.dart';
+import 'package:controle_pedidos/pages/provider/show_provider_dialog.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,9 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
   final _nameFocus = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
+
   bool loading = false;
+  bool isSearchingProvider = true;
 
   late ProductData newProduct;
   List<ProviderData> _providerList = [];
@@ -51,21 +54,20 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    var dropDownItems = _providerList
-        .map(
-          (e) => DropdownMenuItem(
-            child: Text(
-              e.enabled == true ? e.name + ' - ' + e.location : e.name + ' - ' + e.location + ' - FORNECEDOR APAGADO',
-              style: (TextStyle(
-                color: e.enabled == false
-                    ? Colors.red
-                    : CustomColors.textColorTile,
-              )),
-            ),
-            value: e,
-          ),
-        )
-        .toList();
+    _showProviderDialog() async {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return ShowProviderListDialog(
+              selectedProvider: (provider) {
+                setState(() {
+                  _selectedProvider = provider;
+                });
+              },
+              providerList: _providerList,
+            );
+          });
+    }
 
     return ScopedModelDescendant<ProductModel>(
       builder: (context, child, model) => Scaffold(
@@ -147,36 +149,35 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                   ),
                   loading
                       ? const LinearProgressIndicator()
-                      : DropdownButtonFormField<ProviderData>(
-                          value: _selectedProvider,
-                          items: dropDownItems,
-                          elevation: 10,
-                          style: const TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: CustomColors.backgroundTile,
-                            label: const Text(
-                              'Fornecedor',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: CustomColors.textColorTile),
+                      : GestureDetector(
+                          onTap: () {
+                            _showProviderDialog();
+                          },
+                          child: Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: CustomColors.backgroundTile,
                             ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(),
-                                borderRadius: (BorderRadius.circular(16))),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _selectedProvider.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        color: CustomColors.textColorTile),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: CustomColors.textColorTile,
+                                  size: 30,
+                                ),
+                              ],
+                            ),
                           ),
-                          dropdownColor: CustomColors.backgroundTile,
-                          validator: (e) {
-                            if (e == null) {
-                              return 'Campo Obrigatório';
-                            }
-                            return null;
-                          },
-                          onChanged: (e) {
-                            setState(() {
-                              _selectedProvider = e;
-                            });
-                          },
                         ),
                   Padding(
                     padding: const EdgeInsets.all(8),
