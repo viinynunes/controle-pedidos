@@ -3,9 +3,11 @@ import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
 class ShowProductListDialog extends StatefulWidget {
-  const ShowProductListDialog({Key? key, required this.productList})
+  const ShowProductListDialog(
+      {Key? key, required this.productList, required this.selectedProduct})
       : super(key: key);
 
+  final Function(ProductData) selectedProduct;
   final List<ProductData> productList;
 
   @override
@@ -13,7 +15,6 @@ class ShowProductListDialog extends StatefulWidget {
 }
 
 class _ShowProductListDialogState extends State<ShowProductListDialog> {
-  ProductData? product;
   List<ProductData> productList = [];
   List<ProductData> secondProductList = [];
 
@@ -34,63 +35,56 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AlertDialog(
+      elevation: 50,
       backgroundColor: CustomColors.backgroundColor,
-      body: AlertDialog(
-        elevation: 50,
-        backgroundColor: CustomColors.backgroundColor,
-        title: Column(
-          children: [
-            const Text(
-              'Selecione um produto',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: CustomColors.textColorTile),
-            ),
-            const SizedBox(height: 10,),
-            TextField(
-              controller: _searchController,
-              focusNode: _searchNode,
-              decoration: InputDecoration(
-                labelText: 'Procurar Produto',
-                labelStyle: const TextStyle(color: CustomColors.textColorTile),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: const BorderRadius.all(Radius.circular(16)),
-                ),
+      title: Column(
+        children: [
+          const Text(
+            'Selecione um produto',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: CustomColors.textColorTile),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextField(
+            controller: _searchController,
+            focusNode: _searchNode,
+            decoration: InputDecoration(
+              labelText: 'Procurar Produto',
+              labelStyle: const TextStyle(color: CustomColors.textColorTile),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
               ),
-              style: const TextStyle(color: CustomColors.textColorTile),
-              onChanged: (e) {
-                _filterProductList(e);
-              },
-              onSubmitted: (e){
-                setState(() {
-                  product = secondProductList.first;
-                  Navigator.pop(context, product);
-                });
-              },
             ),
-          ],
-        ),
-        content: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: secondProductList.length,
-            itemBuilder: (context, index) {
-              var item = secondProductList[index];
-              return ListTile(
-                textColor: CustomColors.textColorTile,
-                title: Text(item.toString()),
-                onTap: () {
-                  setState(() {
-                    product = item;
-                    Navigator.pop(context, product);
-                  });
-                },
-              );
+            style: const TextStyle(color: CustomColors.textColorTile),
+            onChanged: (e) {
+              _filterProductList(e);
+            },
+            onSubmitted: (e) {
+              _selectProduct(secondProductList.first);
             },
           ),
+        ],
+      ),
+      content: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: secondProductList.length,
+          itemBuilder: (context, index) {
+            var item = secondProductList[index];
+            return ListTile(
+              textColor: CustomColors.textColorTile,
+              title: Text(item.toString()),
+              onTap: () {
+                _selectProduct(item);
+              },
+            );
+          },
         ),
       ),
     );
@@ -118,5 +112,12 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
         secondProductList.addAll(productList);
       });
     }
+  }
+
+  void _selectProduct(ProductData item) {
+    setState(() {
+      widget.selectedProduct(item);
+      Navigator.pop(context);
+    });
   }
 }

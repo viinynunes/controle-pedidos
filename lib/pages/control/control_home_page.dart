@@ -143,24 +143,30 @@ class _ControlHomePageState extends State<ControlHomePage> {
               ),
             ],
             onSelected: (value) async {
+              ProductData? _selectedProduct;
+
               if (value == EnumControlHomePage.addProduct) {
-                ProductData? _selectedProduct = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ShowProductListDialog(productList: productList)));
+                await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ShowProductListDialog(
+                          productList: productList,
+                          selectedProduct: (product) {
+                            _selectedProduct = product;
+                          });
+                    });
 
                 if (_selectedProduct != null) {
                   loading = true;
                   setState(() {
-                    _selectedProvider = _selectedProduct.provider;
+                    _selectedProvider = _selectedProduct!.provider;
                   });
 
                   await controlService.addEmptyProductInStock(
-                      _selectedProduct, context, iniDate, endDate);
+                      _selectedProduct!, context, iniDate, endDate);
                   await _setProviderList(iniDate, endDate);
                   _setStockListByProvider(
-                      iniDate, endDate, _selectedProduct.provider);
+                      iniDate, endDate, _selectedProduct!.provider);
                   loading = false;
                 }
               } else if (value == EnumControlHomePage.loadDefaultStock) {
@@ -515,7 +521,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
     setState(() {
       providersList = list.toList();
-      providerService.sortProviderListByEstablishmentAndRegistration(providersList);
+      providerService
+          .sortProviderListByEstablishmentAndRegistration(providersList);
       loading = false;
     });
   }

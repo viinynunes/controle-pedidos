@@ -69,7 +69,22 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     _quantityFocus.requestFocus();
   }
 
-  _showPopUpMenu(Rect rect) async {
+  void _showProductDialog() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return ShowProductListDialog(
+            selectedProduct: (product) {
+              setState(() {
+                _selectedProduct = product;
+              });
+            },
+            productList: productList,
+          );
+        });
+  }
+
+  void _showPopUpMenu(Rect rect) async {
     await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
@@ -297,25 +312,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
                             onFieldSubmitted: (e) async {
-                              final productFromDialog = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ShowProductListDialog(
-                                            productList: productList,
-                                          )));
-
-                              if (productFromDialog != null &&
-                                  productFromDialog is ProductData) {
-                                setState(() {
-                                  _selectedProduct = productFromDialog;
-                                  _quantityFocus.requestFocus();
-                                  _quantityController.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset: _quantityController
-                                          .value.text.length);
-                                });
-                              }
+                              _showProductDialog();
                             },
                             validator: (e) {
                               var regExp =
@@ -349,24 +346,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                         });
                                       },
                                       onPressed: () async {
-                                        final productFromDialog =
-                                            await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ShowProductListDialog(
-                                                          productList:
-                                                              productList,
-                                                        )));
-
-                                        if (productFromDialog != null &&
-                                            productFromDialog is ProductData) {
-                                          setState(() {
-                                            _selectedProduct =
-                                                productFromDialog;
-                                            _quantityFocus.requestFocus();
-                                          });
-                                        }
+                                        _showProductDialog();
                                       },
                                       child: Row(
                                         mainAxisAlignment:
