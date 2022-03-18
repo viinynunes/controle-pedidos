@@ -110,17 +110,20 @@ class _ProductListPageState extends State<ProductListPage> {
   }
 
   Future<void> _updateProductList() async {
-    setState(() {
-      loading = true;
-    });
-    final list = await ProductModel.of(context).getFilteredEnabledProducts();
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
+      final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
-    setState(() {
-      productList = list;
-      secondaryProductList.clear();
-      secondaryProductList.addAll(productList);
-      loading = false;
-    });
+      setState(() {
+        productList = list;
+        secondaryProductList.clear();
+        secondaryProductList.addAll(productList);
+        loading = false;
+      });
+    }
+
   }
 
   void _filterProduct(String search) {

@@ -145,17 +145,20 @@ class _ProviderListPageState extends State<ProviderListPage> {
   }
 
   Future<void> _updateProviderList() async {
-    setState(() {
-      loading = true;
-    });
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
 
-    final list = await ProviderModel.of(context).getEnabledProviders();
+      final list = await ProviderModel.of(context).getEnabledProviders();
 
-    setState(() {
-      providerList = list;
-      secondaryProviderList.addAll(providerList);
-      loading = false;
-    });
+      setState(() {
+        providerList = list;
+        secondaryProviderList.addAll(providerList);
+        loading = false;
+      });
+    }
+
   }
 
   void _filterProviders(String search) {

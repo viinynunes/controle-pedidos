@@ -172,14 +172,17 @@ class _OrderListPageState extends State<OrderListPage> {
   }
 
   Future<void> _setOrderList() async {
-    setState(() {
-      loading = true;
-    });
-    final list =
-        await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
-    setState(() {
-      orderList = list;
-      loading = false;
-    });
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
+      final list =
+      await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
+      setState(() {
+        orderList = list;
+        loading = false;
+      });
+    }
+
   }
 }

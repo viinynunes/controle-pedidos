@@ -112,11 +112,13 @@ class _EstablishmentListPageState extends State<EstablishmentListPage> {
   }
 
   void _getEstabList() async {
-    final list =
-        await EstablishmentModel.of(context).getEnabledEstablishments();
+    if (mounted) {
+      final list =
+          await EstablishmentModel.of(context).getEnabledEstablishments();
 
-    setState(() {
-      estabList = list;
-    });
+      setState(() {
+        estabList = list;
+      });
+    }
   }
 }

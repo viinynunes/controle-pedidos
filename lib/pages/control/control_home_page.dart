@@ -496,46 +496,52 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   Future<void> _setStockListByProvider(
       DateTime iniDate, DateTime endDate, ProviderData provider) async {
-    setState(() {
-      loading = true;
-    });
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
 
-    final list = await StockModel.of(context)
-        .getAllStocksByDateAndProvider(iniDate, endDate, provider);
+      final list = await StockModel.of(context)
+          .getAllStocksByDateAndProvider(iniDate, endDate, provider);
 
-    setState(() {
-      stockList = list;
-      loading = false;
-    });
+      setState(() {
+        stockList = list;
+        loading = false;
+      });
+    }
   }
 
   Future<void> _setProviderList(DateTime iniDate, DateTime endDate) async {
-    setState(() {
-      stockList.clear();
-      loading = true;
-      _selectedProvider = null;
-    });
+    if (mounted) {
+      setState(() {
+        stockList.clear();
+        loading = true;
+        _selectedProvider = null;
+      });
 
-    final list = await StockModel.of(context)
-        .getAllStockProvidersByDate(iniDate, endDate);
+      final list = await StockModel.of(context)
+          .getAllStockProvidersByDate(iniDate, endDate);
 
-    setState(() {
-      providersList = list.toList();
-      providerService
-          .sortProviderListByEstablishmentAndRegistration(providersList);
-      loading = false;
-    });
+      setState(() {
+        providersList = list.toList();
+        providerService
+            .sortProviderListByEstablishmentAndRegistration(providersList);
+        loading = false;
+      });
+    }
   }
 
   void _updateProductList() async {
-    setState(() {
-      loading = true;
-    });
-    final list = await ProductModel.of(context).getFilteredEnabledProducts();
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
+      final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
-    setState(() {
-      productList = list;
-      loading = false;
-    });
+      setState(() {
+        productList = list;
+        loading = false;
+      });
+    }
   }
 }

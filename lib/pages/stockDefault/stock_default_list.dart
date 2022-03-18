@@ -251,39 +251,43 @@ class _StockDefaultListState extends State<StockDefaultList> {
   }
 
   Future<List<ProductData>> _setProductList() async {
-    setState(() {
-      loading = true;
-    });
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
 
-    final list = await ProductModel.of(context).getFilteredEnabledProducts();
+      final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
-    _stockDefaultService.orderProductsByProviderAndName(list);
+      _stockDefaultService.orderProductsByProviderAndName(list);
 
-    setState(() {
-      productList = list;
-      filteredProductList.addAll(productList);
-      loading = false;
-    });
-
+      setState(() {
+        productList = list;
+        filteredProductList.addAll(productList);
+        loading = false;
+      });
+    }
     return productList;
   }
 
   Future<List<ProductData>> _setProductDefaultList() async {
-    setState(() {
-      loading = true;
-    });
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
 
-    final list =
-        await ProductModel.of(context).getEnabledProductsByStockDefaultTrue();
+      final list =
+      await ProductModel.of(context).getEnabledProductsByStockDefaultTrue();
 
-    _stockDefaultService.orderProductsByProviderAndName(list);
+      _stockDefaultService.orderProductsByProviderAndName(list);
 
-    setState(() {
-      productStockDefaultList = list;
-      filteredProductStockDefaultList.clear();
-      filteredProductStockDefaultList.addAll(productStockDefaultList);
-      loading = false;
-    });
+      setState(() {
+        productStockDefaultList = list;
+        filteredProductStockDefaultList.clear();
+        filteredProductStockDefaultList.addAll(productStockDefaultList);
+        loading = false;
+      });
+    }
+
 
     return productStockDefaultList;
   }

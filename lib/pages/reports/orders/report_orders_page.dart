@@ -145,16 +145,19 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
   }
 
   Future<void> _setOrderList() async {
-    setState(() {
-      loading = true;
-    });
-    final list = await OrderModel.of(context)
-        .getEnabledOrdersBetweenDates(iniDate, endDate);
+    if(mounted){
+      setState(() {
+        loading = true;
+      });
+      final list = await OrderModel.of(context)
+          .getEnabledOrdersBetweenDates(iniDate, endDate);
 
-    setState(() {
-      orderList = list;
-      loading = false;
-    });
+      setState(() {
+        orderList = list;
+        loading = false;
+      });
+    }
+
   }
 
   void createReport(List<OrderData> mergedOrderList) {

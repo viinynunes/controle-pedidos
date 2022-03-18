@@ -118,13 +118,16 @@ class _ClientListPageState extends State<ClientListPage> {
   }
 
   Future<void> _getClientList() async {
-    final list = await ClientModel.of(context).getFilteredClients();
+    if (mounted){
+      final list = await ClientModel.of(context).getFilteredClients();
 
-    setState(() {
-      clientList = list;
-      secondaryClientList.clear();
-      secondaryClientList.addAll(clientList);
-    });
+      setState(() {
+        clientList = list;
+        secondaryClientList.clear();
+        secondaryClientList.addAll(clientList);
+      });
+    }
+
   }
 
   void _filterClients(String search) {
