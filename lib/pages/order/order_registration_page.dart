@@ -5,7 +5,7 @@ import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
-import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
+import 'package:controle_pedidos/pages/product/show_product_list_dialog.dart';
 import 'package:controle_pedidos/services/client_service.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';

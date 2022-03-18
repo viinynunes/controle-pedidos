@@ -3,7 +3,7 @@ import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
-import 'package:controle_pedidos/pages/product/showProductListDialog.dart';
+import 'package:controle_pedidos/pages/product/show_product_list_dialog.dart';
 import 'package:controle_pedidos/services/control_service.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
