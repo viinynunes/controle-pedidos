@@ -66,6 +66,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
             onSubmitted: (e) {
               _selectProduct(secondProductList.first);
             },
+            keyboardType: TextInputType.url,
           ),
         ],
       ),
