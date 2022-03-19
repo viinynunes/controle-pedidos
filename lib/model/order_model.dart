@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/data/order_item_data.dart';
+import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:flutter/material.dart';
@@ -145,6 +146,31 @@ class OrderModel extends Model {
 
     isLoading = false;
     notifyListeners();
+    return orderList;
+  }
+
+  Future<List<OrderData>> getOrderListByProduct(ProductData product) async {
+    List<OrderData> orderList = [];
+
+    final snapOrder =
+        await firebaseCollection.where('enabled', isEqualTo: true).get();
+
+    for (var docSnapOrder in snapOrder.docs) {
+      final orderIndex = OrderData.fromDocSnapshot(docSnapOrder);
+
+      final orderItemSnap = await firebaseCollection
+          .doc(orderIndex.id)
+          .collection('orderItems')
+          .where('product.id', isEqualTo: product.id)
+          .get();
+
+      if (orderItemSnap.docs.isNotEmpty) {
+        final orderItemData = OrderItemData.fromDocSnapshot(orderItemSnap.docs.first);
+        orderIndex.orderItemList!.add(orderItemData);
+        orderList.add(orderIndex);
+      }
+    }
+
     return orderList;
   }
 }
