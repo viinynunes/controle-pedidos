@@ -33,6 +33,7 @@ void main() async {
                       child: ScopedModel<EstablishmentModel>(
                         model: EstablishmentModel(),
                         child: MaterialApp(
+                          debugShowCheckedModeBanner: false,
                           home:
                               model.isLoggedIn() ? const HomePage() : const LoginPage(),
                           theme: ThemeData(
