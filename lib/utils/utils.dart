@@ -14,9 +14,9 @@ class Utils {
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-              Color(0xFF281c66),
+              Color(0xFF120033),
               Color(0xFF1b0247),
-              Color(0xFF361c66),
+              Color(0xFF2e1066),
               Color(0xFF281c66),
             ],
           )),
