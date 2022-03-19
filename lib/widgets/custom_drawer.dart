@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CustomDrawer extends StatefulWidget {
-  const CustomDrawer({Key? key, required this.pageController}) : super(key: key);
+  const CustomDrawer({Key? key, required this.pageController})
+      : super(key: key);
 
   final PageController pageController;
 
@@ -22,7 +23,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
-
     final pageController = widget.pageController;
 
     return Drawer(
@@ -110,6 +110,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     pageController: pageController,
                     page: 3,
                   ),
+                  DrawerTile(
+                      icon: Icons.search,
+                      text: 'TRANSAÇÕES',
+                      pageController: pageController,
+                      page: 4),
                 ],
               );
             },
