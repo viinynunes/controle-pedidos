@@ -14,10 +14,10 @@ class Utils {
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [
-              Color(0xFF19293e),
-              Color(0xFF030f12),
-              Color(0xFF10231f),
-              Color(0xFF31648c),
+              Color(0xFF281c66),
+              Color(0xFF1b0247),
+              Color(0xFF361c66),
+              Color(0xFF281c66),
             ],
           )),
     );
