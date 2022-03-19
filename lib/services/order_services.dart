@@ -41,6 +41,10 @@ class OrderServices {
     return newOrderList;
   }
 
+  void sortByDate(List<OrderData> orderList) {
+    orderList.sort((a, b) => a.creationHour.compareTo(b.creationHour));
+  }
+
   void _sortOrderItems(List<OrderItemData> orderItemList) {
     orderItemList.sort((a, b) {
       int compare = a.product.category

@@ -8,14 +8,17 @@ class OrderData {
   OrderData.fields(
       {required this.client,
       required this.creationDate,
+      required this.creationHour,
       required this.lengthOrderItemList,
       required this.enabled,
       required this.orderItemList});
 
   OrderData.fromDocSnapshot(DocumentSnapshot snapshot) {
     id = snapshot.id;
-    Timestamp timeStamp = snapshot.get('creationDate');
-    creationDate = DateTime.parse(timeStamp.toDate().toString());
+    Timestamp timeDate = snapshot.get('creationDate');
+    creationDate = DateTime.parse(timeDate.toDate().toString());
+    Timestamp timeHour = snapshot.get('creationHour');
+    creationHour = DateTime.parse(timeHour.toDate().toString());
     lengthOrderItemList = snapshot.get('lengthOrderItemList');
     client = ClientData.fromMap(snapshot.get('client'));
     enabled = snapshot.get('enabled');
@@ -24,6 +27,7 @@ class OrderData {
   OrderData.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     creationDate = map['creationDate'];
+    creationHour = map['creationHour'];
     client = ClientData.fromMap(map['client']);
     lengthOrderItemList = map['lengthOrderItemList'];
     enabled = map['enabled'];
@@ -35,6 +39,7 @@ class OrderData {
 
   String? id;
   late DateTime creationDate;
+  late DateTime creationHour;
   late ClientData client;
   late int lengthOrderItemList;
   late bool enabled;
@@ -45,6 +50,7 @@ class OrderData {
     return {
       'id': id,
       'creationDate': creationDate,
+      'creationHour': creationHour,
       'enabled': enabled,
       'lengthOrderItemList': lengthOrderItemList,
       'client': client.toMap(),
@@ -56,6 +62,7 @@ class OrderData {
     return {
       'id': id,
       'creationDate': creationDate,
+      'creationHour': creationHour,
       'lengthOrderItemList': lengthOrderItemList,
       'enabled': enabled,
       'client': client.toMap(),

@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/pages/order/order_registration_page.dart';
+import 'package:controle_pedidos/services/order_services.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/widgets/custom_drawer.dart';
 import 'package:controle_pedidos/widgets/tiles/order_list_tile.dart';
@@ -22,6 +23,8 @@ class OrderListPage extends StatefulWidget {
 class _OrderListPageState extends State<OrderListPage> {
   final dateFormat = DateFormat('dd-MM-yyyy');
   List<OrderData> orderList = [];
+
+  final orderService = OrderServices();
 
   late DateTime _selectedDate;
   bool loading = false;
@@ -172,17 +175,17 @@ class _OrderListPageState extends State<OrderListPage> {
   }
 
   Future<void> _setOrderList() async {
-    if(mounted){
+    if (mounted) {
       setState(() {
         loading = true;
       });
       final list =
-      await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
+          await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
       setState(() {
         orderList = list;
+        orderService.sortByDate(orderList);
         loading = false;
       });
     }
-
   }
 }

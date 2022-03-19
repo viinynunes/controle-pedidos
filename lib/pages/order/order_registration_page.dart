@@ -498,6 +498,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     newOrder.client = client!;
     newOrder.creationDate =
         widget.order == null ? DateTime.now() : widget.order!.creationDate;
+    newOrder.creationHour =
+        widget.order == null ? DateTime.now() : widget.order!.creationHour;
     newOrder.lengthOrderItemList = orderItemList.length;
     newOrder.enabled = true;
     newOrder.orderItemList = orderItemList;

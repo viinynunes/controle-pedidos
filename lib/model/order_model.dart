@@ -18,6 +18,7 @@ class OrderModel extends Model {
     isLoading = true;
     order.creationDate = DateTime(order.creationDate.year,
         order.creationDate.month, order.creationDate.day);
+
     var x = await firebaseCollection.add(order.toResumedMap());
     order.id = x.id;
     for (var e in order.orderItemList!) {
@@ -139,7 +140,8 @@ class OrderModel extends Model {
       orderList.add(order);
     }
 
-    orderList.sort((a, b) => a.client.name.toLowerCase().compareTo(b.client.name.toLowerCase()));
+    orderList.sort((a, b) =>
+        a.client.name.toLowerCase().compareTo(b.client.name.toLowerCase()));
 
     isLoading = false;
     notifyListeners();
