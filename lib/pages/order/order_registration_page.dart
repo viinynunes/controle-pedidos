@@ -135,6 +135,23 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
       await _setProductList();
     }
 
+    void _showClientRegistrationPage({ClientData? client}) async {
+      var recClient = await clientService.createOrUpdate(
+          client: client, clientList: clientList, context: context);
+
+      if (recClient != null) {
+        setState(() {
+          client = recClient;
+        });
+      }
+
+      setState(() {
+        clientService.sortClientsByName(clientList);
+      });
+
+      await _setClientList();
+    }
+
     return ScopedModelDescendant<OrderModel>(
       builder: (context, child, model) => Scaffold(
         backgroundColor: CustomColors.backgroundColor,
@@ -198,22 +215,12 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     _showProductRegistrationPage(product: _selectedProduct);
                   }
                 } else if (value == EnumOrderRegistrationPage.addClient) {
-                  clientService.createOrUpdate(
-                      clientList: clientList, context: context);
+                  _showClientRegistrationPage();
                 } else if (value == EnumOrderRegistrationPage.editClient) {
                   if (client == null) {
                     _showSnackBarError('Nenhum cliente selecionado');
                   } else {
-                    final recClient = await clientService.createOrUpdate(
-                        client: client,
-                        clientList: clientList,
-                        context: context);
-
-                    if (recClient != null) {
-                      setState(() {
-                        client = recClient;
-                      });
-                    }
+                    _showClientRegistrationPage(client: client);
                   }
                 }
               },
