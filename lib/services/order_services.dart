@@ -25,6 +25,8 @@ class OrderServices {
             } else if (equal.note != null && item.note != null) {
               previousOrder.orderItemList!.add(item);
             }
+          } else {
+            previousOrder.orderItemList!.add(item);
           }
 
           newOrderList.remove(previousOrder);
