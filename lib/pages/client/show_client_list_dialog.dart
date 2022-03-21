@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/client_data.dart';
+import 'package:controle_pedidos/services/client_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,8 @@ class _ShowProductListDialogState extends State<ShowClientListDialog> {
   ClientData? client;
   List<ClientData> clientList = [];
   List<ClientData> secondaryClientList = [];
+
+  final clientService = ClientService();
 
   final _searchController = TextEditingController();
   final _searchNode = FocusNode();
@@ -68,6 +71,22 @@ class _ShowProductListDialogState extends State<ShowClientListDialog> {
               _selectClient(secondaryClientList.first);
             },
           ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: TextButton(
+              onPressed: () async {
+                final recClient = await clientService.createOrUpdate(
+                    clientList: clientList, context: context);
+
+                if (recClient != null) {
+                  setState(() {
+                    clientService.sortClientsByName(clientList);
+                  });
+                }
+              },
+              child: const Text('Adicionar Cliente'),
+            ),
+          )
         ],
       ),
       content: SizedBox(
