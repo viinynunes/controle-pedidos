@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/data/product_data.dart';
+import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,8 @@ class ShowProductListDialog extends StatefulWidget {
 class _ShowProductListDialogState extends State<ShowProductListDialog> {
   List<ProductData> productList = [];
   List<ProductData> secondProductList = [];
+
+  final productService = ProductService();
 
   final _searchController = TextEditingController();
   final _searchNode = FocusNode();
@@ -68,6 +71,22 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
             },
             keyboardType: TextInputType.url,
           ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: TextButton(
+              onPressed: () async {
+                final recProd = await productService.createOrUpdate(
+                    productList: productList, context: context);
+
+                setState(() {
+                  if (recProd != null) {
+                    productService.sortProductsByName(productList);
+                  }
+                });
+              },
+              child: const Text('Criar novo produto'),
+            ),
+          )
         ],
       ),
       content: SizedBox(
