@@ -7,6 +7,7 @@ import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/product/show_product_list_dialog.dart';
 import 'package:controle_pedidos/services/client_service.dart';
+import 'package:controle_pedidos/services/order_services.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_order_registration_page.dart';
@@ -30,6 +31,7 @@ class OrderRegistrationPage extends StatefulWidget {
 class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   final productService = ProductService();
   final clientService = ClientService();
+  final orderService = OrderServices();
 
   List<ClientData> clientList = [];
   List<ProductData> productList = [];
@@ -467,6 +469,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   void _setOrderItemList() {
     setState(() {
       orderItemList = newOrder.orderItemList!;
+      orderService.sortOrderItems(orderItemList);
     });
   }
 
