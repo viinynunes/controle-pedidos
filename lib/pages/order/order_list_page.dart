@@ -22,7 +22,6 @@ class OrderListPage extends StatefulWidget {
 
 class _OrderListPageState extends State<OrderListPage> {
   final dateFormat = DateFormat('dd-MM-yyyy');
-  List<OrderData> orderList = [];
 
   final orderService = OrderServices();
 
@@ -55,7 +54,7 @@ class _OrderListPageState extends State<OrderListPage> {
         if (order == null) {
           OrderModel.of(context).createOrder(recOrder);
           setState(() {
-            orderList.add(recOrder);
+            OrderModel.of(context).orderListAll.add(recOrder);
           });
         } else {
           await OrderModel.of(context).updateOrder(recOrder);
@@ -128,9 +127,9 @@ class _OrderListPageState extends State<OrderListPage> {
                   //List of Orders
                   Expanded(
                       child: ListView.builder(
-                        itemCount: orderList.length,
+                        itemCount: OrderModel.of(context).orderListAll.length,
                         itemBuilder: (context, index) {
-                          var order = orderList[index];
+                          var order = OrderModel.of(context).orderListAll[index];
                           return Slidable(
                             key: const ValueKey(0),
                             startActionPane: ActionPane(
@@ -140,7 +139,7 @@ class _OrderListPageState extends State<OrderListPage> {
                                 SlidableAction(
                                   onPressed: (e) {
                                     model.disableOrder(order);
-                                    orderList.remove(order);
+                                    OrderModel.of(context).orderListAll.remove(order);
                                   },
                                   icon: Icons.delete_forever,
                                   backgroundColor: Colors.red,
@@ -181,9 +180,12 @@ class _OrderListPageState extends State<OrderListPage> {
       final list =
           await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
       setState(() {
-        orderList.clear();
-        orderList = list;
-        orderService.sortByDate(orderList);
+
+        OrderModel.of(context).orderListAll.clear();
+        OrderModel.of(context).orderListAll = list;
+        orderService.sortByDate(OrderModel.of(context).orderListAll);
+
+
         loading = false;
       });
     }
