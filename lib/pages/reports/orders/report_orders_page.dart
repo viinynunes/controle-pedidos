@@ -122,6 +122,7 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
                   var order = orderList[index];
                   return ListTile(
                     onTap: () {
+                      orderServices.sortOrderItems(order.orderItemList!);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
