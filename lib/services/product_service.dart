@@ -6,8 +6,10 @@ import '../data/product_data.dart';
 
 class ProductService {
   Future<ProductData?> createOrUpdate(
-      {ProductData? product, required List<ProductData> productList, required BuildContext context}) async {
-    final recProduct = await Navigator.push(
+      {ProductData? product,
+      required List<ProductData> productList,
+      required BuildContext context}) async {
+    var recProduct = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ProductRegistrationPage(
@@ -16,12 +18,12 @@ class ProductService {
       ),
     );
 
-    if (recProduct != null){
-      if (product != null){
+    if (recProduct != null) {
+      if (product != null) {
         ProductModel.of(context).updateProduct(recProduct);
         productList.remove(product);
-      }else {
-        ProductModel.of(context).createProduct(recProduct);
+      } else {
+        recProduct = await ProductModel.of(context).createProduct(recProduct);
       }
       productList.add(recProduct);
     }

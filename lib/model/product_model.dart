@@ -12,11 +12,15 @@ class ProductModel extends Model {
   static ProductModel of(BuildContext context) =>
       ScopedModel.of<ProductModel>(context);
 
-  void createProduct(ProductData product) {
+  Future<ProductData> createProduct(ProductData product) async {
     isLoading = true;
-    firebaseCollection.doc().set(product.toMap());
+    firebaseCollection
+        .add(product.toMap())
+        .then((value) => product.id = value.id);
     isLoading = false;
     notifyListeners();
+
+    return product;
   }
 
   Future<void> updateProduct(ProductData product) async {

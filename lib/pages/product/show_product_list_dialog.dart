@@ -81,6 +81,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
                 setState(() {
                   if (recProd != null) {
                     productService.sortProductsByName(productList);
+                    _selectProduct(recProd);
                   }
                 });
               },
