@@ -30,11 +30,11 @@ class OrderServices {
           }
 
           newOrderList.remove(previousOrder);
-          _sortOrderItems(previousOrder.orderItemList!);
+          sortOrderItems(previousOrder.orderItemList!);
           newOrderList.add(previousOrder);
         }
       } else {
-        _sortOrderItems(order.orderItemList!);
+        sortOrderItems(order.orderItemList!);
         newOrderList.add(order);
         previousOrder = order;
       }
@@ -47,7 +47,7 @@ class OrderServices {
     orderList.sort((a, b) => a.creationHour.compareTo(b.creationHour));
   }
 
-  void _sortOrderItems(List<OrderItemData> orderItemList) {
+  void sortOrderItems(List<OrderItemData> orderItemList) {
     orderItemList.sort((a, b) {
       int compare = a.product.category
           .toLowerCase()
