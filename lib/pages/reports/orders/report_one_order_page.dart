@@ -3,7 +3,6 @@ import 'package:controle_pedidos/utils/transform_widget_to_image.dart';
 import 'package:controle_pedidos/utils/widget_to_image.dart';
 import 'package:flutter/material.dart';
 
-
 class ReportOneOrderPage extends StatefulWidget {
   const ReportOneOrderPage({Key? key, required this.order}) : super(key: key);
 
@@ -14,12 +13,10 @@ class ReportOneOrderPage extends StatefulWidget {
 }
 
 class _ReportOneOrderPageState extends State<ReportOneOrderPage> {
-
   late GlobalKey key1;
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.order.client.name),
@@ -27,7 +24,8 @@ class _ReportOneOrderPageState extends State<ReportOneOrderPage> {
           actions: [
             IconButton(
               onPressed: () async {
-                await TransformWidgetToImage.getWidget(key1, widget.order.client.name);
+                await TransformWidgetToImage.getWidget(
+                    key1, widget.order.client.name);
               },
               icon: const Icon(Icons.share),
             ),
@@ -40,14 +38,19 @@ class _ReportOneOrderPageState extends State<ReportOneOrderPage> {
               color: Colors.white,
               child: Column(
                 children: [
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Center(
                     child: Text(
                       widget.order.client.name,
-                      style: const TextStyle(fontSize: 20),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Flexible(
                     child: ListView.builder(
                       itemCount: widget.order.orderItemList!.length,
@@ -57,14 +60,17 @@ class _ReportOneOrderPageState extends State<ReportOneOrderPage> {
                         return Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(item.quantity.toString() +
-                                  ' ' +
-                                  item.product.category +
-                                  ' ' +
-                                  item.product.name +
-                                  ' - ' +
-                                  note, style: const TextStyle(fontSize: 16),),
+                              padding: const EdgeInsets.all(1),
+                              child: Text(
+                                item.quantity.toString() +
+                                    ' ' +
+                                    item.product.category +
+                                    ' ' +
+                                    item.product.name +
+                                    ' - ' +
+                                    note,
+                                style: const TextStyle(fontSize: 16),
+                              ),
                             ),
                           ],
                         );
