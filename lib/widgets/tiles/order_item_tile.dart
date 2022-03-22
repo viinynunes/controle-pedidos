@@ -21,9 +21,9 @@ class _OrderItemTileState extends State<OrderItemTile> {
   void initState() {
     super.initState();
 
-    if (widget.orderItem.note == null){
+    if (widget.orderItem.note == null) {
       hasNote = false;
-    }else {
+    } else {
       hasNote = true;
     }
   }
@@ -36,6 +36,21 @@ class _OrderItemTileState extends State<OrderItemTile> {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
+            Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Text(
+                  widget.orderItem.quantity.toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: CustomColors.textColorTile),
+                )),
+            Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Text(
+                  widget.orderItem.product.category,
+                  style: const TextStyle(color: CustomColors.textColorTile),
+                )),
             Flexible(
                 flex: 4,
                 fit: FlexFit.tight,
@@ -57,21 +72,6 @@ class _OrderItemTileState extends State<OrderItemTile> {
                 fit: FlexFit.tight,
                 child: Text(
                   widget.orderItem.product.provider.name,
-                  style: const TextStyle(color: CustomColors.textColorTile),
-                )),
-            Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Text(
-                  widget.orderItem.product.category,
-                  style: const TextStyle(color: CustomColors.textColorTile),
-                )),
-            Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: Text(
-                  widget.orderItem.quantity.toString(),
-                  textAlign: TextAlign.center,
                   style: const TextStyle(color: CustomColors.textColorTile),
                 )),
           ],
