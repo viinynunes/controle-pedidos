@@ -36,7 +36,9 @@ class _OrderListPageState extends State<OrderListPage> {
     _selectedDate = DateTime.now();
 
     if (loadOrdersFirst) {
-      _setOrderList();
+      orderList.clear();
+      orderList = OrderModel.of(context).orderListAll;
+      _selectedDate = OrderModel.of(context).orderDate;
       loadOrdersFirst = false;
     }
   }
@@ -182,6 +184,7 @@ class _OrderListPageState extends State<OrderListPage> {
       final list =
           await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
       setState(() {
+        orderList.clear();
         orderList = list;
         orderService.sortByDate(orderList);
         loading = false;

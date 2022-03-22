@@ -11,6 +11,8 @@ class OrderModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('orders');
 
   bool isLoading = false;
+  List<OrderData> orderListAll = [];
+  DateTime orderDate = DateTime.now();
 
   static OrderModel of(BuildContext context) =>
       ScopedModel.of<OrderModel>(context);
@@ -112,6 +114,8 @@ class OrderModel extends Model {
       }
       orderList.add(order);
     }
+    orderListAll.addAll(orderList);
+    orderDate = date;
 
     isLoading = false;
     notifyListeners();
