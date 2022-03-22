@@ -28,19 +28,17 @@ class _OrderListPageState extends State<OrderListPage> {
 
   late DateTime _selectedDate;
   bool loading = false;
-  bool loadOrdersFirst = true;
 
   @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
 
-    if (loadOrdersFirst) {
-      orderList.clear();
-      orderList = OrderModel.of(context).orderListAll;
-      _selectedDate = OrderModel.of(context).orderDate;
-      loadOrdersFirst = false;
+    orderList = OrderModel.of(context).orderListAll;
+    if (orderList.isEmpty){
+      _setOrderList();
     }
+    _selectedDate = OrderModel.of(context).orderDate;
   }
 
   @override
