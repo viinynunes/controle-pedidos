@@ -32,10 +32,9 @@ class _OrderListPageState extends State<OrderListPage> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
+    _selectedDate = OrderModel.of(context).orderDate;
 
-    orderList = OrderModel.of(context).orderListAll;
-    if (orderList.isEmpty){
+    if (OrderModel.of(context).orderListAll.isEmpty) {
       _setOrderList();
     }
     _selectedDate = OrderModel.of(context).orderDate;
