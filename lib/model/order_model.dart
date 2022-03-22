@@ -114,6 +114,7 @@ class OrderModel extends Model {
       }
       orderList.add(order);
     }
+    orderListAll.clear();
     orderListAll.addAll(orderList);
     orderDate = date;
 
