@@ -36,7 +36,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
   final providerService = ProviderService();
 
   bool loading = false;
-  List<ProviderData> providersList = [];
   ProviderData? _selectedProvider;
 
   List<StockData> stockList = [];
@@ -50,8 +49,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
   void initState() {
     super.initState();
 
-    iniDate = DateTime.now();
-    endDate = DateTime.now();
+    iniDate = StockModel.of(context).iniDateAll;
+    endDate = StockModel.of(context).endDateAll;
 
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
@@ -60,8 +59,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
     if (stockList.isNotEmpty) {
       _selectedProvider = stockList.first.product.provider;
     }
-
-    providersList = StockModel.of(context).providerListAll;
 
     stockDefaultController.text = '0';
     stockDefaultController.selection = TextSelection(
@@ -96,7 +93,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
       }
     }
 
-    var dropDownProvidersItems = providersList
+    var dropDownProvidersItems = StockModel.of(context)
+        .providerListAll
         .map(
           (e) => DropdownMenuItem(
             child: Text(e.name + ' - ' + e.location),
@@ -269,7 +267,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
             ),
             loading
                 ? const LinearProgressIndicator()
-                : providersList.isEmpty
+                : StockModel.of(context).providerListAll.isEmpty
                     ? const Center(
                         child: Text(
                           'Nenhum Fornecedor encontrado',
@@ -530,9 +528,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
           .getAllStockProvidersByDate(iniDate, endDate);
 
       setState(() {
-        providersList = list.toList();
-        providerService
-            .sortProviderListByEstablishmentAndRegistration(providersList);
+        StockModel.of(context).providerListAll = list.toList();
+        providerService.sortProviderListByEstablishmentAndRegistration(
+            StockModel.of(context).providerListAll);
         loading = false;
       });
     }
