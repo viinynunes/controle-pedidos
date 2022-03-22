@@ -162,6 +162,14 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
               Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
           centerTitle: true,
           actions: [
+            orderItemList.isEmpty
+                ? Container()
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                        child: Text(
+                    orderItemList.length.toString(),
+                  ))),
             IconButton(
               onPressed: () async {
                 if (orderItemList.isNotEmpty) {
