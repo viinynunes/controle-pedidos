@@ -10,6 +10,11 @@ class StockModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('stock');
   bool loading = false;
 
+  List<StockData> stockListAll = [];
+  List<ProviderData> providerListAll = [];
+  DateTime iniDateAll = DateTime.now();
+  DateTime endDateAll = DateTime.now();
+
   static StockModel of(BuildContext context) =>
       ScopedModel.of<StockModel>(context);
 
@@ -172,6 +177,10 @@ class StockModel extends Model {
           .add(ProviderData.fromMap(stockIndex.product.provider.toMap()));
     }
 
+    providerListAll.addAll(providerList);
+    iniDateAll = iniDate;
+    endDateAll = endDate;
+
     loading = false;
     notifyListeners();
 
@@ -212,6 +221,10 @@ class StockModel extends Model {
       }
       lastStock = stockIndex;
     }
+
+    stockListAll.addAll(stockUniqueList);
+    iniDateAll = iniDate;
+    endDateAll = endDate;
 
     loading = false;
     notifyListeners();

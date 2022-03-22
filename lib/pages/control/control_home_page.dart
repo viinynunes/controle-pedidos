@@ -56,6 +56,13 @@ class _ControlHomePageState extends State<ControlHomePage> {
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
+    stockList = StockModel.of(context).stockListAll;
+    if (stockList.isNotEmpty) {
+      _selectedProvider = stockList.first.product.provider;
+    }
+
+    providersList = StockModel.of(context).providerListAll;
+
     stockDefaultController.text = '0';
     stockDefaultController.selection = TextSelection(
         baseOffset: 0, extentOffset: stockDefaultController.value.text.length);
@@ -265,7 +272,7 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 : providersList.isEmpty
                     ? const Center(
                         child: Text(
-                          'Busque por fornecedores',
+                          'Nenhum Fornecedor encontrado',
                           style: TextStyle(color: CustomColors.textColorTile),
                         ),
                       )
@@ -531,16 +538,12 @@ class _ControlHomePageState extends State<ControlHomePage> {
     }
   }
 
-  void _updateProductList() async {
+  Future<void> _updateProductList() async {
     if (mounted) {
-      setState(() {
-        loading = true;
-      });
       final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
       setState(() {
         productList = list;
-        loading = false;
       });
     }
   }
