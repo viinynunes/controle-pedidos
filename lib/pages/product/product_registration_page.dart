@@ -143,6 +143,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       return null;
                     },
                     textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (e) => _showProviderDialog(),
                   ),
                   const SizedBox(
                     height: 30,
@@ -170,10 +171,13 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                                         color: CustomColors.textColorTile),
                                   ),
                                 ),
-                                const Icon(
-                                  Icons.arrow_drop_down,
-                                  color: CustomColors.textColorTile,
-                                  size: 30,
+                                const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: CustomColors.textColorTile,
+                                    size: 30,
+                                  ),
                                 ),
                               ],
                             ),
