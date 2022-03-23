@@ -9,6 +9,7 @@ class ProviderModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('providers');
 
   bool isLoading = false;
+  List<ProviderData> providerList = [];
 
   static ProviderModel of(BuildContext context) =>
       ScopedModel.of<ProviderModel>(context);
