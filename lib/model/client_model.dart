@@ -5,6 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 class ClientModel extends Model {
   bool isLoading = false;
+  List<ClientData> clientList = [];
 
   static ClientModel of(BuildContext context) => ScopedModel.of<ClientModel>(context);
 
