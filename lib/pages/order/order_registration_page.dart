@@ -33,8 +33,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   final clientService = ClientService();
   final orderService = OrderServices();
 
-  List<ClientData> clientList = [];
-  List<ProductData> productList = [];
   bool loading = false;
 
   List<OrderItemData> orderItemList = [];
@@ -57,8 +55,11 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   @override
   void initState() {
     super.initState();
-    _setClientList();
-    _setProductList();
+    if (ProductModel.of(context).productList.isEmpty ||
+        ClientModel.of(context).clientList.isEmpty) {
+      _setClientList();
+      _setProductList();
+    }
     _quantityController.text = '1';
 
     if (widget.order != null) {
@@ -81,7 +82,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 _selectedProduct = product;
               });
             },
-            productList: productList,
+            productList: ProductModel.of(context).productList,
           );
         });
   }
@@ -124,14 +125,16 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   Widget build(BuildContext context) {
     void _showProductRegistrationPage({ProductData? product}) async {
       var recProduct = await productService.createOrUpdate(
-          product: product, productList: productList, context: context);
+          product: product,
+          productList: ProductModel.of(context).productList,
+          context: context);
 
       if (recProduct != null) {
         _selectedProduct = recProduct;
       }
 
       setState(() {
-        productService.sortProductsByName(productList);
+        productService.sortProductsByName(ProductModel.of(context).productList);
       });
 
       await _setProductList();
@@ -139,7 +142,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
     void _showClientRegistrationPage({ClientData? client}) async {
       var recClient = await clientService.createOrUpdate(
-          client: client, clientList: clientList, context: context);
+          client: client,
+          clientList: ClientModel.of(context).clientList,
+          context: context);
 
       if (recClient != null) {
         setState(() {
@@ -148,7 +153,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
       }
 
       setState(() {
-        clientService.sortClientsByName(clientList);
+        clientService.sortClientsByName(ClientModel.of(context).clientList);
       });
 
       await _setClientList();
@@ -166,10 +171,10 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 ? Container()
                 : Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: Text(
-                    orderItemList.length.toString(),
-                  ))),
+                          orderItemList.length.toString(),
+                        ))),
             IconButton(
               onPressed: () async {
                 if (orderItemList.isNotEmpty) {
@@ -274,7 +279,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                 context: context,
                                 builder: (context) {
                                   return ShowClientListDialog(
-                                    clientList: clientList,
+                                    clientList:
+                                        ClientModel.of(context).clientList,
                                     selectedClient: (c) {
                                       setState(() {
                                         client = c;
@@ -457,7 +463,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
     setState(() {
-      productList = list;
+      ProductModel.of(context).productList = list;
       loading = false;
     });
   }
@@ -469,7 +475,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     final list = await ClientModel.of(context).getFilteredClients();
 
     setState(() {
-      clientList = list;
+      ClientModel.of(context).clientList = list;
       loading = false;
     });
   }
