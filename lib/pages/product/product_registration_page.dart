@@ -32,7 +32,6 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
   bool isSearchingProvider = true;
 
   late ProductData newProduct;
-  List<ProviderData> _providerList = [];
   ProviderData? _selectedProvider;
 
   @override
@@ -41,7 +40,11 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
 
     if (widget.product == null) {
       newProduct = ProductData();
-      _getProvidersList();
+      if(ProviderModel.of(context).providerList.isEmpty){
+        _getProvidersList();
+      } else {
+        _selectedProvider = ProviderModel.of(context).providerList.first;
+      }
     } else {
       newProduct = ProductData.fromMap(widget.product!.toMap());
       _nameController.text = newProduct.name;
@@ -64,7 +67,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                   _selectedProvider = provider;
                 });
               },
-              providerList: _providerList,
+              providerList: ProviderModel.of(context).providerList,
             );
           });
     }
@@ -190,7 +193,7 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                       child: InkWell(
                         onTap: () async {
                           await providerService.createOrUpdate(
-                              providerList: _providerList, context: context);
+                              providerList: ProviderModel.of(context).providerList, context: context);
                           _getProvidersList();
                         },
                         child: const Text(
@@ -217,15 +220,15 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
       loading = true;
     });
     if (product == null) {
-      _providerList = await ProviderModel.of(context).getEnabledProviders();
+      ProviderModel.of(context).providerList = await ProviderModel.of(context).getEnabledProviders();
       providerService
-          .sortProviderListByEstablishmentAndRegistration(_providerList);
-      _selectedProvider = _providerList.first;
+          .sortProviderListByEstablishmentAndRegistration(ProviderModel.of(context).providerList);
+      _selectedProvider = ProviderModel.of(context).providerList.first;
     } else {
-      _providerList = await ProviderModel.of(context).getAllProviders();
+      ProviderModel.of(context).providerList = await ProviderModel.of(context).getAllProviders();
       providerService
-          .sortProviderListByEstablishmentAndRegistration(_providerList);
-      _selectedProvider = _providerList
+          .sortProviderListByEstablishmentAndRegistration(ProviderModel.of(context).providerList);
+      _selectedProvider = ProviderModel.of(context).providerList
           .firstWhere((element) => element.id == product.provider.id);
     }
 
