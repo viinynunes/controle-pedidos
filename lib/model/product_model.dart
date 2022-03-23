@@ -8,6 +8,7 @@ class ProductModel extends Model {
   final firebaseCollection = FirebaseFirestore.instance.collection('products');
 
   bool isLoading = false;
+  List<ProductData> productList = [];
 
   static ProductModel of(BuildContext context) =>
       ScopedModel.of<ProductModel>(context);
