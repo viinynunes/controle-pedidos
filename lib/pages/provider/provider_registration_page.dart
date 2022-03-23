@@ -28,6 +28,8 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
   final _nameController = TextEditingController();
   final _locationController = TextEditingController();
 
+  final _nameFocus = FocusNode();
+
   final _formKey = GlobalKey<FormState>();
 
   EstablishmentData? _selectedEstablishment;
@@ -46,6 +48,8 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
       _locationController.text = newProvider.location;
       _getEstabList(provider: newProvider);
     }
+
+    _nameFocus.requestFocus();
   }
 
   @override
@@ -93,6 +97,7 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
+                    focusNode: _nameFocus,
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Nome',
