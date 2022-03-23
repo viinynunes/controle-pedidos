@@ -5,7 +5,7 @@ import '../model/provider_model.dart';
 import '../pages/provider/provider_registration_page.dart';
 
 class ProviderService {
-  Future<ProviderData> createOrUpdate(
+  Future<ProviderData?> createOrUpdate(
       {ProviderData? provider,
       required List<ProviderData> providerList,
       required BuildContext context}) async {
