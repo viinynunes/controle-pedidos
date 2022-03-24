@@ -4,7 +4,7 @@ import 'package:controle_pedidos/data/product_data.dart';
 
 class OrderItemData {
 
-  OrderItemData({required this.quantity, required this.product, this.note});
+  OrderItemData({required this.id, required this.quantity, required this.product, this.note});
 
   OrderItemData.fromDocSnapshot(DocumentSnapshot snapshot){
     id = snapshot.id;

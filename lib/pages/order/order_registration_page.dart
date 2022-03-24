@@ -36,6 +36,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   bool loading = false;
 
   List<OrderItemData> orderItemList = [];
+  int sortOrderItemID = 0;
 
   late OrderData newOrder;
 
@@ -488,17 +489,20 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   }
 
   void _setOrderItem() {
+    sortOrderItemID++;
     OrderItemData verifyOrderItem =
-        OrderItemData(quantity: 0, product: _selectedProduct!);
+        OrderItemData(id: '$sortOrderItemID', quantity: 0, product: _selectedProduct!);
     if (orderItemList.contains(verifyOrderItem)) {
       _showSnackBarError('O produto já esta na lista');
     } else {
       orderItem = OrderItemData(
+        id: '$sortOrderItemID',
           quantity: int.parse(_quantityController.text),
           product: _selectedProduct!,
           note: note);
       setState(() {
         orderItemList.add(orderItem!);
+        orderService.sortOrderItemsByID(orderItemList);
         _clearFields();
       });
     }

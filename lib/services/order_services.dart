@@ -63,4 +63,16 @@ class OrderServices {
       }
     });
   }
+
+  void sortOrderItemsByID(List<OrderItemData> orderItemList) {
+    orderItemList
+        .sort((a, b) {
+          var aID = int.parse(a.id!);
+          var bID = int.parse(b.id!);
+
+          if (aID < bID) return 1;
+
+          return 0;
+    });
+  }
 }
