@@ -137,7 +137,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                   child: Row(
                                     children: [
                                       Flexible(
-                                        flex: 3,
+                                        flex: 2,
                                         fit: FlexFit.tight,
                                         child: Text(
                                           item.product.provider.name,
@@ -165,7 +165,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                                     .textColorTile)),
                                       ),
                                       Flexible(
-                                        flex: 3,
+                                        flex: 2,
                                         fit: FlexFit.tight,
                                         child: Text(
                                             item.totalOrdered.toString(),
@@ -175,7 +175,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                                     .textColorTile)),
                                       ),
                                       Flexible(
-                                        flex: 3,
+                                        flex: 2,
                                         fit: FlexFit.tight,
                                         child: Text(
                                             (item.totalOrdered - item.total)
