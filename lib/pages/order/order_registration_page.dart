@@ -490,19 +490,24 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
 
   void _setOrderItem() {
     sortOrderItemID++;
-    OrderItemData verifyOrderItem =
-        OrderItemData(id: '$sortOrderItemID', quantity: 0, product: _selectedProduct!);
+    OrderItemData verifyOrderItem = OrderItemData(
+        id: '$sortOrderItemID', quantity: 0, product: _selectedProduct!);
     if (orderItemList.contains(verifyOrderItem)) {
       _showSnackBarError('O produto já esta na lista');
     } else {
       orderItem = OrderItemData(
-        id: '$sortOrderItemID',
+          id: '$sortOrderItemID',
           quantity: int.parse(_quantityController.text),
           product: _selectedProduct!,
           note: note);
       setState(() {
         orderItemList.add(orderItem!);
-        orderService.sortOrderItemsByID(orderItemList);
+        if(widget.order != null){
+          orderService.sortOrderItems(orderItemList);
+        } else {
+          orderService.sortOrderItemsByID(orderItemList);
+        }
+
         _clearFields();
       });
     }
