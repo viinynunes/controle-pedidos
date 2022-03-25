@@ -59,6 +59,9 @@ class _OrderListPageState extends State<OrderListPage> {
         } else {
           await OrderModel.of(context).updateOrder(recOrder);
         }
+        setState(() {
+          orderService.sortByDate(OrderModel.of(context).orderListAll);
+        });
       }
     }
 
@@ -184,8 +187,6 @@ class _OrderListPageState extends State<OrderListPage> {
         OrderModel.of(context).orderListAll.clear();
         OrderModel.of(context).orderListAll = list;
         orderService.sortByDate(OrderModel.of(context).orderListAll);
-
-
         loading = false;
       });
     }

@@ -45,6 +45,16 @@ class OrderServices {
 
   void sortByDate(List<OrderData> orderList) {
     orderList.sort((a, b) => a.creationHour.compareTo(b.creationHour));
+
+    orderList.sort((a, b) {
+      var aux1 = a.creationHour.compareTo(b.creationHour);
+
+      if (aux1 == 0){
+        return 0;
+      } else {
+        return 1;
+      }
+    });
   }
 
   void sortOrderItems(List<OrderItemData> orderItemList) {
