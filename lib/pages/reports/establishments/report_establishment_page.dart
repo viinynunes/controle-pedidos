@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/services/report_establishment_service.dart';
+import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -39,7 +40,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
           actions: [
             IconButton(
               onPressed: () {
-                if (stockDataList.isNotEmpty){
+                if (stockDataList.isNotEmpty) {
                   createReport(stockDataList);
                 }
               },
@@ -47,6 +48,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
             ),
           ],
         ),
+        backgroundColor: CustomColors.backgroundColor,
         body: Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
@@ -113,7 +115,9 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                   ? const LinearProgressIndicator()
                   : stockDataList.isEmpty
                       ? const Center(
-                          child: Text('Lista Vazia'),
+                          child: Text('Lista Vazia',
+                              style:
+                                  TextStyle(color: CustomColors.textColorTile)),
                         )
                       : Expanded(
                           child: ListView.builder(
@@ -126,34 +130,60 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                 child: Container(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   decoration: const BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(width: 0.2))),
+                                    border: Border(
+                                      bottom: BorderSide(width: 0.2, color: CustomColors.textColorTile),
+                                    ),
+                                  ),
                                   child: Row(
                                     children: [
                                       Flexible(
                                         flex: 3,
                                         fit: FlexFit.tight,
-                                        child: Text(item.product.provider.name),
+                                        child: Text(
+                                          item.product.provider.name,
+                                          style: const TextStyle(
+                                              color:
+                                                  CustomColors.textColorTile),
+                                        ),
                                       ),
                                       Flexible(
                                         flex: 4,
                                         fit: FlexFit.tight,
-                                        child: Text(item.product.name, textAlign: TextAlign.justify,),
+                                        child: Text(item.product.name,
+                                            textAlign: TextAlign.justify,
+                                            style: const TextStyle(
+                                                color: CustomColors
+                                                    .textColorTile)),
                                       ),
                                       Flexible(
                                         flex: 1,
                                         fit: FlexFit.tight,
-                                        child: Text(item.product.category, textAlign: TextAlign.end,),
+                                        child: Text(item.product.category,
+                                            textAlign: TextAlign.end,
+                                            style: const TextStyle(
+                                                color: CustomColors
+                                                    .textColorTile)),
                                       ),
                                       Flexible(
                                         flex: 3,
                                         fit: FlexFit.tight,
-                                        child: Text(item.totalOrdered.toString(), textAlign: TextAlign.end,),
+                                        child: Text(
+                                            item.totalOrdered.toString(),
+                                            textAlign: TextAlign.end,
+                                            style: const TextStyle(
+                                                color: CustomColors
+                                                    .textColorTile)),
                                       ),
                                       Flexible(
                                         flex: 3,
                                         fit: FlexFit.tight,
-                                        child: Text((item.totalOrdered - item.total).toString(), textAlign: TextAlign.end,),
+                                        child: Text(
+                                            (item.totalOrdered - item.total)
+                                                .toString(),
+                                            textAlign: TextAlign.end,
+                                            style: const TextStyle(
+                                                color: CustomColors
+                                                    .textColorTile)),
                                       ),
                                     ],
                                   ),
