@@ -165,7 +165,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                                     .textColorTile)),
                                       ),
                                       Flexible(
-                                        flex: 2,
+                                        flex: 1,
                                         fit: FlexFit.tight,
                                         child: Text(
                                             item.totalOrdered.toString(),
@@ -175,7 +175,7 @@ class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
                                                     .textColorTile)),
                                       ),
                                       Flexible(
-                                        flex: 2,
+                                        flex: 1,
                                         fit: FlexFit.tight,
                                         child: Text(
                                             (item.totalOrdered - item.total)
