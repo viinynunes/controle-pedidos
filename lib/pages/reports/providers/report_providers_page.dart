@@ -6,15 +6,15 @@ import 'package:intl/intl.dart';
 
 import '../../../services/excel_export_service.dart';
 
-class ReportEstablishmentPage extends StatefulWidget {
-  const ReportEstablishmentPage({Key? key}) : super(key: key);
+class ReportProvidersPage extends StatefulWidget {
+  const ReportProvidersPage({Key? key}) : super(key: key);
 
   @override
-  _ReportEstablishmentPageState createState() =>
-      _ReportEstablishmentPageState();
+  _ReportProvidersPageState createState() =>
+      _ReportProvidersPageState();
 }
 
-class _ReportEstablishmentPageState extends State<ReportEstablishmentPage> {
+class _ReportProvidersPageState extends State<ReportProvidersPage> {
   bool loading = false;
 
   final dateFormat = DateFormat('dd-MM-yyyy');
