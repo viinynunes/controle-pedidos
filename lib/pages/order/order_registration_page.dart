@@ -52,6 +52,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   final _formKey = GlobalKey<FormState>();
   final _quantityFocus = FocusNode();
   final _selectProductFocus = FocusNode();
+  final _noteFocus = FocusNode();
 
   @override
   void initState() {
@@ -98,6 +99,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
           child: SizedBox(
             width: 500,
             child: TextField(
+              focusNode: _noteFocus,
               controller: _noteController,
               decoration: const InputDecoration(
                 labelText: 'Observação',
@@ -402,6 +404,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                                       RectGetter.getRectFromKey(
                                                           _rectKey);
                                                   _showPopUpMenu(rect!);
+                                                  _noteFocus.requestFocus();
                                                 },
                                                 icon: const Icon(Icons.note),
                                               ),
