@@ -2,34 +2,21 @@ import 'package:controle_pedidos/data/order_item_data.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 
-class OrderItemTile extends StatefulWidget {
-  const OrderItemTile(
-      {Key? key, required this.orderItem, required this.onRefresh})
-      : super(key: key);
+class OrderItemTile extends StatelessWidget {
+  const OrderItemTile({Key? key, required this.orderItem}) : super(key: key);
 
   final OrderItemData orderItem;
-  final VoidCallback onRefresh;
-
-  @override
-  State<OrderItemTile> createState() => _OrderItemTileState();
-}
-
-class _OrderItemTileState extends State<OrderItemTile> {
-  late bool hasNote;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.orderItem.note == null) {
-      hasNote = false;
-    } else {
-      hasNote = true;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    bool hasNote = false;
+
+    if (orderItem.note != null) {
+      hasNote = true;
+    } else {
+      hasNote = false;
+    }
+
     return Card(
       color: CustomColors.backgroundTile,
       child: Padding(
@@ -40,7 +27,7 @@ class _OrderItemTileState extends State<OrderItemTile> {
                 flex: 1,
                 fit: FlexFit.tight,
                 child: Text(
-                  widget.orderItem.quantity.toString(),
+                  orderItem.quantity.toString(),
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: CustomColors.textColorTile),
                 )),
@@ -48,7 +35,7 @@ class _OrderItemTileState extends State<OrderItemTile> {
                 flex: 1,
                 fit: FlexFit.tight,
                 child: Text(
-                  widget.orderItem.product.category,
+                  orderItem.product.category,
                   style: const TextStyle(color: CustomColors.textColorTile),
                 )),
             Flexible(
@@ -56,14 +43,12 @@ class _OrderItemTileState extends State<OrderItemTile> {
                 fit: FlexFit.tight,
                 child: hasNote
                     ? Text(
-                        widget.orderItem.product.name +
-                            ' - ' +
-                            widget.orderItem.note!,
+                        orderItem.product.name + ' - ' + orderItem.note!,
                         style:
                             const TextStyle(color: CustomColors.textColorTile),
                       )
                     : Text(
-                        widget.orderItem.product.name,
+                        orderItem.product.name,
                         style:
                             const TextStyle(color: CustomColors.textColorTile),
                       )),
@@ -71,7 +56,7 @@ class _OrderItemTileState extends State<OrderItemTile> {
                 flex: 2,
                 fit: FlexFit.tight,
                 child: Text(
-                  widget.orderItem.product.provider.name,
+                  orderItem.product.provider.name,
                   style: const TextStyle(color: CustomColors.textColorTile),
                 )),
           ],

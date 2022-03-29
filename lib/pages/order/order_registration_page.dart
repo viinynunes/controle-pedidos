@@ -443,7 +443,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                         ),
                         child: OrderItemTile(
                           orderItem: orderItem,
-                          onRefresh: () {},
                         ),
                       );
                     },
@@ -502,7 +501,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
           note: note);
       setState(() {
         orderItemList.add(orderItem!);
-        if(widget.order != null){
+        if (widget.order != null) {
           orderService.sortOrderItems(orderItemList);
         } else {
           orderService.sortOrderItemsByID(orderItemList);
