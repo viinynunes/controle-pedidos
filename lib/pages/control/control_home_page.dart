@@ -68,6 +68,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    bool desktop = size.width > 600 ? true : false;
+
     void _updateProductAndStockItem(StockData stockItem) async {
       setState(() {
         loading = true;
@@ -198,302 +201,318 @@ class _ControlHomePageState extends State<ControlHomePage> {
       ),
       backgroundColor: CustomColors.backgroundColor,
       body: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Column(
-          children: [
-            Row(
+        padding: EdgeInsets.fromLTRB(4, desktop ? 10 : 4, 4, 4),
+        child: Center(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: desktop ? 1080 : double.maxFinite),
+            child: Column(
               children: [
-                ElevatedButton(
-                    onPressed: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: iniDate,
-                              firstDate: DateTime(2015),
-                              lastDate: DateTime(2050))
-                          .then((value) {
-                        setState(() {
-                          if (value != null) {
-                            if (value != iniDate) {
-                              stockList.clear();
-                              _selectedProvider = null;
-                              iniDate = value;
-                            }
-                          }
-                        });
-                      });
-                    },
-                    child: Text(dateFormat.format(iniDate))),
-                const SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: endDate,
-                              firstDate: DateTime(2015),
-                              lastDate: DateTime(2050))
-                          .then((value) {
-                        setState(() {
-                          if (value != null) {
-                            if (value != endDate) {
-                              stockList.clear();
-                              _selectedProvider = null;
-                              endDate = value;
-                            }
-                          }
-                        });
-                      });
-                    },
-                    child: Text(dateFormat.format(endDate))),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _setProviderList(iniDate, endDate);
-                    },
-                    child: const Text(
-                      'Carregar Fornecedores',
-                      textAlign: TextAlign.center,
+                Row(
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          showDatePicker(
+                                  context: context,
+                                  initialDate: iniDate,
+                                  firstDate: DateTime(2015),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            setState(() {
+                              if (value != null) {
+                                if (value != iniDate) {
+                                  stockList.clear();
+                                  _selectedProvider = null;
+                                  iniDate = value;
+                                }
+                              }
+                            });
+                          });
+                        },
+                        child: Text(dateFormat.format(iniDate))),
+                    SizedBox(
+                      width: desktop ? 20 : 10,
                     ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            loading
-                ? const LinearProgressIndicator()
-                : StockModel.of(context).providerListAll.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'Nenhum Fornecedor encontrado',
-                          style: TextStyle(color: CustomColors.textColorTile),
+                    ElevatedButton(
+                        onPressed: () {
+                          showDatePicker(
+                                  context: context,
+                                  initialDate: endDate,
+                                  firstDate: DateTime(2015),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            setState(() {
+                              if (value != null) {
+                                if (value != endDate) {
+                                  stockList.clear();
+                                  _selectedProvider = null;
+                                  endDate = value;
+                                }
+                              }
+                            });
+                          });
+                        },
+                        child: Text(dateFormat.format(endDate))),
+                    SizedBox(
+                      width: desktop ? 20 : 10,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _setProviderList(iniDate, endDate);
+                        },
+                        child: const Text(
+                          'Carregar Fornecedores',
+                          textAlign: TextAlign.center,
                         ),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            flex: 3,
-                            fit: FlexFit.tight,
-                            child: DropdownButtonFormField<ProviderData>(
-                              value: _selectedProvider,
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  color: CustomColors.textColorTile),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: CustomColors.backgroundTile,
-                                label: const Text(
-                                  'Fornecedor',
-                                  style: TextStyle(
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: desktop ? 25 : 10,
+                ),
+                loading
+                    ? const LinearProgressIndicator()
+                    : StockModel.of(context).providerListAll.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Center(
+                              child: Text(
+                                'Nenhum Fornecedor encontrado',
+                                style: TextStyle(
+                                    color: CustomColors.textColorTile),
+                              ),
+                            ),
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                flex: 3,
+                                fit: FlexFit.tight,
+                                child: DropdownButtonFormField<ProviderData>(
+                                  value: _selectedProvider,
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       color: CustomColors.textColorTile),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: CustomColors.backgroundTile,
+                                    label: const Text(
+                                      'Fornecedor',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: CustomColors.textColorTile),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: Colors.deepPurple),
+                                        borderRadius:
+                                            (BorderRadius.circular(16))),
+                                  ),
+                                  dropdownColor: CustomColors.backgroundTile,
+                                  items: dropDownProvidersItems,
+                                  onChanged: (e) {
+                                    setState(() {
+                                      if (e != null) {
+                                        _selectedProvider = e;
+                                        stockList.clear();
+                                        _setStockListByProvider(iniDate,
+                                            endDate, _selectedProvider!);
+                                        stockDefaultNode.requestFocus();
+                                      }
+                                    });
+                                  },
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: Colors.deepPurple),
-                                    borderRadius: (BorderRadius.circular(16))),
                               ),
-                              dropdownColor: CustomColors.backgroundTile,
-                              items: dropDownProvidersItems,
-                              onChanged: (e) {
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Form(
+                                        child: TextFormField(
+                                          controller: stockDefaultController,
+                                          focusNode: stockDefaultNode,
+                                          enabled: iniDate == endDate,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              color:
+                                                  CustomColors.textColorTile),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor:
+                                                CustomColors.backgroundTile,
+                                            label: const Text(
+                                              'Sobra Padrão',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: CustomColors
+                                                      .textColorTile),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .primaryColor),
+                                                borderRadius:
+                                                    (BorderRadius.circular(
+                                                        16))),
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                          textInputAction: TextInputAction.next,
+                                          validator: (e) {
+                                            var regExp = RegExp(
+                                                    r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
+                                                .hasMatch(e!);
+                                            if (stockDefaultController
+                                                    .text.isEmpty ||
+                                                !regExp) {
+                                              return '';
+                                            }
+                                            return null;
+                                          },
+                                          onFieldSubmitted: (e) async {
+                                            setState(() {
+                                              loading = true;
+                                            });
+                                            int left = int.parse(
+                                                stockDefaultController.text);
+
+                                            await controlService
+                                                .updateTotalOrderedInAllStockByProvider(
+                                                    context, stockList, left);
+
+                                            if (_selectedProvider != null) {
+                                              await _setStockListByProvider(
+                                                  iniDate,
+                                                  endDate,
+                                                  _selectedProvider!);
+                                            }
+
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                stockList.isEmpty
+                    ? Container()
+                    : SizedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 3,
+                                fit: FlexFit.tight,
+                                child: Text(
+                                  'Produto',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 3,
+                                fit: FlexFit.tight,
+                                child: Text(
+                                  'Pedido',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 3,
+                                fit: FlexFit.tight,
+                                child: Text(
+                                  'Total',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 2,
+                                fit: FlexFit.tight,
+                                child: Text(
+                                  'Sobra',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                loading
+                    ? Container()
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: stockList.length,
+                          itemBuilder: (context, index) {
+                            var stockIndex = stockList[index];
+                            return InkWell(
+                              onLongPress: () {
                                 setState(() {
-                                  if (e != null) {
-                                    _selectedProvider = e;
-                                    stockList.clear();
-                                    _setStockListByProvider(
-                                        iniDate, endDate, _selectedProvider!);
-                                    stockDefaultNode.requestFocus();
+                                  if (selectedStockListToShare
+                                      .contains(stockIndex)) {
+                                    selectedStockListToShare.remove(stockIndex);
+                                  } else {
+                                    selectedStockListToShare.add(stockIndex);
                                   }
                                 });
                               },
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Form(
-                                    child: TextFormField(
-                                      controller: stockDefaultController,
-                                      focusNode: stockDefaultNode,
-                                      enabled: iniDate == endDate,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          color: CustomColors.textColorTile),
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: CustomColors.backgroundTile,
-                                        label: const Text(
-                                          'Sobra Padrão',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color:
-                                                  CustomColors.textColorTile),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                (BorderRadius.circular(16))),
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      textInputAction: TextInputAction.next,
-                                      validator: (e) {
-                                        var regExp = RegExp(
-                                                r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
-                                            .hasMatch(e!);
-                                        if (stockDefaultController
-                                                .text.isEmpty ||
-                                            !regExp) {
-                                          return '';
-                                        }
-                                        return null;
-                                      },
-                                      onFieldSubmitted: (e) async {
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                        int left = int.parse(
-                                            stockDefaultController.text);
-
-                                        await controlService
-                                            .updateTotalOrderedInAllStockByProvider(
-                                                context, stockList, left);
-
-                                        if (_selectedProvider != null) {
-                                          await _setStockListByProvider(iniDate,
-                                              endDate, _selectedProvider!);
-                                        }
-
-                                        setState(() {
-                                          loading = false;
-                                        });
-                                      },
-                                    ),
-                                  ),
+                              child: ListTile(
+                                title: StockListTile(
+                                  stock: stockIndex,
+                                  editable: iniDate == endDate,
+                                  selected: selectedStockListToShare
+                                      .contains(stockIndex),
+                                  onDelete: () async {
+                                    await StockModel.of(context)
+                                        .deleteStock(stockIndex);
+                                    setState(() {
+                                      loading = true;
+                                    });
+                                    if (_selectedProvider != null) {
+                                      _setStockListByProvider(
+                                          iniDate, endDate, _selectedProvider!);
+                                    }
+                                    setState(() {
+                                      loading = false;
+                                    });
+                                  },
+                                  onEdit: () async {
+                                    setState(() {
+                                      _updateProductAndStockItem(stockIndex);
+                                    });
+                                  },
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-            stockList.isEmpty
-                ? Container()
-                : SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        children: [
-                          Flexible(
-                            flex: 3,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Produto',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 3,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Pedido',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 3,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Total',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 2,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Sobra',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-            loading
-                ? Container()
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: stockList.length,
-                      itemBuilder: (context, index) {
-                        var stockIndex = stockList[index];
-                        return InkWell(
-                          onLongPress: () {
-                            setState(() {
-                              if (selectedStockListToShare
-                                  .contains(stockIndex)) {
-                                selectedStockListToShare.remove(stockIndex);
-                              } else {
-                                selectedStockListToShare.add(stockIndex);
-                              }
-                            });
+                              ),
+                            );
                           },
-                          child: ListTile(
-                            title: StockListTile(
-                              stock: stockIndex,
-                              editable: iniDate == endDate,
-                              selected:
-                                  selectedStockListToShare.contains(stockIndex),
-                              onDelete: () async {
-                                await StockModel.of(context)
-                                    .deleteStock(stockIndex);
-                                setState(() {
-                                  loading = true;
-                                });
-                                if (_selectedProvider != null) {
-                                  _setStockListByProvider(
-                                      iniDate, endDate, _selectedProvider!);
-                                }
-                                setState(() {
-                                  loading = false;
-                                });
-                              },
-                              onEdit: () async {
-                                setState(() {
-                                  _updateProductAndStockItem(stockIndex);
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-          ],
+                        ),
+                      ),
+              ],
+            ),
+          ),
         ),
       ),
     );
