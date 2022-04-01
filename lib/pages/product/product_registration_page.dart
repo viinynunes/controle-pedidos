@@ -57,6 +57,10 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+
+
     _showProviderDialog() async {
       await showDialog(
           context: context,
@@ -91,122 +95,132 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
         ),
         backgroundColor: CustomColors.backgroundColor,
         body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: _nameController,
-                    focusNode: _nameFocus,
-                    decoration: InputDecoration(
-                      counterText: '',
-                      labelText: 'Nome',
-                      labelStyle: _getStyle(),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blueGrey),
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                      ),
-                    ),
-                    style: _getStyle(),
-                    validator: (e) {
-                      if (_nameController.text.isEmpty) {
-                        return 'Campo Obrigatório';
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.url,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: _categoryController,
-                    maxLength: 3,
-                    decoration: InputDecoration(
-                      labelText: 'Categoria',
-                      labelStyle: _getStyle(),
-                      counterStyle:
-                          const TextStyle(color: CustomColors.textColorTile),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blueGrey),
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                      ),
-                    ),
-                    style: _getStyle(),
-                    validator: (e) {
-                      if (_categoryController.text.isEmpty) {
-                        return 'Campo Obrigatório';
-                      } else if (_categoryController.text.length > 3) {
-                        return 'Máxímo 3 caracteres';
-                      }
-                      return null;
-                    },
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (e) => _showProviderDialog(),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  loading
-                      ? const LinearProgressIndicator()
-                      : GestureDetector(
-                          onTap: () {
-                            _showProviderDialog();
-                          },
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: CustomColors.backgroundTile,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: size.width > 600 ? 600 : double.maxFinite,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: _nameController,
+                          focusNode: _nameFocus,
+                          decoration: InputDecoration(
+                            counterText: '',
+                            labelText: 'Nome',
+                            labelStyle: _getStyle(),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueGrey),
+                              borderRadius: BorderRadius.all(Radius.circular(16)),
                             ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    _selectedProvider.toString(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        color: CustomColors.textColorTile),
+                          ),
+                          style: _getStyle(),
+                          validator: (e) {
+                            if (_nameController.text.isEmpty) {
+                              return 'Campo Obrigatório';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.url,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          controller: _categoryController,
+                          maxLength: 3,
+                          decoration: InputDecoration(
+                            labelText: 'Categoria',
+                            labelStyle: _getStyle(),
+                            counterStyle:
+                                const TextStyle(color: CustomColors.textColorTile),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueGrey),
+                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                            ),
+                          ),
+                          style: _getStyle(),
+                          validator: (e) {
+                            if (_categoryController.text.isEmpty) {
+                              return 'Campo Obrigatório';
+                            } else if (_categoryController.text.length > 3) {
+                              return 'Máxímo 3 caracteres';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (e) => _showProviderDialog(),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        loading
+                            ? const LinearProgressIndicator()
+                            : GestureDetector(
+                                onTap: () {
+                                  _showProviderDialog();
+                                },
+                                child: Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: CustomColors.backgroundTile,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          _selectedProvider.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              color: CustomColors.textColorTile),
+                                        ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Icon(
+                                          Icons.arrow_drop_down,
+                                          color: CustomColors.textColorTile,
+                                          size: 30,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Icon(
-                                    Icons.arrow_drop_down,
-                                    color: CustomColors.textColorTile,
-                                    size: 30,
-                                  ),
-                                ),
-                              ],
+                              ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: InkWell(
+                              onTap: () async {
+                                await providerService.createOrUpdate(
+                                    providerList: ProviderModel.of(context).providerList, context: context);
+                                _getProvidersList();
+                              },
+                              child: const Text(
+                                'Criar novo fornecedor',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: CustomColors.textColorTile),
+                              ),
                             ),
                           ),
                         ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: InkWell(
-                        onTap: () async {
-                          await providerService.createOrUpdate(
-                              providerList: ProviderModel.of(context).providerList, context: context);
-                          _getProvidersList();
-                        },
-                        child: const Text(
-                          'Criar novo fornecedor',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: CustomColors.textColorTile),
-                        ),
-                      ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
