@@ -41,6 +41,9 @@ class _OrderListPageState extends State<OrderListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+
     void _showOrderRegistrationPage({OrderData? order}) async {
       final recOrder = await Navigator.push(
           context,
@@ -100,36 +103,40 @@ class _OrderListPageState extends State<OrderListPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        showDatePicker(
-                                context: context,
-                                initialDate: _selectedDate,
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime(2050))
-                            .then((value) {
-                          setState(() {
-                            if (value != null) {
-                              _selectedDate = value;
-                              _setOrderList();
-                            }
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          showDatePicker(
+                                  context: context,
+                                  initialDate: _selectedDate,
+                                  firstDate: DateTime(2020),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            setState(() {
+                              if (value != null) {
+                                _selectedDate = value;
+                                _setOrderList();
+                              }
+                            });
                           });
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Text(dateFormat.format(_selectedDate)),
-                          const Icon(Icons.arrow_drop_down)
-                        ],
-                      )),
+                        },
+                        child: Row(
+                          children: [
+                            Text(dateFormat.format(_selectedDate)),
+                            const Icon(Icons.arrow_drop_down)
+                          ],
+                        )),
+                  ),
                 ],
               ),
               loading
-                  ? const CircularProgressIndicator()
+                  ? const Padding(padding: EdgeInsets.all(35),child: Center(child: CircularProgressIndicator()))
                   :
                   //List of Orders
                   Expanded(
                       child: ListView.builder(
+                        padding: const EdgeInsets.only(top: 15),
                         itemCount: OrderModel.of(context).orderListAll.length,
                         itemBuilder: (context, index) {
                           var order = OrderModel.of(context).orderListAll[index];
@@ -158,11 +165,18 @@ class _OrderListPageState extends State<OrderListPage> {
                                 ),
                               ],
                             ),
-                            child: OrderListTile(
-                              order: order,
-                              showOrderRegistrationPage: () {
-                                _showOrderRegistrationPage(order: order);
-                              },
+                            child: Center(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: size.width > 600 ? 1080 : double.maxFinite,
+                                ),
+                                child: OrderListTile(
+                                  order: order,
+                                  showOrderRegistrationPage: () {
+                                    _showOrderRegistrationPage(order: order);
+                                  },
+                                ),
+                              ),
                             ),
                           );
                         },
