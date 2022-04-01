@@ -38,6 +38,9 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return AlertDialog(
       elevation: 50,
       backgroundColor: CustomColors.backgroundColor,
@@ -92,7 +95,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
       ),
       content: SizedBox(
         height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+        width: desktop ? MediaQuery.of(context).size.width * 0.4 : double.maxFinite,
         child: ListView.builder(
           shrinkWrap: true,
           itemCount: secondProductList.length,
