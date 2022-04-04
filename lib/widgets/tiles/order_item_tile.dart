@@ -18,6 +18,7 @@ class OrderItemTile extends StatelessWidget {
     }
 
     return Card(
+      elevation: 10,
       color: CustomColors.backgroundTile,
       child: Padding(
         padding: const EdgeInsets.all(8),
