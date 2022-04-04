@@ -57,7 +57,7 @@ class ProviderData {
     if (other is! ProviderData) {
       return false;
     }
-    return name == (other).name;
+    return name == (other).name && location == (other).location;
   }
 
   @override
