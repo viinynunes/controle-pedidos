@@ -10,9 +10,10 @@ class ReportEstablishmentService {
     final stockList =
         await StockModel.of(context).getStockBetweenDates(iniDate, endDate);
 
-    for (var item in stockList){
-      if(stockDataList.contains(item)){
-        var e = stockDataList.singleWhere((element) => element.product.id == item.product.id);
+    for (var item in stockList) {
+      if (stockDataList.contains(item)) {
+        var e = stockDataList
+            .singleWhere((element) => element.product.id == item.product.id);
         item.total += e.total;
         item.totalOrdered += e.totalOrdered;
         stockDataList.remove(e);
@@ -26,9 +27,17 @@ class ReportEstablishmentService {
           .compareTo(b.product.provider.name.toLowerCase());
 
       if (compare == 0) {
-        return a.product.name
+        int secondCompare = a.product.provider.location
             .toLowerCase()
-            .compareTo(b.product.name.toLowerCase());
+            .compareTo(b.product.provider.location.toLowerCase());
+
+        if (secondCompare == 0) {
+          return a.product.name
+              .toLowerCase()
+              .compareTo(b.product.name.toLowerCase());
+        } else {
+          return secondCompare;
+        }
       } else {
         return compare;
       }
