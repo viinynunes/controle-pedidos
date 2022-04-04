@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 
 class ShowProductListDialog extends StatefulWidget {
   const ShowProductListDialog(
-      {Key? key, required this.productList, required this.selectedProduct})
+      {Key? key, required this.productList, required this.selectedProduct, required this.longPressSelectedProduct})
       : super(key: key);
 
   final Function(ProductData) selectedProduct;
+  final Function(ProductData) longPressSelectedProduct;
   final List<ProductData> productList;
 
   @override
@@ -107,6 +108,9 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
               onTap: () {
                 _selectProduct(item);
               },
+              onLongPress: (){
+                _longPressSelectedProduct(item);
+              },
             );
           },
         ),
@@ -141,6 +145,13 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
   void _selectProduct(ProductData item) {
     setState(() {
       widget.selectedProduct(item);
+      Navigator.pop(context);
+    });
+  }
+
+  void _longPressSelectedProduct(ProductData item){
+    setState(() {
+      widget.longPressSelectedProduct(item);
       Navigator.pop(context);
     });
   }

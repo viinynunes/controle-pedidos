@@ -78,11 +78,26 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     await showDialog(
         context: context,
         builder: (context) {
+          var desktop = MediaQuery.of(context).size.width > 600;
           return ShowProductListDialog(
             selectedProduct: (product) {
               setState(() {
                 _selectedProduct = product;
+                if (desktop){
+                  if (_formKey.currentState!.validate()) {
+                    if (_selectedProduct != null) {
+                      _setOrderItem();
+                    }
+                  }
+                }
               });
+            },
+            longPressSelectedProduct: (product){
+              if (desktop) {
+                setState(() {
+                  _selectedProduct = product;
+                });
+              }
             },
             productList: ProductModel.of(context).productList,
           );
@@ -127,6 +142,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final desktop = size.width > 600;
 
     void _showProductRegistrationPage({ProductData? product}) async {
       var recProduct = await productService.createOrUpdate(
@@ -264,7 +280,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: size.width > 600 ? 1080 : double.maxFinite,
+                  maxWidth: desktop ? 1080 : double.maxFinite,
                 ),
                 child: Column(
                   children: [
@@ -304,12 +320,12 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                     ? 'Selecione o cliente'
                                     : client!.name,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: size.width > 600 ? 20 : 16),
+                                style: TextStyle(fontSize: desktop ? 20 : 16),
                               ),
                             ),
                           ),
                     SizedBox(
-                      height: size.width > 600 ? 15 : 10,
+                      height: desktop ? 15 : 10,
                     ),
                     //Line with quantity and product
                     SizedBox(
@@ -349,6 +365,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                 textInputAction: TextInputAction.next,
                                 onFieldSubmitted: (e) async {
                                   _showProductDialog();
+                                  Navigator.pop(context);
                                 },
                                 validator: (e) {
                                   var regExp = RegExp(
@@ -374,56 +391,57 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                   : SizedBox(
                                       height: 55,
                                       child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.deepPurple
-                                                  .withOpacity(0.4)),
-                                          focusNode: _selectProductFocus,
-                                          onLongPress: () {
-                                            setState(() {
-                                              _selectedProduct = null;
-                                            });
-                                          },
-                                          onPressed: () async {
-                                            _showProductDialog();
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Flexible(
-                                                flex: 5,
-                                                fit: FlexFit.tight,
-                                                child: Text(
-                                                  _selectedProduct == null
-                                                      ? 'Selecione um produto'
-                                                      : _selectedProduct
-                                                          .toString(),
-                                                  style: const TextStyle(
-                                                      fontSize: 16),
-                                                  textAlign: TextAlign.center,
-                                                ),
+                                        style: ElevatedButton.styleFrom(
+                                            primary: Colors.deepPurple
+                                                .withOpacity(0.4)),
+                                        focusNode: _selectProductFocus,
+                                        onLongPress: () {
+                                          setState(() {
+                                            _selectedProduct = null;
+                                          });
+                                        },
+                                        onPressed: () async {
+                                          _showProductDialog();
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Flexible(
+                                              flex: 5,
+                                              fit: FlexFit.tight,
+                                              child: Text(
+                                                _selectedProduct == null
+                                                    ? 'Selecione um produto'
+                                                    : _selectedProduct
+                                                        .toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Flexible(
-                                                  flex: 1,
-                                                  fit: FlexFit.loose,
-                                                  child: RectGetter(
-                                                    key: _rectKey,
-                                                    child: IconButton(
-                                                      onPressed: () {
-                                                        var rect = RectGetter
-                                                            .getRectFromKey(
-                                                                _rectKey);
-                                                        _showPopUpMenu(rect!);
-                                                        _noteFocus.requestFocus();
-                                                      },
-                                                      icon:
-                                                          const Icon(Icons.note,),
-                                                    ),
+                                            ),
+                                            Flexible(
+                                              flex: 1,
+                                              fit: FlexFit.loose,
+                                              child: RectGetter(
+                                                key: _rectKey,
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    var rect = RectGetter
+                                                        .getRectFromKey(
+                                                            _rectKey);
+                                                    _showPopUpMenu(rect!);
+                                                    _noteFocus.requestFocus();
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.note,
                                                   ),
                                                 ),
-
-                                            ],
-                                          )),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                             ),
                           ],
