@@ -161,7 +161,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
                           productList: productList,
                           selectedProduct: (product) {
                             _selectedProduct = product;
-                          });
+                          },
+                      longPressSelectedProduct: (product){},);
                     });
 
                 if (_selectedProduct != null) {
