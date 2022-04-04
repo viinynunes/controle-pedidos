@@ -36,7 +36,7 @@ class _ReportProvidersPageState extends State<ReportProvidersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Relatório por estabelecimento'),
+          title: const Text('Relatório por fornecedores'),
           actions: [
             IconButton(
               onPressed: () {
