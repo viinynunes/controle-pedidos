@@ -38,7 +38,7 @@ class ClientModel extends Model {
 
   Future<List<ClientData>> getFilteredClients({String? search}) async {
     isLoading = true;
-    List<ClientData> clientList = [];
+    List<ClientData> auxList = [];
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('clients')
         .where('enabled', isEqualTo: true)
@@ -48,16 +48,17 @@ class ClientModel extends Model {
       for (DocumentSnapshot e in snapshot.docs) {
         String name = e.get('name');
         if (name.toLowerCase().contains(search.toLowerCase())) {
-          clientList.add(ClientData.fromDocSnapshot(e));
+          auxList.add(ClientData.fromDocSnapshot(e));
         }
       }
     } else {
       for (DocumentSnapshot e in snapshot.docs) {
-        clientList.add(ClientData.fromDocSnapshot(e));
+        auxList.add(ClientData.fromDocSnapshot(e));
       }
     }
+    clientList.addAll(auxList);
     isLoading = false;
     notifyListeners();
-    return clientList;
+    return auxList;
   }
 }

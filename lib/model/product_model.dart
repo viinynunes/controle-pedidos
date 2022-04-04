@@ -41,7 +41,7 @@ class ProductModel extends Model {
 
   Future<List<ProductData>> getFilteredEnabledProducts({String? search}) async {
     isLoading = true;
-    List<ProductData> productList = [];
+    List<ProductData> auxList = [];
     final snapshot = await firebaseCollection
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false)
@@ -50,18 +50,19 @@ class ProductModel extends Model {
       for (DocumentSnapshot e in snapshot.docs) {
         String name = e.get('name');
         if (name.toLowerCase().contains(search.toLowerCase())) {
-          productList.add(ProductData.fromDocSnapshot(e));
+          auxList.add(ProductData.fromDocSnapshot(e));
         }
       }
     } else {
       for (DocumentSnapshot e in snapshot.docs) {
-        productList.add(ProductData.fromDocSnapshot(e));
+        auxList.add(ProductData.fromDocSnapshot(e));
       }
     }
+    productList.addAll(auxList);
 
     isLoading = false;
     notifyListeners();
-    return productList;
+    return auxList;
   }
 
   Future<List<ProductData>> getEnabledProductsFromProvider(

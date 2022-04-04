@@ -1,5 +1,7 @@
 import 'package:controle_pedidos/data/order_data.dart';
+import 'package:controle_pedidos/model/client_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
+import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/order/order_registration_page.dart';
 import 'package:controle_pedidos/services/order_services.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
@@ -41,7 +43,6 @@ class _OrderListPageState extends State<OrderListPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final size = MediaQuery.of(context).size;
 
     void _showOrderRegistrationPage({OrderData? order}) async {
@@ -76,6 +77,8 @@ class _OrderListPageState extends State<OrderListPage> {
           IconButton(
             onPressed: () async {
               await _setOrderList();
+              await ProductModel.of(context).getFilteredEnabledProducts();
+              await ClientModel.of(context).getFilteredClients();
             },
             icon: const Icon(Icons.refresh),
           ),
@@ -131,7 +134,9 @@ class _OrderListPageState extends State<OrderListPage> {
                 ],
               ),
               loading
-                  ? const Padding(padding: EdgeInsets.all(35),child: Center(child: CircularProgressIndicator()))
+                  ? const Padding(
+                      padding: EdgeInsets.all(35),
+                      child: Center(child: CircularProgressIndicator()))
                   :
                   //List of Orders
                   Expanded(
@@ -139,7 +144,8 @@ class _OrderListPageState extends State<OrderListPage> {
                         padding: const EdgeInsets.only(top: 15),
                         itemCount: OrderModel.of(context).orderListAll.length,
                         itemBuilder: (context, index) {
-                          var order = OrderModel.of(context).orderListAll[index];
+                          var order =
+                              OrderModel.of(context).orderListAll[index];
                           return Slidable(
                             key: const ValueKey(0),
                             startActionPane: ActionPane(
@@ -149,7 +155,9 @@ class _OrderListPageState extends State<OrderListPage> {
                                 SlidableAction(
                                   onPressed: (e) {
                                     model.disableOrder(order);
-                                    OrderModel.of(context).orderListAll.remove(order);
+                                    OrderModel.of(context)
+                                        .orderListAll
+                                        .remove(order);
                                   },
                                   icon: Icons.delete_forever,
                                   backgroundColor: Colors.red,
@@ -168,7 +176,9 @@ class _OrderListPageState extends State<OrderListPage> {
                             child: Center(
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxWidth: size.width > 600 ? 1080 : double.maxFinite,
+                                  maxWidth: size.width > 600
+                                      ? 1080
+                                      : double.maxFinite,
                                 ),
                                 child: OrderListTile(
                                   order: order,
@@ -197,7 +207,6 @@ class _OrderListPageState extends State<OrderListPage> {
       final list =
           await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
       setState(() {
-
         OrderModel.of(context).orderListAll.clear();
         OrderModel.of(context).orderListAll = list;
         orderService.sortByDate(OrderModel.of(context).orderListAll);
