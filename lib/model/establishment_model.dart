@@ -5,7 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 class EstablishmentModel extends Model {
   final firebaseEstablishments =
-      FirebaseFirestore.instance.collection('providers');
+      FirebaseFirestore.instance.collection('establishments');
 
   bool isLoading = false;
 
