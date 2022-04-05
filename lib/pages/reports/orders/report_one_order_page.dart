@@ -17,6 +17,9 @@ class _ReportOneOrderPageState extends State<ReportOneOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.order.client.name),
@@ -31,56 +34,63 @@ class _ReportOneOrderPageState extends State<ReportOneOrderPage> {
             ),
           ],
         ),
-        body: WidgetToImage(
-          builder: (key) {
-            key1 = key;
-            return Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 5,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: desktop ? 720 : double.maxFinite
+            ),
+            child: WidgetToImage(
+              builder: (key) {
+                key1 = key;
+                return Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Center(
+                        child: Text(
+                          widget.order.client.name,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Flexible(
+                        child: ListView.builder(
+                          itemCount: widget.order.orderItemList!.length,
+                          itemBuilder: (context, index) {
+                            var item = widget.order.orderItemList![index];
+                            String note = item.note ?? '';
+                            return Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(1),
+                                  child: Text(
+                                    item.quantity.toString() +
+                                        ' ' +
+                                        item.product.category +
+                                        ' ' +
+                                        item.product.name +
+                                        ' - ' +
+                                        note,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    ],
                   ),
-                  Center(
-                    child: Text(
-                      widget.order.client.name,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Flexible(
-                    child: ListView.builder(
-                      itemCount: widget.order.orderItemList!.length,
-                      itemBuilder: (context, index) {
-                        var item = widget.order.orderItemList![index];
-                        String note = item.note ?? '';
-                        return Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(1),
-                              child: Text(
-                                item.quantity.toString() +
-                                    ' ' +
-                                    item.product.category +
-                                    ' ' +
-                                    item.product.name +
-                                    ' - ' +
-                                    note,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            );
-          },
+                );
+              },
+            ),
+          ),
         ));
   }
 }

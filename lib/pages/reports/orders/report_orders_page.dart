@@ -34,6 +34,8 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pedidos'),
@@ -51,102 +53,129 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
         ],
       ),
       backgroundColor: CustomColors.backgroundColor,
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            Row(
+      body: Center(
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(maxWidth: desktop ? 1080 : double.maxFinite),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
               children: [
-                SizedBox(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: iniDate,
-                              firstDate: DateTime(2015),
-                              lastDate: DateTime(2050))
-                          .then((value) {
-                        if (value != null) {
-                          setState(() {
-                            iniDate = value;
+                Row(
+                  children: [
+                    SizedBox(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDatePicker(
+                                  context: context,
+                                  initialDate: iniDate,
+                                  firstDate: DateTime(2015),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            if (value != null) {
+                              setState(() {
+                                iniDate = value;
+                              });
+                            }
                           });
-                        }
-                      });
-                    },
-                    child: Text(dateFormat.format(iniDate)),
-                  ),
+                        },
+                        child: Text(dateFormat.format(iniDate)),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDatePicker(
+                                  context: context,
+                                  initialDate: endDate,
+                                  firstDate: DateTime(2015),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            if (value != null) {
+                              setState(() {
+                                endDate = value;
+                              });
+                            }
+                          });
+                        },
+                        child: Text(dateFormat.format(endDate)),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                        child: ElevatedButton(
+                      onPressed: () async {
+                        await _setOrderList();
+                      },
+                      child: const Text('Gerar Relatório'),
+                    ))
+                  ],
                 ),
                 const SizedBox(
-                  width: 10,
+                  height: 10,
                 ),
-                SizedBox(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: endDate,
-                              firstDate: DateTime(2015),
-                              lastDate: DateTime(2050))
-                          .then((value) {
-                        if (value != null) {
-                          setState(() {
-                            endDate = value;
-                          });
-                        }
-                      });
-                    },
-                    child: Text(dateFormat.format(endDate)),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
+                loading ? const LinearProgressIndicator() : Container(),
                 Expanded(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    await _setOrderList();
-                  },
-                  child: const Text('Gerar Relatório'),
-                ))
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: orderList.length,
+                    itemBuilder: (context, index) {
+                      var order = orderList[index];
+                      return ListTile(
+                          onTap: () {
+                            orderServices.sortOrderItems(order.orderItemList!);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ReportOneOrderPage(order: order)));
+                          },
+                          title: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  dateFormat.format(order.creationDate),
+                                  style: _getStyle(),
+                                ),
+                                flex: 2,
+                                fit: FlexFit.tight,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  order.client.name,
+                                  style: _getStyle(),
+                                ),
+                                flex: 3,
+                                fit: FlexFit.tight,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  order.lengthOrderItemList.toString(),
+                                  style: _getStyle(),
+                                ),
+                                flex: 2,
+                                fit: FlexFit.tight,
+                              ),
+                            ],
+                          ));
+                    },
+                  ),
+                ),
               ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            loading ? const LinearProgressIndicator() : Container(),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: orderList.length,
-                itemBuilder: (context, index) {
-                  var order = orderList[index];
-                  return ListTile(
-                    onTap: () {
-                      orderServices.sortOrderItems(order.orderItemList!);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ReportOneOrderPage(order: order)));
-                    },
-                    title: Text(
-                      dateFormat.format(order.creationDate) +
-                          ' - ' +
-                          order.client.name,
-                      style: const TextStyle(color: CustomColors.textColorTile),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Future<void> _setOrderList() async {
-    if(mounted){
+    if (mounted) {
       setState(() {
         loading = true;
       });
@@ -158,10 +187,13 @@ class _ReportOrdersPageState extends State<ReportOrdersPage> {
         loading = false;
       });
     }
-
   }
 
   void createReport(List<OrderData> mergedOrderList) {
     excelService.createAndOpenExcelToOrder(mergedOrderList);
+  }
+
+  TextStyle _getStyle(){
+    return const TextStyle(color: CustomColors.textColorTile);
   }
 }

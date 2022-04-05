@@ -34,9 +34,13 @@ class _ReportProvidersPageState extends State<ReportProvidersPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Relatório por fornecedores'),
+          centerTitle: true,
           actions: [
             IconButton(
               onPressed: () {
@@ -49,150 +53,157 @@ class _ReportProvidersPageState extends State<ReportProvidersPage> {
           ],
         ),
         backgroundColor: CustomColors.backgroundColor,
-        body: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Row(
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: desktop ? 1080 : double.maxFinite
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: iniDate,
-                              firstDate: DateTime(2015),
-                              lastDate: DateTime(2050))
-                          .then((value) {
-                        if (value != null) {
-                          setState(() {
-                            iniDate = value;
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          showDatePicker(
+                                  context: context,
+                                  initialDate: iniDate,
+                                  firstDate: DateTime(2015),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            if (value != null) {
+                              setState(() {
+                                iniDate = value;
+                              });
+                            }
                           });
-                        }
-                      });
-                    },
-                    child: Text(
-                      dateFormat.format(iniDate),
-                    ),
+                        },
+                        child: Text(
+                          dateFormat.format(iniDate),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          showDatePicker(
+                                  context: context,
+                                  initialDate: endDate,
+                                  firstDate: DateTime(2015),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            if (value != null) {
+                              setState(() {
+                                endDate = value;
+                              });
+                            }
+                          });
+                        },
+                        child: Text(
+                          dateFormat.format(endDate),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: ElevatedButton(
+                        onPressed: () {
+                          _updateOrderItemList();
+                        },
+                        child: const Text('Gerar Relatório'),
+                      ))
+                    ],
                   ),
                   const SizedBox(
-                    width: 10,
+                    height: 10,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: endDate,
-                              firstDate: DateTime(2015),
-                              lastDate: DateTime(2050))
-                          .then((value) {
-                        if (value != null) {
-                          setState(() {
-                            endDate = value;
-                          });
-                        }
-                      });
-                    },
-                    child: Text(
-                      dateFormat.format(endDate),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      child: ElevatedButton(
-                    onPressed: () {
-                      _updateOrderItemList();
-                    },
-                    child: const Text('Gerar Relatório'),
-                  ))
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              loading
-                  ? const LinearProgressIndicator()
-                  : stockDataList.isEmpty
-                      ? const Center(
-                          child: Text('Lista Vazia',
-                              style:
-                                  TextStyle(color: CustomColors.textColorTile)),
-                        )
-                      : Expanded(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: stockDataList.length,
-                            itemBuilder: (context, index) {
-                              var item = stockDataList[index];
-                              return Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Container(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  decoration: const BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(width: 0.2, color: CustomColors.textColorTile),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Flexible(
-                                        flex: 2,
-                                        fit: FlexFit.tight,
-                                        child: Text(
-                                          item.product.provider.name,
-                                          style: const TextStyle(
-                                              color:
-                                                  CustomColors.textColorTile),
+                  loading
+                      ? const LinearProgressIndicator()
+                      : stockDataList.isEmpty
+                          ? const Center(
+                              child: Text('Lista Vazia',
+                                  style:
+                                      TextStyle(color: CustomColors.textColorTile)),
+                            )
+                          : Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: stockDataList.length,
+                                itemBuilder: (context, index) {
+                                  var item = stockDataList[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: Container(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      decoration: const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(width: 0.2, color: CustomColors.textColorTile),
                                         ),
                                       ),
-                                      Flexible(
-                                        flex: 4,
-                                        fit: FlexFit.tight,
-                                        child: Text(item.product.name,
-                                            textAlign: TextAlign.justify,
-                                            style: const TextStyle(
-                                                color: CustomColors
-                                                    .textColorTile)),
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            flex: 2,
+                                            fit: FlexFit.tight,
+                                            child: Text(
+                                              item.product.provider.name,
+                                              style: const TextStyle(
+                                                  color:
+                                                      CustomColors.textColorTile),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            flex: 4,
+                                            fit: FlexFit.tight,
+                                            child: Text(item.product.name,
+                                                textAlign: TextAlign.justify,
+                                                style: const TextStyle(
+                                                    color: CustomColors
+                                                        .textColorTile)),
+                                          ),
+                                          Flexible(
+                                            flex: 1,
+                                            fit: FlexFit.tight,
+                                            child: Text(item.product.category,
+                                                textAlign: TextAlign.end,
+                                                style: const TextStyle(
+                                                    color: CustomColors
+                                                        .textColorTile)),
+                                          ),
+                                          Flexible(
+                                            flex: 1,
+                                            fit: FlexFit.tight,
+                                            child: Text(
+                                                item.totalOrdered.toString(),
+                                                textAlign: TextAlign.end,
+                                                style: const TextStyle(
+                                                    color: CustomColors
+                                                        .textColorTile)),
+                                          ),
+                                          Flexible(
+                                            flex: 1,
+                                            fit: FlexFit.tight,
+                                            child: Text(
+                                                (item.totalOrdered - item.total)
+                                                    .toString(),
+                                                textAlign: TextAlign.end,
+                                                style: const TextStyle(
+                                                    color: CustomColors
+                                                        .textColorTile)),
+                                          ),
+                                        ],
                                       ),
-                                      Flexible(
-                                        flex: 1,
-                                        fit: FlexFit.tight,
-                                        child: Text(item.product.category,
-                                            textAlign: TextAlign.end,
-                                            style: const TextStyle(
-                                                color: CustomColors
-                                                    .textColorTile)),
-                                      ),
-                                      Flexible(
-                                        flex: 1,
-                                        fit: FlexFit.tight,
-                                        child: Text(
-                                            item.totalOrdered.toString(),
-                                            textAlign: TextAlign.end,
-                                            style: const TextStyle(
-                                                color: CustomColors
-                                                    .textColorTile)),
-                                      ),
-                                      Flexible(
-                                        flex: 1,
-                                        fit: FlexFit.tight,
-                                        child: Text(
-                                            (item.totalOrdered - item.total)
-                                                .toString(),
-                                            textAlign: TextAlign.end,
-                                            style: const TextStyle(
-                                                color: CustomColors
-                                                    .textColorTile)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-            ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                ],
+              ),
+            ),
           ),
         ));
   }
