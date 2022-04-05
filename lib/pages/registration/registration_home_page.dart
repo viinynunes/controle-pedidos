@@ -39,6 +39,7 @@ class _RegistrationHomePageState extends State<RegistrationHomePage> {
     return Scaffold(
       body: _registrationPageElements.elementAt(_registrationPageIndex),
       bottomNavigationBar: BottomNavigationBar(
+        landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
         type: BottomNavigationBarType.fixed,
         backgroundColor: CustomColors.bottomNavigationBarColor,
         selectedItemColor: Colors.deepPurple,
