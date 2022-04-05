@@ -48,6 +48,9 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         title: isSearching
@@ -93,18 +96,25 @@ class _ProductListPageState extends State<ProductListPage> {
         child: const Icon(Icons.add),
       ),
       backgroundColor: CustomColors.backgroundColor,
-      body: ListView.builder(
-        shrinkWrap: true,
-        itemCount: secondaryProductList.length,
-        itemBuilder: (context, index) {
-          var product = secondaryProductList[index];
-          return ProductListTile(
-            product: product,
-            showRegistrationPage: () {
-              _showProductRegistrationPage(product: product);
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: desktop ? 1080 : double.maxFinite
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: secondaryProductList.length,
+            itemBuilder: (context, index) {
+              var product = secondaryProductList[index];
+              return ProductListTile(
+                product: product,
+                showRegistrationPage: () {
+                  _showProductRegistrationPage(product: product);
+                },
+              );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }

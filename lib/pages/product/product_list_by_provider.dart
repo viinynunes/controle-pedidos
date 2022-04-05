@@ -57,6 +57,9 @@ class _ProductListByProviderState extends State<ProductListByProvider> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.provider.name),
@@ -77,20 +80,27 @@ class _ProductListByProviderState extends State<ProductListByProvider> {
                       style: TextStyle(color: CustomColors.textColorTile),
                     ),
                   )
-                : RefreshIndicator(
-                    onRefresh: _setProductList,
-                    child: ListView.builder(
-                        itemCount: productList.length,
-                        itemBuilder: (context, index) {
-                          var product = productList[index];
-                          return ProductListTile(
-                            product: product,
-                            showRegistrationPage: () {
-                              _showProductRegistrationPage(product: product);
-                            },
-                          );
-                        }),
-                  );
+                : Center(
+                  child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: desktop ? 1080 : double.maxFinite
+              ),
+                    child: RefreshIndicator(
+                        onRefresh: _setProductList,
+                        child: ListView.builder(
+                            itemCount: productList.length,
+                            itemBuilder: (context, index) {
+                              var product = productList[index];
+                              return ProductListTile(
+                                product: product,
+                                showRegistrationPage: () {
+                                  _showProductRegistrationPage(product: product);
+                                },
+                              );
+                            }),
+                      ),
+                  ),
+                );
           }
         },
       ),
