@@ -38,6 +38,9 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_nameController.text.isEmpty
@@ -56,89 +59,96 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
       ),
       backgroundColor: CustomColors.backgroundColor,
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Nome',
-                    labelStyle: _getStyle(),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: desktop ? 600 : double.maxFinite
+            ),
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Nome',
+                        labelStyle: _getStyle(),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                      ),
+                      style: _getStyle(),
+                      validator: (e) {
+                        if (_nameController.text.isEmpty) {
+                          return 'Campo Obrigatório';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
                     ),
-                  ),
-                  style: _getStyle(),
-                  validator: (e) {
-                    if (_nameController.text.isEmpty) {
-                      return 'Campo Obrigatório';
-                    }
-                    return null;
-                  },
-                  textInputAction: TextInputAction.next,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: _getStyle(),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  style: _getStyle(),
-                  validator: (text) {
-                    bool regValida = RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                        .hasMatch(text!);
-                    if (text.isNotEmpty && !regValida) {
-                      return 'Email Inválido';
-                    }
-                    return null;
-                  },
-                  textInputAction: TextInputAction.next,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _phoneController,
-                  decoration: InputDecoration(
-                    labelText: 'Telefone',
-                    labelStyle: _getStyle(),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: _getStyle(),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                      ),
+                      style: _getStyle(),
+                      validator: (text) {
+                        bool regValida = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(text!);
+                        if (text.isNotEmpty && !regValida) {
+                          return 'Email Inválido';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
                     ),
-                  ),
-                  style: _getStyle(),
-                  textInputAction: TextInputAction.next,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _addressController,
-                  decoration: InputDecoration(
-                    labelText: 'Endereço',
-                    labelStyle: _getStyle(),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  style: _getStyle(),
-                  textInputAction: TextInputAction.next,
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        labelText: 'Telefone',
+                        labelStyle: _getStyle(),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                      ),
+                      style: _getStyle(),
+                      textInputAction: TextInputAction.next,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      controller: _addressController,
+                      decoration: InputDecoration(
+                        labelText: 'Endereço',
+                        labelStyle: _getStyle(),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                      ),
+                      style: _getStyle(),
+                      textInputAction: TextInputAction.next,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

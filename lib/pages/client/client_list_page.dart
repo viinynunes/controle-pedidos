@@ -51,6 +51,9 @@ class _ClientListPageState extends State<ClientListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         title: TextField(
@@ -77,42 +80,49 @@ class _ClientListPageState extends State<ClientListPage> {
         ),
       ),
       backgroundColor: CustomColors.backgroundColor,
-      body: ListView.builder(
-        itemCount: secondaryClientList.length,
-        itemBuilder: (context, index) {
-          var client = secondaryClientList[index];
-          return Slidable(
-            key: const ValueKey(0),
-            startActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              dismissible: null,
-              children: [
-                SlidableAction(
-                  onPressed: (e) {
-                    setState(() {
-                      ClientModel.of(context).disableClient(client);
-                      secondaryClientList.remove(client);
-                    });
-                  },
-                  icon: Icons.delete_forever,
-                  label: 'Apagar',
-                  backgroundColor: Colors.red,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: desktop ? 1080 : double.maxFinite
+          ),
+          child: ListView.builder(
+            itemCount: secondaryClientList.length,
+            itemBuilder: (context, index) {
+              var client = secondaryClientList[index];
+              return Slidable(
+                key: const ValueKey(0),
+                startActionPane: ActionPane(
+                  motion: const ScrollMotion(),
+                  dismissible: null,
+                  children: [
+                    SlidableAction(
+                      onPressed: (e) {
+                        setState(() {
+                          ClientModel.of(context).disableClient(client);
+                          secondaryClientList.remove(client);
+                        });
+                      },
+                      icon: Icons.delete_forever,
+                      label: 'Apagar',
+                      backgroundColor: Colors.red,
+                    ),
+                    SlidableAction(
+                      onPressed: (e) {
+                        setState(() {
+                          _showClientRegistrationPage(client: client);
+                        });
+                      },
+                      icon: Icons.edit,
+                      label: 'Editar',
+                      backgroundColor: Colors.deepPurple,
+                    )
+                  ],
                 ),
-                SlidableAction(
-                  onPressed: (e) {
-                    setState(() {
-                      _showClientRegistrationPage(client: client);
-                    });
-                  },
-                  icon: Icons.edit,
-                  label: 'Editar',
-                  backgroundColor: Colors.deepPurple,
-                )
-              ],
-            ),
-            child: ClientListTile(client: client),
-          );
-        },
+                child: ClientListTile(client: client),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
