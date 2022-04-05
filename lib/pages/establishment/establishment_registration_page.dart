@@ -36,6 +36,8 @@ class _EstablishmentRegistrationPageState
 
   @override
   Widget build(BuildContext context) {
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_nameController.text.isEmpty
@@ -54,26 +56,32 @@ class _EstablishmentRegistrationPageState
       ),
       backgroundColor: CustomColors.backgroundColor,
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                  labelText: 'Nome',
-                  labelStyle: TextStyle(color: CustomColors.textColorTile),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.deepPurple),
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  )),
-              style: const TextStyle(color: CustomColors.textColorTile),
-              validator: (text) {
-                if (_nameController.text.isEmpty) {
-                  return 'Campo Obrigatório';
-                }
-                return null;
-              },
+        child: Center(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: desktop ? 600 : double.maxFinite),
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                      labelText: 'Nome',
+                      labelStyle: TextStyle(color: CustomColors.textColorTile),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      )),
+                  style: const TextStyle(color: CustomColors.textColorTile),
+                  validator: (text) {
+                    if (_nameController.text.isEmpty) {
+                      return 'Campo Obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+              ),
             ),
           ),
         ),
@@ -83,7 +91,9 @@ class _EstablishmentRegistrationPageState
 
   void _getFields() {
     newEstablishment.name = _nameController.text;
-    newEstablishment.registrationDate = widget.establishment == null ? DateTime.now() : widget.establishment!.registrationDate;
+    newEstablishment.registrationDate = widget.establishment == null
+        ? DateTime.now()
+        : widget.establishment!.registrationDate;
     newEstablishment.enabled = true;
   }
 }

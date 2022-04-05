@@ -56,6 +56,9 @@ class _EstablishmentListPageState extends State<EstablishmentListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Estabelecimentos'),
@@ -71,43 +74,50 @@ class _EstablishmentListPageState extends State<EstablishmentListPage> {
           child: const Icon(Icons.add),
         ),
         backgroundColor: CustomColors.backgroundColor,
-        body: ListView.builder(
-          itemCount: estabList.length,
-          itemBuilder: (context, index) {
-            var item = estabList[index];
-            return Slidable(
-              key: const ValueKey(0),
-              startActionPane: ActionPane(
-                motion: const ScrollMotion(),
-                dismissible: null,
-                children: [
-                  SlidableAction(
-                    onPressed: (e) {
-                      setState(() {
-                        EstablishmentModel.of(context)
-                            .disableEstablishment(item);
-                        estabList.remove(item);
-                      });
-                    },
-                    icon: Icons.delete_forever,
-                    label: 'Apagar',
-                    backgroundColor: Colors.red,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: desktop ? 1080 : double.maxFinite
+            ),
+            child: ListView.builder(
+              itemCount: estabList.length,
+              itemBuilder: (context, index) {
+                var item = estabList[index];
+                return Slidable(
+                  key: const ValueKey(0),
+                  startActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    dismissible: null,
+                    children: [
+                      SlidableAction(
+                        onPressed: (e) {
+                          setState(() {
+                            EstablishmentModel.of(context)
+                                .disableEstablishment(item);
+                            estabList.remove(item);
+                          });
+                        },
+                        icon: Icons.delete_forever,
+                        label: 'Apagar',
+                        backgroundColor: Colors.red,
+                      ),
+                      SlidableAction(
+                        onPressed: (e) {
+                          setState(() {
+                            _showClientRegistrationPage(estab: item);
+                          });
+                        },
+                        icon: Icons.edit,
+                        label: 'Editar',
+                        backgroundColor: Colors.deepPurple,
+                      )
+                    ],
                   ),
-                  SlidableAction(
-                    onPressed: (e) {
-                      setState(() {
-                        _showClientRegistrationPage(estab: item);
-                      });
-                    },
-                    icon: Icons.edit,
-                    label: 'Editar',
-                    backgroundColor: Colors.deepPurple,
-                  )
-                ],
-              ),
-              child: EstablishmentListTile(establishment: item),
-            );
-          },
+                  child: EstablishmentListTile(establishment: item),
+                );
+              },
+            ),
+          ),
         ));
   }
 
