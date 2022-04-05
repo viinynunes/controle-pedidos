@@ -27,6 +27,9 @@ class _ClientListPageState extends State<ClientListPage> {
   List<ClientData> secondaryClientList = [];
 
   bool loading = false;
+  bool isSearching = false;
+
+  final _searchFocus = FocusNode();
 
   @override
   void initState() {
@@ -56,7 +59,9 @@ class _ClientListPageState extends State<ClientListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
+        title: isSearching
+            ? TextField(
+          focusNode: _searchFocus,
           decoration: const InputDecoration(
               enabledBorder: InputBorder.none,
               hintText: 'Pesquisar',
@@ -65,8 +70,25 @@ class _ClientListPageState extends State<ClientListPage> {
           onChanged: (text) async {
             _filterClients(text);
           },
-        ),
+        )
+            : const Text('Clientes'),
         centerTitle: true,
+        actions: [IconButton(
+          onPressed: () {
+            setState(() {
+              if (isSearching) {
+                _clearSearchFromSecondaryList();
+                isSearching = false;
+              } else {
+                isSearching = true;
+                _searchFocus.requestFocus();
+              }
+            });
+          },
+          icon: isSearching
+              ? const Icon(Icons.cancel)
+              : const Icon(Icons.search),
+        ),],
       ),
       drawer: CustomDrawer(
         pageController: widget.pageController,
@@ -163,5 +185,12 @@ class _ClientListPageState extends State<ClientListPage> {
         secondaryClientList.addAll(clientList);
       });
     }
+  }
+
+  void _clearSearchFromSecondaryList() {
+    setState(() {
+      secondaryClientList.clear();
+      secondaryClientList.addAll(clientList);
+    });
   }
 }
