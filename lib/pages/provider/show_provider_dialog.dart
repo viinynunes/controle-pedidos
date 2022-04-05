@@ -30,6 +30,9 @@ class _ShowProviderListDialogState extends State<ShowProviderListDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return AlertDialog(
         scrollable: true,
         backgroundColor: CustomColors.backgroundTile,
@@ -56,8 +59,8 @@ class _ShowProviderListDialogState extends State<ShowProviderListDialog> {
           },
         ),
         content: SizedBox(
-          height: 200,
-          width: double.maxFinite,
+          height: MediaQuery.of(context).size.height,
+          width: desktop ? MediaQuery.of(context).size.width * 0.4 : double.maxFinite,
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: filteredProviderList.length,

@@ -53,6 +53,9 @@ class _ProviderListPageState extends State<ProviderListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return ScopedModelDescendant<ProviderModel>(
       builder: (context, child, model) => Scaffold(
         appBar: AppBar(
@@ -103,43 +106,50 @@ class _ProviderListPageState extends State<ProviderListPage> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : ListView.builder(
-                itemCount: secondaryProviderList.length,
-                itemBuilder: (context, index) {
-                  var provider = secondaryProviderList[index];
-                  return Slidable(
-                      key: const ValueKey(0),
-                      startActionPane: ActionPane(
-                        dismissible: null,
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (e) {
-                              setState(() {
-                                model.disableProvider(provider);
-                                secondaryProviderList.remove(provider);
-                              });
-                            },
-                            icon: Icons.delete_forever,
-                            backgroundColor: Colors.red,
-                            label: 'Apagar',
+            : Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: desktop ? 1080 : double.maxFinite
+                ),
+                child: ListView.builder(
+                    itemCount: secondaryProviderList.length,
+                    itemBuilder: (context, index) {
+                      var provider = secondaryProviderList[index];
+                      return Slidable(
+                          key: const ValueKey(0),
+                          startActionPane: ActionPane(
+                            dismissible: null,
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (e) {
+                                  setState(() {
+                                    model.disableProvider(provider);
+                                    secondaryProviderList.remove(provider);
+                                  });
+                                },
+                                icon: Icons.delete_forever,
+                                backgroundColor: Colors.red,
+                                label: 'Apagar',
+                              ),
+                              SlidableAction(
+                                onPressed: (e) {
+                                  setState(() {
+                                    _showProviderRegistrationPage(
+                                        provider: provider);
+                                  });
+                                },
+                                icon: Icons.edit,
+                                backgroundColor: Colors.deepPurple,
+                                label: 'Editar',
+                              ),
+                            ],
                           ),
-                          SlidableAction(
-                            onPressed: (e) {
-                              setState(() {
-                                _showProviderRegistrationPage(
-                                    provider: provider);
-                              });
-                            },
-                            icon: Icons.edit,
-                            backgroundColor: Colors.deepPurple,
-                            label: 'Editar',
-                          ),
-                        ],
-                      ),
-                      child: ProviderListTile(provider: provider));
-                },
+                          child: ProviderListTile(provider: provider));
+                    },
+                  ),
               ),
+            ),
       ),
     );
   }

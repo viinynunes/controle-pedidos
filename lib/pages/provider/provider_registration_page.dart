@@ -54,6 +54,9 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     var dropDownItems = _establishmentList
         .map((e) => DropdownMenuItem(
               child: Text(
@@ -89,113 +92,120 @@ class _ProviderRegistrationPageState extends State<ProviderRegistrationPage> {
         ),
         backgroundColor: CustomColors.backgroundColor,
         body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    focusNode: _nameFocus,
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Nome',
-                      labelStyle: _getStyle(),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurple),
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: desktop ? 600 : double.maxFinite
+              ),
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        focusNode: _nameFocus,
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Nome',
+                          labelStyle: _getStyle(),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                        ),
+                        style: _getStyle(),
+                        validator: (e) {
+                          if (_nameController.text.isEmpty) {
+                            return 'Campo Obrigatório';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    style: _getStyle(),
-                    validator: (e) {
-                      if (_nameController.text.isEmpty) {
-                        return 'Campo Obrigatório';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: _locationController,
-                    decoration: InputDecoration(
-                      labelText: 'Localização',
-                      labelStyle: _getStyle(),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurple),
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    style: _getStyle(),
-                    validator: (e) {
-                      if (_locationController.text.isEmpty) {
-                        return 'Campo Obrigatório';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  loading
-                      ? const LinearProgressIndicator()
-                      : DropdownButtonFormField<EstablishmentData>(
-                          items: dropDownItems,
-                          elevation: 10,
-                          style: const TextStyle(
-                              fontSize: 20, color: Colors.white),
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            label: const Text(
-                              'Estabelecimento',
+                      TextFormField(
+                        controller: _locationController,
+                        decoration: InputDecoration(
+                          labelText: 'Localização',
+                          labelStyle: _getStyle(),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                        ),
+                        style: _getStyle(),
+                        validator: (e) {
+                          if (_locationController.text.isEmpty) {
+                            return 'Campo Obrigatório';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      loading
+                          ? const LinearProgressIndicator()
+                          : DropdownButtonFormField<EstablishmentData>(
+                              items: dropDownItems,
+                              elevation: 10,
+                              style: const TextStyle(
+                                  fontSize: 20, color: Colors.white),
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                label: const Text(
+                                  'Estabelecimento',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: CustomColors.textColorTile),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(),
+                                    borderRadius: (BorderRadius.circular(16))),
+                              ),
+                              dropdownColor: CustomColors.backgroundTile,
+                              validator: (e) {
+                                if (e == null) {
+                                  return 'Campo Obrigatório';
+                                }
+                                return null;
+                              },
+                              onChanged: (e) {
+                                setState(() {
+                                  _selectedEstablishment = e;
+                                });
+                              },
+                              value: _selectedEstablishment,
+                            ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            onTap: () async {
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EstablishmentRegistrationPage()));
+                              _getEstabList();
+                            },
+                            child: const Text(
+                              'Criar novo Estabelecimento',
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                   color: CustomColors.textColorTile),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(),
-                                borderRadius: (BorderRadius.circular(16))),
                           ),
-                          dropdownColor: CustomColors.backgroundTile,
-                          validator: (e) {
-                            if (e == null) {
-                              return 'Campo Obrigatório';
-                            }
-                            return null;
-                          },
-                          onChanged: (e) {
-                            setState(() {
-                              _selectedEstablishment = e;
-                            });
-                          },
-                          value: _selectedEstablishment,
-                        ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: InkWell(
-                        onTap: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EstablishmentRegistrationPage()));
-                          _getEstabList();
-                        },
-                        child: const Text(
-                          'Criar novo Estabelecimento',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: CustomColors.textColorTile),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
