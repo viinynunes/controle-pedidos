@@ -37,11 +37,14 @@ class _StockDefaultListState extends State<StockDefaultList> {
 
   @override
   Widget build(BuildContext context) {
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Editar Produtos Padrão'),
+          centerTitle: true,
           actions: [
             IconButton(
               onPressed: () {
@@ -79,179 +82,191 @@ class _StockDefaultListState extends State<StockDefaultList> {
         ),
         body: loading
             ? const Center(child: CircularProgressIndicator())
-            : TabBarView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Form(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Produtos',
-                              labelStyle: const TextStyle(
-                                  color: CustomColors.textColorTile),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
+            : Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: desktop ? 1080 : double.maxFinite),
+                  child: TabBarView(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Form(
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Produtos',
+                                  labelStyle: const TextStyle(
+                                      color: CustomColors.textColorTile),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                    color: CustomColors.textColorTile),
+                                onChanged: (text) {
+                                  _filterProductStockDefaultList(text);
+                                },
                               ),
                             ),
-                            style: const TextStyle(
-                                color: CustomColors.textColorTile),
-                            onChanged: (text) {
-                              _filterProductStockDefaultList(text);
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: filteredProductStockDefaultList.length,
-                            itemBuilder: (context, index) {
-                              var item = filteredProductStockDefaultList[index];
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount:
+                                    filteredProductStockDefaultList.length,
+                                itemBuilder: (context, index) {
+                                  var item =
+                                      filteredProductStockDefaultList[index];
 
-                              return CheckboxListTile(
-                                key: Key(item.id.toString()),
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                value: item.stockDefault,
-                                onChanged: (e) {
-                                  if (e != null) {
-                                    setState(() {
-                                      item.stockDefault = e;
-                                      filteredProductStockDefaultList
-                                          .remove(item);
-                                      _updateStockDefaultProperty(item);
-                                      _setProductList();
-                                    });
-                                  }
+                                  return CheckboxListTile(
+                                    key: Key(item.id.toString()),
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    value: item.stockDefault,
+                                    onChanged: (e) {
+                                      if (e != null) {
+                                        setState(() {
+                                          item.stockDefault = e;
+                                          filteredProductStockDefaultList
+                                              .remove(item);
+                                          _updateStockDefaultProperty(item);
+                                          _setProductList();
+                                        });
+                                      }
+                                    },
+                                    side: const BorderSide(
+                                        color: CustomColors.textColorTile),
+                                    title: Row(
+                                      children: [
+                                        Flexible(
+                                          flex: 2,
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            item.name,
+                                            style: const TextStyle(
+                                                color:
+                                                    CustomColors.textColorTile),
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 2,
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            item.provider.name,
+                                            textAlign: TextAlign.end,
+                                            style: const TextStyle(
+                                                color:
+                                                    CustomColors.textColorTile),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 },
-                                side: const BorderSide(
-                                    color: CustomColors.textColorTile),
-                                title: Row(
-                                  children: [
-                                    Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(
-                                        item.name,
-                                        style: const TextStyle(
-                                            color: CustomColors.textColorTile),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(
-                                        item.provider.name,
-                                        textAlign: TextAlign.end,
-                                        style: const TextStyle(
-                                            color: CustomColors.textColorTile),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Form(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Produtos',
-                              labelStyle: const TextStyle(
-                                  color: CustomColors.textColorTile),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Form(
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Produtos',
+                                  labelStyle: const TextStyle(
+                                      color: CustomColors.textColorTile),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                    color: CustomColors.textColorTile),
+                                onChanged: (text) {
+                                  _filterProductList(text);
+                                },
                               ),
                             ),
-                            style: const TextStyle(
-                                color: CustomColors.textColorTile),
-                            onChanged: (text) {
-                              _filterProductList(text);
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: filteredProductList.length,
-                            itemBuilder: (context, index) {
-                              var item = filteredProductList[index];
-                              return CheckboxListTile(
-                                key: Key(item.id.toString()),
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                value: item.stockDefault,
-                                onChanged: (e) {
-                                  if (e != null) {
-                                    setState(() {
-                                      item.stockDefault = e;
-                                      _updateStockDefaultProperty(item);
-                                      _setProductDefaultList();
-                                    });
-                                  }
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: filteredProductList.length,
+                                itemBuilder: (context, index) {
+                                  var item = filteredProductList[index];
+                                  return CheckboxListTile(
+                                    key: Key(item.id.toString()),
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    value: item.stockDefault,
+                                    onChanged: (e) {
+                                      if (e != null) {
+                                        setState(() {
+                                          item.stockDefault = e;
+                                          _updateStockDefaultProperty(item);
+                                          _setProductDefaultList();
+                                        });
+                                      }
+                                    },
+                                    side: const BorderSide(
+                                        color: CustomColors.textColorTile),
+                                    title: Row(
+                                      children: [
+                                        Flexible(
+                                          flex: 2,
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            item.name,
+                                            style: const TextStyle(
+                                                color:
+                                                    CustomColors.textColorTile),
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 2,
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            item.provider.name,
+                                            textAlign: TextAlign.end,
+                                            style: const TextStyle(
+                                                color:
+                                                    CustomColors.textColorTile),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 },
-                                side: const BorderSide(
-                                    color: CustomColors.textColorTile),
-                                title: Row(
-                                  children: [
-                                    Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(
-                                        item.name,
-                                        style: const TextStyle(
-                                            color: CustomColors.textColorTile),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(
-                                        item.provider.name,
-                                        textAlign: TextAlign.end,
-                                        style: const TextStyle(
-                                            color: CustomColors.textColorTile),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
       ),
     );
   }
 
   Future<List<ProductData>> _setProductList() async {
-    if(mounted){
+    if (mounted) {
       setState(() {
         loading = true;
       });
@@ -270,13 +285,13 @@ class _StockDefaultListState extends State<StockDefaultList> {
   }
 
   Future<List<ProductData>> _setProductDefaultList() async {
-    if(mounted){
+    if (mounted) {
       setState(() {
         loading = true;
       });
 
       final list =
-      await ProductModel.of(context).getEnabledProductsByStockDefaultTrue();
+          await ProductModel.of(context).getEnabledProductsByStockDefaultTrue();
 
       _stockDefaultService.orderProductsByProviderAndName(list);
 
@@ -287,7 +302,6 @@ class _StockDefaultListState extends State<StockDefaultList> {
         loading = false;
       });
     }
-
 
     return productStockDefaultList;
   }
