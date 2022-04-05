@@ -39,6 +39,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final desktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transações'),
@@ -59,67 +62,74 @@ class _TransactionsPageState extends State<TransactionsPage> {
         pageController: widget.pageController,
       ),
       backgroundColor: CustomColors.backgroundColor,
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Pesquisar Produtos',
-                labelStyle: const TextStyle(color: CustomColors.textColorTile),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              style: const TextStyle(color: CustomColors.textColorTile),
-              onChanged: (text) {
-                _filterProductList(text);
-              },
-              keyboardType: TextInputType.url,
-            ),
-            loading
-                ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(
-                      child: CircularProgressIndicator(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: desktop ? 1080 : double.maxFinite
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    labelText: 'Pesquisar Produtos',
+                    labelStyle: const TextStyle(color: CustomColors.textColorTile),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                  )
-                : isSearching
-                    ? Expanded(
-                        child: ListView.builder(
-                          itemCount: filteredProductList.length,
-                          itemBuilder: (context, index) {
-                            var product = filteredProductList[index];
-                            return ListTile(
-                              title: Text(
-                                product.name + ' - ' + product.provider.name,
-                                style: const TextStyle(
-                                    color: CustomColors.textColorTile),
-                              ),
-                              onTap: () {
-                                _searchController.text = product.name;
-                                _updateOrderList(product);
-                              },
-                            );
-                          },
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  style: const TextStyle(color: CustomColors.textColorTile),
+                  onChanged: (text) {
+                    _filterProductList(text);
+                  },
+                  keyboardType: TextInputType.url,
+                ),
+                loading
+                    ? const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(
+                          child: CircularProgressIndicator(),
                         ),
                       )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: orderList.length,
-                          itemBuilder: (context, index) {
-                            var order = orderList[index];
-                            return TransactionListTile(order: order);
-                          },
-                        ),
-                      ),
-          ],
+                    : isSearching
+                        ? Expanded(
+                            child: ListView.builder(
+                              itemCount: filteredProductList.length,
+                              itemBuilder: (context, index) {
+                                var product = filteredProductList[index];
+                                return ListTile(
+                                  title: Text(
+                                    product.name + ' - ' + product.provider.name,
+                                    style: const TextStyle(
+                                        color: CustomColors.textColorTile),
+                                  ),
+                                  onTap: () {
+                                    _searchController.text = product.name;
+                                    _updateOrderList(product);
+                                  },
+                                );
+                              },
+                            ),
+                          )
+                        : Expanded(
+                            child: ListView.builder(
+                              itemCount: orderList.length,
+                              itemBuilder: (context, index) {
+                                var order = orderList[index];
+                                return TransactionListTile(order: order);
+                              },
+                            ),
+                          ),
+              ],
+            ),
+          ),
         ),
       ),
     );
