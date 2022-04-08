@@ -54,6 +54,30 @@ class StockModel extends Model {
     return newStock;
   }
 
+  Future<StockData> createDuplicatedStockItem(StockData newStock) async {
+    newStock.creationDate = DateTime(newStock.creationDate.year,
+        newStock.creationDate.month, newStock.creationDate.day);
+
+    final snap = await firebaseCollection
+        .where('creationDate', isEqualTo: newStock.creationDate)
+        .get();
+
+    if (snap.docs.isNotEmpty) {
+      for (var snapIndex in snap.docs) {
+        var snapItem = StockData.fromMap(snapIndex.id, snapIndex.data());
+
+        if (snapItem.product.id == newStock.product.id) {
+          if (snapItem.product.provider != newStock.product.provider) {
+            firebaseCollection
+                .add(newStock.toMap())
+                .then((value) => newStock.id = value.id);
+          }
+        }
+      }
+    }
+    return newStock;
+  }
+
   Future<void> updateStockItem(StockData stock, VoidCallback onError) async {
     loading = true;
     try {

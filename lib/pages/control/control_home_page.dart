@@ -1,9 +1,11 @@
 import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
+import 'package:controle_pedidos/model/provider_model.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
 import 'package:controle_pedidos/pages/product/show_product_list_dialog.dart';
+import 'package:controle_pedidos/pages/provider/show_provider_dialog.dart';
 import 'package:controle_pedidos/services/control_service.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
@@ -149,6 +151,27 @@ class _ControlHomePageState extends State<ControlHomePage> {
                   style: TextStyle(color: CustomColors.textColorTile),
                 ),
               ),
+              const PopupMenuItem(
+                value: EnumControlHomePage.showOrder,
+                child: Text(
+                  'Ver Pedidos',
+                  style: TextStyle(color: CustomColors.textColorTile),
+                ),
+              ),
+              const PopupMenuItem(
+                value: EnumControlHomePage.duplicateStock,
+                child: Text(
+                  'Dividir Entre Fornecedores',
+                  style: TextStyle(color: CustomColors.textColorTile),
+                ),
+              ),
+              const PopupMenuItem(
+                value: EnumControlHomePage.clearSelectedStockListToShare,
+                child: Text(
+                  'Limpar Selecionados',
+                  style: TextStyle(color: CustomColors.textColorTile),
+                ),
+              ),
             ],
             onSelected: (value) async {
               ProductData? _selectedProduct;
@@ -158,11 +181,12 @@ class _ControlHomePageState extends State<ControlHomePage> {
                     context: context,
                     builder: (context) {
                       return ShowProductListDialog(
-                          productList: productList,
-                          selectedProduct: (product) {
-                            _selectedProduct = product;
-                          },
-                      longPressSelectedProduct: (product){},);
+                        productList: productList,
+                        selectedProduct: (product) {
+                          _selectedProduct = product;
+                        },
+                        longPressSelectedProduct: (product) {},
+                      );
                     });
 
                 if (_selectedProduct != null) {
@@ -192,6 +216,39 @@ class _ControlHomePageState extends State<ControlHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const StockDefaultList()));
+              } else if (value == EnumControlHomePage.showOrder) {
+                return;
+              } else if (value == EnumControlHomePage.duplicateStock) {
+                if (selectedStockListToShare.isEmpty) {
+                  _showSnackBarError('Nenhum produto selecionado');
+                } else if (selectedStockListToShare.length > 1) {
+                  _showSnackBarError('Selecione apenas um produto');
+                } else {
+                  var toDivideStock = selectedStockListToShare.first;
+
+                  var providerAllList = await _getAllProviders();
+
+                  await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ShowProviderListDialog(
+                          selectedProvider: (provider) {
+                            toDivideStock.product.provider = provider;
+                          },
+                          providerList: providerAllList);
+                    },
+                  );
+
+                  await _setStockListByProvider(
+                      iniDate, endDate, toDivideStock.product.provider);
+
+                  controlService.addEmptyDuplicatedProductInStock(
+                      toDivideStock.product,
+                      StockModel.of(context).providerListAll,
+                      stockList,
+                      context);
+                }
+                await _setProviderList(iniDate, endDate);
               }
             },
           ),
@@ -321,7 +378,8 @@ class _ControlHomePageState extends State<ControlHomePage> {
                                         stockList.clear();
                                         _setStockListByProvider(iniDate,
                                             endDate, _selectedProvider!);
-                                        stockDefaultNode.requestFocus();
+                                        //stockDefaultNode.requestFocus();
+                                        selectedStockListToShare.clear();
                                       }
                                     });
                                   },
@@ -556,6 +614,19 @@ class _ControlHomePageState extends State<ControlHomePage> {
     }
   }
 
+  Future<List<ProviderData>> _getAllProviders() async {
+    List<ProviderData> providerList = [];
+    if (mounted) {
+      final list = await ProviderModel.of(context).getEnabledProviders();
+
+      setState(() {
+        providerList = list;
+      });
+    }
+
+    return providerList;
+  }
+
   Future<void> _updateProductList() async {
     if (mounted) {
       final list = await ProductModel.of(context).getFilteredEnabledProducts();
@@ -564,5 +635,19 @@ class _ControlHomePageState extends State<ControlHomePage> {
         productList = list;
       });
     }
+  }
+
+  _showSnackBarError(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(milliseconds: 1500),
+        backgroundColor: CustomColors.backgroundTile,
+        content: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.red, fontSize: 18),
+        ),
+      ),
+    );
   }
 }
