@@ -14,32 +14,40 @@ class ReportEstablishmentService {
       if (stockDataList.contains(item)) {
         var e = stockDataList
             .singleWhere((element) => element.product.id == item.product.id);
-        item.total += e.total;
-        item.totalOrdered += e.totalOrdered;
-        stockDataList.remove(e);
+        if (e.product.provider == item.product.provider) {
+          item.total += e.total;
+          item.totalOrdered += e.totalOrdered;
+          stockDataList.remove(e);
+        }
       }
       stockDataList.add(item);
     }
 
     stockDataList.sort((a, b) {
-      int compare = a.product.provider.name
-          .toLowerCase()
-          .compareTo(b.product.provider.name.toLowerCase());
+      int firstCompare = a.product.provider.establishment.registrationDate
+          .compareTo(b.product.provider.establishment.registrationDate);
 
-      if (compare == 0) {
-        int secondCompare = a.product.provider.location
-            .toLowerCase()
-            .compareTo(b.product.provider.location.toLowerCase());
+      if (firstCompare == 0) {
+        int compare = a.product.provider.registrationDate
+            .compareTo(b.product.provider.registrationDate);
 
-        if (secondCompare == 0) {
-          return a.product.name
+        if (compare == 0) {
+          int secondCompare = a.product.provider.location
               .toLowerCase()
-              .compareTo(b.product.name.toLowerCase());
+              .compareTo(b.product.provider.location.toLowerCase());
+
+          if (secondCompare == 0) {
+            return a.product.name
+                .toLowerCase()
+                .compareTo(b.product.name.toLowerCase());
+          } else {
+            return secondCompare;
+          }
         } else {
-          return secondCompare;
+          return compare;
         }
       } else {
-        return compare;
+        return firstCompare;
       }
     });
 

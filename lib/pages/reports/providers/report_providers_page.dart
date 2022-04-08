@@ -22,7 +22,8 @@ class _ReportProvidersPageState extends State<ReportProvidersPage> {
 
   List<StockData> stockDataList = [];
 
-  ExcelExportService excelService = ExcelExportService();
+  final excelService = ExcelExportService();
+  final service = ReportEstablishmentService();
 
   @override
   void initState() {
@@ -212,7 +213,7 @@ class _ReportProvidersPageState extends State<ReportProvidersPage> {
     setState(() {
       loading = true;
     });
-    final service = ReportEstablishmentService();
+
     final list =
         await service.mergeOrderItemsByProvider(context, iniDate, endDate);
 
