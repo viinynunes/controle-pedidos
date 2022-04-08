@@ -152,13 +152,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 ),
               ),
               const PopupMenuItem(
-                value: EnumControlHomePage.showOrder,
-                child: Text(
-                  'Ver Pedidos',
-                  style: TextStyle(color: CustomColors.textColorTile),
-                ),
-              ),
-              const PopupMenuItem(
                 value: EnumControlHomePage.duplicateStock,
                 child: Text(
                   'Dividir Entre Fornecedores',
@@ -166,9 +159,9 @@ class _ControlHomePageState extends State<ControlHomePage> {
                 ),
               ),
               const PopupMenuItem(
-                value: EnumControlHomePage.clearSelectedStockListToShare,
+                value: EnumControlHomePage.showOrder,
                 child: Text(
-                  'Limpar Selecionados',
+                  'Ver Pedidos',
                   style: TextStyle(color: CustomColors.textColorTile),
                 ),
               ),

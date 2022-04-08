@@ -1,1 +1,7 @@
-enum EnumControlHomePage { loadDefaultStock, addProduct, editDefaultStock, showOrder, duplicateStock, clearSelectedStockListToShare }
+enum EnumControlHomePage {
+  loadDefaultStock,
+  addProduct,
+  editDefaultStock,
+  showOrder,
+  duplicateStock
+}
