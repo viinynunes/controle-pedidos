@@ -74,7 +74,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     _quantityFocus.requestFocus();
   }
 
-  void _showProductDialog() async {
+  Future<void> _showProductDialog() async {
     await showDialog(
         context: context,
         builder: (context) {
@@ -364,8 +364,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
                                 onFieldSubmitted: (e) async {
-                                  _showProductDialog();
-                                  Navigator.pop(context);
+                                  await _showProductDialog();
+                                  //Navigator.pop(context);
                                 },
                                 validator: (e) {
                                   var regExp = RegExp(
