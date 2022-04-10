@@ -56,6 +56,7 @@ class ClientModel extends Model {
         auxList.add(ClientData.fromDocSnapshot(e));
       }
     }
+    clientList.clear();
     clientList.addAll(auxList);
     isLoading = false;
     notifyListeners();

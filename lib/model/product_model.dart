@@ -58,6 +58,7 @@ class ProductModel extends Model {
         auxList.add(ProductData.fromDocSnapshot(e));
       }
     }
+    productList.clear();
     productList.addAll(auxList);
 
     isLoading = false;
