@@ -154,11 +154,15 @@ class OrderModel extends Model {
     return orderList;
   }
 
-  Future<List<OrderData>> getOrderListByProduct(ProductData product) async {
+  Future<List<OrderData>> getOrderListByProduct(
+      ProductData product, DateTime iniDate, DateTime endDate) async {
     List<OrderData> orderList = [];
 
-    final snapOrder =
-        await firebaseCollection.where('enabled', isEqualTo: true).get();
+    final snapOrder = await firebaseCollection
+        .where('enabled', isEqualTo: true)
+        .where('creationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('creationDate', isLessThanOrEqualTo: endDate)
+        .get();
 
     for (var docSnapOrder in snapOrder.docs) {
       final orderIndex = OrderData.fromDocSnapshot(docSnapOrder);
@@ -170,7 +174,8 @@ class OrderModel extends Model {
           .get();
 
       if (orderItemSnap.docs.isNotEmpty) {
-        final orderItemData = OrderItemData.fromDocSnapshot(orderItemSnap.docs.first);
+        final orderItemData =
+            OrderItemData.fromDocSnapshot(orderItemSnap.docs.first);
         orderIndex.orderItemList!.add(orderItemData);
         orderList.add(orderIndex);
       }

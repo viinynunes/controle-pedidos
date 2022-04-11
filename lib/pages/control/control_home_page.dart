@@ -6,6 +6,7 @@ import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:controle_pedidos/pages/control/share_stock_Items_by_provider.dart';
 import 'package:controle_pedidos/pages/product/show_product_list_dialog.dart';
 import 'package:controle_pedidos/pages/provider/show_provider_dialog.dart';
+import 'package:controle_pedidos/pages/transactions/transactions_dialog.dart';
 import 'package:controle_pedidos/services/control_service.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/services/provider_service.dart';
@@ -210,7 +211,22 @@ class _ControlHomePageState extends State<ControlHomePage> {
                     MaterialPageRoute(
                         builder: (context) => const StockDefaultList()));
               } else if (value == EnumControlHomePage.showOrder) {
-                return;
+                if (selectedStockListToShare.isEmpty) {
+                  _showSnackBarError('Nenhum produto selecionado');
+                } else if (selectedStockListToShare.length > 1) {
+                  _showSnackBarError('Selecione apenas um produto');
+                } else {
+                  final product = selectedStockListToShare.first.product;
+
+                  await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return TransactionsDialog(
+                            product: product,
+                            iniDate: iniDate,
+                            endDate: endDate);
+                      });
+                }
               } else if (value == EnumControlHomePage.duplicateStock) {
                 if (selectedStockListToShare.isEmpty) {
                   _showSnackBarError('Nenhum produto selecionado');

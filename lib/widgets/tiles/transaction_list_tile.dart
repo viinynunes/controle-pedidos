@@ -13,30 +13,27 @@ class TransactionListTile extends StatelessWidget {
     final dateFormat = DateFormat('dd-MM-yyyy');
 
     return Card(
+      elevation: 10,
       color: CustomColors.backgroundTile,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(10),
         child: Row(
           children: [
             Flexible(
-                flex: 4,
-                fit: FlexFit.tight,
-                child: Text(
-                  dateFormat.format(order.creationDate),
-                  style: const TextStyle(color: CustomColors.textColorTile),
-                )),
+              flex: 3,
+              fit: FlexFit.tight,
+              child: Text(
+                dateFormat.format(order.creationDate),
+                style: const TextStyle(
+                  color: CustomColors.textColorTile,
+                ),
+              ),
+            ),
             Flexible(
                 flex: 3,
                 fit: FlexFit.tight,
                 child: Text(
                   order.client.name,
-                  style: const TextStyle(color: CustomColors.textColorTile),
-                )),
-            Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: Text(
-                  order.orderItemList!.first.product.name,
                   style: const TextStyle(color: CustomColors.textColorTile),
                 )),
             Flexible(

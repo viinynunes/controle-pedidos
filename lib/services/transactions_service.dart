@@ -6,7 +6,7 @@ import '../data/order_data.dart';
 class TransactionsService {
 
   Future<List<OrderData>> getTransactionsByProduct(ProductData product, BuildContext context) async {
-    final list = await OrderModel.of(context).getOrderListByProduct(product);
+    final list = await OrderModel.of(context).getOrderListByProduct(product, DateTime.now(), DateTime.now());
 
     return list;
   }
