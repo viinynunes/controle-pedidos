@@ -17,23 +17,31 @@ class OrderModel extends Model {
   static OrderModel of(BuildContext context) =>
       ScopedModel.of<OrderModel>(context);
 
-  Future<void> createOrder(OrderData order) async {
+  Future<void> createOrder(
+      OrderData order, VoidCallback onSuccess, VoidCallback onError) async {
     isLoading = true;
-    order.creationDate = DateTime(order.creationDate.year,
-        order.creationDate.month, order.creationDate.day);
 
-    var x = await firebaseCollection.add(order.toResumedMap());
-    order.id = x.id;
-    for (var e in order.orderItemList!) {
-      firebaseCollection
-          .doc(order.id)
-          .collection('orderItems')
-          .doc()
-          .set(e.toMap());
+    try {
+      order.creationDate = DateTime(order.creationDate.year,
+          order.creationDate.month, order.creationDate.day);
 
-      final stock = StockData(e.quantity, 0, DateTime.now(), e.product);
-      StockModel().createStockItem(stock);
+      var x = await firebaseCollection.add(order.toResumedMap());
+      order.id = x.id;
+      for (var e in order.orderItemList!) {
+        firebaseCollection
+            .doc(order.id)
+            .collection('orderItems')
+            .doc()
+            .set(e.toMap());
+
+        final stock = StockData(e.quantity, 0, DateTime.now(), e.product);
+        StockModel().createStockItem(stock, () => onError());
+      }
+      onSuccess();
+    } catch (e) {
+      onError();
     }
+
     isLoading = false;
     notifyListeners();
   }

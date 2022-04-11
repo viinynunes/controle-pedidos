@@ -56,7 +56,11 @@ class _OrderListPageState extends State<OrderListPage> {
                     )));
       if (recOrder != null) {
         if (order == null) {
-          OrderModel.of(context).createOrder(recOrder);
+          OrderModel.of(context).createOrder(recOrder, () {
+            _showSnackBar('Pedido cadastrado', Colors.green);
+          }, () {
+            _showSnackBar('Erro ao cadastrar pedido', Colors.red);
+          });
           setState(() {
             OrderModel.of(context).orderListAll.add(recOrder);
           });
@@ -213,5 +217,19 @@ class _OrderListPageState extends State<OrderListPage> {
         loading = false;
       });
     }
+  }
+
+  _showSnackBar(String text, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(milliseconds: 1500),
+        backgroundColor: CustomColors.backgroundTile,
+        content: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: color, fontSize: 18),
+        ),
+      ),
+    );
   }
 }

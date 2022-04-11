@@ -18,7 +18,8 @@ class StockModel extends Model {
   static StockModel of(BuildContext context) =>
       ScopedModel.of<StockModel>(context);
 
-  Future<StockData> createStockItem(StockData newStock) async {
+  Future<StockData> createStockItem(
+      StockData newStock, VoidCallback onError) async {
     bool alreadyInStock = false;
 
     newStock.creationDate = DateTime(newStock.creationDate.year,
@@ -37,18 +38,29 @@ class StockModel extends Model {
           stockIndex.total += newStock.total;
           await firebaseCollection
               .doc(stockIndex.id)
-              .update(stockIndex.toMap());
-          alreadyInStock = true;
+              .update(stockIndex.toMap())
+              .then((value) => alreadyInStock = true)
+              .catchError((e) {
+            onError();
+          });
           break;
         }
       }
       if (alreadyInStock == false) {
-        final recStock = await firebaseCollection.add(newStock.toMap());
-        newStock.id = recStock.id;
+        await firebaseCollection
+            .add(newStock.toMap())
+            .then((recStock) => newStock.id = recStock.id)
+            .catchError((e) {
+          onError();
+        });
       }
     } else {
-      final recStock = await firebaseCollection.add(newStock.toMap());
-      newStock.id = recStock.id;
+      await firebaseCollection
+          .add(newStock.toMap())
+          .then((recStock) => newStock.id = recStock.id)
+          .catchError((e) {
+        onError();
+      });
     }
 
     return newStock;
@@ -98,7 +110,7 @@ class StockModel extends Model {
       if (!orderItemsDB.contains(e)) {
         StockData newStock =
             StockData(e.quantity, 0, orderNew.creationDate, e.product);
-        await createStockItem(newStock);
+        await createStockItem(newStock, () {});
       }
     }
 

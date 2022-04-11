@@ -14,7 +14,7 @@ class ControlService {
     StockData stockData = StockData(0, 0, DateTime.now(), product);
 
     if (!list.contains(stockData)) {
-      await StockModel.of(context).createStockItem(stockData);
+      await StockModel.of(context).createStockItem(stockData, (){});
     }
   }
 
@@ -41,7 +41,7 @@ class ControlService {
     for (var product in list) {
       StockData newStock = StockData(0, 0, DateTime.now(), product);
 
-      await StockModel.of(context).createStockItem(newStock);
+      await StockModel.of(context).createStockItem(newStock, (){});
     }
   }
 
