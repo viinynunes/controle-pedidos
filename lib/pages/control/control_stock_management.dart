@@ -383,7 +383,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                                         stockList.clear();
                                         _setStockListByProvider(iniDate,
                                             endDate, _selectedProvider!);
-                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        //FocusScope.of(context).requestFocus(FocusNode());
                                         //stockDefaultNode.requestFocus();
                                         selectedStockListToShare.clear();
                                       }
@@ -448,7 +448,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                                             int left = int.parse(
                                                 stockDefaultController.text);
 
-                                            await controlService
+                                            controlService
                                                 .updateTotalOrderedInAllStockByProvider(
                                                     context, stockList, left);
 
@@ -479,7 +479,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                           child: Row(
                             children: [
                               Flexible(
-                                flex: 3,
+                                flex: 4,
                                 fit: FlexFit.tight,
                                 child: Text(
                                   'Produto',
@@ -490,7 +490,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                                 ),
                               ),
                               Flexible(
-                                flex: 3,
+                                flex: 2,
                                 fit: FlexFit.tight,
                                 child: Text(
                                   'Pedido',
@@ -501,7 +501,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                                 ),
                               ),
                               Flexible(
-                                flex: 3,
+                                flex: 2,
                                 fit: FlexFit.tight,
                                 child: Text(
                                   'Total',
@@ -551,15 +551,12 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                                   selected: selectedStockListToShare
                                       .contains(stockIndex),
                                   onDelete: () async {
-                                    await StockModel.of(context)
+                                    StockModel.of(context)
                                         .deleteStock(stockIndex);
                                     setState(() {
                                       loading = true;
                                     });
-                                    if (_selectedProvider != null) {
-                                      _setStockListByProvider(
-                                          iniDate, endDate, _selectedProvider!);
-                                    }
+                                    stockList.remove(stockIndex);
                                     setState(() {
                                       loading = false;
                                     });
