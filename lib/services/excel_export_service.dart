@@ -17,9 +17,17 @@ class ExcelExportService {
     final sheet = workbook.worksheets[0];
     int rowIndex = 1, columnIndex = 1;
 
+    Style orderItemStyle = workbook.styles.add('orderItemStyle');
+    orderItemStyle.borders.all.lineStyle = LineStyle.medium;
+
+    Style clientNameStyle = workbook.styles.add('clientNameStyle');
+    clientNameStyle.borders.all.lineStyle = LineStyle.medium;
+    clientNameStyle.hAlign = HAlignType.center;
+
     for (var order in orderList) {
       rowIndex++;
       sheet.getRangeByIndex(rowIndex, columnIndex).setText(order.client.name);
+      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = clientNameStyle;
       rowIndex++;
       for (var item in order.orderItemList!) {
         if (item.note != null) {
@@ -39,6 +47,8 @@ class ExcelExportService {
                   ' ' +
                   item.product.name);
         }
+
+        sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = orderItemStyle;
 
         sheet.autoFitColumn(columnIndex);
         rowIndex++;
@@ -60,6 +70,13 @@ class ExcelExportService {
     final workbook = Workbook();
     final sheet = workbook.worksheets[0];
 
+    Style stockStyle = workbook.styles.add('stockStyle');
+    stockStyle.borders.all.lineStyle = LineStyle.medium;
+
+    Style providerStyle = workbook.styles.add('providerStyle');
+    providerStyle.borders.all.lineStyle = LineStyle.medium;
+    providerStyle.hAlign = HAlignType.center;
+
     int rowIndex = 1, columnIndex = 1, columnInitValue = 1;
     ProviderData? lastProvider;
 
@@ -69,8 +86,11 @@ class ExcelExportService {
       rowIndex++;
       columnIndex = columnInitValue;
 
-      if(firstLine){
-        sheet.getRangeByIndex(rowIndex, columnIndex).setText(stockItem.product.provider.name);
+      if (firstLine) {
+        sheet
+            .getRangeByIndex(rowIndex, columnIndex)
+            .setText(stockItem.product.provider.name);
+        sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = providerStyle;
         rowIndex++;
         firstLine = false;
       }
@@ -80,34 +100,41 @@ class ExcelExportService {
         rowIndex++;
         lastProvider = stockItem.product.provider;
         sheet.getRangeByIndex(rowIndex, columnIndex).setText(lastProvider.name);
+        sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = providerStyle;
         rowIndex++;
       }
       sheet
           .getRangeByIndex(rowIndex, columnIndex)
           .setText(stockItem.product.name);
+      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       columnIndex++;
 
-      sheet.getRangeByIndex(rowIndex, columnIndex)
-      .setText(lastProvider.location);
+      sheet
+          .getRangeByIndex(rowIndex, columnIndex)
+          .setText(lastProvider.location);
+      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       columnIndex++;
 
       sheet.getRangeByIndex(rowIndex, columnIndex).setText(
-          stockItem.product.category +
-              '   ' +
-              stockItem.total.toString());
+          stockItem.product.category + '   ' + stockItem.total.toString());
+      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       columnIndex++;
+
       sheet.getRangeByIndex(rowIndex, columnIndex).setText(
           stockItem.product.category +
               '   ' +
               stockItem.totalOrdered.toString());
+      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       columnIndex++;
+
       sheet
           .getRangeByIndex(rowIndex, columnIndex)
           .setText((stockItem.totalOrdered - stockItem.total).toString());
+      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       sheet.autoFitColumn(columnInitValue);
       if (rowIndex > 60) {
