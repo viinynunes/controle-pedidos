@@ -30,14 +30,10 @@ class _StockListTileState extends State<StockListTile> {
   final _stockFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
 
-  late int totalOrdered;
-
   @override
   void initState() {
     super.initState();
-
-    int left = widget.stock.totalOrdered - widget.stock.total;
-    _stockInputController.text = left.toString();
+    _stockInputController.text = widget.stock.totalOrdered.toString();
   }
 
   @override
@@ -45,7 +41,12 @@ class _StockListTileState extends State<StockListTile> {
     StockData stock = widget.stock;
 
     void _updateStockTotal() {
-      stock.totalOrdered = int.parse(_stockInputController.text) + stock.total;
+      setState(
+        () {
+          stock.totalOrdered = int.parse(_stockInputController.text);
+        },
+      );
+
       StockModel.of(context).updateStockItem(
         stock,
         () => ScaffoldMessenger.of(context).showSnackBar(
@@ -54,11 +55,6 @@ class _StockListTileState extends State<StockListTile> {
             backgroundColor: Colors.red,
           ),
         ),
-      );
-      setState(
-        () {
-          totalOrdered = stock.total + int.parse(_stockInputController.text);
-        },
       );
     }
 
@@ -105,7 +101,7 @@ class _StockListTileState extends State<StockListTile> {
                   children: [
                     //Product Name
                     Flexible(
-                      flex: 3,
+                      flex: 4,
                       fit: FlexFit.tight,
                       child: Text(
                         stock.product.name,
@@ -114,7 +110,7 @@ class _StockListTileState extends State<StockListTile> {
                     ),
                     //Total From Order
                     Flexible(
-                      flex: 3,
+                      flex: 2,
                       fit: FlexFit.tight,
                       child: Text(
                         stock.total.toString(),
@@ -122,17 +118,6 @@ class _StockListTileState extends State<StockListTile> {
                         style: _textStyle(),
                       ),
                     ),
-                    //Total Including stock
-                    Flexible(
-                      flex: 3,
-                      fit: FlexFit.tight,
-                      child: Text(
-                        stock.totalOrdered.toString(),
-                        textAlign: TextAlign.center,
-                        style: _textStyle(),
-                      ),
-                    ),
-                    //Stock
                     Flexible(
                       flex: 2,
                       fit: FlexFit.tight,
@@ -174,6 +159,18 @@ class _StockListTileState extends State<StockListTile> {
                         enableInteractiveSelection: false,
                       ),
                     ),
+                    //Total Including stock
+                    Flexible(
+                      flex: 2,
+                      fit: FlexFit.tight,
+                      child: Text(
+                        (widget.stock.totalOrdered - widget.stock.total)
+                            .toString(),
+                        textAlign: TextAlign.center,
+                        style: _textStyle(),
+                      ),
+                    ),
+                    //Stock
                   ],
                 ),
               ),
