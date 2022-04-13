@@ -12,12 +12,22 @@ class ReportEstablishmentService {
 
     for (var item in stockList) {
       if (stockDataList.contains(item)) {
-        var e = stockDataList
-            .singleWhere((element) => element.product.id == item.product.id);
+        var list = stockDataList
+            .where((element) => element.product.id == item.product.id).toList();
+        late StockData e;
+        if (list.length > 1) {
+          e = list.singleWhere((element) =>
+              element.product.id == item.product.id &&
+              element.product.provider.id == item.product.provider.id);
+        } else {
+          e = list
+              .singleWhere((element) => element.product.id == item.product.id);
+        }
+
         if (e.product.provider == item.product.provider) {
           item.total += e.total;
           item.totalOrdered += e.totalOrdered;
-          stockDataList.remove(e);
+          stockDataList.removeWhere((element) => element.product.id == e.product.id && element.product.provider.id == e.product.provider.id);
         }
       }
       stockDataList.add(item);
