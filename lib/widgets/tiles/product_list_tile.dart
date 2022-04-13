@@ -56,7 +56,7 @@ class ProductListTile extends StatelessWidget {
                       ),
                     ),
                     Flexible(
-                      flex: 2,
+                      flex: 1,
                       fit: FlexFit.tight,
                       child: Text(
                         product.category,
@@ -65,8 +65,17 @@ class ProductListTile extends StatelessWidget {
                     ),
                     Flexible(
                       flex: 1,
+                      fit: FlexFit.tight,
                       child: Text(
                         product.provider.name,
+                        style: const TextStyle(fontSize: 14, color: CustomColors.textColorTile),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      fit: FlexFit.tight,
+                      child: Text(
+                        product.provider.location,
                         style: const TextStyle(fontSize: 14, color: CustomColors.textColorTile),
                       ),
                     )
