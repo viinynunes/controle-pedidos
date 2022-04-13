@@ -41,7 +41,7 @@ class ControlService {
     for (var product in list) {
       StockData newStock = StockData(0, 0, DateTime.now(), product);
 
-      await StockModel.of(context).createStockItem(newStock, (){});
+      StockModel.of(context).createStockItem(newStock, (){});
     }
   }
 
@@ -49,7 +49,7 @@ class ControlService {
       BuildContext context, List<StockData> stockList, int left) async {
     for (var stock in stockList) {
       stock.totalOrdered = stock.total + left;
-      await StockModel.of(context).updateStockItem(stock, () {});
+      StockModel.of(context).updateStockItem(stock, () {});
     }
   }
 
