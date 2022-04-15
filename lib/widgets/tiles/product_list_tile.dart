@@ -6,10 +6,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductListTile extends StatelessWidget {
-  const ProductListTile({Key? key, required this.product, required this.showRegistrationPage}) : super(key: key);
+  const ProductListTile({Key? key, required this.product, required this.showRegistrationPage, required this.onDelete}) : super(key: key);
 
   final ProductData product;
   final VoidCallback showRegistrationPage;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class ProductListTile extends StatelessWidget {
             children: [
               SlidableAction(
                 onPressed: (e) {
-                  model.disableProduct(product);
+                  onDelete();
                 },
                 icon: Icons.delete_forever,
                 backgroundColor: Colors.red,
