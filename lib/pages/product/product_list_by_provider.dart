@@ -96,6 +96,12 @@ class _ProductListByProviderState extends State<ProductListByProvider> {
                                 showRegistrationPage: () {
                                   _showProductRegistrationPage(product: product);
                                 },
+                                onDelete: (){
+                                  setState(() {
+                                    ProductModel.of(context).disableProduct(product);
+                                    productList.remove(product);
+                                  });
+                                },
                               );
                             }),
                       ),
