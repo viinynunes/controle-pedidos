@@ -113,6 +113,12 @@ class _ProductListPageState extends State<ProductListPage> {
                       showRegistrationPage: () {
                         _showProductRegistrationPage(product: product);
                       },
+                      onDelete: (){
+                        setState(() {
+                          ProductModel.of(context).disableProduct(product);
+                          productList.remove(product);
+                        });
+                      },
                     );
                   },
                 ),
@@ -126,7 +132,7 @@ class _ProductListPageState extends State<ProductListPage> {
       setState(() {
         loading = true;
       });
-      final list = await ProductModel.of(context).getFilteredEnabledProducts();
+      final list = await ProductModel.of(context).getAllEnabledProducts();
 
       setState(() {
         productList = list;
