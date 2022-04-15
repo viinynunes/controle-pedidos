@@ -18,6 +18,7 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
   final _addressController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  final _focusName = FocusNode();
 
   late ClientData newClientData;
 
@@ -34,6 +35,7 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
       _phoneController.text = newClientData.phone ?? '';
       _addressController.text = newClientData.address ?? '';
     }
+    _focusName.requestFocus();
   }
 
   @override
@@ -72,6 +74,7 @@ class _ClientRegistrationPageState extends State<ClientRegistrationPage> {
                   children: [
                     TextFormField(
                       controller: _nameController,
+                      focusNode: _focusName,
                       decoration: InputDecoration(
                         labelText: 'Nome',
                         labelStyle: _getStyle(),
