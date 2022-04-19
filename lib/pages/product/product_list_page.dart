@@ -104,7 +104,6 @@ class _ProductListPageState extends State<ProductListPage> {
                 constraints:
                     BoxConstraints(maxWidth: desktop ? 1080 : double.maxFinite),
                 child: ListView.builder(
-                  shrinkWrap: true,
                   itemCount: secondaryProductList.length,
                   itemBuilder: (context, index) {
                     var product = secondaryProductList[index];
