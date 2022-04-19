@@ -18,10 +18,10 @@ class ExcelExportService {
     int rowIndex = 1, columnIndex = 1;
 
     Style orderItemStyle = workbook.styles.add('orderItemStyle');
-    orderItemStyle.borders.all.lineStyle = LineStyle.medium;
+    orderItemStyle.borders.all.lineStyle = LineStyle.thin;
 
     Style clientNameStyle = workbook.styles.add('clientNameStyle');
-    clientNameStyle.borders.all.lineStyle = LineStyle.medium;
+    clientNameStyle.borders.all.lineStyle = LineStyle.thin;
     clientNameStyle.hAlign = HAlignType.center;
 
     for (var order in orderList) {
@@ -71,10 +71,10 @@ class ExcelExportService {
     final sheet = workbook.worksheets[0];
 
     Style stockStyle = workbook.styles.add('stockStyle');
-    stockStyle.borders.all.lineStyle = LineStyle.medium;
+    stockStyle.borders.all.lineStyle = LineStyle.thin;
 
     Style providerStyle = workbook.styles.add('providerStyle');
-    providerStyle.borders.all.lineStyle = LineStyle.medium;
+    providerStyle.borders.all.lineStyle = LineStyle.thin;
     providerStyle.hAlign = HAlignType.center;
 
     int rowIndex = 1, columnIndex = 1, columnInitValue = 1;
