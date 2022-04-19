@@ -130,10 +130,13 @@ class ExcelExportService {
       sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       columnIndex++;
-
+/*
       sheet
           .getRangeByIndex(rowIndex, columnIndex)
           .setText((stockItem.totalOrdered - stockItem.total).toString());
+      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;*/
+
+      sheet.getRangeByIndex(rowIndex, columnIndex).setValue(stockItem.totalOrdered - stockItem.total);
       sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       sheet.autoFitColumn(columnInitValue);
