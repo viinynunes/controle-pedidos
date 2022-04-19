@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/data/provider_data.dart';
+import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -27,6 +28,21 @@ class ProductModel extends Model {
   Future<void> updateProduct(ProductData product) async {
     isLoading = true;
     await firebaseCollection.doc(product.id).update(product.toMap());
+
+    final snapStock = await FirebaseFirestore.instance
+        .collection('stock')
+        .where('product.id', isEqualTo: product.id)
+        .get();
+
+    for (var s in snapStock.docs) {
+      final stock = StockData.fromMap(s.id, s.data());
+      stock.product = product;
+      FirebaseFirestore.instance
+          .collection('stock')
+          .doc(stock.id)
+          .update(stock.toMap());
+    }
+
     isLoading = false;
     notifyListeners();
   }
