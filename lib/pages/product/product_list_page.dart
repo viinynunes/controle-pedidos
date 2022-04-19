@@ -132,7 +132,7 @@ class _ProductListPageState extends State<ProductListPage> {
       setState(() {
         loading = true;
       });
-      final list = await ProductModel.of(context).getAllEnabledProducts();
+      final list = await ProductModel.of(context).getFilteredEnabledProducts();
 
       setState(() {
         productList = list;
