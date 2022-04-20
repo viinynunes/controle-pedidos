@@ -18,8 +18,12 @@ class ProductModel extends Model {
     isLoading = true;
     firebaseCollection
         .add(product.toMap())
-        .then((value) => product.id = value.id);
+        .then((value) {
+          product.id = value.id;
+          updateProduct(product);
+    });
     isLoading = false;
+
     notifyListeners();
 
     return product;
