@@ -72,20 +72,24 @@ class _TransactionsDialogState extends State<TransactionsDialog> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : SizedBox(
-              height: MediaQuery.of(context).size.height,
-              width: desktop
-                  ? MediaQuery.of(context).size.width * 0.4
-                  : double.maxFinite,
-              child: ListView.builder(
-                itemCount: orderList.length,
-                itemBuilder: (context, index) {
-                  var order = orderList[index];
+          : orderList.isEmpty
+              ? const Center(
+                  child: Text('Nenhum pedido encontrado', style: TextStyle(color: CustomColors.textColorTile),),
+                )
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: desktop
+                      ? MediaQuery.of(context).size.width * 0.4
+                      : double.maxFinite,
+                  child: ListView.builder(
+                    itemCount: orderList.length,
+                    itemBuilder: (context, index) {
+                      var order = orderList[index];
 
-                  return TransactionListTile(order: order);
-                },
-              ),
-            ),
+                      return TransactionListTile(order: order);
+                    },
+                  ),
+                ),
     );
   }
 
