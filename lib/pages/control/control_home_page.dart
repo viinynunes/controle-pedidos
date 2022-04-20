@@ -21,7 +21,6 @@ class _ControlHomePageState extends State<ControlHomePage> {
       physics: const BouncingScrollPhysics(),
       children: [
         ControlStockManagement(pageController: widget.pageController),
-        ControlStockManagement(pageController: widget.pageController),
       ],
     );
   }
