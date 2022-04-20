@@ -14,6 +14,8 @@ class OrderModel extends Model {
   List<OrderData> orderListAll = [];
   DateTime orderDate = DateTime.now();
 
+  List<ProductData> productList = [];
+
   static OrderModel of(BuildContext context) =>
       ScopedModel.of<OrderModel>(context);
 
@@ -53,7 +55,7 @@ class OrderModel extends Model {
     final snap =
         await firebaseCollection.doc(order.id).collection('orderItems').get();
     for (var e in snap.docs) {
-      orderItemsDB.add(await _getOrderItem(e));
+      orderItemsDB.add(await _getOrderItem(e, await _getProductList()));
       await e.reference.delete();
     }
     for (var e in order.orderItemList!) {
@@ -93,7 +95,8 @@ class OrderModel extends Model {
           await firebaseCollection.doc(order.id).collection('orderItems').get();
 
       for (var e in orderItemSnap.docs) {
-        order.orderItemList!.add(await _getOrderItem(e));
+        order.orderItemList!
+            .add(await _getOrderItem(e, await _getProductList()));
       }
       orderList.add(order);
     }
@@ -107,27 +110,23 @@ class OrderModel extends Model {
     isLoading = true;
     List<OrderData> orderList = [];
     var formDate = DateTime(date.year, date.month, date.day);
+
     final orderSnap = await firebaseCollection
         .where('enabled', isEqualTo: true)
         .where('creationDate', isEqualTo: formDate)
         .get();
 
-    for (var e in orderSnap.docs) {
-      OrderData order = OrderData.fromDocSnapshot(e);
-      final orderItemSnap =
-          await firebaseCollection.doc(order.id).collection('orderItems').get();
-
-      for (var e in orderItemSnap.docs) {
-        order.orderItemList!.add(await _getOrderItem(e));
-      }
-      orderList.add(order);
+    for(var o in orderSnap.docs){
+      orderList.add(OrderData.fromDocSnapshot(o));
     }
+
     orderListAll.clear();
     orderListAll.addAll(orderList);
     orderDate = date;
 
     isLoading = false;
     notifyListeners();
+
     return orderList;
   }
 
@@ -149,7 +148,8 @@ class OrderModel extends Model {
           await firebaseCollection.doc(order.id).collection('orderItems').get();
 
       for (var e in orderItemSnap.docs) {
-        order.orderItemList!.add(await _getOrderItem(e));
+        order.orderItemList!
+            .add(await _getOrderItem(e, await _getProductList()));
       }
       orderList.add(order);
     }
@@ -182,7 +182,8 @@ class OrderModel extends Model {
           .get();
 
       if (orderItemSnap.docs.isNotEmpty) {
-        final orderItemData = await _getOrderItem(orderItemSnap.docs.first);
+        final orderItemData = await _getOrderItem(
+            orderItemSnap.docs.first, await _getProductList());
         orderIndex.orderItemList!.add(orderItemData);
         orderList.add(orderIndex);
       }
@@ -191,22 +192,27 @@ class OrderModel extends Model {
     return orderList;
   }
 
-  _getOrderItem(QueryDocumentSnapshot item) async {
+  _getOrderItem(
+      QueryDocumentSnapshot item, List<ProductData> productList) async {
     final pID = item.get('productID');
-    late ProductData product;
     late OrderItemData oi;
 
-    final snapProd = await FirebaseFirestore.instance
-        .collection('products')
-        .where('id', isEqualTo: pID)
-        .get();
+    final prod = productList.firstWhere((element) => element.id == pID);
 
-    if (snapProd.docs.isNotEmpty) {
-      final snap = snapProd.docs.firstWhere((element) => element.id == pID);
-      product = ProductData.fromDocSnapshot(snap);
-      oi = OrderItemData.fromDocSnapshot(item, product);
-    }
+    oi = OrderItemData.fromDocSnapshot(item, prod);
 
     return oi;
+  }
+
+  _getProductList() async {
+    List<ProductData> productList = [];
+
+    final snap = await FirebaseFirestore.instance.collection('products').get();
+
+    for(var e in snap.docs){
+      productList.add(ProductData.fromDocSnapshot(e));
+    }
+
+    return productList;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/model/client_model.dart';
+import 'package:controle_pedidos/model/order_item_model.dart';
 import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/pages/order/order_registration_page.dart';
@@ -26,6 +27,7 @@ class _OrderListPageState extends State<OrderListPage> {
   final dateFormat = DateFormat('dd-MM-yyyy');
 
   final orderService = OrderServices();
+  List<OrderData> orderList = [];
 
   late DateTime _selectedDate;
   bool loading = false;
@@ -34,11 +36,7 @@ class _OrderListPageState extends State<OrderListPage> {
   void initState() {
     super.initState();
     _selectedDate = OrderModel.of(context).orderDate;
-
-    if (OrderModel.of(context).orderListAll.isEmpty) {
-      _setOrderList();
-    }
-    _selectedDate = OrderModel.of(context).orderDate;
+    _setOrderList();
   }
 
   @override
@@ -46,6 +44,17 @@ class _OrderListPageState extends State<OrderListPage> {
     final size = MediaQuery.of(context).size;
 
     void _showOrderRegistrationPage({OrderData? order}) async {
+
+      if (order != null){
+        setState(() {
+          loading = true;
+        });
+        await OrderItemModel.of(context).getOrderItemFromOrder(order);
+        setState(() {
+          loading = false;
+        });
+      }
+
       final recOrder = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -62,13 +71,13 @@ class _OrderListPageState extends State<OrderListPage> {
             _showSnackBar('Erro ao cadastrar pedido', Colors.red);
           });
           setState(() {
-            OrderModel.of(context).orderListAll.add(recOrder);
+           orderList.add(recOrder);
           });
         } else {
           await OrderModel.of(context).updateOrder(recOrder);
         }
         setState(() {
-          orderService.sortByDate(OrderModel.of(context).orderListAll);
+          orderService.sortByDate(orderList);
         });
       }
     }
@@ -146,10 +155,10 @@ class _OrderListPageState extends State<OrderListPage> {
                   Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.only(top: 15),
-                        itemCount: OrderModel.of(context).orderListAll.length,
+                        itemCount: orderList.length,
                         itemBuilder: (context, index) {
                           var order =
-                              OrderModel.of(context).orderListAll[index];
+                              orderList[index];
                           return Slidable(
                             key: const ValueKey(0),
                             startActionPane: ActionPane(
@@ -159,8 +168,7 @@ class _OrderListPageState extends State<OrderListPage> {
                                 SlidableAction(
                                   onPressed: (e) {
                                     model.disableOrder(order);
-                                    OrderModel.of(context)
-                                        .orderListAll
+                                    orderList
                                         .remove(order);
                                   },
                                   icon: Icons.delete_forever,
@@ -211,9 +219,10 @@ class _OrderListPageState extends State<OrderListPage> {
       final list =
           await OrderModel.of(context).getEnabledOrderFromDate(_selectedDate);
       setState(() {
+        orderList = list;
         OrderModel.of(context).orderListAll.clear();
         OrderModel.of(context).orderListAll = list;
-        orderService.sortByDate(OrderModel.of(context).orderListAll);
+        orderService.sortByDate(orderList);
         loading = false;
       });
     }
