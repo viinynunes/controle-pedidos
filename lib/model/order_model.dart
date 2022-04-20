@@ -134,6 +134,7 @@ class OrderModel extends Model {
       DateTime iniDate, DateTime endDate) async {
     isLoading = true;
     List<OrderData> orderList = [];
+    List<ProductData> productList = await _getProductList();
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
     final orderSnap = await firebaseCollection
@@ -149,7 +150,7 @@ class OrderModel extends Model {
 
       for (var e in orderItemSnap.docs) {
         order.orderItemList!
-            .add(await _getOrderItem(e, await _getProductList()));
+            .add(await _getOrderItem(e, productList));
       }
       orderList.add(order);
     }
@@ -165,6 +166,7 @@ class OrderModel extends Model {
   Future<List<OrderData>> getOrderListByProduct(
       ProductData product, DateTime iniDate, DateTime endDate) async {
     List<OrderData> orderList = [];
+    List<ProductData> productList = await _getProductList();
 
     final snapOrder = await firebaseCollection
         .where('enabled', isEqualTo: true)
@@ -178,12 +180,12 @@ class OrderModel extends Model {
       final orderItemSnap = await firebaseCollection
           .doc(orderIndex.id)
           .collection('orderItems')
-          .where('product.id', isEqualTo: product.id)
+          .where('productID', isEqualTo: product.id)
           .get();
 
       if (orderItemSnap.docs.isNotEmpty) {
         final orderItemData = await _getOrderItem(
-            orderItemSnap.docs.first, await _getProductList());
+            orderItemSnap.docs.first, productList);
         orderIndex.orderItemList!.add(orderItemData);
         orderList.add(orderIndex);
       }
