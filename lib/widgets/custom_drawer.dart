@@ -110,11 +110,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     pageController: pageController,
                     page: 3,
                   ),
-                  DrawerTile(
+                  /*DrawerTile(
                       icon: Icons.search,
                       text: 'TRANSAÇÕES',
                       pageController: pageController,
-                      page: 4),
+                      page: 4),*/
                 ],
               );
             },
