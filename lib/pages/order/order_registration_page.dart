@@ -83,7 +83,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
             selectedProduct: (product) {
               setState(() {
                 _selectedProduct = product;
-                if (desktop){
+                if (desktop) {
                   if (_formKey.currentState!.validate()) {
                     if (_selectedProduct != null) {
                       _setOrderItem();
@@ -92,7 +92,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                 }
               });
             },
-            longPressSelectedProduct: (product){
+            longPressSelectedProduct: (product) {
               if (desktop) {
                 setState(() {
                   _selectedProduct = product;
@@ -525,7 +525,10 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   void _setOrderItem() {
     sortOrderItemID++;
     OrderItemData verifyOrderItem = OrderItemData(
-        id: '$sortOrderItemID', quantity: 0, product: _selectedProduct!);
+        id: '$sortOrderItemID',
+        quantity: 0,
+        product: _selectedProduct!,
+        productID: _selectedProduct!.id!);
     if (orderItemList.contains(verifyOrderItem)) {
       _showSnackBarError('O produto já esta na lista');
     } else {
@@ -533,6 +536,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
           id: '$sortOrderItemID',
           quantity: int.parse(_quantityController.text),
           product: _selectedProduct!,
+          productID: _selectedProduct!.id!,
           note: note);
       setState(() {
         orderItemList.add(orderItem!);

@@ -54,7 +54,7 @@ class OrderData {
       'enabled': enabled,
       'lengthOrderItemList': lengthOrderItemList,
       'client': client.toMap(),
-      'orderItemList': orderItemList!.map((e) => e.toMap()),
+      'orderItemList': orderItemList!.map((e) => e.toCompleteMap()),
     };
   }
 

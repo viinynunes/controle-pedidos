@@ -52,8 +52,8 @@ class OrderModel extends Model {
     firebaseCollection.doc(order.id).update(order.toResumedMap());
     final snap =
         await firebaseCollection.doc(order.id).collection('orderItems').get();
-    for (DocumentSnapshot e in snap.docs) {
-      orderItemsDB.add(OrderItemData.fromDocSnapshot(e));
+    for (var e in snap.docs) {
+      orderItemsDB.add(await _getOrderItem(e));
       await e.reference.delete();
     }
     for (var e in order.orderItemList!) {
@@ -93,7 +93,7 @@ class OrderModel extends Model {
           await firebaseCollection.doc(order.id).collection('orderItems').get();
 
       for (var e in orderItemSnap.docs) {
-        order.orderItemList!.add(OrderItemData.fromDocSnapshot(e));
+        order.orderItemList!.add(await _getOrderItem(e));
       }
       orderList.add(order);
     }
@@ -118,7 +118,7 @@ class OrderModel extends Model {
           await firebaseCollection.doc(order.id).collection('orderItems').get();
 
       for (var e in orderItemSnap.docs) {
-        order.orderItemList!.add(OrderItemData.fromDocSnapshot(e));
+        order.orderItemList!.add(await _getOrderItem(e));
       }
       orderList.add(order);
     }
@@ -149,7 +149,7 @@ class OrderModel extends Model {
           await firebaseCollection.doc(order.id).collection('orderItems').get();
 
       for (var e in orderItemSnap.docs) {
-        order.orderItemList!.add(OrderItemData.fromDocSnapshot(e));
+        order.orderItemList!.add(await _getOrderItem(e));
       }
       orderList.add(order);
     }
@@ -182,13 +182,31 @@ class OrderModel extends Model {
           .get();
 
       if (orderItemSnap.docs.isNotEmpty) {
-        final orderItemData =
-            OrderItemData.fromDocSnapshot(orderItemSnap.docs.first);
+        final orderItemData = await _getOrderItem(orderItemSnap.docs.first);
         orderIndex.orderItemList!.add(orderItemData);
         orderList.add(orderIndex);
       }
     }
 
     return orderList;
+  }
+
+  _getOrderItem(QueryDocumentSnapshot item) async {
+    final pID = item.get('productID');
+    late ProductData product;
+    late OrderItemData oi;
+
+    final snapProd = await FirebaseFirestore.instance
+        .collection('products')
+        .where('id', isEqualTo: pID)
+        .get();
+
+    if (snapProd.docs.isNotEmpty) {
+      final snap = snapProd.docs.firstWhere((element) => element.id == pID);
+      product = ProductData.fromDocSnapshot(snap);
+      oi = OrderItemData.fromDocSnapshot(item, product);
+    }
+
+    return oi;
   }
 }
