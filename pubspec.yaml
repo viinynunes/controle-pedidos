@@ -50,6 +50,7 @@ dependencies:
   syncfusion_flutter_xlsio: ^19.4.53-beta
   rect_getter: ^1.1.0
   animated_splash_screen: ^1.2.0
+  file_saver: ^0.1.0
 
 
 dev_dependencies:
