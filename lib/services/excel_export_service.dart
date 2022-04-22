@@ -63,7 +63,7 @@ class ExcelExportService {
     final List<int> bytes = workbook.saveAsStream();
     workbook.dispose();
 
-    _saveAndOpenFile(bytes, 'pedidos ${dateFormat.format(DateTime.now())}');
+    _saveAndOpenFile(bytes, 'Pedidos ${dateFormat.format(DateTime.now())}');
   }
 
   void createAndOpenExcelToEstablishment(List<StockData> stockList) async {
