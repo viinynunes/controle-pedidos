@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,9 +23,13 @@ class TransformWidgetToImage {
 
   static Future<void> saveFileAndLaunchFile(
       Uint8List bytes, String fileName) async {
-    final path = (await getExternalStorageDirectory())?.path;
-    final file = File('$path/$fileName.png');
-    await file.writeAsBytes(bytes);
-    Share.shareFiles([(file.path)]);
+    if (!kIsWeb) {
+      final path = (await getExternalStorageDirectory())?.path;
+      final file = File('$path/$fileName.png');
+      await file.writeAsBytes(bytes);
+      Share.shareFiles([(file.path)]);
+    } else {
+      await FileSaver.instance.saveFile('$fileName.png', bytes, 'png');
+    }
   }
 }

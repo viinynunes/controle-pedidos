@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:controle_pedidos/data/provider_data.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -130,13 +133,10 @@ class ExcelExportService {
       sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       columnIndex++;
-/*
+
       sheet
           .getRangeByIndex(rowIndex, columnIndex)
-          .setText((stockItem.totalOrdered - stockItem.total).toString());
-      sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;*/
-
-      sheet.getRangeByIndex(rowIndex, columnIndex).setValue(stockItem.totalOrdered - stockItem.total);
+          .setValue(stockItem.totalOrdered - stockItem.total);
       sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = stockStyle;
 
       sheet.autoFitColumn(columnInitValue);
@@ -154,11 +154,16 @@ class ExcelExportService {
   }
 
   void _saveAndOpenFile(List<int> bytes, String name) async {
-    final path = (await getApplicationDocumentsDirectory()).path;
-    final fileName = '$path/$name.xlsx';
-    final file = File(fileName);
+    if (!kIsWeb) {
+      final path = (await getApplicationDocumentsDirectory()).path;
+      final fileName = '$path/$name.xlsx';
+      final file = File(fileName);
 
-    await file.writeAsBytes(bytes, flush: true);
-    OpenFile.open(fileName);
+      await file.writeAsBytes(bytes, flush: true);
+      OpenFile.open(fileName);
+    } else {
+      final uIntList = Uint8List.fromList(bytes);
+      await FileSaver.instance.saveFile('$name.xlsx', uIntList, 'xlsx');
+    }
   }
 }
