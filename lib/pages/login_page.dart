@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: 'Senha',
                                 hintStyle: TextStyle(color: Colors.white),
                               ),
-                              autofillHints: const [AutofillHints.email],
+                              autofillHints: const [AutofillHints.password],
                               style: const TextStyle(color: Colors.white),
                               obscureText: true,
                               validator: (text) {
