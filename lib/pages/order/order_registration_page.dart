@@ -56,6 +56,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
   final _quantityFocus = FocusNode();
   final _selectProductFocus = FocusNode();
   final _noteFocus = FocusNode();
+  final _clientFocus = FocusNode();
 
   @override
   void initState() {
@@ -74,7 +75,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     } else {
       newOrder = OrderData();
     }
-    _quantityFocus.requestFocus();
+    _clientFocus.requestFocus();
   }
 
   Future<void> _showProductDialog() async {
@@ -308,6 +309,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                 height: 35,
                                 width: MediaQuery.of(context).size.width,
                                 child: ElevatedButton(
+                                  focusNode: _clientFocus,
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.deepPurple.withOpacity(0.4),
                                   ),
