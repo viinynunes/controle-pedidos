@@ -11,9 +11,11 @@ import 'package:controle_pedidos/services/order_services.dart';
 import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_order_registration_page.dart';
+import 'package:controle_pedidos/utils/shortcuts/new_order_shortcut.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:rect_getter/rect_getter.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -181,311 +183,330 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
       await _setClientList();
     }
 
-    return ScopedModelDescendant<OrderModel>(
-      builder: (context, child, model) => Scaffold(
-        backgroundColor: CustomColors.backgroundColor,
-        appBar: AppBar(
-          title:
-              Text(widget.order == null ? 'Novo Pedido' : newOrder.client.name),
-          centerTitle: true,
-          actions: [
-            orderItemList.isEmpty
-                ? Container()
-                : Center(
-                    child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          orderItemList.length.toString(),
-                        ))),
-            IconButton(
-              onPressed: () async {
-                if (orderItemList.isNotEmpty) {
-                  if (client == null) {
-                    _showSnackBarError('Selecione o cliente');
-                  } else {
-                    _setOrder();
-                  }
-                }
-              },
-              icon: const Icon(Icons.save),
-            ),
-            PopupMenuButton(
-              color: CustomColors.backgroundTile,
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: EnumOrderRegistrationPage.addProduct,
-                  child: Text(
-                    'Adicionar Produto',
-                    style: TextStyle(color: CustomColors.textColorTile),
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: EnumOrderRegistrationPage.editProduct,
-                  child: Text(
-                    'Editar Produto',
-                    style: TextStyle(color: CustomColors.textColorTile),
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: EnumOrderRegistrationPage.addClient,
-                  child: Text(
-                    'Adicionar Cliente',
-                    style: TextStyle(color: CustomColors.textColorTile),
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: EnumOrderRegistrationPage.editClient,
-                  child: Text(
-                    'Editar Cliente',
-                    style: TextStyle(color: CustomColors.textColorTile),
-                  ),
-                ),
-              ],
-              onSelected: (value) async {
-                if (value == EnumOrderRegistrationPage.addProduct) {
-                  _showProductRegistrationPage();
-                } else if (value == EnumOrderRegistrationPage.editProduct) {
-                  if (_selectedProduct == null) {
-                    _showSnackBarError('Nenhum produto selecionado');
-                  } else {
-                    _showProductRegistrationPage(product: _selectedProduct);
-                  }
-                } else if (value == EnumOrderRegistrationPage.addClient) {
-                  _showClientRegistrationPage();
-                } else if (value == EnumOrderRegistrationPage.editClient) {
-                  if (client == null) {
-                    _showSnackBarError('Nenhum cliente selecionado');
-                  } else {
-                    _showClientRegistrationPage(client: client);
-                  }
-                }
-              },
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              if (_selectedProduct != null) {
-                _setOrderItem();
-              }
-            }
-          },
-          child: const Icon(Icons.add),
-        ),
-        body: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(5, 15, 5, 5),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: desktop ? 1080 : double.maxFinite,
-                ),
-                child: Column(
-                  children: [
-                    loading
-                        ? const LinearProgressIndicator()
-                        :
-                        //Select Client
-                        SizedBox(
-                            height: 35,
-                            width: MediaQuery.of(context).size.width,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.deepPurple.withOpacity(0.4),
-                              ),
-                              onLongPress: () {
-                                setState(() {
-                                  client = null;
-                                });
-                              },
-                              onPressed: () async {
-                                await showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return ShowClientListDialog(
-                                            clientList: ClientModel.of(context)
-                                                .clientList,
-                                            selectedClient: (c) {
-                                              setState(() {
-                                                client = c;
-                                              });
-                                            },
-                                          );
-                                        })
-                                    .then((value) =>
-                                        _quantityFocus.requestFocus());
-                              },
-                              child: Text(
-                                client == null
-                                    ? 'Selecione o cliente'
-                                    : client!.name,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: desktop ? 20 : 16),
-                              ),
-                            ),
-                          ),
-                    SizedBox(
-                      height: desktop ? 15 : 10,
-                    ),
-                    //Line with quantity and product
-                    SizedBox(
-                      child: SizedBox(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 80,
-                              //Quantity
-                              child: TextFormField(
-                                focusNode: _quantityFocus,
-                                controller: _quantityController,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: CustomColors.backgroundTile,
-                                  labelText: 'Quantidade',
-                                  labelStyle: const TextStyle(
-                                      color: CustomColors.textColorTile),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5))),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5))),
-                                ),
-                                style: const TextStyle(
-                                    color: CustomColors.textColorTile),
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                                onFieldSubmitted: (e) async {
-                                  if (!kIsWeb) {
-                                    await _showProductDialog();
-                                  }
-                                  //Navigator.pop(context);
-                                },
-                                validator: (e) {
-                                  var regExp = RegExp(
-                                          r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
-                                      .hasMatch(e!);
-                                  if (_quantityController.text.isEmpty ||
-                                      !regExp) {
-                                    return 'Quantidade Inválida';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
+    return Shortcuts(
+      shortcuts: {
+        LogicalKeySet(LogicalKeyboardKey.f2): NewOrderF2Shortcut(),
+        LogicalKeySet(LogicalKeyboardKey.f10): NewOrderF10Shortcut(),
 
-                            //Product
-                            Expanded(
-                              child: loading
-                                  ? const Center(
-                                      child: LinearProgressIndicator())
-                                  : SizedBox(
-                                      height: 55,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            primary: Colors.deepPurple
-                                                .withOpacity(0.4)),
-                                        focusNode: _selectProductFocus,
-                                        onLongPress: () {
-                                          setState(() {
-                                            _selectedProduct = null;
-                                          });
-                                        },
-                                        onPressed: () async {
-                                          _showProductDialog();
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Flexible(
-                                              flex: 5,
-                                              fit: FlexFit.tight,
-                                              child: Text(
-                                                _selectedProduct == null
-                                                    ? 'Selecione um produto'
-                                                    : _selectedProduct
-                                                        .toString(),
-                                                style: const TextStyle(
-                                                    fontSize: 16),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                            Flexible(
-                                              flex: 1,
-                                              fit: FlexFit.loose,
-                                              child: RectGetter(
-                                                key: _rectKey,
-                                                child: IconButton(
-                                                  onPressed: () {
-                                                    var rect = RectGetter
-                                                        .getRectFromKey(
-                                                            _rectKey);
-                                                    _showPopUpMenu(rect!);
-                                                    _noteFocus.requestFocus();
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.note,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                            ),
-                          ],
-                        ),
+      },
+      child: Actions(
+        actions: {
+          NewOrderF2Shortcut: CallbackAction<NewOrderF2Shortcut>(
+              onInvoke: ((intent) => _setOrder())),
+          NewOrderF10Shortcut: CallbackAction<NewOrderF10Shortcut>(
+            onInvoke: (((intent) => _showProductRegistrationPage())),
+          )
+        },
+        child: ScopedModelDescendant<OrderModel>(
+          builder: (context, child, model) => Scaffold(
+            backgroundColor: CustomColors.backgroundColor,
+            appBar: AppBar(
+              title: Text(
+                  widget.order == null ? 'Novo Pedido' : newOrder.client.name),
+              centerTitle: true,
+              actions: [
+                orderItemList.isEmpty
+                    ? Container()
+                    : Center(
+                        child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              orderItemList.length.toString(),
+                            ))),
+                IconButton(
+                  onPressed: () async {
+                    if (orderItemList.isNotEmpty) {
+                      if (client == null) {
+                        _showSnackBarError('Selecione o cliente');
+                      } else {
+                        _setOrder();
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.save),
+                ),
+                PopupMenuButton(
+                  color: CustomColors.backgroundTile,
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: EnumOrderRegistrationPage.addProduct,
+                      child: Text(
+                        'Adicionar Produto',
+                        style: TextStyle(color: CustomColors.textColorTile),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    const PopupMenuItem(
+                      value: EnumOrderRegistrationPage.editProduct,
+                      child: Text(
+                        'Editar Produto',
+                        style: TextStyle(color: CustomColors.textColorTile),
+                      ),
                     ),
-                    //Line with a ListView that contains the order items
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: orderItemList.length,
-                        itemBuilder: (context, index) {
-                          var orderItem = orderItemList[index];
-                          return Slidable(
-                            key: const ValueKey(0),
-                            startActionPane: ActionPane(
-                              dismissible: null,
-                              motion: const ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  onPressed: (e) {
+                    const PopupMenuItem(
+                      value: EnumOrderRegistrationPage.addClient,
+                      child: Text(
+                        'Adicionar Cliente',
+                        style: TextStyle(color: CustomColors.textColorTile),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: EnumOrderRegistrationPage.editClient,
+                      child: Text(
+                        'Editar Cliente',
+                        style: TextStyle(color: CustomColors.textColorTile),
+                      ),
+                    ),
+                  ],
+                  onSelected: (value) async {
+                    if (value == EnumOrderRegistrationPage.addProduct) {
+                      _showProductRegistrationPage();
+                    } else if (value == EnumOrderRegistrationPage.editProduct) {
+                      if (_selectedProduct == null) {
+                        _showSnackBarError('Nenhum produto selecionado');
+                      } else {
+                        _showProductRegistrationPage(product: _selectedProduct);
+                      }
+                    } else if (value == EnumOrderRegistrationPage.addClient) {
+                      _showClientRegistrationPage();
+                    } else if (value == EnumOrderRegistrationPage.editClient) {
+                      if (client == null) {
+                        _showSnackBarError('Nenhum cliente selecionado');
+                      } else {
+                        _showClientRegistrationPage(client: client);
+                      }
+                    }
+                  },
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  if (_selectedProduct != null) {
+                    _setOrderItem();
+                  }
+                }
+              },
+              child: const Icon(Icons.add),
+            ),
+            body: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(5, 15, 5, 5),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: desktop ? 1080 : double.maxFinite,
+                    ),
+                    child: Column(
+                      children: [
+                        loading
+                            ? const LinearProgressIndicator()
+                            :
+                            //Select Client
+                            SizedBox(
+                                height: 35,
+                                width: MediaQuery.of(context).size.width,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.deepPurple.withOpacity(0.4),
+                                  ),
+                                  onLongPress: () {
                                     setState(() {
-                                      orderItemList.remove(orderItem);
+                                      client = null;
                                     });
                                   },
-                                  icon: Icons.delete_forever,
-                                  backgroundColor: Colors.red,
+                                  onPressed: () async {
+                                    await showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return ShowClientListDialog(
+                                                clientList:
+                                                    ClientModel.of(context)
+                                                        .clientList,
+                                                selectedClient: (c) {
+                                                  setState(() {
+                                                    client = c;
+                                                  });
+                                                },
+                                              );
+                                            })
+                                        .then((value) =>
+                                            _quantityFocus.requestFocus());
+                                  },
+                                  child: Text(
+                                    client == null
+                                        ? 'Selecione o cliente'
+                                        : client!.name,
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        TextStyle(fontSize: desktop ? 20 : 16),
+                                  ),
+                                ),
+                              ),
+                        SizedBox(
+                          height: desktop ? 15 : 10,
+                        ),
+                        //Line with quantity and product
+                        SizedBox(
+                          child: SizedBox(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 80,
+                                  //Quantity
+                                  child: TextFormField(
+                                    focusNode: _quantityFocus,
+                                    controller: _quantityController,
+                                    textAlign: TextAlign.center,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: CustomColors.backgroundTile,
+                                      labelText: 'Quantidade',
+                                      labelStyle: const TextStyle(
+                                          color: CustomColors.textColorTile),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                    ),
+                                    style: const TextStyle(
+                                        color: CustomColors.textColorTile),
+                                    keyboardType: TextInputType.number,
+                                    textInputAction: TextInputAction.next,
+                                    onFieldSubmitted: (e) async {
+                                      if (!kIsWeb) {
+                                        await _showProductDialog();
+                                      }
+                                      //Navigator.pop(context);
+                                    },
+                                    validator: (e) {
+                                      var regExp = RegExp(
+                                              r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]')
+                                          .hasMatch(e!);
+                                      if (_quantityController.text.isEmpty ||
+                                          !regExp) {
+                                        return 'Quantidade Inválida';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+
+                                //Product
+                                Expanded(
+                                  child: loading
+                                      ? const Center(
+                                          child: LinearProgressIndicator())
+                                      : SizedBox(
+                                          height: 55,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                primary: Colors.deepPurple
+                                                    .withOpacity(0.4)),
+                                            focusNode: _selectProductFocus,
+                                            onLongPress: () {
+                                              setState(() {
+                                                _selectedProduct = null;
+                                              });
+                                            },
+                                            onPressed: () async {
+                                              _showProductDialog();
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Flexible(
+                                                  flex: 5,
+                                                  fit: FlexFit.tight,
+                                                  child: Text(
+                                                    _selectedProduct == null
+                                                        ? 'Selecione um produto'
+                                                        : _selectedProduct
+                                                            .toString(),
+                                                    style: const TextStyle(
+                                                        fontSize: 16),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  fit: FlexFit.loose,
+                                                  child: RectGetter(
+                                                    key: _rectKey,
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        var rect = RectGetter
+                                                            .getRectFromKey(
+                                                                _rectKey);
+                                                        _showPopUpMenu(rect!);
+                                                        _noteFocus
+                                                            .requestFocus();
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.note,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                 ),
                               ],
                             ),
-                            child: OrderItemTile(
-                              orderItem: orderItem,
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        //Line with a ListView that contains the order items
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: orderItemList.length,
+                            itemBuilder: (context, index) {
+                              var orderItem = orderItemList[index];
+                              return Slidable(
+                                key: const ValueKey(0),
+                                startActionPane: ActionPane(
+                                  dismissible: null,
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (e) {
+                                        setState(() {
+                                          orderItemList.remove(orderItem);
+                                        });
+                                      },
+                                      icon: Icons.delete_forever,
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  ],
+                                ),
+                                child: OrderItemTile(
+                                  orderItem: orderItem,
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
