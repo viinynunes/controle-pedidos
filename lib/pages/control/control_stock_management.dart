@@ -21,7 +21,8 @@ import '../stockDefault/stock_default_list.dart';
 import '../transactions/transactions_dialog.dart';
 
 class ControlStockManagement extends StatefulWidget {
-  const ControlStockManagement({Key? key, required this.pageController}) : super(key: key);
+  const ControlStockManagement({Key? key, required this.pageController})
+      : super(key: key);
 
   final PageController pageController;
 
@@ -156,6 +157,13 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                 ),
               ),
               const PopupMenuItem(
+                value: EnumControlHomePage.changeStockData,
+                child: Text(
+                  'Alterar Data',
+                  style: TextStyle(color: CustomColors.textColorTile),
+                ),
+              ),
+              const PopupMenuItem(
                 value: EnumControlHomePage.showOrder,
                 child: Text(
                   'Ver Pedidos',
@@ -254,6 +262,27 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                       context);
                 }
                 await _setProviderList(iniDate, endDate);
+              } else if (value == EnumControlHomePage.changeStockData) {
+                if (selectedStockListToShare.isEmpty) {
+                  _showSnackBarError('Nenhum produto selecionado');
+                } else if (selectedStockListToShare.length > 1) {
+                  _showSnackBarError('Selecione apenas um produto');
+                } else {
+                  showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2050))
+                      .then((value) {
+                    if (value != null) {
+                      final stock = selectedStockListToShare.first;
+                      stock.creationDate = value;
+                      controlService.updateStockItem(context, stock);
+                      _setStockListByProvider(
+                          iniDate, endDate, _selectedProvider!);
+                    }
+                  });
+                }
               }
             },
           ),
