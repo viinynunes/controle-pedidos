@@ -12,6 +12,7 @@ import 'package:controle_pedidos/services/product_service.dart';
 import 'package:controle_pedidos/utils/custom_colors.dart';
 import 'package:controle_pedidos/utils/enum_order_registration_page.dart';
 import 'package:controle_pedidos/widgets/tiles/order_item_tile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:rect_getter/rect_getter.dart';
@@ -313,7 +314,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                           });
                                         },
                                       );
-                                    });
+                                    }).then((value) => _quantityFocus.requestFocus());
                               },
                               child: Text(
                                 client == null
@@ -364,7 +365,9 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
                                 onFieldSubmitted: (e) async {
-                                  await _showProductDialog();
+                                  if(!kIsWeb){
+                                    await _showProductDialog();
+                                  }
                                   //Navigator.pop(context);
                                 },
                                 validator: (e) {
