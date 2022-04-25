@@ -204,7 +204,6 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                     _showSnackBarError('Selecione o cliente');
                   } else {
                     _setOrder();
-                    Navigator.pop(context, newOrder);
                   }
                 }
               },
@@ -303,18 +302,20 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                               },
                               onPressed: () async {
                                 await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return ShowClientListDialog(
-                                        clientList:
-                                            ClientModel.of(context).clientList,
-                                        selectedClient: (c) {
-                                          setState(() {
-                                            client = c;
-                                          });
-                                        },
-                                      );
-                                    }).then((value) => _quantityFocus.requestFocus());
+                                        context: context,
+                                        builder: (context) {
+                                          return ShowClientListDialog(
+                                            clientList: ClientModel.of(context)
+                                                .clientList,
+                                            selectedClient: (c) {
+                                              setState(() {
+                                                client = c;
+                                              });
+                                            },
+                                          );
+                                        })
+                                    .then((value) =>
+                                        _quantityFocus.requestFocus());
                               },
                               child: Text(
                                 client == null
@@ -365,7 +366,7 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
                                 onFieldSubmitted: (e) async {
-                                  if(!kIsWeb){
+                                  if (!kIsWeb) {
                                     await _showProductDialog();
                                   }
                                   //Navigator.pop(context);
@@ -577,6 +578,8 @@ class _OrderRegistrationPageState extends State<OrderRegistrationPage> {
     newOrder.lengthOrderItemList = orderItemList.length;
     newOrder.enabled = true;
     newOrder.orderItemList = orderItemList;
+
+    Navigator.pop(context, newOrder);
   }
 
   void _clearFields() {
