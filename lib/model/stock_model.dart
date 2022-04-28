@@ -103,60 +103,68 @@ class StockModel extends Model {
   }
 
   Future<void> updateStockFromOrder(
-      OrderData orderNew, List<OrderItemData> orderItemsDB) async {
+      OrderData orderNew,
+      List<OrderItemData> orderItemsDB,
+      VoidCallback onSuccess,
+      VoidCallback onError) async {
     loading = true;
 
-    for (var e in orderNew.orderItemList!) {
-      if (!orderItemsDB.contains(e)) {
-        StockData newStock =
-            StockData(e.quantity, 0, orderNew.creationDate, e.product);
-        await createStockItem(newStock, () {});
-      }
-    }
-
-    for (var old in orderItemsDB) {
-      if (orderNew.orderItemList!.contains(old)) {
-        var newItem = orderNew.orderItemList!
-            .singleWhere((element) => element.product.id == old.product.id);
-
-        final snapStock = await firebaseCollection
-            .where('creationDate', isEqualTo: orderNew.creationDate)
-            .where('product.id', isEqualTo: newItem.product.id)
-            .get();
-
-        var stockItem = StockData.fromMap(
-            snapStock.docs.first.id, snapStock.docs.first.data());
-
-        if (newItem.quantity > old.quantity) {
-          stockItem.total = newItem.quantity + stockItem.total - old.quantity;
-          firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
-        } else if (newItem.quantity < old.quantity) {
-          stockItem.total = stockItem.total - old.quantity + newItem.quantity;
-          firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
+    try {
+      for (var e in orderNew.orderItemList!) {
+        if (!orderItemsDB.contains(e)) {
+          StockData newStock =
+              StockData(e.quantity, 0, orderNew.creationDate, e.product);
+          await createStockItem(newStock, () {});
         }
-      } else {
-        if (orderItemsDB.contains(old)) {
-          final snapCollection = await firebaseCollection
+      }
+
+      for (var old in orderItemsDB) {
+        if (orderNew.orderItemList!.contains(old)) {
+          var newItem = orderNew.orderItemList!
+              .singleWhere((element) => element.product.id == old.product.id);
+
+          final snapStock = await firebaseCollection
               .where('creationDate', isEqualTo: orderNew.creationDate)
-              .where('product.id', isEqualTo: old.product.id)
+              .where('product.id', isEqualTo: newItem.product.id)
               .get();
 
-          final DocumentSnapshot snapDelete = snapCollection.docs.first;
+          var stockItem = StockData.fromMap(
+              snapStock.docs.first.id, snapStock.docs.first.data());
 
-          StockData stockItem = StockData.fromMap(
-              snapDelete.id, snapDelete.data() as Map<String, dynamic>);
+          if (newItem.quantity > old.quantity) {
+            stockItem.total = newItem.quantity + stockItem.total - old.quantity;
+            firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
+          } else if (newItem.quantity < old.quantity) {
+            stockItem.total = stockItem.total - old.quantity + newItem.quantity;
+            firebaseCollection.doc(stockItem.id).update(stockItem.toMap());
+          }
+        } else {
+          if (orderItemsDB.contains(old)) {
+            final snapCollection = await firebaseCollection
+                .where('creationDate', isEqualTo: orderNew.creationDate)
+                .where('product.id', isEqualTo: old.product.id)
+                .get();
 
-          stockItem.total = stockItem.total - old.quantity;
+            final DocumentSnapshot snapDelete = snapCollection.docs.first;
 
-          if (stockItem.total == 0 && stockItem.totalOrdered == 0) {
-            await snapDelete.reference.delete();
-          } else {
-            await firebaseCollection
-                .doc(snapDelete.id)
-                .update(stockItem.toMap());
+            StockData stockItem = StockData.fromMap(
+                snapDelete.id, snapDelete.data() as Map<String, dynamic>);
+
+            stockItem.total = stockItem.total - old.quantity;
+
+            if (stockItem.total == 0 && stockItem.totalOrdered == 0) {
+              await snapDelete.reference.delete();
+            } else {
+              await firebaseCollection
+                  .doc(snapDelete.id)
+                  .update(stockItem.toMap());
+            }
           }
         }
       }
+      onSuccess();
+    } catch (e) {
+      onError();
     }
   }
 

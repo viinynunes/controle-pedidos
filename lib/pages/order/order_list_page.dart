@@ -74,7 +74,13 @@ class _OrderListPageState extends State<OrderListPage> {
            orderList.add(recOrder);
           });
         } else {
-          await OrderModel.of(context).updateOrder(recOrder);
+          orderList.remove(order);
+          orderList.add(recOrder);
+          OrderModel.of(context).updateOrder(recOrder, () {
+            _showSnackBar('Pedido atualizado', Colors.green);
+          }, () {
+            _showSnackBar('Erro ao atualizar pedido', Colors.red);
+          });
         }
         setState(() {
           orderService.sortByDate(orderList);
