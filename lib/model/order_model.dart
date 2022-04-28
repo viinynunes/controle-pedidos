@@ -3,6 +3,7 @@ import 'package:controle_pedidos/data/order_data.dart';
 import 'package:controle_pedidos/data/order_item_data.dart';
 import 'package:controle_pedidos/data/product_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
+import 'package:controle_pedidos/model/order_item_model.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -48,33 +49,45 @@ class OrderModel extends Model {
     notifyListeners();
   }
 
-  Future<void> updateOrder(OrderData order) async {
+  Future<void> updateOrder(
+      OrderData order, VoidCallback onSuccess, VoidCallback onError) async {
     isLoading = true;
     List<OrderItemData> orderItemsDB = [];
-    firebaseCollection.doc(order.id).update(order.toResumedMap());
-    final snap =
-        await firebaseCollection.doc(order.id).collection('orderItems').get();
-    for (var e in snap.docs) {
-      orderItemsDB.add(await _getOrderItem(e, await _getProductList()));
-      await e.reference.delete();
-    }
-    for (var e in order.orderItemList!) {
-      await firebaseCollection
-          .doc(order.id)
-          .collection('orderItems')
-          .doc()
-          .set(e.toMap());
-    }
+    List<ProductData> productList = await _getProductList();
 
-    StockModel().updateStockFromOrder(order, orderItemsDB);
+    try {
+      firebaseCollection.doc(order.id).update(order.toResumedMap());
+      final snap =
+          await firebaseCollection.doc(order.id).collection('orderItems').get();
+      for (var e in snap.docs) {
+        orderItemsDB.add(_getOrderItem(e, productList));
+        await e.reference.delete();
+      }
+      for (var e in order.orderItemList!) {
+        firebaseCollection
+            .doc(order.id)
+            .collection('orderItems')
+            .doc()
+            .set(e.toMap())
+            .catchError((e) => onError());
+      }
+      StockModel()
+          .updateStockFromOrder(order, orderItemsDB, onSuccess, onError);
+    } catch (e) {
+      onError();
+    }
 
     isLoading = false;
     notifyListeners();
   }
 
-  void disableOrder(OrderData order) {
+  void disableOrder(OrderData order) async {
+    OrderItemModel oiModel = OrderItemModel();
     isLoading = true;
     order.enabled = false;
+    if (order.orderItemList!.isEmpty) {
+      await oiModel.getOrderItemFromOrder(order);
+    }
     StockModel().deleteFromOrder(order);
     firebaseCollection.doc(order.id).update(order.toResumedMap());
     isLoading = false;
@@ -116,7 +129,7 @@ class OrderModel extends Model {
         .where('creationDate', isEqualTo: formDate)
         .get();
 
-    for(var o in orderSnap.docs){
+    for (var o in orderSnap.docs) {
       orderList.add(OrderData.fromDocSnapshot(o));
     }
 
@@ -149,8 +162,7 @@ class OrderModel extends Model {
           await firebaseCollection.doc(order.id).collection('orderItems').get();
 
       for (var e in orderItemSnap.docs) {
-        order.orderItemList!
-            .add(await _getOrderItem(e, productList));
+        order.orderItemList!.add(await _getOrderItem(e, productList));
       }
       orderList.add(order);
     }
@@ -184,8 +196,8 @@ class OrderModel extends Model {
           .get();
 
       if (orderItemSnap.docs.isNotEmpty) {
-        final orderItemData = await _getOrderItem(
-            orderItemSnap.docs.first, productList);
+        final orderItemData =
+            await _getOrderItem(orderItemSnap.docs.first, productList);
         orderIndex.orderItemList!.add(orderItemData);
         orderList.add(orderIndex);
       }
@@ -194,8 +206,7 @@ class OrderModel extends Model {
     return orderList;
   }
 
-  _getOrderItem(
-      QueryDocumentSnapshot item, List<ProductData> productList) async {
+  _getOrderItem(QueryDocumentSnapshot item, List<ProductData> productList) {
     final pID = item.get('productID');
     late OrderItemData oi;
 
@@ -211,7 +222,7 @@ class OrderModel extends Model {
 
     final snap = await FirebaseFirestore.instance.collection('products').get();
 
-    for(var e in snap.docs){
+    for (var e in snap.docs) {
       productList.add(ProductData.fromDocSnapshot(e));
     }
 
