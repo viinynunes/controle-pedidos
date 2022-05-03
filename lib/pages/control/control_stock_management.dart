@@ -111,6 +111,10 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
         title: const Text('Controle'),
         centerTitle: true,
         actions: [
+          _selectedProvider != null ?
+          IconButton(onPressed: (){
+            _setStockListByProvider(iniDate, endDate, _selectedProvider!);
+          }, icon: const Icon(Icons.refresh)) : Container(),
           IconButton(
               onPressed: () {
                 if (_selectedProvider != null) {
