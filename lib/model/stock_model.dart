@@ -72,20 +72,14 @@ class StockModel extends Model {
 
     final snap = await firebaseCollection
         .where('creationDate', isEqualTo: newStock.creationDate)
+        .where('product.id', isEqualTo: newStock.product.id)
+        .where('product.provider.id', isEqualTo: newStock.product.provider.id)
         .get();
 
-    if (snap.docs.isNotEmpty) {
-      for (var snapIndex in snap.docs) {
-        var snapItem = StockData.fromMap(snapIndex.id, snapIndex.data());
-
-        if (snapItem.product.id == newStock.product.id) {
-          if (snapItem.product.provider != newStock.product.provider) {
-            firebaseCollection
-                .add(newStock.toMap())
-                .then((value) => newStock.id = value.id);
-          }
-        }
-      }
+    if (snap.docs.isEmpty) {
+      firebaseCollection
+          .add(newStock.toMap())
+          .then((value) => newStock.id = value.id);
     }
     return newStock;
   }
@@ -194,11 +188,12 @@ class StockModel extends Model {
     final snap = await firebaseCollection
         .where('creationDate', isEqualTo: stock.creationDate)
         .where('product.id', isEqualTo: stock.product.id)
+        .where('product.provider.id', isEqualTo: stock.product.provider.id)
         .get();
 
-    DocumentSnapshot stockItem = snap.docs.first;
-
-    await stockItem.reference.delete();
+    for (var stockItem in snap.docs) {
+      await stockItem.reference.delete();
+    }
   }
 
   Future<Set<ProviderData>> getAllStockProvidersByDate(

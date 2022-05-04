@@ -93,6 +93,8 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
           _setStockListByProvider(iniDate, endDate, lastProvider);
           loading = false;
         });
+      }else {
+        _setStockListByProvider(iniDate, endDate, _selectedProvider!);
       }
     }
 
@@ -255,15 +257,14 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                           providerList: providerAllList);
                     },
                   );
-
-                  await _setStockListByProvider(
-                      iniDate, endDate, toDivideStock.product.provider);
-
                   controlService.addEmptyDuplicatedProductInStock(
                       toDivideStock.product,
                       StockModel.of(context).providerListAll,
                       stockList,
                       context);
+
+                  await _setStockListByProvider(
+                      iniDate, endDate, toDivideStock.product.provider);
                 }
                 await _setProviderList(iniDate, endDate);
               } else if (value == EnumControlHomePage.changeStockData) {
