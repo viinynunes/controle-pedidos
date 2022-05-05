@@ -605,8 +605,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                                   _updateProductAndStockItem(stockIndex);
                                 });
                               },
-                              index: index,
-                              length: stockList.length,
+                              isLastItem: index + 1 == stockList.length,
                             ),
                           ),
                         );

@@ -12,8 +12,7 @@ class StockListTile extends StatefulWidget {
     Key? key,
     required this.stock,
     required this.editable,
-    required this.index,
-    required this.length,
+    required this.isLastItem,
     required this.selected,
     required this.onDelete,
     required this.onEdit,
@@ -22,8 +21,7 @@ class StockListTile extends StatefulWidget {
   final StockData stock;
   final bool editable;
   final bool selected;
-  final int index;
-  final int length;
+  final bool isLastItem;
 
   final VoidCallback onDelete;
   final VoidCallback onEdit;
@@ -65,7 +63,7 @@ class _StockListTileState extends State<StockListTile> {
       );
 
       _stockFocus.nextFocus();
-      if (widget.index == widget.length) {
+      if (widget.isLastItem) {
         FocusScope.of(context).unfocus();
       }
     }
