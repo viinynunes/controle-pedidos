@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 
 class ShowProductListDialog extends StatefulWidget {
   const ShowProductListDialog(
-      {Key? key, required this.productList, required this.selectedProduct, required this.longPressSelectedProduct})
+      {Key? key,
+      required this.productList,
+      required this.selectedProduct,
+      required this.longPressSelectedProduct})
       : super(key: key);
 
   final Function(ProductData) selectedProduct;
@@ -23,7 +26,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
   final productService = ProductService();
 
   final _searchController = TextEditingController();
-  final _searchNode = FocusNode();
+  final _searchFocus = FocusNode();
 
   @override
   void initState() {
@@ -34,12 +37,11 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
       secondProductList.addAll(productList);
     }
 
-    _searchNode.requestFocus();
+    _searchFocus.requestFocus();
   }
 
   @override
   Widget build(BuildContext context) {
-
     final desktop = MediaQuery.of(context).size.width > 600;
 
     return AlertDialog(
@@ -57,7 +59,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
           ),
           TextField(
             controller: _searchController,
-            focusNode: _searchNode,
+            focusNode: _searchFocus,
             decoration: InputDecoration(
               labelText: 'Procurar Produto',
               labelStyle: const TextStyle(color: CustomColors.textColorTile),
@@ -82,6 +84,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
                 final recProd = await productService.createOrUpdate(
                     productList: productList, context: context);
 
+                _searchFocus.requestFocus();
                 setState(() {
                   if (recProd != null) {
                     productService.sortProductsByName(productList);
@@ -96,7 +99,9 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
       ),
       content: SizedBox(
         height: MediaQuery.of(context).size.height,
-        width: desktop ? MediaQuery.of(context).size.width * 0.4 : double.maxFinite,
+        width: desktop
+            ? MediaQuery.of(context).size.width * 0.4
+            : double.maxFinite,
         child: ListView.builder(
           shrinkWrap: true,
           itemCount: secondProductList.length,
@@ -108,7 +113,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
               onTap: () {
                 _selectProduct(item);
               },
-              onLongPress: (){
+              onLongPress: () {
                 _longPressSelectedProduct(item);
               },
             );
@@ -149,7 +154,7 @@ class _ShowProductListDialogState extends State<ShowProductListDialog> {
     });
   }
 
-  void _longPressSelectedProduct(ProductData item){
+  void _longPressSelectedProduct(ProductData item) {
     setState(() {
       widget.longPressSelectedProduct(item);
       Navigator.pop(context);
