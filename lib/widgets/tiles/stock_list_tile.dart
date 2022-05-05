@@ -71,7 +71,7 @@ class _StockListTileState extends State<StockListTile> {
     }
 
     Future<void> _onPointerDown(PointerDownEvent event) async {
-      if (kIsWeb) {
+      if (kIsWeb && widget.editable) {
         html.document.body!
             .addEventListener('contextmenu', (event) => event.preventDefault());
 
@@ -102,6 +102,7 @@ class _StockListTileState extends State<StockListTile> {
 
     return Slidable(
         key: const ValueKey(0),
+        enabled: widget.editable,
         startActionPane: ActionPane(
           motion: const ScrollMotion(),
           dismissible: null,
