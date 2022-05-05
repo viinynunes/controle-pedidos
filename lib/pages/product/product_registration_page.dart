@@ -157,7 +157,11 @@ class _ProductRegistrationPageState extends State<ProductRegistrationPage> {
                             return null;
                           },
                           textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (e) => _showProviderDialog(),
+                          onFieldSubmitted: (e) {
+                            FocusScope.of(context).previousFocus();
+                            _showProviderDialog();
+
+                          },
                         ),
                         const SizedBox(
                           height: 30,
