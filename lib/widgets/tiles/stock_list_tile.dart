@@ -8,18 +8,22 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:universal_html/html.dart' as html;
 
 class StockListTile extends StatefulWidget {
-  const StockListTile(
-      {Key? key,
-      required this.stock,
-      required this.editable,
-      required this.selected,
-      required this.onDelete,
-      required this.onEdit})
-      : super(key: key);
+  const StockListTile({
+    Key? key,
+    required this.stock,
+    required this.editable,
+    required this.index,
+    required this.length,
+    required this.selected,
+    required this.onDelete,
+    required this.onEdit,
+  }) : super(key: key);
 
   final StockData stock;
   final bool editable;
   final bool selected;
+  final int index;
+  final int length;
 
   final VoidCallback onDelete;
   final VoidCallback onEdit;
@@ -59,6 +63,11 @@ class _StockListTileState extends State<StockListTile> {
           ),
         ),
       );
+
+      _stockFocus.nextFocus();
+      if (widget.index == widget.length) {
+        FocusScope.of(context).unfocus();
+      }
     }
 
     Future<void> _onPointerDown(PointerDownEvent event) async {

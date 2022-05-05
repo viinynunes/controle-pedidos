@@ -93,7 +93,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
           _setStockListByProvider(iniDate, endDate, lastProvider);
           loading = false;
         });
-      }else {
+      } else {
         _setStockListByProvider(iniDate, endDate, _selectedProvider!);
       }
     }
@@ -113,10 +113,15 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
         title: const Text('Controle'),
         centerTitle: true,
         actions: [
-          _selectedProvider != null ?
-          IconButton(onPressed: (){
-            _setStockListByProvider(iniDate, endDate, _selectedProvider!);
-          }, icon: const Icon(Icons.refresh)) : Container(),
+          _selectedProvider != null
+              ? IconButton(
+                  autofocus: false,
+                  onPressed: () {
+                    _setStockListByProvider(
+                        iniDate, endDate, _selectedProvider!);
+                  },
+                  icon: const Icon(Icons.refresh))
+              : Container(),
           IconButton(
               onPressed: () {
                 if (_selectedProvider != null) {
@@ -560,52 +565,54 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                           ),
                         ),
                       ),
-                loading
-                    ? Container()
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: stockList.length,
-                          itemBuilder: (context, index) {
-                            var stockIndex = stockList[index];
-                            return InkWell(
-                              onLongPress: () {
+                if (loading)
+                  Container()
+                else
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: stockList.length,
+                      itemBuilder: (context, index) {
+                        var stockIndex = stockList[index];
+                        return InkWell(
+                          onLongPress: () {
+                            setState(() {
+                              if (selectedStockListToShare
+                                  .contains(stockIndex)) {
+                                selectedStockListToShare.remove(stockIndex);
+                              } else {
+                                selectedStockListToShare.add(stockIndex);
+                              }
+                            });
+                          },
+                          child: ListTile(
+                            title: StockListTile(
+                              stock: stockIndex,
+                              editable: iniDate == endDate,
+                              selected:
+                                  selectedStockListToShare.contains(stockIndex),
+                              onDelete: () async {
+                                StockModel.of(context).deleteStock(stockIndex);
                                 setState(() {
-                                  if (selectedStockListToShare
-                                      .contains(stockIndex)) {
-                                    selectedStockListToShare.remove(stockIndex);
-                                  } else {
-                                    selectedStockListToShare.add(stockIndex);
-                                  }
+                                  loading = true;
+                                });
+                                stockList.remove(stockIndex);
+                                setState(() {
+                                  loading = false;
                                 });
                               },
-                              child: ListTile(
-                                title: StockListTile(
-                                  stock: stockIndex,
-                                  editable: iniDate == endDate,
-                                  selected: selectedStockListToShare
-                                      .contains(stockIndex),
-                                  onDelete: () async {
-                                    StockModel.of(context)
-                                        .deleteStock(stockIndex);
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    stockList.remove(stockIndex);
-                                    setState(() {
-                                      loading = false;
-                                    });
-                                  },
-                                  onEdit: () async {
-                                    setState(() {
-                                      _updateProductAndStockItem(stockIndex);
-                                    });
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                              onEdit: () async {
+                                setState(() {
+                                  _updateProductAndStockItem(stockIndex);
+                                });
+                              },
+                              index: index,
+                              length: stockList.length,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
