@@ -264,8 +264,6 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                   );
                   controlService.addEmptyDuplicatedProductInStock(
                       toDivideStock.product,
-                      StockModel.of(context).providerListAll,
-                      stockList,
                       context);
 
                   await _setStockListByProvider(

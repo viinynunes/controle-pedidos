@@ -1,5 +1,4 @@
 import 'package:controle_pedidos/data/product_data.dart';
-import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
@@ -14,24 +13,22 @@ class ControlService {
     StockData stockData = StockData(0, 0, DateTime.now(), product);
 
     if (!list.contains(stockData)) {
-      await StockModel.of(context).createStockItem(stockData, (){});
+      await StockModel.of(context).createStockItem(stockData, () {});
     }
   }
 
   Future<void> addEmptyDuplicatedProductInStock(
-      ProductData product,
-      List<ProviderData> providerList,
-      List<StockData> stockListByProvider,
-      BuildContext context) async {
+      ProductData product, BuildContext context) async {
     StockData stock = StockData(0, 0, DateTime.now(), product);
 
-    if (providerList.contains(product.provider)) {
+    /*if (providerList.contains(product.provider)) {
       if (!stockListByProvider.contains(stock)) {
         await StockModel.of(context).createDuplicatedStockItem(stock);
       }
     } else {
       await StockModel.of(context).createDuplicatedStockItem(stock);
-    }
+    }*/
+    await StockModel.of(context).createDuplicatedStockItem(stock);
   }
 
   Future<void> loadEmptyProductsListInStock(BuildContext context) async {
@@ -41,7 +38,7 @@ class ControlService {
     for (var product in list) {
       StockData newStock = StockData(0, 0, DateTime.now(), product);
 
-      StockModel.of(context).createStockItem(newStock, (){});
+      StockModel.of(context).createStockItem(newStock, () {});
     }
   }
 
