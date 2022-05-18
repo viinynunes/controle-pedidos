@@ -4,5 +4,6 @@ enum EnumControlHomePage {
   editDefaultStock,
   showOrder,
   duplicateStock,
-  changeStockData
+  changeStockData,
+  verifyStockTotal
 }

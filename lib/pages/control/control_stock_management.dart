@@ -181,6 +181,13 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                   style: TextStyle(color: CustomColors.textColorTile),
                 ),
               ),
+              const PopupMenuItem(
+                value: EnumControlHomePage.verifyStockTotal,
+                child: Text(
+                        'Verificar Estoque',
+                        style: TextStyle(color: CustomColors.textColorTile),
+                      ),
+              ),
             ],
             onSelected: (value) async {
               ProductData? _selectedProduct;
@@ -263,8 +270,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                     },
                   );
                   controlService.addEmptyDuplicatedProductInStock(
-                      toDivideStock.product,
-                      context);
+                      toDivideStock.product, context);
 
                   await _setStockListByProvider(
                       iniDate, endDate, toDivideStock.product.provider);
@@ -289,6 +295,28 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
                       _setStockListByProvider(
                           iniDate, endDate, _selectedProvider!);
                     }
+                  });
+                }
+              } else if (value == EnumControlHomePage.verifyStockTotal) {
+                if (_selectedProvider == null) {
+                  _showSnackBarError('Nenhum Fornecedor selecionado');
+                } else {
+                  setState(() {
+                    loading = true;
+                  });
+
+                  final auxProvider = _selectedProvider;
+
+                  await controlService.verifyStockTotal(
+                      context, iniDate, endDate, _selectedProvider!);
+
+                  await _setProviderList(iniDate, endDate);
+
+                  await _setStockListByProvider(
+                      iniDate, endDate, auxProvider!);
+
+                  setState(() {
+                    loading = false;
                   });
                 }
               }
@@ -629,6 +657,7 @@ class _ControlStockManagementState extends State<ControlStockManagement> {
           .getAllStocksByDateAndProvider(iniDate, endDate, provider);
 
       setState(() {
+        _selectedProvider = provider;
         stockList = list;
         loading = false;
       });

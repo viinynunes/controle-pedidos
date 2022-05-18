@@ -1,5 +1,7 @@
 import 'package:controle_pedidos/data/product_data.dart';
+import 'package:controle_pedidos/data/provider_data.dart';
 import 'package:controle_pedidos/data/stock_data.dart';
+import 'package:controle_pedidos/model/order_model.dart';
 import 'package:controle_pedidos/model/product_model.dart';
 import 'package:controle_pedidos/model/stock_model.dart';
 import 'package:flutter/material.dart';
@@ -53,5 +55,29 @@ class ControlService {
   Future<void> updateStockItem(
       BuildContext context, StockData stockItem) async {
     StockModel.of(context).updateStockItem(stockItem, () {});
+  }
+
+  Future<void> verifyStockTotal(
+      BuildContext context, DateTime iniDate, DateTime endDate, ProviderData provider) async {
+    /*final stockItemList =
+        await StockModel.of(context).getStockBetweenDates(iniDate, endDate);*/
+
+    final stockItemList = await StockModel.of(context).getAllStocksByDateAndProvider(iniDate, endDate, provider);
+
+    for (var stock in stockItemList) {
+      int totalOrdered = 0;
+
+      final orderList = await OrderModel.of(context)
+          .getOrderListByProduct(stock.product, iniDate, endDate);
+
+      for (var order in orderList) {
+        totalOrdered += order.orderItemList!.first.quantity;
+      }
+
+      if (totalOrdered != stock.total) {
+        stock.total = totalOrdered;
+        await StockModel.of(context).updateStockItem(stock, () {});
+      }
+    }
   }
 }
