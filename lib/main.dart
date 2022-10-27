@@ -1,19 +1,37 @@
-import 'package:controle_pedidos/model/client_model.dart';
-import 'package:controle_pedidos/model/establishment_model.dart';
-import 'package:controle_pedidos/model/order_item_model.dart';
-import 'package:controle_pedidos/model/order_model.dart';
-import 'package:controle_pedidos/model/product_model.dart';
-import 'package:controle_pedidos/model/provider_model.dart';
-import 'package:controle_pedidos/model/stock_model.dart';
-import 'package:controle_pedidos/model/user_model.dart';
-import 'package:controle_pedidos/pages/home_page.dart';
-import 'package:controle_pedidos/pages/login_page.dart';
+import 'package:controle_pedidos/src/global_locator.dart';
+import 'package:controle_pedidos/src/modules/client/presenter/android/pages/android_client_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  initGlobalServiceLocator();
+
+  try {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyCFGTe4EV1NyD3q65xCggS9Wvs_wxYHJ2I",
+          appId: "1:242675882008:web:9aa50610ad1af3e8f18b6d",
+          messagingSenderId: "242675882008",
+          projectId: "controle-de-pedidos-ca8b2"),
+    );
+  } catch (e) {
+    print(e);
+  }
+
+  runApp(MaterialApp(
+    home: const AndroidClientListPage(),
+    theme: ThemeData(
+        useMaterial3: true,
+        primarySwatch: Colors.deepPurple,
+        textTheme: const TextTheme(
+          labelSmall: TextStyle(color: Colors.green),
+        )),
+  ));
+}
+
+/* void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp(
@@ -82,3 +100,4 @@ void main() async {
     ),
   );
 }
+*/
