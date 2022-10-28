@@ -28,8 +28,6 @@ class _AndroidClientRegistrationPageState
 
   @override
   Widget build(BuildContext context) {
-    final desktop = MediaQuery.of(context).size.width > 600;
-
     Widget getTextField(
         {required TextEditingController controller,
         FocusNode? focus,
@@ -77,53 +75,49 @@ class _AndroidClientRegistrationPageState
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: ConstrainedBox(
-            constraints:
-                BoxConstraints(maxWidth: desktop ? 600 : double.maxFinite),
-            child: Form(
-              key: controller.formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    getTextField(
-                        controller: controller.nameController,
-                        focus: controller.focusName,
-                        label: 'Nome',
-                        validator: controller.nameValidator),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    getTextField(
-                      controller: controller.emailController,
-                      label: 'Email',
-                      validator: controller.emailValidator,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    getTextField(
-                        controller: controller.phoneController,
-                        label: 'Telefone',
-                        validator: controller.phoneValidator,
-                        textInputType: TextInputType.phone),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    getTextField(
-                        controller: controller.addressController,
-                        label: 'Endereço'),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text('Ativo'),
-                    Observer(
-                        builder: (_) => Switch(
-                            value: controller.enabled,
-                            onChanged: controller.changeEnabled)),
-                  ],
-                ),
+          child: Form(
+            key: controller.formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  getTextField(
+                      controller: controller.nameController,
+                      focus: controller.focusName,
+                      label: 'Nome',
+                      validator: controller.nameValidator),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getTextField(
+                    controller: controller.emailController,
+                    label: 'Email',
+                    validator: controller.emailValidator,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getTextField(
+                      controller: controller.phoneController,
+                      label: 'Telefone',
+                      validator: controller.phoneValidator,
+                      textInputType: TextInputType.phone),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getTextField(
+                      controller: controller.addressController,
+                      label: 'Endereço'),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text('Ativo'),
+                  Observer(
+                      builder: (_) => Switch(
+                          value: controller.enabled,
+                          onChanged: controller.changeEnabled)),
+                ],
               ),
             ),
           ),
