@@ -33,4 +33,10 @@ class EstablishmentModel extends Establishment {
       'enabled': enabled,
     };
   }
+
+  Map<String, dynamic> toIdMap() {
+    return {
+      'id': id,
+    };
+  }
 }
