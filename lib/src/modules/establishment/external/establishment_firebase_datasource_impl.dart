@@ -34,6 +34,14 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   }
 
   @override
+  Future<EstablishmentModel> getEstablishmentById(String id) async {
+    final snap = await _establishmentCollection.doc(id).get().catchError((e) =>
+        throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR'));
+
+    return EstablishmentModel.fromMap(map: snap.data()!);
+  }
+
+  @override
   Future<List<EstablishmentModel>> getEstablishmentList() async {
     List<EstablishmentModel> estabList = [];
 
