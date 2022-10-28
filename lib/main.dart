@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/src/global_locator.dart';
-import 'package:controle_pedidos/src/modules/client/presenter/android/pages/android_client_list_page.dart';
+import 'package:controle_pedidos/src/modules/establishment/presenter/android/pages/android_establishment_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ void main() async {
   }
 
   runApp(MaterialApp(
-    home: const AndroidClientListPage(),
+    home: const AndroidEstablishmentListPage(),
     theme: ThemeData(
         useMaterial3: true,
         primarySwatch: Colors.deepPurple,
