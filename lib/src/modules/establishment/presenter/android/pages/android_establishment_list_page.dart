@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/drawer/widgets/android_custom_drawer.dart';
 import 'tiles/android_establishment_list_tile.dart';
 
 class AndroidEstablishmentListPage extends StatefulWidget {
@@ -33,6 +34,7 @@ class _AndroidEstablishmentListPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AndroidCustomDrawer(),
       appBar: AppBar(
         title: Observer(
           builder: (_) => controller.searching
