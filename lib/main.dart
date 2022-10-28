@@ -1,12 +1,12 @@
 import 'package:controle_pedidos/src/global_locator.dart';
-import 'package:controle_pedidos/src/modules/establishment/presenter/android/pages/android_establishment_list_page.dart';
+import 'package:controle_pedidos/src/modules/core/registration/android_registration_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initGlobalServiceLocator();
+  await initGlobalServiceLocator();
 
   try {
     await Firebase.initializeApp(
@@ -21,7 +21,7 @@ void main() async {
   }
 
   runApp(MaterialApp(
-    home: const AndroidEstablishmentListPage(),
+    home: const AndroidRegistrationNavigation(),
     theme: ThemeData(
         useMaterial3: true,
         primarySwatch: Colors.deepPurple,
