@@ -1,5 +1,7 @@
 import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
 
+import '../../../core/helpers.dart';
+
 class EstablishmentModel extends Establishment {
   EstablishmentModel(
       {required super.id,
@@ -14,10 +16,11 @@ class EstablishmentModel extends Establishment {
             registrationDate: establishment.registrationDate,
             enabled: establishment.enabled);
 
-  EstablishmentModel.fromMap(
-      {required Map<String, dynamic> map, required super.registrationDate})
+  EstablishmentModel.fromMap({required Map<String, dynamic> map})
       : super(
           id: map['id'],
+          registrationDate:
+              Helpers.convertTimestampToDateTime(map['registrationDate']),
           name: map['name'],
           enabled: map['enabled'],
         );

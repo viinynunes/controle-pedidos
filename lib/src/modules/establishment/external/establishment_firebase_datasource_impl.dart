@@ -41,11 +41,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
         await _establishmentCollection.orderBy('name', descending: false).get();
 
     for (var i in snap.docs) {
-      Timestamp timestamp = i.get('registrationDate');
-      final registrationDate = DateTime.parse(timestamp.toDate().toString());
-
-      estabList.add(EstablishmentModel.fromMap(
-          map: i.data(), registrationDate: registrationDate));
+      estabList.add(EstablishmentModel.fromMap(map: i.data()));
     }
 
     return estabList;
