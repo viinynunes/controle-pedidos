@@ -34,6 +34,16 @@ class EstablishmentUsecaseImpl implements IEstablishmentUsecase {
   }
 
   @override
+  Future<Either<EstablishmentError, Establishment>> getEstablishmentById(
+      String id) async {
+    if (id.isEmpty) {
+      return Left(EstablishmentError('Invalid id'));
+    }
+
+    return _repository.getEstablishmentById(id);
+  }
+
+  @override
   Future<Either<EstablishmentError, List<Establishment>>>
       getEstablishmentList() async {
     return _repository.getEstablishmentList();

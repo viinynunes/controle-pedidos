@@ -9,9 +9,12 @@ abstract class IEstablishmentRepository {
   Future<Either<EstablishmentError, bool>> updateEstablishment(
       Establishment establishment);
 
+  Future<Either<EstablishmentError, Establishment>> getEstablishmentById(
+      String id);
+
   Future<Either<EstablishmentError, List<Establishment>>>
       getEstablishmentList();
 
   Future<Either<EstablishmentError, List<Establishment>>>
-  getEstablishmentListByEnabled();
+      getEstablishmentListByEnabled();
 }
