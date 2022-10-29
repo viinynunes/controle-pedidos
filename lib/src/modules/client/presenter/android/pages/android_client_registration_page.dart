@@ -55,12 +55,12 @@ class _AndroidClientRegistrationPageState
         },
         child: const Icon(Icons.save),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Form(
-            key: controller.formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
+      body: Center(
+        child: Form(
+          key: controller.formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

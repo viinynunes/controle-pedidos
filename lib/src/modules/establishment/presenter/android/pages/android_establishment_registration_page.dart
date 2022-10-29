@@ -55,10 +55,10 @@ class _AndroidEstablishmentRegistrationPageState
         },
         child: const Icon(Icons.save),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Form(
-            key: controller.formKey,
+      body: Center(
+        child: Form(
+          key: controller.formKey,
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Column(
