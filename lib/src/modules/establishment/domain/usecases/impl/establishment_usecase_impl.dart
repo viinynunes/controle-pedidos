@@ -38,4 +38,10 @@ class EstablishmentUsecaseImpl implements IEstablishmentUsecase {
       getEstablishmentList() async {
     return _repository.getEstablishmentList();
   }
+
+  @override
+  Future<Either<EstablishmentError, List<Establishment>>>
+      getEstablishmentListByEnabled() {
+    return _repository.getEstablishmentListByEnabled();
+  }
 }

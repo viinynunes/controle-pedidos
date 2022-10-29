@@ -11,4 +11,7 @@ abstract class IEstablishmentRepository {
 
   Future<Either<EstablishmentError, List<Establishment>>>
       getEstablishmentList();
+
+  Future<Either<EstablishmentError, List<Establishment>>>
+  getEstablishmentListByEnabled();
 }

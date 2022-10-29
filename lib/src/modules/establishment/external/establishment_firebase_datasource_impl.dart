@@ -54,4 +54,20 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
 
     return estabList;
   }
+
+  @override
+  Future<List<EstablishmentModel>> getEstablishmentListByEnabled() async {
+    List<EstablishmentModel> estabList = [];
+
+    final snap = await _establishmentCollection
+        .where('enabled', isEqualTo: true)
+        .orderBy('name', descending: false)
+        .get();
+
+    for (var i in snap.docs) {
+      estabList.add(EstablishmentModel.fromMap(map: i.data()));
+    }
+
+    return estabList;
+  }
 }

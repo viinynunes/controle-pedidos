@@ -47,4 +47,16 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
       return Left(EstablishmentError(e.toString()));
     }
   }
+
+  @override
+  Future<Either<EstablishmentError, List<Establishment>>>
+      getEstablishmentListByEnabled() async {
+    try {
+      final result = await _datasource.getEstablishmentListByEnabled();
+
+      return Right(result);
+    } catch (e) {
+      return Left(EstablishmentError(e.toString()));
+    }
+  }
 }

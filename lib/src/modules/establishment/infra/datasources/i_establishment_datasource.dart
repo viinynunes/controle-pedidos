@@ -5,5 +5,9 @@ abstract class IEstablishmentDatasource {
 
   Future<bool> updateEstablishment(EstablishmentModel establishment);
 
+  Future<EstablishmentModel> getEstablishmentById(String id);
+
   Future<List<EstablishmentModel>> getEstablishmentList();
+
+  Future<List<EstablishmentModel>> getEstablishmentListByEnabled();
 }
