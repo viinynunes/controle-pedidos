@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../core/widgets/custom_text_form_field.dart';
+
 class AndroidEstablishmentRegistrationPage extends StatefulWidget {
   const AndroidEstablishmentRegistrationPage({Key? key, this.establishment})
       : super(key: key);
@@ -28,26 +30,6 @@ class _AndroidEstablishmentRegistrationPageState
 
   @override
   Widget build(BuildContext context) {
-    Widget getTextField(
-        {required TextEditingController controller,
-        FocusNode? focus,
-        required String label,
-        String? Function(String?)? validator,
-        TextInputType? textInputType}) {
-      return TextFormField(
-        controller: controller,
-        focusNode: focus,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
-        ),
-        style: Theme.of(context).textTheme.bodyMedium,
-        validator: validator,
-        textInputAction: TextInputAction.next,
-        keyboardType: textInputType,
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.establishment == null
@@ -82,7 +64,7 @@ class _AndroidEstablishmentRegistrationPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  getTextField(
+                  CustomTextFormField(
                       controller: controller.nameController,
                       focus: controller.nameFocus,
                       label: 'Nome',

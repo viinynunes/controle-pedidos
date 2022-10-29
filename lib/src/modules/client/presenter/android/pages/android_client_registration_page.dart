@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../core/widgets/custom_text_form_field.dart';
+
 class AndroidClientRegistrationPage extends StatefulWidget {
   const AndroidClientRegistrationPage({Key? key, required this.client})
       : super(key: key);
@@ -28,26 +30,6 @@ class _AndroidClientRegistrationPageState
 
   @override
   Widget build(BuildContext context) {
-    Widget getTextField(
-        {required TextEditingController controller,
-        FocusNode? focus,
-        required String label,
-        String? Function(String?)? validator,
-        TextInputType? textInputType}) {
-      return TextFormField(
-        controller: controller,
-        focusNode: focus,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
-        ),
-        style: Theme.of(context).textTheme.bodyMedium,
-        validator: validator,
-        textInputAction: TextInputAction.next,
-        keyboardType: textInputType,
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.client == null
@@ -82,7 +64,7 @@ class _AndroidClientRegistrationPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  getTextField(
+                  CustomTextFormField(
                       controller: controller.nameController,
                       focus: controller.focusName,
                       label: 'Nome',
@@ -90,7 +72,7 @@ class _AndroidClientRegistrationPageState
                   const SizedBox(
                     height: 20,
                   ),
-                  getTextField(
+                  CustomTextFormField(
                     controller: controller.emailController,
                     label: 'Email',
                     validator: controller.emailValidator,
@@ -98,7 +80,7 @@ class _AndroidClientRegistrationPageState
                   const SizedBox(
                     height: 20,
                   ),
-                  getTextField(
+                  CustomTextFormField(
                       controller: controller.phoneController,
                       label: 'Telefone',
                       validator: controller.phoneValidator,
@@ -106,7 +88,7 @@ class _AndroidClientRegistrationPageState
                   const SizedBox(
                     height: 20,
                   ),
-                  getTextField(
+                  CustomTextFormField(
                       controller: controller.addressController,
                       label: 'Endereço'),
                   const SizedBox(
