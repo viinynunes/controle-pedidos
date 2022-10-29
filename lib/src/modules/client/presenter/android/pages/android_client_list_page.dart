@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/widgets/custom_material_banner_error.dart';
 import '../../stores/client_controller.dart';
 import 'tiles/android_client_list_tile.dart';
 
@@ -22,10 +23,14 @@ class _AndroidClientListPageState extends State<AndroidClientListPage> {
     super.initState();
 
     reaction((_) => controller.error, (_) {
-      controller.error.map((error) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(error.message)));
-      });
+      controller.error
+          .map((error) => CustomMaterialBannerError.showMaterialBannerError(
+              context: context,
+              message: 'Fornecedor Erro - ${error.message}',
+              onClose: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                controller.getClientList();
+              }));
     });
 
     controller.initState();

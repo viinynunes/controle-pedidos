@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../core/drawer/widgets/android_custom_drawer.dart';
+import '../../../../core/widgets/custom_material_banner_error.dart';
 import 'tiles/android_establishment_list_tile.dart';
 
 class AndroidEstablishmentListPage extends StatefulWidget {
@@ -24,8 +25,14 @@ class _AndroidEstablishmentListPageState
     super.initState();
 
     reaction((_) => controller.error, (_) {
-      controller.error.map((error) => ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(error.message))));
+      controller.error
+          .map((error) => CustomMaterialBannerError.showMaterialBannerError(
+              context: context,
+              message: 'Fornecedor Erro - ${error.message}',
+              onClose: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                controller.getEstablishmentList();
+              }));
     });
 
     controller.initState();
