@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/provider/presenter/android/pages/android_provider_list_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../client/presenter/android/pages/android_client_list_page.dart';
@@ -19,6 +20,7 @@ class _AndroidRegistrationNavigationState
   Widget build(BuildContext context) {
     final List<Widget> _registrationPageElements = [
       const AndroidClientListPage(),
+      const AndroidProviderListPage(),
       const AndroidEstablishmentListPage(),
     ];
 
@@ -43,12 +45,12 @@ class _AndroidRegistrationNavigationState
                 color: Colors.green,
               ),
               label: 'Clientes'),
-          /* BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: Icon(
                 Icons.sports_handball_outlined,
                 color: Colors.green,
               ),
-              label: 'Fornecedores'), */
+              label: 'Fornecedores'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.account_balance_sharp,
