@@ -7,6 +7,8 @@ class CustomTextFormField extends StatefulWidget {
       required this.label,
       this.focus,
       this.validator,
+      this.onChanged,
+      this.onSubmitted,
       this.textInputType})
       : super(key: key);
 
@@ -14,6 +16,8 @@ class CustomTextFormField extends StatefulWidget {
   final String label;
   final FocusNode? focus;
   final String? Function(String?)? validator;
+  final Function(String)? onChanged;
+  final Function(String)? onSubmitted;
   final TextInputType? textInputType;
 
   @override
@@ -34,6 +38,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       validator: widget.validator,
       textInputAction: TextInputAction.next,
       keyboardType: widget.textInputType,
+      onChanged: widget.onChanged,
+      onFieldSubmitted: widget.onSubmitted,
     );
   }
 }
