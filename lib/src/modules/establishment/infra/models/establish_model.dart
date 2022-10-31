@@ -41,4 +41,9 @@ class EstablishmentModel extends Establishment {
       'id': id,
     };
   }
+
+  @override
+  String toString() {
+    return name;
+  }
 }
