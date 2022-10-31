@@ -1,4 +1,6 @@
 import 'package:controle_pedidos/src/modules/establishment/domain/repositories/i_establishment_repository.dart';
+import 'package:controle_pedidos/src/modules/establishment/domain/services/i_establishment_service.dart';
+import 'package:controle_pedidos/src/modules/establishment/domain/services/impl/establishment_service_impl.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/usecases/i_establishment_usecase.dart';
 import 'package:controle_pedidos/src/modules/establishment/external/establishment_firebase_datasource_impl.dart';
 import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
@@ -18,6 +20,8 @@ void setUpEstablishmentLocator() {
       () => EstablishmentRepositoryImpl(estabLocator()));
   estabLocator.registerLazySingleton<IEstablishmentUsecase>(
       () => EstablishmentUsecaseImpl(estabLocator()));
+  estabLocator.registerLazySingleton<IEstablishmentService>(
+      () => EstablishmentServiceImpl());
   estabLocator.registerLazySingleton<EstablishmentController>(
       () => EstablishmentController(estabLocator()));
   estabLocator.registerFactory<EstablishmentRegistrationController>(
