@@ -3,10 +3,10 @@ import 'package:controle_pedidos/src/modules/establishment/errors/establishment_
 import 'package:dartz/dartz.dart';
 
 abstract class IEstablishmentRepository {
-  Future<Either<EstablishmentError, bool>> createEstablishment(
+  Future<Either<EstablishmentError, Establishment>> createEstablishment(
       Establishment establishment);
 
-  Future<Either<EstablishmentError, bool>> updateEstablishment(
+  Future<Either<EstablishmentError, Establishment>> updateEstablishment(
       Establishment establishment);
 
   Future<Either<EstablishmentError, Establishment>> getEstablishmentById(

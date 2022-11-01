@@ -44,6 +44,39 @@ mixin _$EstablishmentRegistrationController
     });
   }
 
+  late final _$successAtom = Atom(
+      name: '_EstablishmentRegistrationControllerBase.success',
+      context: context);
+
+  @override
+  Option<bool> get success {
+    _$successAtom.reportRead();
+    return super.success;
+  }
+
+  @override
+  set success(Option<bool> value) {
+    _$successAtom.reportWrite(value, super.success, () {
+      super.success = value;
+    });
+  }
+
+  late final _$errorAtom = Atom(
+      name: '_EstablishmentRegistrationControllerBase.error', context: context);
+
+  @override
+  Option<EstablishmentError> get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(Option<EstablishmentError> value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   late final _$_EstablishmentRegistrationControllerBaseActionController =
       ActionController(
           name: '_EstablishmentRegistrationControllerBase', context: context);
@@ -78,7 +111,9 @@ mixin _$EstablishmentRegistrationController
   String toString() {
     return '''
 enabled: ${enabled},
-newEstablishment: ${newEstablishment}
+newEstablishment: ${newEstablishment},
+success: ${success},
+error: ${error}
     ''';
   }
 }

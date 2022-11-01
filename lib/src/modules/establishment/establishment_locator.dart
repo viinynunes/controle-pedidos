@@ -25,5 +25,5 @@ void setUpEstablishmentLocator() {
   estabLocator.registerLazySingleton<EstablishmentController>(
       () => EstablishmentController(estabLocator()));
   estabLocator.registerFactory<EstablishmentRegistrationController>(
-      () => EstablishmentRegistrationController());
+      () => EstablishmentRegistrationController(estabLocator()));
 }

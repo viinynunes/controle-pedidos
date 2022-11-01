@@ -68,24 +68,18 @@ abstract class _EstablishmentControllerBase with Store {
   @action
   callEstablishmentRegistrationPage(
       {required BuildContext context, Establishment? establishment}) async {
-    final newEstab = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => AndroidEstablishmentRegistrationPage(
-            establishment: establishment)));
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            AndroidEstablishmentRegistrationPage(establishment: establishment),
+      ),
+    );
 
-    loading = true;
-
-    if (newEstab != null && newEstab is Establishment) {
-      if (establishment == null) {
-        final create = await usecase.createEstablishment(newEstab);
-
-        create.fold((l) => error = optionOf(l), (r) => getEstablishmentList());
-      } else {
-        final update = await usecase.updateEstablishment(newEstab);
-
-        update.fold((l) => error = optionOf(l), (r) => getEstablishmentList());
-      }
+    if (result != null && result is Establishment) {
+      estabList.add(result);
+      filteredEstabList.add(result);
     }
 
-    loading = false;
+    initState();
   }
 }

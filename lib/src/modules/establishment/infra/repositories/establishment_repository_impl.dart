@@ -11,7 +11,7 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
   EstablishmentRepositoryImpl(this._datasource);
 
   @override
-  Future<Either<EstablishmentError, bool>> createEstablishment(
+  Future<Either<EstablishmentError, Establishment>> createEstablishment(
       Establishment establishment) async {
     try {
       final result = await _datasource.createEstablishment(
@@ -24,7 +24,7 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
   }
 
   @override
-  Future<Either<EstablishmentError, bool>> updateEstablishment(
+  Future<Either<EstablishmentError, Establishment>> updateEstablishment(
       Establishment establishment) async {
     try {
       final result = await _datasource.updateEstablishment(

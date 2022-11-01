@@ -8,7 +8,8 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
       FirebaseHelper.firebaseCollection.collection('establishment');
 
   @override
-  Future<bool> createEstablishment(EstablishmentModel establishment) async {
+  Future<EstablishmentModel> createEstablishment(
+      EstablishmentModel establishment) async {
     _establishmentCollection.add(establishment.toMap()).then((value) {
       establishment.id = value.id;
       _establishmentCollection
@@ -18,11 +19,11 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
       (e) => throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'),
     );
 
-    return true;
+    return establishment;
   }
 
   @override
-  Future<bool> updateEstablishment(EstablishmentModel establishment) async {
+  Future<EstablishmentModel> updateEstablishment(EstablishmentModel establishment) async {
     _establishmentCollection
         .doc(establishment.id)
         .update(establishment.toMap())
@@ -30,7 +31,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
           (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
         );
 
-    return true;
+    return establishment;
   }
 
   @override

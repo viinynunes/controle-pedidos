@@ -1,9 +1,9 @@
 import '../models/establish_model.dart';
 
 abstract class IEstablishmentDatasource {
-  Future<bool> createEstablishment(EstablishmentModel establishment);
+  Future<EstablishmentModel> createEstablishment(EstablishmentModel establishment);
 
-  Future<bool> updateEstablishment(EstablishmentModel establishment);
+  Future<EstablishmentModel> updateEstablishment(EstablishmentModel establishment);
 
   Future<EstablishmentModel> getEstablishmentById(String id);
 
