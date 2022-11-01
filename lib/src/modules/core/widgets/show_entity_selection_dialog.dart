@@ -73,11 +73,21 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
               itemBuilder: (_, index) {
                 final entity = entityList[index];
 
-                return ListTile(
-                  onTap: () {
-                    Navigator.of(context).pop(entity);
-                  },
-                  title: Center(child: Text(entity.toString())),
+                return GestureDetector(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            entity.toString(),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             );
