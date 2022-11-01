@@ -74,6 +74,7 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
                 final entity = entityList[index];
 
                 return GestureDetector(
+                  onTap: () => Navigator.of(context).pop(entity),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
