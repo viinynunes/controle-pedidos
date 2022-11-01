@@ -86,4 +86,9 @@ class ProviderModel extends Provider {
       'name': name,
     };
   }
+
+  @override
+  String toString() {
+    return name + ' - ' + location + ' - ' + establishmentName;
+  }
 }
