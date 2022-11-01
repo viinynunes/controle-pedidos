@@ -62,14 +62,14 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
         ],
       ),
       content: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.9,
-        width: double.maxFinite,
+        height: MediaQuery.of(context).size.height * 0.25,
         child: Observer(
           builder: (_) {
             var entityList = controller.filteredObjectList;
 
             return ListView.builder(
               itemCount: entityList.length,
+              shrinkWrap: true,
               itemBuilder: (_, index) {
                 final entity = entityList[index];
 
