@@ -10,7 +10,8 @@ class ProviderUsecaseImpl implements IProviderUsecase {
   ProviderUsecaseImpl(this._repository);
 
   @override
-  Future<Either<ProviderError, bool>> createProvider(Provider provider) async {
+  Future<Either<ProviderError, Provider>> createProvider(
+      Provider provider) async {
     if (provider.name.isEmpty || provider.name.length < 2) {
       return Left(ProviderError('Invalid name'));
     }
@@ -23,7 +24,8 @@ class ProviderUsecaseImpl implements IProviderUsecase {
   }
 
   @override
-  Future<Either<ProviderError, bool>> updateProvider(Provider provider) async {
+  Future<Either<ProviderError, Provider>> updateProvider(
+      Provider provider) async {
     if (provider.id.isEmpty) {
       return Left(ProviderError('Invalid id'));
     }
@@ -40,7 +42,12 @@ class ProviderUsecaseImpl implements IProviderUsecase {
   }
 
   @override
-  Future<Either<ProviderError, List<Provider>>> getProviderList() async {
+  Future<Either<ProviderError, List<Provider>>> getProviderList() {
     return _repository.getProviderList();
+  }
+
+  @override
+  Future<Either<ProviderError, List<Provider>>> getProviderListByEnabled() {
+    return _repository.getProviderListByEnabled();
   }
 }

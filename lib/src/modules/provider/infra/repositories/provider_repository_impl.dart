@@ -11,7 +11,8 @@ class ProviderRepositoryImpl implements IProviderRepository {
   ProviderRepositoryImpl(this._datasource);
 
   @override
-  Future<Either<ProviderError, bool>> createProvider(Provider provider) async {
+  Future<Either<ProviderError, Provider>> createProvider(
+      Provider provider) async {
     try {
       final result = await _datasource
           .createProvider(ProviderModel.fromProvider(provider));
@@ -23,7 +24,8 @@ class ProviderRepositoryImpl implements IProviderRepository {
   }
 
   @override
-  Future<Either<ProviderError, bool>> updateProvider(Provider provider) async {
+  Future<Either<ProviderError, Provider>> updateProvider(
+      Provider provider) async {
     try {
       final result = await _datasource
           .updateProvider(ProviderModel.fromProvider(provider));
@@ -38,6 +40,18 @@ class ProviderRepositoryImpl implements IProviderRepository {
   Future<Either<ProviderError, List<Provider>>> getProviderList() async {
     try {
       final result = await _datasource.getProviderList();
+
+      return Right(result);
+    } catch (e) {
+      return Left(ProviderError(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ProviderError, List<Provider>>>
+      getProviderListByEnabled() async {
+    try {
+      final result = await _datasource.getProviderListByEnabled();
 
       return Right(result);
     } catch (e) {

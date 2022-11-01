@@ -135,14 +135,14 @@ abstract class _ProviderRegistrationControllerBase with Store {
         final create = await providerUsecase.createProvider(newProviderData);
 
         create.fold((l) => error = optionOf(l), (r) {
-          success = optionOf(r);
+          success = optionOf(true);
           Navigator.of(context).pop(r);
         });
       } else {
         final update = await providerUsecase.updateProvider(newProviderData);
 
         update.fold((l) => error = optionOf(l), (r) {
-          success = optionOf(r);
+          success = optionOf(true);
           Navigator.of(context).pop(r);
         });
       }
