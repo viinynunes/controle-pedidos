@@ -71,14 +71,14 @@ abstract class _EstablishmentRegistrationControllerBase with Store {
 
         create.fold((l) => error = optionOf(l), (r) {
           success = optionOf(true);
-          Navigator.of(context).pop(newEstablishmentData);
+          Navigator.of(context).pop(r);
         });
       } else {
         final update = await usecase.updateEstablishment(newEstablishmentData);
 
         update.fold((l) => error = optionOf(l), (r) {
           success = optionOf(true);
-          Navigator.of(context).pop(newEstablishmentData);
+          Navigator.of(context).pop(r);
         });
       }
     }
