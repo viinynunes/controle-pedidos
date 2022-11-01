@@ -10,20 +10,19 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   @override
   Future<EstablishmentModel> createEstablishment(
       EstablishmentModel establishment) async {
-    _establishmentCollection.add(establishment.toMap()).then((value) {
-      establishment.id = value.id;
-      _establishmentCollection
-          .doc(establishment.id)
-          .update(establishment.toMap());
-    }).catchError(
-      (e) => throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'),
-    );
+    final rec = await _establishmentCollection
+        .add(establishment.toMap())
+        .catchError((e) =>
+            throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'));
 
-    return establishment;
+    establishment.id = rec.id;
+
+    return await updateEstablishment(establishment);
   }
 
   @override
-  Future<EstablishmentModel> updateEstablishment(EstablishmentModel establishment) async {
+  Future<EstablishmentModel> updateEstablishment(
+      EstablishmentModel establishment) async {
     _establishmentCollection
         .doc(establishment.id)
         .update(establishment.toMap())
