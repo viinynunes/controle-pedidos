@@ -50,6 +50,7 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
 
     if (result != null) {
       objectList.add(result);
+      filteredObjectList.add(result);
     }
   }
 
