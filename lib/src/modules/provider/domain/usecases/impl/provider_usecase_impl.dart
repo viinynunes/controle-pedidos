@@ -42,6 +42,15 @@ class ProviderUsecaseImpl implements IProviderUsecase {
   }
 
   @override
+  Future<Either<ProviderError, Provider>> getProviderById(String id) async {
+    if (id.isEmpty) {
+      return Left(ProviderError('Invalid id'));
+    }
+
+    return _repository.getProviderById(id);
+  }
+
+  @override
   Future<Either<ProviderError, List<Provider>>> getProviderList() {
     return _repository.getProviderList();
   }

@@ -28,6 +28,14 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   }
 
   @override
+  Future<ProviderModel> getProviderById(String id) async {
+    final snap = await _providerCollection.doc(id).get().catchError(
+        (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
+
+    return ProviderModel.fromMap(map: snap.data()!);
+  }
+
+  @override
   Future<List<ProviderModel>> getProviderListByEnabled() async {
     List<ProviderModel> providerList = [];
 

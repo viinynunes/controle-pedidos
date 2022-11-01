@@ -5,6 +5,8 @@ abstract class IProviderDatasource {
 
   Future<ProviderModel> updateProvider(ProviderModel provider);
 
+  Future<ProviderModel> getProviderById(String id);
+
   Future<List<ProviderModel>> getProviderList();
 
   Future<List<ProviderModel>> getProviderListByEnabled();

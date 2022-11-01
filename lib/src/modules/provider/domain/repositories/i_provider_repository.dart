@@ -7,6 +7,8 @@ abstract class IProviderRepository {
 
   Future<Either<ProviderError, Provider>> updateProvider(Provider provider);
 
+  Future<Either<ProviderError, Provider>> getProviderById(String id);
+
   Future<Either<ProviderError, List<Provider>>> getProviderListByEnabled();
 
   Future<Either<ProviderError, List<Provider>>> getProviderList();

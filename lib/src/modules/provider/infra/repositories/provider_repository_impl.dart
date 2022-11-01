@@ -37,6 +37,17 @@ class ProviderRepositoryImpl implements IProviderRepository {
   }
 
   @override
+  Future<Either<ProviderError, Provider>> getProviderById(String id) async {
+    try {
+      final result = await _datasource.getProviderById(id);
+
+      return Right(result);
+    } catch (e) {
+      return Left(ProviderError(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<ProviderError, List<Provider>>> getProviderList() async {
     try {
       final result = await _datasource.getProviderList();
