@@ -8,23 +8,21 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
       FirebaseHelper.firebaseCollection.collection('client');
 
   @override
-  Future<bool> createClient(ClientModel client) async {
-    _clientCollection.add(client.toMap()).then((value) {
-      client.id = value.id;
-      _clientCollection.doc(client.id).update(client.toMap());
-    }).catchError(
-      (e) => throw FirebaseException(plugin: 'CREATE CLIENT ERROR'),
-    );
+  Future<ClientModel> createClient(ClientModel client) async {
+    final result = await _clientCollection.add({}).catchError(
+        (e) => throw FirebaseException(plugin: 'CREATE CLIENT ERROR'));
 
-    return true;
+    client.id = result.id;
+
+    return await updateClient(client);
   }
 
   @override
-  Future<bool> updateClient(ClientModel client) async {
+  Future<ClientModel> updateClient(ClientModel client) async {
     _clientCollection.doc(client.id).update(client.toMap()).catchError(
         (e) => throw FirebaseException(plugin: 'UPDATE CLIENT ERROR'));
 
-    return true;
+    return client;
   }
 
   @override
@@ -42,6 +40,24 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
         (e) => throw FirebaseException(plugin: 'GET CLIENT BY ID ERROR'));
 
     return ClientModel.fromMap(snap.data()!);
+  }
+
+  @override
+  Future<List<ClientModel>> getClientListByEnabled() async {
+    List<ClientModel> clientList = [];
+
+    final snap = await _clientCollection
+        .where('enabled', isEqualTo: true)
+        .orderBy('name', descending: false)
+        .get()
+        .catchError((e) =>
+            throw FirebaseException(plugin: 'GET CLIENT BY ENABLED ERROR'));
+
+    for (var index in snap.docs) {
+      clientList.add(ClientModel.fromMap(index.data()));
+    }
+
+    return clientList;
   }
 
   @override

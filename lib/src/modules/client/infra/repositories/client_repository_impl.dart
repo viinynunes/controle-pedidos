@@ -12,7 +12,7 @@ class ClientRepositoryImpl implements IClientRepository {
   ClientRepositoryImpl(this._datasource);
 
   @override
-  Future<Either<ClientError, bool>> createClient(Client client) async {
+  Future<Either<ClientError, Client>> createClient(Client client) async {
     try {
       final result =
           await _datasource.createClient(ClientModel.fromClient(client));
@@ -24,7 +24,7 @@ class ClientRepositoryImpl implements IClientRepository {
   }
 
   @override
-  Future<Either<ClientError, bool>> updateClient(Client client) async {
+  Future<Either<ClientError, Client>> updateClient(Client client) async {
     try {
       final result =
           await _datasource.updateClient(ClientModel.fromClient(client));
@@ -39,7 +39,7 @@ class ClientRepositoryImpl implements IClientRepository {
   Future<Either<ClientError, bool>> disableClient(Client client) async {
     try {
       final result =
-          await _datasource.updateClient(ClientModel.fromClient(client));
+          await _datasource.disableClient(ClientModel.fromClient(client));
 
       return Right(result);
     } catch (e) {
@@ -62,6 +62,17 @@ class ClientRepositoryImpl implements IClientRepository {
   Future<Either<ClientError, List<Client>>> getClientList() async {
     try {
       final result = await _datasource.getClientList();
+
+      return Right(result);
+    } catch (e) {
+      return Left(ClientError(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ClientError, List<Client>>> getClientListByEnabled() async {
+    try {
+      final result = await _datasource.getClientListByEnabled();
 
       return Right(result);
     } catch (e) {

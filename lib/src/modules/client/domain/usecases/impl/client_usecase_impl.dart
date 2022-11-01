@@ -11,7 +11,7 @@ class ClientUsecaseImpl implements IClientUsecase {
   ClientUsecaseImpl(this._repository);
 
   @override
-  Future<Either<ClientError, bool>> createClient(Client client) async {
+  Future<Either<ClientError, Client>> createClient(Client client) async {
     if (client.name.length < 2) {
       return Left(ClientError('Invalid client name'));
     }
@@ -28,7 +28,7 @@ class ClientUsecaseImpl implements IClientUsecase {
   }
 
   @override
-  Future<Either<ClientError, bool>> updateClient(Client client) async {
+  Future<Either<ClientError, Client>> updateClient(Client client) async {
     if (client.id.isEmpty) {
       return Left(ClientError('Invalid ID'));
     }
@@ -69,5 +69,10 @@ class ClientUsecaseImpl implements IClientUsecase {
   @override
   Future<Either<ClientError, List<Client>>> getClientList() async {
     return _repository.getClientList();
+  }
+
+  @override
+  Future<Either<ClientError, List<Client>>> getClientEnabled() {
+    return _repository.getClientListByEnabled();
   }
 }
