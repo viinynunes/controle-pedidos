@@ -6,6 +6,7 @@ class CustomTextFormField extends StatefulWidget {
       required this.controller,
       required this.label,
       this.focus,
+      this.maxLength,
       this.validator,
       this.onChanged,
       this.onSubmitted,
@@ -15,6 +16,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final FocusNode? focus;
+  final int? maxLength;
   final String? Function(String?)? validator;
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
@@ -34,6 +36,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         labelText: widget.label,
         labelStyle: Theme.of(context).textTheme.bodyMedium,
       ),
+      maxLength: widget.maxLength,
       style: Theme.of(context).textTheme.bodyMedium,
       validator: widget.validator,
       textInputAction: TextInputAction.next,
