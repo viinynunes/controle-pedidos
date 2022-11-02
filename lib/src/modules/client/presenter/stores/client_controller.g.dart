@@ -125,9 +125,12 @@ mixin _$ClientController on _ClientListBase, Store {
       AsyncAction('_ClientListBase.clientRegistrationPage', context: context);
 
   @override
-  Future clientRegistrationPage(BuildContext context, Client? client) {
-    return _$clientRegistrationPageAsyncAction
-        .run(() => super.clientRegistrationPage(context, client));
+  Future clientRegistrationPage(
+      {required BuildContext context,
+      required IClientRegistrationPage registrationPage}) {
+    return _$clientRegistrationPageAsyncAction.run(() => super
+        .clientRegistrationPage(
+            context: context, registrationPage: registrationPage));
   }
 
   late final _$_ClientListBaseActionController =

@@ -68,8 +68,7 @@ abstract class _ProductControllerBase with Store {
   @action
   callProductRegistrationPage(
       {required BuildContext context,
-      required IProductRegistrationPage registrationPage,
-      Product? product}) async {
+      required IProductRegistrationPage registrationPage}) async {
     final result = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => registrationPage));
 

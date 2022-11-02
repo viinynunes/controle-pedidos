@@ -128,13 +128,10 @@ mixin _$ProductController on _ProductControllerBase, Store {
   @override
   Future callProductRegistrationPage(
       {required BuildContext context,
-      required IProductRegistrationPage registrationPage,
-      Product? product}) {
+      required IProductRegistrationPage registrationPage}) {
     return _$callProductRegistrationPageAsyncAction.run(() => super
         .callProductRegistrationPage(
-            context: context,
-            registrationPage: registrationPage,
-            product: product));
+            context: context, registrationPage: registrationPage));
   }
 
   late final _$_ProductControllerBaseActionController =

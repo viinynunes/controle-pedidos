@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/client/domain/entities/client.dart';
+import 'package:controle_pedidos/src/modules/client/presenter/pages/i_client_registration_page.dart';
 import 'package:controle_pedidos/src/modules/client/presenter/stores/client_registration_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -6,11 +6,8 @@ import 'package:get_it/get_it.dart';
 
 import '../../../../core/widgets/custom_text_form_field.dart';
 
-class AndroidClientRegistrationPage extends StatefulWidget {
-  const AndroidClientRegistrationPage({Key? key, required this.client})
-      : super(key: key);
-
-  final Client? client;
+class AndroidClientRegistrationPage extends IClientRegistrationPage {
+  const AndroidClientRegistrationPage({super.key, super.client});
 
   @override
   State<AndroidClientRegistrationPage> createState() =>
@@ -18,7 +15,7 @@ class AndroidClientRegistrationPage extends StatefulWidget {
 }
 
 class _AndroidClientRegistrationPageState
-    extends State<AndroidClientRegistrationPage> {
+    extends IClientRegistrationPageState<AndroidClientRegistrationPage> {
   final controller = GetIt.I.get<ClientRegistrationController>();
 
   @override

@@ -6,6 +6,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../core/widgets/custom_material_banner_error.dart';
 import '../../stores/client_controller.dart';
+import 'android_client_registration_page.dart';
 import 'tiles/android_client_list_tile.dart';
 
 class AndroidClientListPage extends StatefulWidget {
@@ -81,7 +82,9 @@ class _AndroidClientListPageState extends State<AndroidClientListPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          controller.clientRegistrationPage(context, null);
+          controller.clientRegistrationPage(
+              context: context,
+              registrationPage: const AndroidClientRegistrationPage());
         },
         child: const Icon(Icons.add),
       ),
@@ -115,7 +118,10 @@ class _AndroidClientListPageState extends State<AndroidClientListPage> {
                           return AndroidClientListTile(
                             client: client,
                             onTap: () => controller.clientRegistrationPage(
-                                context, client),
+                                context: context,
+                                registrationPage: AndroidClientRegistrationPage(
+                                  client: client,
+                                )),
                           );
                         },
                       )

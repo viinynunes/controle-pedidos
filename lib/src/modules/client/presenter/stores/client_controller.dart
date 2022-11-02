@@ -1,11 +1,11 @@
 import 'package:controle_pedidos/src/modules/client/domain/usecases/i_client_usecase.dart';
-import 'package:controle_pedidos/src/modules/client/presenter/android/pages/android_client_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../domain/entities/client.dart';
 import '../../errors/client_errors.dart';
+import '../pages/i_client_registration_page.dart';
 
 part 'client_controller.g.dart';
 
@@ -83,22 +83,16 @@ abstract class _ClientListBase with Store {
   }
 
   @action
-  clientRegistrationPage(BuildContext context, Client? client) async {
+  clientRegistrationPage(
+      {required BuildContext context,
+      required IClientRegistrationPage registrationPage}) async {
     loading = true;
     error = none();
-    final result = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => AndroidClientRegistrationPage(client: client)));
+    final result = await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => registrationPage));
 
     if (result != null && result is Client) {
-      if (client == null) {
-        final create = await clientUsecase.createClient(result);
-
-        create.fold((l) => error = optionOf(l), (r) => getClientList());
-      } else {
-        final update = await clientUsecase.updateClient(result);
-
-        update.fold((l) => error = optionOf(l), (r) => getClientList());
-      }
+      initState();
     }
     loading = false;
   }
