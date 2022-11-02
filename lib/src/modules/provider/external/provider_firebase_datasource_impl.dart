@@ -32,6 +32,10 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
     final snap = await _providerCollection.doc(id).get().catchError(
         (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
 
+    if (snap.data() == null) {
+      throw FirebaseException(plugin: 'PROVIDER NOT FOUND');
+    }
+
     return ProviderModel.fromMap(map: snap.data()!);
   }
 
