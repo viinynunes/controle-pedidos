@@ -1,8 +1,10 @@
 import 'package:controle_pedidos/src/modules/client/presenter/pages/i_client_registration_page.dart';
 import 'package:controle_pedidos/src/modules/client/presenter/stores/client_registration_controller.dart';
+import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
 import '../../../../core/widgets/custom_text_form_field.dart';
 
@@ -21,6 +23,22 @@ class _AndroidClientRegistrationPageState
   @override
   void initState() {
     super.initState();
+
+    reaction((p0) => controller.error, (p0) {
+      controller.error
+          .map((error) => CustomMaterialBannerError.showMaterialBannerError(
+              context: context,
+              message: error.message,
+              onClose: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              }));
+    });
+
+    reaction((_) => controller.success, (_) {
+      controller.success.map((error) => ScaffoldMessenger.of(context)
+          .showSnackBar(
+              const SnackBar(content: Text('Cliente salvo com sucesso'))));
+    });
 
     controller.initState(client: widget.client);
   }
@@ -44,15 +62,10 @@ class _AndroidClientRegistrationPageState
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (controller.formKey.currentState!.validate()) {
-            controller.initNewClient();
-            Navigator.pop(context, controller.newClientData);
-          }
-        },
+        onPressed: () => controller.saveOrUpdate(context),
         child: const Icon(Icons.save),
       ),
-      body: Center(
+      body: SafeArea(
         child: Form(
           key: controller.formKey,
           child: Padding(
@@ -63,7 +76,7 @@ class _AndroidClientRegistrationPageState
                 children: [
                   CustomTextFormField(
                       controller: controller.nameController,
-                      focus: controller.focusName,
+                      focus: controller.nameFocus,
                       label: 'Nome',
                       validator: controller.nameValidator),
                   const SizedBox(

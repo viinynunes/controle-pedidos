@@ -1,27 +1,38 @@
+import 'package:controle_pedidos/src/modules/client/domain/usecases/i_client_usecase.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:string_validator/string_validator.dart';
 
 import '../../domain/entities/client.dart';
+import '../../errors/client_errors.dart';
 import '../../infra/models/client_model.dart';
 
 part 'client_registration_controller.g.dart';
 
-class ClientRegistrationController = ClientRegistrationBase
+class ClientRegistrationController = _ClientRegistrationBase
     with _$ClientRegistrationController;
 
-abstract class ClientRegistrationBase with Store {
+abstract class _ClientRegistrationBase with Store {
+  final IClientUsecase usecase;
+
+  _ClientRegistrationBase(this.usecase);
+
+  @observable
+  bool enabled = true;
+  @observable
+  Option<ClientError> error = none();
+  @observable
+  Option<Client> success = none();
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
   bool newClient = true;
 
-  @observable
-  bool enabled = true;
-
   final formKey = GlobalKey<FormState>();
-  final focusName = FocusNode();
+  final nameFocus = FocusNode();
 
   late ClientModel newClientData;
 
@@ -35,7 +46,7 @@ abstract class ClientRegistrationBase with Store {
       enabled = client.enabled;
       newClient = false;
     }
-    focusName.requestFocus();
+    nameFocus.requestFocus();
   }
 
   initNewClient() {
@@ -79,5 +90,27 @@ abstract class ClientRegistrationBase with Store {
       return 'Telefone Inválido';
     }
     return null;
+  }
+
+  @action
+  saveOrUpdate(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      initNewClient();
+      if (newClient) {
+        final create = await usecase.createClient(newClientData);
+
+        create.fold((l) => error = optionOf(l), (r) {
+          success = optionOf(r);
+          Navigator.of(context).pop(r);
+        });
+      } else {
+        final update = await usecase.updateClient(newClientData);
+
+        update.fold((l) => error = optionOf(l), (r) {
+          success = optionOf(r);
+          Navigator.of(context).pop(r);
+        });
+      }
+    }
   }
 }

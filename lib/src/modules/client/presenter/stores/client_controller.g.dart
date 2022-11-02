@@ -105,12 +105,12 @@ mixin _$ClientController on _ClientListBase, Store {
     });
   }
 
-  late final _$createClientAsyncAction =
-      AsyncAction('_ClientListBase.createClient', context: context);
+  late final _$initStateAsyncAction =
+      AsyncAction('_ClientListBase.initState', context: context);
 
   @override
-  Future createClient(Client client) {
-    return _$createClientAsyncAction.run(() => super.createClient(client));
+  Future initState() {
+    return _$initStateAsyncAction.run(() => super.initState());
   }
 
   late final _$getClientListAsyncAction =
@@ -135,17 +135,6 @@ mixin _$ClientController on _ClientListBase, Store {
 
   late final _$_ClientListBaseActionController =
       ActionController(name: '_ClientListBase', context: context);
-
-  @override
-  dynamic initState() {
-    final _$actionInfo = _$_ClientListBaseActionController.startAction(
-        name: '_ClientListBase.initState');
-    try {
-      return super.initState();
-    } finally {
-      _$_ClientListBaseActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   dynamic filterClientByText() {

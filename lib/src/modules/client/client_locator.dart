@@ -21,5 +21,5 @@ void setUpClientLocator() {
   clientLocator.registerLazySingleton<ClientController>(
       () => ClientController(clientLocator()));
   clientLocator.registerFactory<ClientRegistrationController>(
-      () => ClientRegistrationController());
+      () => ClientRegistrationController(clientLocator()));
 }

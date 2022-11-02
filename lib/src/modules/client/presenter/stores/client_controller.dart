@@ -32,33 +32,21 @@ abstract class _ClientListBase with Store {
   final searchFocus = FocusNode();
 
   @action
-  initState() {
-    getClientList();
-  }
-
-  @action
-  createClient(Client client) async {
-    loading = true;
-    error = none();
-    final result = await clientUsecase.createClient(client);
-
-    result.fold(
-      (l) => {error = optionOf(l)},
-      (r) => getClientList(),
-    );
-
-    loading = false;
+  initState() async {
+    await getClientList();
   }
 
   @action
   getClientList() async {
     loading = true;
-    error = none();
     final result = await clientUsecase.getClientList();
 
     result.fold(
       (l) => error = optionOf(l),
-      (r) => clientList = ObservableList.of(r),
+      (r) {
+        clientList = ObservableList.of(r);
+        filteredClientList = ObservableList.of(r);
+      },
     );
 
     loading = false;
@@ -86,14 +74,12 @@ abstract class _ClientListBase with Store {
   clientRegistrationPage(
       {required BuildContext context,
       required IClientRegistrationPage registrationPage}) async {
-    loading = true;
-    error = none();
+    searching = false;
     final result = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => registrationPage));
 
-    if (result != null && result is Client) {
-      initState();
+    if (result != null) {
+      await initState();
     }
-    loading = false;
   }
 }
