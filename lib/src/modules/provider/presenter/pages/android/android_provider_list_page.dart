@@ -1,12 +1,13 @@
 import 'package:controle_pedidos/src/modules/core/drawer/widgets/android_custom_drawer.dart';
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
-import 'package:controle_pedidos/src/modules/provider/presenter/android/pages/tiles/android_provider_list_tile.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/stores/provider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+
+import 'tiles/android_provider_list_tile.dart';
 
 class AndroidProviderListPage extends StatefulWidget {
   const AndroidProviderListPage({Key? key}) : super(key: key);

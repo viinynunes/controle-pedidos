@@ -1,9 +1,9 @@
 import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_list_page.dart';
-import 'package:controle_pedidos/src/modules/provider/presenter/android/pages/android_provider_list_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../client/presenter/pages/android/android_client_list_page.dart';
 import '../../establishment/presenter/android/pages/android_establishment_list_page.dart';
+import '../../provider/presenter/pages/android/android_provider_list_page.dart';
 
 class AndroidRegistrationNavigation extends StatefulWidget {
   const AndroidRegistrationNavigation({Key? key}) : super(key: key);

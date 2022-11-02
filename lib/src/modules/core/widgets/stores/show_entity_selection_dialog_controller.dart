@@ -1,6 +1,6 @@
 import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/establishment/presenter/android/pages/android_establishment_registration_page.dart';
-import 'package:controle_pedidos/src/modules/provider/presenter/android/pages/android_provider_registration_page.dart';
+import 'package:controle_pedidos/src/modules/provider/presenter/pages/android/android_provider_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
