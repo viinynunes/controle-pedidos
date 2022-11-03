@@ -1,0 +1,32 @@
+import 'package:controle_pedidos/src/domain/entities/client.dart';
+
+import 'order_item.dart';
+
+class Order {
+  String id;
+  DateTime registrationDate;
+  DateTime registrationHour;
+  int orderItemLength;
+  bool enabled;
+  Client client;
+
+  List<OrderItem> orderItemList = [];
+
+  Order({
+    required this.id,
+    required this.registrationDate,
+    required this.registrationHour,
+    required this.orderItemLength,
+    required this.enabled,
+    required this.client,
+    required this.orderItemList,
+  });
+
+  void addOrderItem(OrderItem item) {
+    orderItemList.add(item);
+  }
+
+  void removeOrderItem(OrderItem item) {
+    orderItemList.remove(item);
+  }
+}
