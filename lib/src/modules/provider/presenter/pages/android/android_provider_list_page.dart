@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/src/modules/core/drawer/widgets/android_custom_drawer.dart';
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/modules/provider/presenter/pages/android/android_provider_registration_page.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/stores/provider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -80,8 +81,9 @@ class _AndroidProviderListPageState extends State<AndroidProviderListPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            controller.callProviderRegistrationPage(context: context),
+        onPressed: () => controller.callProviderRegistrationPage(
+            context: context,
+            registrationPage: const AndroidProviderRegistrationPage()),
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
@@ -111,7 +113,11 @@ class _AndroidProviderListPageState extends State<AndroidProviderListPage> {
                             provider: provider,
                             onTap: () =>
                                 controller.callProviderRegistrationPage(
-                                    context: context, provider: provider));
+                                    context: context,
+                                    registrationPage:
+                                        AndroidProviderRegistrationPage(
+                                      provider: provider,
+                                    )));
                       },
                     )
                   : const Center(

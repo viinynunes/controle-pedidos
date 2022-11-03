@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/modules/provider/presenter/pages/i_provider_registration_page.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/stores/provider_registration_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -8,21 +9,17 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/widgets/show_entity_selection_dialog.dart';
-import '../../../domain/entities/provider.dart';
 
-class AndroidProviderRegistrationPage extends StatefulWidget {
-  const AndroidProviderRegistrationPage({Key? key, this.provider})
-      : super(key: key);
-
-  final Provider? provider;
+class AndroidProviderRegistrationPage extends IProviderRegistrationPage {
+  const AndroidProviderRegistrationPage({super.key, super.provider});
 
   @override
-  State<AndroidProviderRegistrationPage> createState() =>
+  State<StatefulWidget> createState() =>
       _AndroidProviderRegistrationPageState();
 }
 
 class _AndroidProviderRegistrationPageState
-    extends State<AndroidProviderRegistrationPage> {
+    extends IProviderRegistrationPageState {
   final controller = GetIt.I.get<ProviderRegistrationController>();
 
   @override

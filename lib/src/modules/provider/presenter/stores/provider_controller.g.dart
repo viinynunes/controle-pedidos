@@ -114,6 +114,19 @@ mixin _$ProviderController on _ProviderControllerBase, Store {
     return _$getProviderListAsyncAction.run(() => super.getProviderList());
   }
 
+  late final _$callProviderRegistrationPageAsyncAction = AsyncAction(
+      '_ProviderControllerBase.callProviderRegistrationPage',
+      context: context);
+
+  @override
+  Future callProviderRegistrationPage(
+      {required BuildContext context,
+      required IProviderRegistrationPage registrationPage}) {
+    return _$callProviderRegistrationPageAsyncAction.run(() => super
+        .callProviderRegistrationPage(
+            context: context, registrationPage: registrationPage));
+  }
+
   late final _$_ProviderControllerBaseActionController =
       ActionController(name: '_ProviderControllerBase', context: context);
 
