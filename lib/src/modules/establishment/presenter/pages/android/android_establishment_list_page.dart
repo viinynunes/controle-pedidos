@@ -6,6 +6,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../core/drawer/widgets/android_custom_drawer.dart';
 import '../../../../core/widgets/custom_material_banner_error.dart';
+import 'android_establishment_registration_page.dart';
 import 'tiles/android_establishment_list_tile.dart';
 
 class AndroidEstablishmentListPage extends StatefulWidget {
@@ -78,8 +79,9 @@ class _AndroidEstablishmentListPageState
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            controller.callEstablishmentRegistrationPage(context: context),
+        onPressed: () => controller.callEstablishmentRegistrationPage(
+            context: context,
+            registrationPage: const AndroidEstablishmentRegistrationPage()),
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
@@ -114,7 +116,10 @@ class _AndroidEstablishmentListPageState
                             onTap: () {
                               controller.callEstablishmentRegistrationPage(
                                   context: context,
-                                  establishment: establishment);
+                                  registrationPage:
+                                      AndroidEstablishmentRegistrationPage(
+                                    establishment: establishment,
+                                  ));
                             },
                           );
                         },

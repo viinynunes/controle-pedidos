@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
-import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/modules/establishment/presenter/pages/i_establishment_registration_page.dart';
 import 'package:controle_pedidos/src/modules/establishment/presenter/stores/establishment_registration_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -8,19 +8,17 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../core/widgets/custom_text_form_field.dart';
 
-class AndroidEstablishmentRegistrationPage extends StatefulWidget {
-  const AndroidEstablishmentRegistrationPage({Key? key, this.establishment})
-      : super(key: key);
-
-  final Establishment? establishment;
+class AndroidEstablishmentRegistrationPage
+    extends IEstablishmentRegistrationPage {
+  const AndroidEstablishmentRegistrationPage({super.key, super.establishment});
 
   @override
-  State<AndroidEstablishmentRegistrationPage> createState() =>
+  State<StatefulWidget> createState() =>
       _AndroidEstablishmentRegistrationPageState();
 }
 
 class _AndroidEstablishmentRegistrationPageState
-    extends State<AndroidEstablishmentRegistrationPage> {
+    extends IEstablishmentRegistrationPageState {
   final controller = GetIt.I.get<EstablishmentRegistrationController>();
 
   @override

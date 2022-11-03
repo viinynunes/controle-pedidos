@@ -121,10 +121,11 @@ mixin _$EstablishmentController on _EstablishmentControllerBase, Store {
 
   @override
   Future callEstablishmentRegistrationPage(
-      {required BuildContext context, Establishment? establishment}) {
+      {required BuildContext context,
+      required IEstablishmentRegistrationPage registrationPage}) {
     return _$callEstablishmentRegistrationPageAsyncAction.run(() => super
         .callEstablishmentRegistrationPage(
-            context: context, establishment: establishment));
+            context: context, registrationPage: registrationPage));
   }
 
   late final _$_EstablishmentControllerBaseActionController =

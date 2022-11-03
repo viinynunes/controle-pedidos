@@ -1,11 +1,10 @@
 import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/usecases/i_establishment_usecase.dart';
 import 'package:controle_pedidos/src/modules/establishment/errors/establishment_errors.dart';
+import 'package:controle_pedidos/src/modules/establishment/presenter/pages/i_establishment_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-
-import '../pages/android/android_establishment_registration_page.dart';
 
 part 'establishment_controller.g.dart';
 
@@ -67,11 +66,11 @@ abstract class _EstablishmentControllerBase with Store {
 
   @action
   callEstablishmentRegistrationPage(
-      {required BuildContext context, Establishment? establishment}) async {
+      {required BuildContext context,
+      required IEstablishmentRegistrationPage registrationPage}) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) =>
-            AndroidEstablishmentRegistrationPage(establishment: establishment),
+        builder: (_) => registrationPage,
       ),
     );
 
