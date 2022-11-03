@@ -1,4 +1,4 @@
-import '../../entities/establishment.dart';
+import '../../../../../domain/entities/establishment.dart';
 import '../i_establishment_service.dart';
 
 class EstablishmentServiceImpl implements IEstablishmentService {

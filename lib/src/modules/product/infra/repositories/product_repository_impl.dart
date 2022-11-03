@@ -1,7 +1,7 @@
-import 'package:controle_pedidos/src/modules/product/domain/entities/product.dart';
+import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/modules/product/domain/repositories/i_product_repository.dart';
 import 'package:controle_pedidos/src/modules/product/errors/product_error.dart';
-import 'package:controle_pedidos/src/modules/product/infra/models/product_model.dart';
+import 'package:controle_pedidos/src/domain/models/product_model.dart';
 import 'package:dartz/dartz.dart';
 
 import '../datasources/i_product_datasource.dart';

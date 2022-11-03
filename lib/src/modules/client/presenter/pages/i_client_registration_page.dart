@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/client.dart';
+import '../../../../domain/entities/client.dart';
 
 abstract class IClientRegistrationPage extends StatefulWidget {
   const IClientRegistrationPage({super.key, this.client});

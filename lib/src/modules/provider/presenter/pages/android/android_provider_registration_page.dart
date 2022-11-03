@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
-import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/pages/i_provider_registration_page.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/stores/provider_registration_controller.dart';
 import 'package:flutter/material.dart';

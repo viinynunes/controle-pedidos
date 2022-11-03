@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../domain/entities/provider.dart';
+import '../../../../domain/entities/provider.dart';
 
 part 'provider_controller.g.dart';
 

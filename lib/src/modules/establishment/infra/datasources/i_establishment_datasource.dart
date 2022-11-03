@@ -1,4 +1,4 @@
-import '../models/establish_model.dart';
+import '../../../../domain/models/establish_model.dart';
 
 abstract class IEstablishmentDatasource {
   Future<EstablishmentModel> createEstablishment(EstablishmentModel establishment);

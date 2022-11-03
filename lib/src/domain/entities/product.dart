@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/domain/entities/provider.dart';
 
 class Product {
   String id;

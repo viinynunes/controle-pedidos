@@ -1,5 +1,5 @@
-import 'package:controle_pedidos/src/modules/product/domain/entities/product.dart';
-import 'package:controle_pedidos/src/modules/provider/infra/models/provider_model.dart';
+import 'package:controle_pedidos/src/domain/entities/product.dart';
+import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 
 class ProductModel extends Product {
   ProductModel(

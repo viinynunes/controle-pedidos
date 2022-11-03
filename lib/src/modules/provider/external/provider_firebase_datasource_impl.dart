@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
-import 'package:controle_pedidos/src/modules/provider/infra/models/provider_model.dart';
+import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 
 class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   final _providerCollection =

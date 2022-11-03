@@ -1,8 +1,8 @@
-import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/repositories/i_establishment_repository.dart';
 import 'package:controle_pedidos/src/modules/establishment/errors/establishment_errors.dart';
 import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
-import 'package:controle_pedidos/src/modules/establishment/infra/models/establish_model.dart';
+import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:dartz/dartz.dart';
 
 class EstablishmentRepositoryImpl implements IEstablishmentRepository {

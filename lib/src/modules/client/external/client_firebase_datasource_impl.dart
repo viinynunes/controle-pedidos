@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_datasource.dart';
-import 'package:controle_pedidos/src/modules/client/infra/models/client_model.dart';
+import 'package:controle_pedidos/src/domain/models/client_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 
 class ClientFirebaseDatasourceImpl implements IClientDatasource {

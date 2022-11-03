@@ -1,4 +1,4 @@
-import '../domain/entities/provider.dart';
+import '../../../domain/entities/provider.dart';
 
 abstract class IProviderService {
   void sortProviderListByRegistrationDate(

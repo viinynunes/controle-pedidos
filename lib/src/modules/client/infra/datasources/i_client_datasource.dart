@@ -1,4 +1,4 @@
-import '../models/client_model.dart';
+import '../../../../domain/models/client_model.dart';
 
 abstract class IClientDatasource {
   Future<ClientModel> createClient(ClientModel client);

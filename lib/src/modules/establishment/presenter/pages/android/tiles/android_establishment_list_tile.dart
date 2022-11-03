@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/entities/establishment.dart';
+import '../../../../../../domain/entities/establishment.dart';
 
 class AndroidEstablishmentListTile extends StatefulWidget {
   const AndroidEstablishmentListTile(

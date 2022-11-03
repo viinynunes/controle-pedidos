@@ -1,4 +1,4 @@
-import '../../../establishment/domain/entities/establishment.dart';
+import 'establishment.dart';
 
 class Provider {
   String id;

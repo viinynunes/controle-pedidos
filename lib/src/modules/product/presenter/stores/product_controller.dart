@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/product/domain/entities/product.dart';
+import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/modules/product/domain/usecases/i_product_usecase.dart';
 import 'package:controle_pedidos/src/modules/product/presenter/pages/i_product_registration_page.dart';
 import 'package:dartz/dartz.dart';

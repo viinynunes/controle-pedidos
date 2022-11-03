@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
-import 'package:controle_pedidos/src/modules/establishment/infra/models/establish_model.dart';
+import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 
 class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {

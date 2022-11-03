@@ -1,10 +1,10 @@
-import 'package:controle_pedidos/src/modules/client/domain/entities/client.dart';
+import 'package:controle_pedidos/src/domain/entities/client.dart';
 import 'package:controle_pedidos/src/modules/client/domain/repositories/i_client_repository.dart';
 import 'package:controle_pedidos/src/modules/client/errors/client_errors.dart';
 import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_datasource.dart';
 import 'package:dartz/dartz.dart';
 
-import '../models/client_model.dart';
+import '../../../../domain/models/client_model.dart';
 
 class ClientRepositoryImpl implements IClientRepository {
   final IClientDatasource _datasource;

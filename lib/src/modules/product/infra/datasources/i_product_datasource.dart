@@ -1,4 +1,4 @@
-import '../models/product_model.dart';
+import '../../../../domain/models/product_model.dart';
 
 abstract class IProductDatasource {
   Future<ProductModel> createProduct(ProductModel product);

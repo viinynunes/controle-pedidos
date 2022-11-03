@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/client/domain/entities/client.dart';
+import 'package:controle_pedidos/src/domain/entities/client.dart';
 import 'package:controle_pedidos/src/modules/client/domain/repositories/i_client_repository.dart';
 import 'package:controle_pedidos/src/modules/client/domain/usecases/i_client_usecase.dart';
 import 'package:controle_pedidos/src/modules/client/errors/client_errors.dart';

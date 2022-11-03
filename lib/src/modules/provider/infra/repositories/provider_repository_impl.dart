@@ -1,8 +1,8 @@
-import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/domain/entities/provider.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/repositories/i_provider_repository.dart';
 import 'package:controle_pedidos/src/modules/provider/errors/provider_error.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
-import 'package:controle_pedidos/src/modules/provider/infra/models/provider_model.dart';
+import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:dartz/dartz.dart';
 
 class ProviderRepositoryImpl implements IProviderRepository {

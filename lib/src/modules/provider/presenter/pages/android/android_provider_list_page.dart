@@ -1,6 +1,6 @@
 import 'package:controle_pedidos/src/modules/core/drawer/widgets/android_custom_drawer.dart';
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
-import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/domain/entities/provider.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/pages/android/android_provider_registration_page.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/stores/provider_controller.dart';
 import 'package:flutter/material.dart';

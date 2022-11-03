@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/product/domain/entities/product.dart';
+import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/modules/product/domain/repositories/i_product_repository.dart';
 import 'package:controle_pedidos/src/modules/product/domain/usecases/i_product_usecase.dart';
 import 'package:controle_pedidos/src/modules/product/errors/product_error.dart';

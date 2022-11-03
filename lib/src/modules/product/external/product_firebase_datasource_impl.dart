@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
-import 'package:controle_pedidos/src/modules/product/infra/models/product_model.dart';
+import 'package:controle_pedidos/src/domain/models/product_model.dart';
 
 import '../infra/datasources/i_product_datasource.dart';
 

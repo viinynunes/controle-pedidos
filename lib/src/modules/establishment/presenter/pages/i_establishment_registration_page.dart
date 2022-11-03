@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:flutter/material.dart';
 
 abstract class IEstablishmentRegistrationPage extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/domain/entities/provider.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/repositories/i_provider_repository.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/usecases/I_provider_usecase.dart';
 import 'package:controle_pedidos/src/modules/provider/errors/provider_error.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/entities/client.dart';
+import '../../../../../../domain/entities/client.dart';
 
 class AndroidClientListTile extends StatefulWidget {
   const AndroidClientListTile(

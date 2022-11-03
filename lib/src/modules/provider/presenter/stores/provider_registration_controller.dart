@@ -3,13 +3,13 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../establishment/domain/entities/establishment.dart';
+import '../../../../domain/entities/establishment.dart';
 import '../../../establishment/domain/services/i_establishment_service.dart';
 import '../../../establishment/domain/usecases/i_establishment_usecase.dart';
-import '../../../establishment/infra/models/establish_model.dart';
-import '../../domain/entities/provider.dart';
+import '../../../../domain/models/establish_model.dart';
+import '../../../../domain/entities/provider.dart';
 import '../../domain/usecases/I_provider_usecase.dart';
-import '../../infra/models/provider_model.dart';
+import '../../../../domain/models/provider_model.dart';
 
 part 'provider_registration_controller.g.dart';
 

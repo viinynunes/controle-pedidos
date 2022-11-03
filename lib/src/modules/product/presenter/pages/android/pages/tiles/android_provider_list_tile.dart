@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../domain/entities/product.dart';
+import '../../../../../../../domain/entities/product.dart';
 
 class AndroidProductListTile extends StatelessWidget {
   const AndroidProductListTile(

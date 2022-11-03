@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../domain/entities/client.dart';
+import '../../../../domain/entities/client.dart';
 import '../../errors/client_errors.dart';
 import '../pages/i_client_registration_page.dart';
 

@@ -1,15 +1,15 @@
-import 'package:controle_pedidos/src/modules/product/domain/entities/product.dart';
+import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/modules/product/domain/usecases/i_product_usecase.dart';
-import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/domain/entities/provider.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/usecases/I_provider_usecase.dart';
-import 'package:controle_pedidos/src/modules/provider/infra/models/provider_model.dart';
+import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../provider/services/i_provider_service.dart';
 import '../../errors/product_error.dart';
-import '../../infra/models/product_model.dart';
+import '../../../../domain/models/product_model.dart';
 
 part 'product_registration_controller.g.dart';
 

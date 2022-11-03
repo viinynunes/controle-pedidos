@@ -1,6 +1,6 @@
-import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/usecases/i_establishment_usecase.dart';
-import 'package:controle_pedidos/src/modules/establishment/infra/models/establish_model.dart';
+import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';

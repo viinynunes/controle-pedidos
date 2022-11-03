@@ -1,7 +1,7 @@
 import 'package:controle_pedidos/src/modules/core/helpers.dart';
-import 'package:controle_pedidos/src/modules/provider/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/domain/entities/provider.dart';
 
-import '../../../establishment/infra/models/establish_model.dart';
+import 'establish_model.dart';
 
 class ProviderModel extends Provider {
   ProviderModel(

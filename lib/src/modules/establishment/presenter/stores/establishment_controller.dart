@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/establishment/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/usecases/i_establishment_usecase.dart';
 import 'package:controle_pedidos/src/modules/establishment/errors/establishment_errors.dart';
 import 'package:controle_pedidos/src/modules/establishment/presenter/pages/i_establishment_registration_page.dart';

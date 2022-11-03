@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:string_validator/string_validator.dart';
 
-import '../../domain/entities/client.dart';
+import '../../../../domain/entities/client.dart';
 import '../../errors/client_errors.dart';
-import '../../infra/models/client_model.dart';
+import '../../../../domain/models/client_model.dart';
 
 part 'client_registration_controller.g.dart';
 
