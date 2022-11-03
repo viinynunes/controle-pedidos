@@ -2,7 +2,7 @@ import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pag
 import 'package:flutter/material.dart';
 
 import '../../client/presenter/pages/android/android_client_list_page.dart';
-import '../../establishment/presenter/android/pages/android_establishment_list_page.dart';
+import '../../establishment/presenter/pages/android/android_establishment_list_page.dart';
 import '../../provider/presenter/pages/android/android_provider_list_page.dart';
 
 class AndroidRegistrationNavigation extends StatefulWidget {

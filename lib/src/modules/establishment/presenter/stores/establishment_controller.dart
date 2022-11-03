@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../android/pages/android_establishment_registration_page.dart';
+import '../pages/android/android_establishment_registration_page.dart';
 
 part 'establishment_controller.g.dart';
 
