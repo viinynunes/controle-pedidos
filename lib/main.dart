@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/src/global_locator.dart';
 import 'package:controle_pedidos/src/modules/core/registration/android_registration_page.dart';
+import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ void main() async {
   }
 
   runApp(MaterialApp(
-    home: const AndroidRegistrationNavigation(),
+    home: const AndroidOrderListPage(),
     theme: ThemeData(
         useMaterial3: true,
         primarySwatch: Colors.deepPurple,
