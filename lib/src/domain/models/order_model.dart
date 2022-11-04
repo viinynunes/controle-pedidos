@@ -1,3 +1,5 @@
+import 'package:controle_pedidos/src/domain/models/order_item_model.dart';
+
 import '../entities/order.dart';
 import 'client_model.dart';
 
@@ -21,15 +23,15 @@ class OrderModel extends Order {
             client: order.client,
             orderItemList: order.orderItemList);
 
-  OrderModel.fromMap(
-      {required Map<String, dynamic> map, required super.orderItemList})
+  OrderModel.fromMap({required Map<String, dynamic> map})
       : super(
             id: map['id'],
             registrationDate: map['registrationDate'],
             registrationHour: map['registrationHour'],
             orderItemLength: map['orderItemLength'],
             enabled: map['enabled'],
-            client: ClientModel.fromMap(map['client']));
+            client: ClientModel.fromMap(map['client']),
+            orderItemList: map['orderItemList']);
 
   Map<String, dynamic> toMap() {
     return {
@@ -39,6 +41,8 @@ class OrderModel extends Order {
       'lengthOrderItemList': orderItemLength,
       'enabled': enabled,
       'client': ClientModel.fromClient(client).toMap(),
+      'orderItem': orderItemList
+          .map((item) => OrderItemModel.fromOrderItem(item: item).toMap())
     };
   }
 }
