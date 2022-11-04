@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/src/modules/core/registration/android_registration_page.dart';
+import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_list_page.dart';
 import 'package:controle_pedidos/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -75,7 +76,10 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
               AndroidDrawerTile(
                 icon: Icons.storage,
                 text: 'PEDIDOS',
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const AndroidOrderListPage()));
+                },
               ),
               AndroidDrawerTile(
                 icon: Icons.add_circle_sharp,
