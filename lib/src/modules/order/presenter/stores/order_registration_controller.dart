@@ -113,8 +113,7 @@ abstract class _OrderRegistrationControllerBase with Store {
         listIndex++;
         sortOrderItemList();
       }
-
-      clearSelectedProduct();
+      prepareToSelectNewProduct();
     } else {
       error = optionOf(OrderError('Nenhum produto selecionado'));
     }
@@ -133,10 +132,14 @@ abstract class _OrderRegistrationControllerBase with Store {
   }
 
   @action
-  clearSelectedProduct() {
+  prepareToSelectNewProduct() {
     selectedProduct = null;
     selectedOrderItem = null;
+    quantityFocus.requestFocus();
     quantityController.text = '1';
+    quantityController.selection = TextSelection(
+        baseOffset: 0, extentOffset: quantityController.value.text.length);
+    noteController.text = '';
   }
 
   @action

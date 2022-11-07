@@ -237,12 +237,12 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   }
 
   @override
-  dynamic clearSelectedProduct() {
+  dynamic prepareToSelectNewProduct() {
     final _$actionInfo =
         _$_OrderRegistrationControllerBaseActionController.startAction(
-            name: '_OrderRegistrationControllerBase.clearSelectedProduct');
+            name: '_OrderRegistrationControllerBase.prepareToSelectNewProduct');
     try {
-      return super.clearSelectedProduct();
+      return super.prepareToSelectNewProduct();
     } finally {
       _$_OrderRegistrationControllerBaseActionController
           .endAction(_$actionInfo);
