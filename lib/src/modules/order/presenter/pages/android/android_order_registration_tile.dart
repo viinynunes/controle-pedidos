@@ -18,27 +18,20 @@ class AndroidOrderItemRegistrationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slidable(
       key: UniqueKey(),
-      direction: Axis.vertical,
-      endActionPane: ActionPane(
+      direction: Axis.horizontal,
+      startActionPane: ActionPane(
         dismissible: null,
         motion: const ScrollMotion(),
         children: [
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SlidableAction(
-                  onPressed: (e) => onRemove(),
-                  icon: Icons.delete_forever,
-                  backgroundColor: Colors.red,
-                ),
-                SlidableAction(
-                  onPressed: (e) {},
-                  icon: Icons.edit,
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-              ],
-            ),
+          SlidableAction(
+            onPressed: (e) => onRemove(),
+            icon: Icons.delete_forever,
+            backgroundColor: Colors.red,
+          ),
+          SlidableAction(
+            onPressed: (e) {},
+            icon: Icons.edit,
+            backgroundColor: Theme.of(context).primaryColor,
           )
         ],
       ),
