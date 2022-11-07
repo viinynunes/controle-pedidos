@@ -4,8 +4,10 @@ import 'package:controle_pedidos/src/modules/order/presenter/pages/android/andro
 import 'package:controle_pedidos/src/modules/order/presenter/pages/i_order_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
 class AndroidOrderRegistrationPage extends IOrderRegistrationPage {
   const AndroidOrderRegistrationPage(
@@ -24,6 +26,18 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
   @override
   void initState() {
     super.initState();
+
+    reaction((p0) => controller.error, (p0) {
+      controller.error.map((error) {
+        HapticFeedback.heavyImpact();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.1,
+              child: Center(child: Text(error.message))),
+          backgroundColor: Theme.of(context).errorColor,
+        ));
+      });
+    });
 
     controller.initState(
         order: widget.order,
@@ -114,7 +128,7 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                                 color: Theme.of(context).backgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Observer(
                                   builder: (_) => Flexible(
