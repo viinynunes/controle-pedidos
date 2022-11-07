@@ -1,4 +1,6 @@
+import 'package:controle_pedidos/src/domain/entities/client.dart';
 import 'package:controle_pedidos/src/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/modules/client/presenter/pages/android/android_client_registration_page.dart';
 import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_registration_page.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/pages/android/android_provider_registration_page.dart';
 import 'package:dartz/dartz.dart';
@@ -55,6 +57,11 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
           builder: (_) => const AndroidProductRegistrationPage()));
     }
 
+    if (objectList is ObservableList<Client>) {
+      result = await Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => const AndroidClientRegistrationPage()));
+    }
+
     if (result != null) {
       objectList.add(result);
       filteredObjectList.add(result);
@@ -78,6 +85,10 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
 
     if (objectList is ObservableList<Product>) {
       auxList = productFilterCondition();
+    }
+
+    if (objectList is ObservableList<Client>) {
+      auxList = clientFilterCondition();
     }
 
     filteredObjectList = ObservableList.of(auxList);
@@ -119,6 +130,19 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
           p.category.toLowerCase().contains(searchText) ||
           p.enabled.toString().toLowerCase().contains(searchText)) {
         auxList.add(p);
+      }
+    }
+
+    return auxList;
+  }
+
+  List<Client> clientFilterCondition() {
+    List<Client> auxList = [];
+
+    for (Client c in objectList) {
+      if (c.name.toLowerCase().contains(searchText) ||
+          c.enabled.toString().toLowerCase().contains(searchText)) {
+        auxList.add(c);
       }
     }
 
