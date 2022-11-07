@@ -74,13 +74,17 @@ abstract class _OrderRegistrationControllerBase with Store {
   addSelectedOrderItemToList() {
     initOrderItem();
 
-    if (orderItemList.contains(selectedOrderItem)) {
-      error = optionOf(OrderError('Produto já adicionado'));
-    } else {
-      orderItemList.add(selectedOrderItem!);
-    }
+    if (formKey.currentState!.validate() && selectedOrderItem != null) {
+      if (orderItemList.contains(selectedOrderItem)) {
+        error = optionOf(OrderError('Produto já adicionado'));
+      } else {
+        orderItemList.add(selectedOrderItem!);
+      }
 
-    clearSelectedProduct();
+      clearSelectedProduct();
+    } else {
+      error = optionOf(OrderError('Nenhum produto selecionado'));
+    }
   }
 
   @action
@@ -97,10 +101,19 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   clearSelectedProduct() {
     selectedProduct = null;
+    selectedOrderItem = null;
   }
 
   @action
   removeItemFromOrderItemList(OrderItem item) {
     orderItemList.remove(item);
+  }
+
+  String? quantityValidator(String? text) {
+    var regExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(text!);
+    if (quantityController.text.isEmpty || quantityController.text == '0' || !regExp) {
+      return 'Quantidade Inválida';
+    }
+    return null;
   }
 }

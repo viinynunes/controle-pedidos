@@ -29,6 +29,7 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
 
     reaction((p0) => controller.error, (p0) {
       controller.error.map((error) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         HapticFeedback.heavyImpact();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: SizedBox(
@@ -96,15 +97,15 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                         flex: 1,
                         fit: FlexFit.tight,
                         child: TextFormField(
-                          controller: controller.quantityController,
-                          focusNode: controller.quantityFocus,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                          decoration: const InputDecoration(
-                            labelText: 'QTD',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
+                            controller: controller.quantityController,
+                            focusNode: controller.quantityFocus,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              labelText: 'QTD',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: controller.quantityValidator),
                       ),
                       SizedBox(width: size.width * 0.03),
                       Flexible(
