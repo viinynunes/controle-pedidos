@@ -6,7 +6,7 @@ class OrderItemModel extends OrderItem {
       {required super.productId,
       required super.quantity,
       required super.product,
-      super.note});
+      required super.note});
 
   OrderItemModel.fromOrderItem({required OrderItem item})
       : super(

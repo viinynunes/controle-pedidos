@@ -3,7 +3,7 @@ import 'product.dart';
 class OrderItem {
   String productId;
   int quantity;
-  String? note;
+  String note;
 
   Product product;
 
@@ -11,7 +11,7 @@ class OrderItem {
       {required this.productId,
       required this.quantity,
       required this.product,
-      this.note});
+      required this.note});
 
   @override
   bool operator ==(Object other) =>
