@@ -9,6 +9,7 @@ import '../../../../domain/entities/client.dart';
 import '../../../../domain/entities/order_item.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/models/order_item_model.dart';
+import '../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../errors/order_error.dart';
 
 part 'order_registration_controller.g.dart';
@@ -48,6 +49,17 @@ abstract class _OrderRegistrationControllerBase with Store {
   final orderItemListScrollController = ScrollController();
 
   final quantityFocus = FocusNode();
+
+  @action
+  callEntitySelectionDialog(BuildContext context) async {
+    final selectedProduct = await showDialog(
+        context: context,
+        builder: (_) => ShowEntitySelectionDialog(entityList: productList));
+
+    if (selectedProduct != null && selectedProduct is Product) {
+      selectProduct(selectedProduct);
+    }
+  }
 
   @action
   initState(

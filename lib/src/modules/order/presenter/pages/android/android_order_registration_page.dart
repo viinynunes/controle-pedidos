@@ -1,4 +1,3 @@
-import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/modules/core/widgets/show_entity_selection_dialog.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_registration_tile.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/i_order_registration_page.dart';
@@ -62,8 +61,7 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                   builder: (_) => ShowEntitySelectionDialog(
                       entityList: controller.clientList));
 
-              if (selectedClient != null &&
-                  selectedClient is Client) {
+              if (selectedClient != null && selectedClient is Client) {
                 controller.selectClient(selectedClient);
               }
             },
@@ -109,32 +107,28 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                         flex: 1,
                         fit: FlexFit.tight,
                         child: TextFormField(
-                            controller: controller.quantityController,
-                            focusNode: controller.quantityFocus,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            decoration: const InputDecoration(
-                              labelText: 'QTD',
-                              border: OutlineInputBorder(),
-                            ),
-                            validator: controller.quantityValidator),
+                          controller: controller.quantityController,
+                          focusNode: controller.quantityFocus,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          decoration: const InputDecoration(
+                            labelText: 'QTD',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: controller.quantityValidator,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) =>
+                              controller.callEntitySelectionDialog(context),
+                        ),
                       ),
                       SizedBox(width: size.width * 0.03),
                       Flexible(
                         flex: 4,
                         fit: FlexFit.tight,
                         child: GestureDetector(
-                          onTap: () async {
-                            final selectedProduct = await showDialog(
-                                context: context,
-                                builder: (_) => ShowEntitySelectionDialog(
-                                    entityList: controller.productList));
-
-                            if (selectedProduct != null &&
-                                selectedProduct is Product) {
-                              controller.selectProduct(selectedProduct);
-                            }
-                          },
+                          onTap: () =>
+                              controller.callEntitySelectionDialog(context),
                           child: Container(
                             height: size.height * 0.1,
                             decoration: BoxDecoration(
@@ -182,7 +176,8 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                         return orderItemList.isNotEmpty
                             ? ListView.builder(
                                 physics: const BouncingScrollPhysics(),
-                                controller: controller.orderItemListScrollController,
+                                controller:
+                                    controller.orderItemListScrollController,
                                 itemCount: orderItemList.length,
                                 itemBuilder: (_, index) {
                                   final item = orderItemList[index];
