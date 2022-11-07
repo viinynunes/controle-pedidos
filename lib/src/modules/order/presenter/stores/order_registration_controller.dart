@@ -52,13 +52,23 @@ abstract class _OrderRegistrationControllerBase with Store {
 
   @action
   callEntitySelectionDialog(BuildContext context) async {
-    final selectedProduct = await showDialog(
-        context: context,
-        builder: (_) => ShowEntitySelectionDialog(entityList: productList));
-
-    if (selectedProduct != null && selectedProduct is Product) {
-      selectProduct(selectedProduct);
-    }
+    await showDialog(
+      context: context,
+      builder: (_) => ShowEntitySelectionDialog(
+        entityList: productList,
+        fromTileSelection: (entity) {
+          if (entity != null && entity is Product) {
+            selectProduct(entity);
+          }
+        },
+        fromKeyboardSelection: (entity) {
+          if (entity != null && entity is Product) {
+            selectedProduct = entity;
+            addSelectedOrderItemToList();
+          }
+        },
+      ),
+    );
   }
 
   @action
@@ -126,6 +136,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   clearSelectedProduct() {
     selectedProduct = null;
     selectedOrderItem = null;
+    quantityController.text = '1';
   }
 
   @action

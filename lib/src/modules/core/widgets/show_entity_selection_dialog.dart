@@ -5,10 +5,16 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class ShowEntitySelectionDialog extends StatefulWidget {
-  const ShowEntitySelectionDialog({Key? key, required this.entityList})
+  const ShowEntitySelectionDialog(
+      {Key? key,
+      required this.entityList,
+      this.fromKeyboardSelection,
+      this.fromTileSelection})
       : super(key: key);
 
   final List entityList;
+  final Function(Object? entity)? fromKeyboardSelection;
+  final Function(Object? entity)? fromTileSelection;
 
   @override
   State<ShowEntitySelectionDialog> createState() =>
@@ -41,9 +47,10 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
             },
             onSubmitted: (e) {
               Navigator.of(context).pop(controller.filteredObjectList.first);
+              widget
+                  .fromKeyboardSelection!(controller.filteredObjectList.first);
             },
             textInputType: TextInputType.url,
-
           ),
           const SizedBox(
             height: 5,
@@ -76,7 +83,10 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
                 final entity = entityList[index];
 
                 return GestureDetector(
-                  onTap: () => Navigator.of(context).pop(entity),
+                  onTap: () {
+                    Navigator.of(context).pop(entity);
+                    widget.fromTileSelection!(entity);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
