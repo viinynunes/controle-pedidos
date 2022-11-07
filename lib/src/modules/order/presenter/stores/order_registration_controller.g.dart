@@ -25,19 +25,20 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
     });
   }
 
-  late final _$clientAtom =
-      Atom(name: '_OrderRegistrationControllerBase.client', context: context);
+  late final _$selectedClientAtom = Atom(
+      name: '_OrderRegistrationControllerBase.selectedClient',
+      context: context);
 
   @override
-  ClientModel? get client {
-    _$clientAtom.reportRead();
-    return super.client;
+  Client? get selectedClient {
+    _$selectedClientAtom.reportRead();
+    return super.selectedClient;
   }
 
   @override
-  set client(ClientModel? value) {
-    _$clientAtom.reportWrite(value, super.client, () {
-      super.client = value;
+  set selectedClient(Client? value) {
+    _$selectedClientAtom.reportWrite(value, super.selectedClient, () {
+      super.selectedClient = value;
     });
   }
 
@@ -188,6 +189,18 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   }
 
   @override
+  dynamic selectClient(Client client) {
+    final _$actionInfo = _$_OrderRegistrationControllerBaseActionController
+        .startAction(name: '_OrderRegistrationControllerBase.selectClient');
+    try {
+      return super.selectClient(client);
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic addSelectedOrderItemToList() {
     final _$actionInfo =
         _$_OrderRegistrationControllerBaseActionController.startAction(
@@ -244,7 +257,7 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   String toString() {
     return '''
 newOrder: ${newOrder},
-client: ${client},
+selectedClient: ${selectedClient},
 newOrderData: ${newOrderData},
 selectedProduct: ${selectedProduct},
 selectedOrderItem: ${selectedOrderItem},

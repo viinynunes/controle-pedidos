@@ -9,6 +9,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../domain/entities/client.dart';
+
 class AndroidOrderRegistrationPage extends IOrderRegistrationPage {
   const AndroidOrderRegistrationPage(
       {super.key,
@@ -54,9 +56,19 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
       appBar: AppBar(
         title: Observer(
           builder: (_) => TextButton(
-            onPressed: () {},
+            onPressed: () async {
+              final selectedClient = await showDialog(
+                  context: context,
+                  builder: (_) => ShowEntitySelectionDialog(
+                      entityList: controller.clientList));
+
+              if (selectedClient != null &&
+                  selectedClient is Client) {
+                controller.selectClient(selectedClient);
+              }
+            },
             child: Text(
-              controller.client?.name ?? 'Selecione o cliente',
+              controller.selectedClient?.name ?? 'Selecione o cliente',
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),

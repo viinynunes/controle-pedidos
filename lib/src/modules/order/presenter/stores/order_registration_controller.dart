@@ -1,5 +1,4 @@
 import 'package:controle_pedidos/src/domain/entities/order.dart' as o;
-import 'package:controle_pedidos/src/domain/models/client_model.dart';
 import 'package:controle_pedidos/src/domain/models/order_model.dart';
 import 'package:controle_pedidos/src/modules/order/domain/usecase/i_order_usecase.dart';
 import 'package:dartz/dartz.dart';
@@ -25,7 +24,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   @observable
   bool newOrder = false;
   @observable
-  ClientModel? client;
+  Client? selectedClient;
   @observable
   OrderModel? newOrderData;
   @observable
@@ -59,6 +58,7 @@ abstract class _OrderRegistrationControllerBase with Store {
     if (order != null) {
       newOrder = false;
       newOrderData = OrderModel.fromOrder(order: order);
+      selectedClient = newOrderData?.client;
       orderItemList = ObservableList.of(newOrderData?.orderItemList ?? []);
     }
 
@@ -68,6 +68,11 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   selectProduct(Product product) {
     selectedProduct = product;
+  }
+
+  @action
+  selectClient(Client client) {
+    selectedClient = client;
   }
 
   @action
@@ -111,7 +116,9 @@ abstract class _OrderRegistrationControllerBase with Store {
 
   String? quantityValidator(String? text) {
     var regExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(text!);
-    if (quantityController.text.isEmpty || quantityController.text == '0' || !regExp) {
+    if (quantityController.text.isEmpty ||
+        quantityController.text == '0' ||
+        !regExp) {
       return 'Quantidade Inválida';
     }
     return null;
