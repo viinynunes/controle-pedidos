@@ -45,4 +45,9 @@ class ProductModel extends Product {
           provider != null ? ProviderModel.fromProvider(provider!).toMap() : '',
     };
   }
+
+  @override
+  String toString() {
+    return '$name - $category - $providerName';
+  }
 }

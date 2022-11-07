@@ -1,22 +1,25 @@
+import 'product.dart';
+
 class OrderItem {
-  String id;
   String productId;
-  String productName;
   int quantity;
   String? note;
 
+  Product product;
+
   OrderItem(
-      {required this.id,
-        required this.productId,
-        required this.productName,
-        required this.quantity,
-        this.note});
+      {required this.productId,
+      required this.quantity,
+      required this.product,
+      this.note});
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is OrderItem && runtimeType == other.runtimeType && id == other.id;
+      other is OrderItem &&
+          runtimeType == other.runtimeType &&
+          productId == other.productId;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => productId.hashCode;
 }

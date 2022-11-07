@@ -1,35 +1,32 @@
 import 'package:controle_pedidos/src/domain/entities/order_item.dart';
+import 'package:controle_pedidos/src/domain/models/product_model.dart';
 
 class OrderItemModel extends OrderItem {
   OrderItemModel(
-      {required super.id,
-      required super.productId,
-      required super.productName,
+      {required super.productId,
       required super.quantity,
+      required super.product,
       super.note});
 
   OrderItemModel.fromOrderItem({required OrderItem item})
       : super(
-            id: item.id,
             productId: item.productId,
-            productName: item.productName,
             quantity: item.quantity,
+            product: item.product,
             note: item.note);
 
   OrderItemModel.fromMap({required Map<String, dynamic> map})
       : super(
-            id: map['id'],
             productId: map['productId'],
-            productName: map['productName'],
             quantity: map['quantity'],
+            product: map['product'],
             note: map['note']);
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'productId': productId,
-      'productName': productName,
       'quantity': quantity,
+      'product': ProductModel.fromProduct(product: product),
       'note': note
     };
   }

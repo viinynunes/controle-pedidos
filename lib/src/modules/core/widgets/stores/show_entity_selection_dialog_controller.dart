@@ -1,11 +1,13 @@
 import 'package:controle_pedidos/src/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_registration_page.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/pages/android/android_provider_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../establishment/presenter/pages/android/android_establishment_registration_page.dart';
+import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
+import '../../../establishment/presenter/pages/android/android_establishment_registration_page.dart';
 import '../errors/show_entity_selection_dialog_error.dart';
 
 part 'show_entity_selection_dialog_controller.g.dart';
@@ -48,6 +50,11 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
           builder: (_) => const AndroidEstablishmentRegistrationPage()));
     }
 
+    if (objectList is ObservableList<Product>) {
+      result = await Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => const AndroidProductRegistrationPage()));
+    }
+
     if (result != null) {
       objectList.add(result);
       filteredObjectList.add(result);
@@ -67,6 +74,10 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
 
     if (objectList is ObservableList<Establishment>) {
       auxList = establishmentFilterCondition();
+    }
+
+    if (objectList is ObservableList<Product>) {
+      auxList = productFilterCondition();
     }
 
     filteredObjectList = ObservableList.of(auxList);
@@ -91,6 +102,21 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
     for (Provider p in objectList) {
       if (p.name.toLowerCase().contains(searchText) ||
           p.location.toLowerCase().contains(searchText) ||
+          p.enabled.toString().toLowerCase().contains(searchText)) {
+        auxList.add(p);
+      }
+    }
+
+    return auxList;
+  }
+
+  List<Product> productFilterCondition() {
+    List<Product> auxList = [];
+
+    for (Product p in objectList) {
+      if (p.name.toLowerCase().contains(searchText) ||
+          p.providerName.toLowerCase().contains(searchText) ||
+          p.category.toLowerCase().contains(searchText) ||
           p.enabled.toString().toLowerCase().contains(searchText)) {
         auxList.add(p);
       }
