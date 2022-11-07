@@ -182,6 +182,7 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                         return orderItemList.isNotEmpty
                             ? ListView.builder(
                                 physics: const BouncingScrollPhysics(),
+                                controller: controller.orderItemListScrollController,
                                 itemCount: orderItemList.length,
                                 itemBuilder: (_, index) {
                                   final item = orderItemList[index];

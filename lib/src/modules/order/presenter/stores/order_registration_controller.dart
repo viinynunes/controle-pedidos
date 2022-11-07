@@ -40,9 +40,12 @@ abstract class _OrderRegistrationControllerBase with Store {
   @observable
   Option<OrderError> error = none();
 
+  int listIndex = 0;
+
   final formKey = GlobalKey<FormState>();
   final quantityController = TextEditingController();
   final noteController = TextEditingController();
+  final orderItemListScrollController = ScrollController();
 
   final quantityFocus = FocusNode();
 
@@ -60,6 +63,7 @@ abstract class _OrderRegistrationControllerBase with Store {
       newOrderData = OrderModel.fromOrder(order: order);
       selectedClient = newOrderData?.client;
       orderItemList = ObservableList.of(newOrderData?.orderItemList ?? []);
+      sortOrderItemList();
     }
 
     quantityController.text = '1';
@@ -84,6 +88,8 @@ abstract class _OrderRegistrationControllerBase with Store {
         error = optionOf(OrderError('Produto já adicionado'));
       } else {
         orderItemList.add(selectedOrderItem!);
+        listIndex++;
+        sortOrderItemList();
       }
 
       clearSelectedProduct();
@@ -96,6 +102,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   initOrderItem() {
     if (selectedProduct != null) {
       selectedOrderItem = OrderItemModel(
+          listIndex: listIndex,
           productId: selectedProduct!.id,
           quantity: int.parse(quantityController.text),
           note: noteController.text,
@@ -112,6 +119,10 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   removeItemFromOrderItemList(OrderItem item) {
     orderItemList.remove(item);
+  }
+
+  sortOrderItemList() {
+    orderItemList.sort((a, b) => b.listIndex.compareTo(a.listIndex));
   }
 
   String? quantityValidator(String? text) {

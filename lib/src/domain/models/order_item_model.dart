@@ -3,13 +3,15 @@ import 'package:controle_pedidos/src/domain/models/product_model.dart';
 
 class OrderItemModel extends OrderItem {
   OrderItemModel(
-      {required super.productId,
+      {required super.listIndex,
+      required super.productId,
       required super.quantity,
       required super.product,
       required super.note});
 
   OrderItemModel.fromOrderItem({required OrderItem item})
       : super(
+            listIndex: item.listIndex,
             productId: item.productId,
             quantity: item.quantity,
             product: item.product,
@@ -17,6 +19,7 @@ class OrderItemModel extends OrderItem {
 
   OrderItemModel.fromMap({required Map<String, dynamic> map})
       : super(
+            listIndex: map['listIndex'],
             productId: map['productId'],
             quantity: map['quantity'],
             product: map['product'],
@@ -24,6 +27,7 @@ class OrderItemModel extends OrderItem {
 
   Map<String, dynamic> toMap() {
     return {
+      'listIndex': listIndex,
       'productId': productId,
       'quantity': quantity,
       'product': ProductModel.fromProduct(product: product),
