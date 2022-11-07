@@ -42,6 +42,8 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
             onSubmitted: (e) {
               Navigator.of(context).pop(controller.filteredObjectList.first);
             },
+            textInputType: TextInputType.url,
+
           ),
           const SizedBox(
             height: 5,
