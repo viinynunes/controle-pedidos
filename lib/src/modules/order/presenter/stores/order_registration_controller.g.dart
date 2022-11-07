@@ -166,6 +166,16 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
         .run(() => super.callEntitySelectionDialog(context));
   }
 
+  late final _$callAddNoteDialogAsyncAction = AsyncAction(
+      '_OrderRegistrationControllerBase.callAddNoteDialog',
+      context: context);
+
+  @override
+  Future callAddNoteDialog(BuildContext context) {
+    return _$callAddNoteDialogAsyncAction
+        .run(() => super.callAddNoteDialog(context));
+  }
+
   late final _$_OrderRegistrationControllerBaseActionController =
       ActionController(
           name: '_OrderRegistrationControllerBase', context: context);

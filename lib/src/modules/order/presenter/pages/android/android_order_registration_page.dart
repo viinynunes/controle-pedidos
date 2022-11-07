@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:rect_getter/rect_getter.dart';
 
 import '../../../../../domain/entities/client.dart';
 
@@ -155,12 +156,15 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                                   ),
                                 ),
                                 Flexible(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.note),
-                                  ),
-                                ),
+                                    flex: 1,
+                                    child: RectGetter(
+                                      key: controller.rectKey,
+                                      child: IconButton(
+                                        onPressed: () => controller
+                                            .callAddNoteDialog(context),
+                                        icon: const Icon(Icons.note),
+                                      ),
+                                    )),
                               ],
                             ),
                           ),
@@ -168,6 +172,7 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                       )
                     ],
                   ),
+                  const SizedBox(height: 10),
                   Expanded(
                     child: Observer(
                       builder: (_) {

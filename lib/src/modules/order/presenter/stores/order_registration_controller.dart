@@ -4,6 +4,7 @@ import 'package:controle_pedidos/src/modules/order/domain/usecase/i_order_usecas
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:rect_getter/rect_getter.dart';
 
 import '../../../../domain/entities/client.dart';
 import '../../../../domain/entities/order_item.dart';
@@ -44,11 +45,34 @@ abstract class _OrderRegistrationControllerBase with Store {
   int listIndex = 0;
 
   final formKey = GlobalKey<FormState>();
+  final rectKey = RectGetter.createGlobalKey();
+
   final quantityController = TextEditingController();
   final noteController = TextEditingController();
   final orderItemListScrollController = ScrollController();
 
   final quantityFocus = FocusNode();
+  final noteFocus = FocusNode();
+
+  @action
+  initState(
+      {required o.Order? order,
+      required List<Product> productList,
+      required List<Client> clientList}) {
+    this.productList = ObservableList.of(productList);
+
+    this.clientList = ObservableList.of(clientList);
+
+    if (order != null) {
+      newOrder = false;
+      newOrderData = OrderModel.fromOrder(order: order);
+      selectedClient = newOrderData?.client;
+      orderItemList = ObservableList.of(newOrderData?.orderItemList ?? []);
+      sortOrderItemList();
+    }
+
+    quantityController.text = '1';
+  }
 
   @action
   callEntitySelectionDialog(BuildContext context) async {
@@ -72,23 +96,34 @@ abstract class _OrderRegistrationControllerBase with Store {
   }
 
   @action
-  initState(
-      {required o.Order? order,
-      required List<Product> productList,
-      required List<Client> clientList}) {
-    this.productList = ObservableList.of(productList);
+  callAddNoteDialog(BuildContext context) async {
+    var rect = RectGetter.getRectFromKey(rectKey);
 
-    this.clientList = ObservableList.of(clientList);
+    noteFocus.requestFocus();
 
-    if (order != null) {
-      newOrder = false;
-      newOrderData = OrderModel.fromOrder(order: order);
-      selectedClient = newOrderData?.client;
-      orderItemList = ObservableList.of(newOrderData?.orderItemList ?? []);
-      sortOrderItemList();
-    }
-
-    quantityController.text = '1';
+    await showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(
+            rect!.left + 5, rect.top + 40, rect.right, rect.bottom),
+        items: [
+          PopupMenuItem(
+            child: SizedBox(
+              width: 500,
+              child: TextField(
+                focusNode: noteFocus,
+                controller: noteController,
+                decoration: InputDecoration(
+                  labelText: 'Observação',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8))),
+                onSubmitted: (text) {
+                  noteController.text = text;
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ),
+        ]);
   }
 
   @action
