@@ -47,8 +47,10 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
             },
             onSubmitted: (e) {
               Navigator.of(context).pop(controller.filteredObjectList.first);
-              widget
-                  .fromKeyboardSelection!(controller.filteredObjectList.first);
+              if (widget.fromKeyboardSelection != null) {
+                widget.fromKeyboardSelection!(
+                    controller.filteredObjectList.first);
+              }
             },
             textInputType: TextInputType.url,
           ),
@@ -85,7 +87,10 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop(entity);
-                    widget.fromTileSelection!(entity);
+
+                    if (widget.fromTileSelection != null) {
+                      widget.fromTileSelection!(entity);
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
