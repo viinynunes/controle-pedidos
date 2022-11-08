@@ -8,17 +8,25 @@ import 'package:controle_pedidos/src/modules/order/presenter/stores/order_contro
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_controller.dart';
 import 'package:get_it/get_it.dart';
 
+import 'services/i_order_service.dart';
+import 'services/impl/order_service_impl.dart';
+
 final orderLocator = GetIt.instance;
 
 void setUpOrderLocator() {
+  orderLocator.registerLazySingleton<IOrderService>(() => OrderServiceImpl());
   orderLocator.registerLazySingleton<IOrderDatasource>(
       () => OrderFirebaseDatasourceImpl());
   orderLocator.registerLazySingleton<IOrderRepository>(
       () => OrderRepositoryImpl(orderLocator()));
   orderLocator.registerLazySingleton<IOrderUsecase>(
       () => OrderUsecaseImpl(orderLocator()));
-  orderLocator.registerLazySingleton<OrderController>(
-      () => OrderController(orderLocator(), orderLocator(), orderLocator()));
+  orderLocator.registerLazySingleton<OrderController>(() => OrderController(
+        orderLocator(),
+        orderLocator(),
+        orderLocator(),
+        orderLocator(),
+      ));
   orderLocator.registerFactory<OrderRegistrationController>(
       () => OrderRegistrationController(orderLocator()));
 }

@@ -10,18 +10,20 @@ import '../../../../domain/entities/order.dart' as o;
 import '../../../client/domain/usecases/i_client_usecase.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../errors/order_error.dart';
+import '../../services/i_order_service.dart';
 
 part 'order_controller.g.dart';
 
 class OrderController = _OrderControllerBase with _$OrderController;
 
 abstract class _OrderControllerBase with Store {
+  final IOrderService orderService;
   final IOrderUsecase orderUsecase;
   final IClientUsecase clientUsecase;
   final IProductUsecase productUsecase;
 
-  _OrderControllerBase(
-      this.orderUsecase, this.clientUsecase, this.productUsecase);
+  _OrderControllerBase(this.orderUsecase, this.clientUsecase,
+      this.productUsecase, this.orderService);
 
   @observable
   String searchText = '';
@@ -66,6 +68,8 @@ abstract class _OrderControllerBase with Store {
     }, (r) {
       orderList = ObservableList.of(r);
       filteredOrderList = ObservableList.of(r);
+
+      orderService.sortOrderListByRegistrationHour(orderList);
     });
 
     loading = false;
@@ -108,6 +112,8 @@ abstract class _OrderControllerBase with Store {
 
       orderList.add(result);
     }
+
+    orderService.sortOrderListByRegistrationHour(orderList);
   }
 
   @action
