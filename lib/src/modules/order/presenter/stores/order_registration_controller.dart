@@ -24,7 +24,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   _OrderRegistrationControllerBase(this.orderUsecase);
 
   @observable
-  bool newOrder = false;
+  bool newOrder = true;
   @observable
   Client? selectedClient;
   @observable
