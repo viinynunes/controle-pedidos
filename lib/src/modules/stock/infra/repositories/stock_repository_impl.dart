@@ -1,14 +1,16 @@
 import 'package:controle_pedidos/src/domain/entities/provider.dart';
-
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
-
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
-
 import 'package:dartz/dartz.dart';
 
 import '../../domain/repositories/i_stock_repository.dart';
+import '../datasources/i_stock_datasource.dart';
 
 class StockRepositoryImpl implements IStockRepository {
+  final IStockDatasource _datasource;
+
+  StockRepositoryImpl(this._datasource);
+
   @override
   Future<Either<StockError, Stock>> createStock() {
     // TODO: implement createStock
@@ -62,10 +64,9 @@ class StockRepositoryImpl implements IStockRepository {
   @override
   Future<Either<StockError, List<Stock>>> getStockListByProviderBetweenDates(
       {required Provider provider,
-        required DateTime iniDate,
-        required DateTime endDate}) {
+      required DateTime iniDate,
+      required DateTime endDate}) {
     // TODO: implement getStockListByProviderBetweenDates
     throw UnimplementedError();
   }
-
 }

@@ -3,9 +3,14 @@ import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../repositories/i_stock_repository.dart';
 import '../i_stock_usecase.dart';
 
 class StockUsecaseImpl implements IStockUsecase {
+  final IStockRepository _repository;
+
+  StockUsecaseImpl(this._repository);
+
   @override
   Future<Either<StockError, Stock>> createStock() {
     // TODO: implement createStock
