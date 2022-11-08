@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/drawer/widgets/android_custom_drawer.dart';
+import 'tiles/android_order_list_tile.dart';
 
 class AndroidOrderListPage extends StatefulWidget {
   const AndroidOrderListPage({Key? key}) : super(key: key);
@@ -131,8 +132,18 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                             itemBuilder: (_, index) {
                               final order = orderList[index];
 
-                              return ListTile(
-                                title: Text(order.toString()),
+                              return AndroidOrderListTile(
+                                order: order,
+                                onTap: () =>
+                                    controller.callOrderRegistrationPage(
+                                  context: context,
+                                  registrationPage:
+                                      AndroidOrderRegistrationPage(
+                                    productList: controller.productList,
+                                    clientList: controller.clientList,
+                                    order: order,
+                                  ),
+                                ),
                               );
                             },
                           )
