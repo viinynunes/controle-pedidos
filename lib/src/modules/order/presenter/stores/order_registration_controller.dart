@@ -75,20 +75,29 @@ abstract class _OrderRegistrationControllerBase with Store {
   }
 
   @action
-  callEntitySelectionDialog(BuildContext context) async {
+  callEntitySelectionDialog(
+      {required BuildContext context, required List<Object> entityList}) async {
     await showDialog(
       context: context,
       builder: (_) => ShowEntitySelectionDialog(
-        entityList: productList,
+        entityList: entityList,
         fromTileSelection: (entity) {
           if (entity != null && entity is Product) {
             selectProduct(entity);
+          }
+
+          if (entity != null && entity is Client) {
+            selectClient(entity);
           }
         },
         fromKeyboardSelection: (entity) {
           if (entity != null && entity is Product) {
             selectedProduct = entity;
             addSelectedOrderItemToList();
+          }
+
+          if (entity != null && entity is Client) {
+            selectClient(entity);
           }
         },
       ),
@@ -113,7 +122,7 @@ abstract class _OrderRegistrationControllerBase with Store {
                 focusNode: noteFocus,
                 controller: noteController,
                 decoration: InputDecoration(
-                  labelText: 'Observação',
+                    labelText: 'Observação',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8))),
                 onSubmitted: (text) {

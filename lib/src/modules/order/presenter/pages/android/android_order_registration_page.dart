@@ -1,4 +1,3 @@
-import 'package:controle_pedidos/src/modules/core/widgets/show_entity_selection_dialog.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_registration_tile.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/i_order_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_controller.dart';
@@ -8,8 +7,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rect_getter/rect_getter.dart';
-
-import '../../../../../domain/entities/client.dart';
 
 class AndroidOrderRegistrationPage extends IOrderRegistrationPage {
   const AndroidOrderRegistrationPage(
@@ -56,16 +53,8 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
       appBar: AppBar(
         title: Observer(
           builder: (_) => TextButton(
-            onPressed: () async {
-              final selectedClient = await showDialog(
-                  context: context,
-                  builder: (_) => ShowEntitySelectionDialog(
-                      entityList: controller.clientList));
-
-              if (selectedClient != null && selectedClient is Client) {
-                controller.selectClient(selectedClient);
-              }
-            },
+            onPressed: () => controller.callEntitySelectionDialog(
+                context: context, entityList: controller.clientList),
             child: Text(
               controller.selectedClient?.name ?? 'Selecione o cliente',
               style: Theme.of(context).textTheme.titleMedium,
@@ -120,7 +109,9 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           onFieldSubmitted: (_) =>
-                              controller.callEntitySelectionDialog(context),
+                              controller.callEntitySelectionDialog(
+                                  context: context,
+                                  entityList: controller.productList),
                         ),
                       ),
                       SizedBox(width: size.width * 0.03),
@@ -128,8 +119,9 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                         flex: 4,
                         fit: FlexFit.tight,
                         child: GestureDetector(
-                          onTap: () =>
-                              controller.callEntitySelectionDialog(context),
+                          onTap: () => controller.callEntitySelectionDialog(
+                              context: context,
+                              entityList: controller.productList),
                           child: Container(
                             height: size.height * 0.1,
                             decoration: BoxDecoration(

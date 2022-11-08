@@ -161,9 +161,10 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
       context: context);
 
   @override
-  Future callEntitySelectionDialog(BuildContext context) {
-    return _$callEntitySelectionDialogAsyncAction
-        .run(() => super.callEntitySelectionDialog(context));
+  Future callEntitySelectionDialog(
+      {required BuildContext context, required List<Object> entityList}) {
+    return _$callEntitySelectionDialogAsyncAction.run(() => super
+        .callEntitySelectionDialog(context: context, entityList: entityList));
   }
 
   late final _$callAddNoteDialogAsyncAction = AsyncAction(
