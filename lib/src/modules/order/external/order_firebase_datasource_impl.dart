@@ -41,19 +41,16 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   Future<OrderModel> updateOrder(OrderModel order) async {
     List<OrderItemModel> beforeUpdateOrderItemsList = [];
 
-    final beforeOrderItemSnap = await _orderCollection
-        .doc(order.id)
-        .get()
-        .catchError((e) => throw FirebaseException(plugin: ''));
+    final outdatedOrder = await _orderCollection.doc(order.id).get().catchError(
+        (e) => throw FirebaseException(
+            plugin: 'GET OUTDATED ORDER ERROR', message: e.toString()));
 
-    for (var item in beforeOrderItemSnap.get('orderItemList')) {
-      beforeUpdateOrderItemsList.add(OrderItemModel.fromMap(map: item.data()));
+    for (var item in outdatedOrder.get('orderItemList')) {
+      beforeUpdateOrderItemsList.add(OrderItemModel.fromMap(map: item));
     }
 
-    final updateOrderSnap = await _orderCollection
-        .doc(order.id)
-        .update(order.toMap())
-        .catchError((e) => throw FirebaseException(
+    await _orderCollection.doc(order.id).update(order.toMap()).catchError((e) =>
+        throw FirebaseException(
             plugin: 'UPDATE ORDER ERROR', message: e.toString()));
 
     for (var item in order.orderItemList) {

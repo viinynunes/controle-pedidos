@@ -209,21 +209,36 @@ abstract class _OrderRegistrationControllerBase with Store {
   }
 
   @action
-  createOrder(BuildContext context) async {
-    if (orderItemList.isNotEmpty && selectedClient != null) {
-      final createResult = await orderUsecase.createOrder(OrderModel(
-          id: newOrderData?.id ?? '0',
-          registrationDate: DateTime.now(),
-          registrationHour: DateTime.now(),
-          orderItemLength: orderItemList.length,
-          enabled: true,
-          client: selectedClient!,
-          orderItemList: orderItemList));
+  initNewOrderData() {
+    newOrderData = OrderModel(
+        id: newOrderData?.id ?? '0',
+        registrationDate: newOrderData?.registrationDate ?? DateTime.now(),
+        registrationHour: newOrderData?.registrationHour ?? DateTime.now(),
+        orderItemLength: orderItemList.length,
+        enabled: true,
+        client: selectedClient!,
+        orderItemList: orderItemList);
+  }
 
-      createResult.fold((l) => error = optionOf(l), (r) {
-        success = optionOf(r);
-        Navigator.of(context).pop(r);
-      });
+  @action
+  saveOrder(BuildContext context) async {
+    if (orderItemList.isNotEmpty && selectedClient != null) {
+      initNewOrderData();
+      if (newOrder) {
+        final createResult = await orderUsecase.createOrder(newOrderData!);
+
+        createResult.fold((l) => error = optionOf(l), (r) {
+          success = optionOf(r);
+          Navigator.of(context).pop(r);
+        });
+      } else {
+        final updateResult = await orderUsecase.updateOrder(newOrderData!);
+
+        updateResult.fold((l) => error = optionOf(l), (r) {
+          success = optionOf(r);
+          Navigator.of(context).pop(r);
+        });
+      }
     }
   }
 

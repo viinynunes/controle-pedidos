@@ -156,6 +156,22 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
     });
   }
 
+  late final _$successAtom =
+      Atom(name: '_OrderRegistrationControllerBase.success', context: context);
+
+  @override
+  Option<o.Order> get success {
+    _$successAtom.reportRead();
+    return super.success;
+  }
+
+  @override
+  set success(Option<o.Order> value) {
+    _$successAtom.reportWrite(value, super.success, () {
+      super.success = value;
+    });
+  }
+
   late final _$callEntitySelectionDialogAsyncAction = AsyncAction(
       '_OrderRegistrationControllerBase.callEntitySelectionDialog',
       context: context);
@@ -175,6 +191,15 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   Future callAddNoteDialog(BuildContext context) {
     return _$callAddNoteDialogAsyncAction
         .run(() => super.callAddNoteDialog(context));
+  }
+
+  late final _$saveOrderAsyncAction = AsyncAction(
+      '_OrderRegistrationControllerBase.saveOrder',
+      context: context);
+
+  @override
+  Future saveOrder(BuildContext context) {
+    return _$saveOrderAsyncAction.run(() => super.saveOrder(context));
   }
 
   late final _$_OrderRegistrationControllerBaseActionController =
@@ -301,6 +326,18 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   }
 
   @override
+  dynamic initNewOrderData() {
+    final _$actionInfo = _$_OrderRegistrationControllerBaseActionController
+        .startAction(name: '_OrderRegistrationControllerBase.initNewOrderData');
+    try {
+      return super.initNewOrderData();
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 newOrder: ${newOrder},
@@ -311,7 +348,8 @@ selectedOrderItem: ${selectedOrderItem},
 orderItemList: ${orderItemList},
 productList: ${productList},
 clientList: ${clientList},
-error: ${error}
+error: ${error},
+success: ${success}
     ''';
   }
 }

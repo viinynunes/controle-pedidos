@@ -102,6 +102,10 @@ abstract class _OrderControllerBase with Store {
     ));
 
     if (result != null && result is o.Order) {
+      if (registrationPage.order != null) {
+        orderList.remove(registrationPage.order);
+      }
+
       orderList.add(result);
     }
   }
