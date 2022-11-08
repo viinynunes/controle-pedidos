@@ -73,7 +73,8 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
         ],
       ),
       content: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.25,
+        height: MediaQuery.of(context).size.height * 0.30,
+        width: double.maxFinite,
         child: Observer(
           builder: (_) {
             var entityList = controller.filteredObjectList;
