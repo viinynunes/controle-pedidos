@@ -144,6 +144,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                                     order: order,
                                   ),
                                 ),
+                                onDisable: () => controller.disableOrder(order),
                               );
                             },
                           )

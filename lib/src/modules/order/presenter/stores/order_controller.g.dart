@@ -183,6 +183,14 @@ mixin _$OrderController on _OrderControllerBase, Store {
             context: context, registrationPage: registrationPage));
   }
 
+  late final _$disableOrderAsyncAction =
+      AsyncAction('_OrderControllerBase.disableOrder', context: context);
+
+  @override
+  Future disableOrder(o.Order order) {
+    return _$disableOrderAsyncAction.run(() => super.disableOrder(order));
+  }
+
   late final _$getProductListByEnabledAsyncAction = AsyncAction(
       '_OrderControllerBase.getProductListByEnabled',
       context: context);

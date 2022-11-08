@@ -111,6 +111,20 @@ abstract class _OrderControllerBase with Store {
   }
 
   @action
+  disableOrder(o.Order order) async {
+    loading = true;
+
+    final disableResult = await orderUsecase.disableOrder(order);
+
+    disableResult.fold((l) => error = optionOf(l), (r) {
+      orderList.remove(order);
+      filteredOrderList.remove(order);
+    });
+
+    loading = false;
+  }
+
+  @action
   getProductListByEnabled() async {
     loading = true;
 
