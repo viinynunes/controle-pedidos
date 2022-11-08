@@ -83,25 +83,40 @@ abstract class _OrderRegistrationControllerBase with Store {
         entityList: entityList,
         fromTileSelection: (entity) {
           if (entity != null && entity is Product) {
-            selectProduct(entity);
+            selectedProductHandler(entity, true);
           }
 
           if (entity != null && entity is Client) {
-            selectClient(entity);
+            selectedClientHandler(entity);
           }
         },
         fromKeyboardSelection: (entity) {
           if (entity != null && entity is Product) {
-            selectedProduct = entity;
-            addSelectedOrderItemToList();
+            selectedProductHandler(entity, false);
           }
 
           if (entity != null && entity is Client) {
-            selectClient(entity);
+            selectedClientHandler(entity);
           }
         },
       ),
     );
+  }
+
+  @action
+  selectedClientHandler(Client client) {
+    selectClient(client);
+    prepareToSelectNewProduct();
+  }
+
+  @action
+  selectedProductHandler(Product product, bool fromTile) {
+    if (fromTile) {
+      selectProduct(product);
+    } else {
+      selectedProduct = product;
+      addSelectedOrderItemToList();
+    }
   }
 
   @action

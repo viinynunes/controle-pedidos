@@ -198,6 +198,32 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   }
 
   @override
+  dynamic selectedClientHandler(Client client) {
+    final _$actionInfo =
+        _$_OrderRegistrationControllerBaseActionController.startAction(
+            name: '_OrderRegistrationControllerBase.selectedClientHandler');
+    try {
+      return super.selectedClientHandler(client);
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic selectedProductHandler(Product product, bool fromTile) {
+    final _$actionInfo =
+        _$_OrderRegistrationControllerBaseActionController.startAction(
+            name: '_OrderRegistrationControllerBase.selectedProductHandler');
+    try {
+      return super.selectedProductHandler(product, fromTile);
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic selectProduct(Product product) {
     final _$actionInfo = _$_OrderRegistrationControllerBaseActionController
         .startAction(name: '_OrderRegistrationControllerBase.selectProduct');
