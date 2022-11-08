@@ -74,6 +74,9 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
               ),
             ),
           ),
+          IconButton(
+              onPressed: () => controller.createOrder(context),
+              icon: const Icon(Icons.save)),
         ],
       ),
       floatingActionButton: FloatingActionButton(

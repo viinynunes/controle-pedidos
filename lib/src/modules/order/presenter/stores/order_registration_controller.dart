@@ -41,6 +41,8 @@ abstract class _OrderRegistrationControllerBase with Store {
   var clientList = ObservableList<Client>.of([]);
   @observable
   Option<OrderError> error = none();
+  @observable
+  Option<o.Order> success = none();
 
   int listIndex = 0;
 
@@ -204,6 +206,25 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   removeItemFromOrderItemList(OrderItem item) {
     orderItemList.remove(item);
+  }
+
+  @action
+  createOrder(BuildContext context) async {
+    if (orderItemList.isNotEmpty && selectedClient != null) {
+      final createResult = await orderUsecase.createOrder(OrderModel(
+          id: newOrderData?.id ?? '0',
+          registrationDate: DateTime.now(),
+          registrationHour: DateTime.now(),
+          orderItemLength: orderItemList.length,
+          enabled: true,
+          client: selectedClient!,
+          orderItemList: orderItemList));
+
+      createResult.fold((l) => error = optionOf(l), (r) {
+        success = optionOf(r);
+        Navigator.of(context).pop(r);
+      });
+    }
   }
 
   sortOrderItemList() {
