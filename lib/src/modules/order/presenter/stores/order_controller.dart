@@ -83,7 +83,12 @@ abstract class _OrderControllerBase with Store {
     List<o.Order> auxList = [];
 
     for (o.Order i in orderList) {
-      if (i.client.name.toLowerCase().contains(searchText)) {
+      if (i.client.name.toLowerCase().contains(searchText) ||
+          i.orderItemList.any((element) =>
+              element.product.name.toLowerCase().contains(searchText) ||
+              element.product.providerName
+                  .toLowerCase()
+                  .contains(searchText))) {
         auxList.add(i);
       }
     }
