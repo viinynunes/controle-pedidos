@@ -21,13 +21,13 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     order.id = snap.id;
 
     for (var item in order.orderItemList) {
-      await _orderCollection
+/*      await _orderCollection
           .doc(order.id)
           .collection('orderItem')
           .doc(item.productId)
           .set(OrderItemModel.fromOrderItem(item: item).toMap())
           .catchError((e) => throw FirebaseException(
-              plugin: 'CREATE ORDER ITEM ERROR', message: e.toString()));
+              plugin: 'CREATE ORDER ITEM ERROR', message: e.toString()));*/
 
       //await create stock
     }
@@ -89,7 +89,10 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
         .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
 
     for (var o in snap.docs) {
-      orderList.add(OrderModel.fromMap(map: o.data()));
+      orderList.add(
+        OrderModel.fromMap(
+            map: o.data(), orderItemList: _getOrderItemList(o.data())),
+      );
     }
 
     return orderList;
@@ -104,12 +107,15 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     final snap = await _orderCollection
         .where('enabled', isEqualTo: true)
         .where('registrationDate', isEqualTo: date)
-        .orderBy('registrationDate', descending: false)
+        .orderBy('registrationHour', descending: false)
         .get()
         .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
 
     for (var o in snap.docs) {
-      orderList.add(OrderModel.fromMap(map: o.data()));
+      orderList.add(
+        OrderModel.fromMap(
+            map: o.data(), orderItemList: _getOrderItemList(o.data())),
+      );
     }
 
     return orderList;
@@ -131,7 +137,10 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
         .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
 
     for (var o in snap.docs) {
-      orderList.add(OrderModel.fromMap(map: o.data()));
+      orderList.add(
+        OrderModel.fromMap(
+            map: o.data(), orderItemList: _getOrderItemList(o.data())),
+      );
     }
 
     return orderList;
@@ -148,9 +157,22 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
         .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
 
     for (var o in snap.docs) {
-      orderList.add(OrderModel.fromMap(map: o.data()));
+      orderList.add(
+        OrderModel.fromMap(
+            map: o.data(), orderItemList: _getOrderItemList(o.data())),
+      );
     }
 
     return orderList;
+  }
+
+  _getOrderItemList(Map<String, dynamic> map) {
+    List<OrderItemModel> itemList = [];
+
+    for (var e in map['orderItemList']) {
+      itemList.add(OrderItemModel.fromMap(map: e));
+    }
+
+    return itemList;
   }
 }

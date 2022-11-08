@@ -22,7 +22,7 @@ class OrderItemModel extends OrderItem {
             listIndex: map['listIndex'],
             productId: map['productId'],
             quantity: map['quantity'],
-            product: map['product'],
+            product: ProductModel.fromMap(map: map['product']),
             note: map['note']);
 
   Map<String, dynamic> toMap() {
@@ -30,8 +30,13 @@ class OrderItemModel extends OrderItem {
       'listIndex': listIndex,
       'productId': productId,
       'quantity': quantity,
-      'product': ProductModel.fromProduct(product: product),
+      'product': ProductModel.fromProduct(product: product).toMap(),
       'note': note
     };
+  }
+
+  @override
+  String toString() {
+    return '$quantity ${product.category} ${product.name}';
   }
 }
