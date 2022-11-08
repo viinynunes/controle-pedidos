@@ -47,8 +47,10 @@ abstract class _OrderControllerBase with Store {
   @action
   initState() async {
     await getOrderListByDate();
-    await getProductListByEnabled();
-    await getClientListByEnabled();
+    if (productList.isEmpty || clientList.isEmpty) {
+      await getProductListByEnabled();
+      await getClientListByEnabled();
+    }
   }
 
   @action
@@ -58,7 +60,10 @@ abstract class _OrderControllerBase with Store {
     final result =
         await orderUsecase.getOrderListByEnabledAndDate(selectedDate);
 
-    result.fold((l) => error = optionOf(l), (r) {
+    result.fold((l) {
+      error = optionOf(l);
+      return;
+    }, (r) {
       orderList = ObservableList.of(r);
       filteredOrderList = ObservableList.of(r);
     });
@@ -96,8 +101,8 @@ abstract class _OrderControllerBase with Store {
       builder: (_) => registrationPage,
     ));
 
-    if (result != null) {
-      initState();
+    if (result != null && result is o.Order) {
+      orderList.add(result);
     }
   }
 
