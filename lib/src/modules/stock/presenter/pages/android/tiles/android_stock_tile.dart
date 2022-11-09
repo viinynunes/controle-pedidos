@@ -1,5 +1,9 @@
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../store/stock_tile_controller.dart';
 
 class AndroidStockTile extends StatefulWidget {
   const AndroidStockTile({Key? key, required this.stock}) : super(key: key);
@@ -11,17 +15,13 @@ class AndroidStockTile extends StatefulWidget {
 }
 
 class _AndroidStockTileState extends State<AndroidStockTile> {
-  final stockTotalOrderedController = TextEditingController();
-
-  int stockLeft = 0;
+  final controller = GetIt.I.get<StockTileController>();
 
   @override
   void initState() {
     super.initState();
 
-    stockTotalOrderedController.text = widget.stock.totalOrdered.toString();
-    stockLeft =
-        int.parse((widget.stock.totalOrdered - widget.stock.total).toString());
+    controller.initState(widget.stock);
   }
 
   @override
@@ -29,18 +29,29 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
     return Card(
       child: Row(
         children: [
-          _getFlexible(flex: 8, text: widget.stock.product.name),
-          _getFlexible(flex: 2, text: widget.stock.product.category),
-          _getFlexible(flex: 4, text: widget.stock.total.toString()),
+          _getFlexible(flex: 8, text: controller.stock.product.name),
+          _getFlexible(flex: 2, text: controller.stock.product.category),
+          _getFlexible(flex: 4, text: controller.stock.total.toString()),
           Flexible(
             flex: 4,
             fit: FlexFit.tight,
             child: TextField(
-              controller: stockTotalOrderedController,
+              controller: controller.stockTotalOrderedController,
+              focusNode: controller.stockTotalOrderedFocus,
               textAlign: TextAlign.center,
+              onTap: controller.stockTextFieldTap,
+              onSubmitted: (newStock) {
+                controller.stockTotalOrderedController.text = newStock;
+                controller.updateStockLeft();
+              },
+              keyboardType: const TextInputType.numberWithOptions(),
+              textInputAction: TextInputAction.next,
             ),
           ),
-          _getFlexible(flex: 4, text: stockLeft.toString()),
+          Observer(
+            builder: (_) =>
+                _getFlexible(flex: 4, text: controller.stockLeft.toString()),
+          ),
         ],
       ),
     );

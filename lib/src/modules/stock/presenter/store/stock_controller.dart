@@ -86,6 +86,7 @@ abstract class _StockControllerBase with Store {
   @action
   getProviderListByStockBetweenDates() async {
     selectedProvider = null;
+    stockList.clear();
 
     providerList = ObservableList.of([
       ProviderModel(

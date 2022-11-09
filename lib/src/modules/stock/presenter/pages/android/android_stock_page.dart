@@ -46,16 +46,24 @@ class _AndroidStockPageState extends IStockPageState {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Observer(
-                    builder: (_) => ElevatedButton(
-                      onPressed: () =>
-                          controller.showDateTimeRangeSelector(context),
-                      child: Text(controller.selectedDateString),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Observer(
+                      builder: (_) => ElevatedButton(
+                        onPressed: () =>
+                            controller.showDateTimeRangeSelector(context),
+                        child: Text(controller.selectedDateString, textAlign: TextAlign.center,),
+                      ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: controller.getProviderListByStockBetweenDates,
-                    child: const Text('Buscar Fornecedores'),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: ElevatedButton(
+                      onPressed: controller.getProviderListByStockBetweenDates,
+                      child: const Text('Buscar Fornecedores'),
+                    ),
                   ),
                 ],
               ),
@@ -70,6 +78,7 @@ class _AndroidStockPageState extends IStockPageState {
                             fit: FlexFit.tight,
                             child: DropdownButtonFormField<Provider>(
                               value: controller.selectedProvider,
+                              alignment: Alignment.center,
                               items:
                                   controller.getProviderDropdownItems(context),
                               decoration: InputDecoration(

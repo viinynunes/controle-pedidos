@@ -7,6 +7,7 @@ import 'domain/usecases/impl/stock_usecase_impl.dart';
 import 'external/stock_firebase_datasource_impl.dart';
 import 'infra/datasources/i_stock_datasource.dart';
 import 'infra/repositories/stock_repository_impl.dart';
+import 'presenter/store/stock_tile_controller.dart';
 
 final stockLocator = GetIt.instance;
 
@@ -19,4 +20,6 @@ void setUpStockLocator() {
       () => StockUsecaseImpl(stockLocator()));
   stockLocator
       .registerSingleton<StockController>(StockController(stockLocator()));
+  stockLocator
+      .registerFactory<StockTileController>(() => StockTileController());
 }
