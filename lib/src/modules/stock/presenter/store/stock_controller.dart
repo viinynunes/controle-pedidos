@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:controle_pedidos/src/domain/models/provider_model.dart';
+import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/provider.dart';
+import '../../../../domain/models/product_model.dart';
 import '../../errors/stock_error.dart';
 
 part 'stock_controller.g.dart';
@@ -118,8 +120,46 @@ abstract class _StockControllerBase with Store {
 
   @action
   getStockListByProviderBetweenDates() async {
-    if (selectedProvider != null) {
+    final product = ProductModel(
+        id: '0',
+        category: 'vs',
+        enabled: true,
+        name: 'raphis p/17',
+        stockDefault: false,
+        providerId: '0',
+        providerName: 'Nunes');
+
+    stockList = ObservableList.of([
+      StockModel(
+          id: '3',
+          total: 9,
+          totalOrdered: 0,
+          registrationDate: DateTime.now(),
+          product: product),
+      StockModel(
+          id: '0',
+          total: 2,
+          totalOrdered: 1,
+          registrationDate: DateTime.now(),
+          product: product),
+      StockModel(
+          id: '1',
+          total: 4,
+          totalOrdered: 5,
+          registrationDate: DateTime.now(),
+          product: product),
+      StockModel(
+          id: '2',
+          total: 14,
+          totalOrdered: 20,
+          registrationDate: DateTime.now(),
+          product: product),
+    ]);
+
+/*    if (selectedProvider != null) {
       loading = true;
+
+      stockList.clear();
 
       final providerResult =
           await stockUsecase.getStockListByProviderBetweenDates(
@@ -129,7 +169,7 @@ abstract class _StockControllerBase with Store {
           (l) => error = optionOf(l), (r) => stockList = ObservableList.of(r));
 
       loading = false;
-    }
+    }*/
   }
 
   @action

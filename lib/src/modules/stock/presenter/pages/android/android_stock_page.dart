@@ -6,6 +6,7 @@ import '../../../../../domain/entities/provider.dart';
 import '../../../../core/drawer/widgets/android_custom_drawer.dart';
 import '../../store/stock_controller.dart';
 import '../i_stock_page.dart';
+import 'tiles/android_stock_tile.dart';
 
 class AndroidStockPage extends IStockPage {
   const AndroidStockPage({Key? key}) : super(key: key);
@@ -59,11 +60,8 @@ class _AndroidStockPageState extends IStockPageState {
                 ],
               ),
               Observer(
-                builder: (_) => controller.providerList.isEmpty
-                    ? const Center(
-                        child: Text('Nenhum fornecedor encontrado'),
-                      )
-                    : Row(
+                builder: (_) => controller.providerList.isNotEmpty
+                    ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -81,6 +79,9 @@ class _AndroidStockPageState extends IStockPageState {
                               onChanged: (provider) {
                                 if (provider != null) {
                                   controller.setSelectedProvider(provider);
+
+                                  controller
+                                      .getStockListByProviderBetweenDates();
                                 }
                               },
                             ),
@@ -98,22 +99,59 @@ class _AndroidStockPageState extends IStockPageState {
                             ),
                           ),
                         ],
-                      ),
+                      )
+                    : Container(),
               ),
-              // Expanded(
-              //   child: ListView.builder(
-              //     itemCount: 3,
-              //     itemBuilder: (_, index) {
-              //       return const ListTile(
-              //         title: Text('AAAA'),
-              //       );
-              //     },
-              //   ),
-              // )
+              Observer(
+                  builder: (_) => controller.stockList.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              _getStockTableHeader(flex: 8, text: 'Produto'),
+                              _getStockTableHeader(flex: 2, text: 'Emb'),
+                              _getStockTableHeader(flex: 4, text: 'Pedido'),
+                              _getStockTableHeader(flex: 4, text: 'Total'),
+                              _getStockTableHeader(flex: 4, text: 'Sobra'),
+                            ],
+                          ),
+                        )
+                      : Container()),
+              Observer(
+                builder: (_) => Expanded(
+                  child: controller.stockList.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: controller.stockList.length,
+                          itemBuilder: (_, index) {
+                            final stock = controller.stockList[index];
+                            return AndroidStockTile(
+                              stock: stock,
+                            );
+                          },
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(
+                            child: Text('Nenhum Item Encontrado'),
+                          ),
+                        ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  _getStockTableHeader({required int flex, required String text}) {
+    return Flexible(
+        flex: flex,
+        fit: FlexFit.tight,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall,
+        ));
   }
 }
