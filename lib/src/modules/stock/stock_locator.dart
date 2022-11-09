@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/stock/presenter/store/stock_controller.dart';
 import 'package:get_it/get_it.dart';
 
 import 'domain/repositories/i_stock_repository.dart';
@@ -16,4 +17,6 @@ void setUpStockLocator() {
       () => StockRepositoryImpl(stockLocator()));
   stockLocator.registerLazySingleton<IStockUsecase>(
       () => StockUsecaseImpl(stockLocator()));
+  stockLocator
+      .registerSingleton<StockController>(StockController(stockLocator()));
 }
