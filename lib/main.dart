@@ -1,13 +1,10 @@
 import 'package:controle_pedidos/src/global_locator.dart';
-import 'package:controle_pedidos/src/modules/core/registration/android_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await initGlobalServiceLocator();
 
   try {
     await Firebase.initializeApp(
@@ -20,6 +17,8 @@ void main() async {
   } catch (e) {
     print(e);
   }
+
+  await initGlobalServiceLocator();
 
   runApp(MaterialApp(
     home: const AndroidOrderListPage(),
