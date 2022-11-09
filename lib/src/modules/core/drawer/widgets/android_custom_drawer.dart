@@ -3,6 +3,7 @@ import 'package:controle_pedidos/src/modules/order/presenter/pages/android/andro
 import 'package:controle_pedidos/utils/utils.dart';
 import 'package:flutter/material.dart';
 
+import '../../../stock/presenter/pages/android/android_stock_page.dart';
 import '../tiles/android_drawer_tile.dart';
 
 class AndroidCustomDrawer extends StatefulWidget {
@@ -84,7 +85,10 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
               AndroidDrawerTile(
                 icon: Icons.add_circle_sharp,
                 text: 'CONTROLE',
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const AndroidStockPage()));
+                },
               ),
               AndroidDrawerTile(
                 icon: Icons.category,
