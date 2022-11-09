@@ -1,5 +1,5 @@
-import 'package:controle_pedidos/src/modules/core/helpers.dart';
 import 'package:controle_pedidos/src/domain/entities/provider.dart';
+import 'package:controle_pedidos/src/modules/core/helpers.dart';
 
 import 'establish_model.dart';
 
@@ -86,6 +86,16 @@ class ProviderModel extends Provider {
       'name': name,
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProviderModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => 0;
 
   @override
   String toString() {
