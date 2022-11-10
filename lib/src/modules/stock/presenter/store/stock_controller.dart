@@ -140,19 +140,19 @@ abstract class _StockControllerBase with Store {
       StockModel(
           id: '0',
           total: 2,
-          totalOrdered: 1,
+          totalOrdered: 0,
           registrationDate: DateTime.now(),
           product: product),
       StockModel(
           id: '1',
           total: 4,
-          totalOrdered: 5,
+          totalOrdered: 0,
           registrationDate: DateTime.now(),
           product: product),
       StockModel(
           id: '2',
           total: 14,
-          totalOrdered: 20,
+          totalOrdered: 0,
           registrationDate: DateTime.now(),
           product: product),
     ]);

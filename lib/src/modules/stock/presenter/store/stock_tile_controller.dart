@@ -21,9 +21,21 @@ abstract class _StockTileControllerBase with Store {
   initState(Stock stock) {
     this.stock = stock;
 
-    stockTotalOrderedController.text = stock.totalOrdered.toString();
+    updateTotalOrderedController();
 
     updateStockLeft();
+  }
+
+  @action
+  updateTotalOrderedController() {
+    stockTotalOrderedController.text = stock.totalOrdered.toString();
+  }
+
+  stockTextFieldTap() {
+    stockTotalOrderedFocus.requestFocus();
+    stockTotalOrderedController.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: stockTotalOrderedController.value.text.length);
   }
 
   @action
@@ -32,10 +44,39 @@ abstract class _StockTileControllerBase with Store {
         (int.parse(stockTotalOrderedController.text) - stock.total).toString());
   }
 
-  stockTextFieldTap() {
-    stockTotalOrderedFocus.requestFocus();
-    stockTotalOrderedController.selection = TextSelection(
-        baseOffset: 0,
-        extentOffset: stockTotalOrderedController.value.text.length);
+  @action
+  updateTotalOrderedByButton(bool increase) {
+    if (increase) {
+      stock.totalOrdered++;
+    } else {
+      stock.totalOrdered--;
+    }
+
+    updateTotalOrderedController();
+    updateStockLeft();
+  }
+
+  @action
+  updateStockLeftByButton(bool increase) {
+    if (increase) {
+      if (stockLeft.isNegative) {
+        stockLeft = 0;
+        stock.totalOrdered = stock.total;
+      }
+      stockLeft++;
+      stock.totalOrdered++;
+    } else {
+      stockLeft--;
+      stock.totalOrdered--;
+    }
+
+    updateTotalOrderedController();
+  }
+
+  @action
+  updateTotalOrderedByKeyboard(String newStock){
+    stockTotalOrderedController.text = newStock;
+    stock.totalOrdered = int.parse(newStock);
+    updateStockLeft();
   }
 }

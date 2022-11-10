@@ -40,11 +40,44 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
   }
 
   @override
+  dynamic updateTotalOrderedController() {
+    final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
+        name: '_StockTileControllerBase.getTotalOrdered');
+    try {
+      return super.updateTotalOrderedController();
+    } finally {
+      _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic updateStockLeft() {
     final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
         name: '_StockTileControllerBase.updateStockLeft');
     try {
       return super.updateStockLeft();
+    } finally {
+      _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateTotalOrderedByButton(bool increase) {
+    final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
+        name: '_StockTileControllerBase.updateTotalOrdered');
+    try {
+      return super.updateTotalOrderedByButton(increase);
+    } finally {
+      _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateStockLeftByButton(bool increase) {
+    final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
+        name: '_StockTileControllerBase.updateStockLeftButton');
+    try {
+      return super.updateStockLeftByButton(increase);
     } finally {
       _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
     }
