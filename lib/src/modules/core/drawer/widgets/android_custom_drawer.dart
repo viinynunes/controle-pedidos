@@ -78,7 +78,7 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
                 icon: Icons.storage,
                 text: 'PEDIDOS',
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (_) => const AndroidOrderListPage()));
                 },
               ),
@@ -86,7 +86,7 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
                 icon: Icons.add_circle_sharp,
                 text: 'CONTROLE',
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (_) => const AndroidStockPage()));
                 },
               ),
@@ -94,7 +94,7 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
                 icon: Icons.category,
                 text: 'CADASTROS',
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (_) => const AndroidRegistrationNavigation()));
                 },
               ),

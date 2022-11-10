@@ -1,7 +1,8 @@
 import 'package:controle_pedidos/src/global_locator.dart';
-import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'src/modules/core/home/android_home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ void main() async {
   await initGlobalServiceLocator();
 
   runApp(MaterialApp(
-    home: const AndroidOrderListPage(),
+    home: const AndroidHomePage(),
     theme: ThemeData(
         useMaterial3: true,
         primarySwatch: Colors.deepPurple,
