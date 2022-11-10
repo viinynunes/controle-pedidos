@@ -85,8 +85,12 @@ abstract class _StockControllerBase with Store {
 
   @action
   getProviderListByStockBetweenDates() async {
+    loading = true;
+
     selectedProvider = null;
     stockList.clear();
+
+    await Future.delayed(const Duration(seconds: 3));
 
     providerList = ObservableList.of([
       ProviderModel(
@@ -106,6 +110,9 @@ abstract class _StockControllerBase with Store {
           establishmentId: '1',
           establishmentName: 'Ceaflor'),
     ]);
+
+    loading = false;
+
     /*loading = true;
 
     final providerResult =

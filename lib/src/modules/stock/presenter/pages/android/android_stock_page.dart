@@ -43,6 +43,7 @@ class _AndroidStockPageState extends IStockPageState {
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
+              //Row with Select Date and Get Providers Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -53,7 +54,10 @@ class _AndroidStockPageState extends IStockPageState {
                       builder: (_) => ElevatedButton(
                         onPressed: () =>
                             controller.showDateTimeRangeSelector(context),
-                        child: Text(controller.selectedDateString, textAlign: TextAlign.center,),
+                        child: Text(
+                          controller.selectedDateString,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
@@ -68,49 +72,57 @@ class _AndroidStockPageState extends IStockPageState {
                   ),
                 ],
               ),
+              //Widget with DropDown provider selection and stock Left TextField
               Observer(
-                builder: (_) => controller.providerList.isNotEmpty
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Flexible(
-                            flex: 3,
-                            fit: FlexFit.tight,
-                            child: DropdownButtonFormField<Provider>(
-                              value: controller.selectedProvider,
-                              alignment: Alignment.center,
-                              items:
-                                  controller.getProviderDropdownItems(context),
-                              decoration: InputDecoration(
-                                  labelText: 'Fornecedores',
-                                  labelStyle:
-                                      Theme.of(context).textTheme.titleSmall),
-                              onChanged: (provider) {
-                                if (provider != null) {
-                                  controller.setSelectedProvider(provider);
-
-                                  controller
-                                      .getStockListByProviderBetweenDates();
-                                }
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: TextFormField(
-                              controller: controller.stockDefaultLeftController,
-                              decoration: const InputDecoration(
-                                labelText: 'Sobra',
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
+                builder: (_) => controller.loading
+                    ? const Center(
+                        heightFactor: 10,
+                        child: LinearProgressIndicator(),
                       )
-                    : Container(),
+                    : controller.providerList.isNotEmpty
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Flexible(
+                                flex: 3,
+                                fit: FlexFit.tight,
+                                child: DropdownButtonFormField<Provider>(
+                                  value: controller.selectedProvider,
+                                  alignment: Alignment.center,
+                                  items: controller
+                                      .getProviderDropdownItems(context),
+                                  decoration: InputDecoration(
+                                      labelText: 'Fornecedores',
+                                      labelStyle: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall),
+                                  onChanged: (provider) {
+                                    if (provider != null) {
+                                      controller.setSelectedProvider(provider);
+
+                                      controller
+                                          .getStockListByProviderBetweenDates();
+                                    }
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: TextFormField(
+                                  controller:
+                                      controller.stockDefaultLeftController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Sobra',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(),
               ),
               Observer(
                   builder: (_) => controller.stockList.isNotEmpty
