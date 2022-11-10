@@ -22,6 +22,14 @@ class _StockLeftTextFieldWidgetState extends State<StockLeftTextFieldWidget> {
         labelText: 'Sobra',
       ),
       textAlign: TextAlign.center,
+      onTap: () {
+        controller.stockDefaultLeftController.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset:
+                controller.stockDefaultLeftController.value.text.length);
+      },
+      onFieldSubmitted: controller.stockLeftSubmit,
+      keyboardType: TextInputType.phone,
     );
   }
 }

@@ -2,7 +2,9 @@ import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
+import '../../../store/stock_controller.dart';
 import '../../../store/stock_tile_controller.dart';
 
 class AndroidStockTile extends StatefulWidget {
@@ -15,13 +17,18 @@ class AndroidStockTile extends StatefulWidget {
 }
 
 class _AndroidStockTileState extends State<AndroidStockTile> {
-  final controller = GetIt.I.get<StockTileController>();
+  final tileController = GetIt.I.get<StockTileController>();
+  final stockController = GetIt.I.get<StockController>();
 
   @override
   void initState() {
     super.initState();
 
-    controller.initState(widget.stock);
+    reaction((p0) => stockController.stockList, (p0) {
+      tileController.initState(widget.stock);
+    });
+
+    tileController.initState(widget.stock);
   }
 
   @override
@@ -31,18 +38,18 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
         width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
-            _getFlexible(flex: 8, text: controller.stock.product.name),
-            _getFlexible(flex: 2, text: controller.stock.product.category),
-            _getFlexible(flex: 4, text: controller.stock.total.toString()),
+            _getFlexible(flex: 8, text: tileController.stock.product.name),
+            _getFlexible(flex: 2, text: tileController.stock.product.category),
+            _getFlexible(flex: 4, text: tileController.stock.total.toString()),
             Flexible(
               flex: 3,
               fit: FlexFit.tight,
               child: TextField(
-                controller: controller.stockTotalOrderedController,
-                focusNode: controller.stockTotalOrderedFocus,
+                controller: tileController.stockTotalOrderedController,
+                focusNode: tileController.stockTotalOrderedFocus,
                 textAlign: TextAlign.center,
-                onTap: controller.stockTextFieldTap,
-                onSubmitted: controller.updateTotalOrderedByKeyboard,
+                onTap: tileController.stockTextFieldTap,
+                onSubmitted: tileController.updateTotalOrderedByKeyboard,
                 keyboardType: const TextInputType.numberWithOptions(),
                 textInputAction: TextInputAction.next,
               ),
@@ -55,7 +62,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () => controller.updateTotalOrderedByButton(true),
+                    onTap: () => tileController.updateTotalOrderedByButton(true),
                     child: const Icon(
                       Icons.add_circle_sharp,
                       size: 15,
@@ -64,7 +71,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
-                    onTap: () => controller.updateTotalOrderedByButton(false),
+                    onTap: () => tileController.updateTotalOrderedByButton(false),
                     child: const Icon(
                       Icons.remove_circle_sharp,
                       size: 15,
@@ -76,7 +83,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
             ),
             Observer(
               builder: (_) =>
-                  _getFlexible(flex: 3, text: controller.stockLeft.toString()),
+                  _getFlexible(flex: 3, text: tileController.stockLeft.toString()),
             ),
             Flexible(
               flex: 2,
@@ -86,7 +93,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () => controller.updateStockLeftByButton(true),
+                    onTap: () => tileController.updateStockLeftByButton(true),
                     child: const Icon(
                       Icons.add_circle_sharp,
                       size: 15,
@@ -95,7 +102,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
-                    onTap: () => controller.updateStockLeftByButton(false),
+                    onTap: () => tileController.updateStockLeftByButton(false),
                     child: const Icon(
                       Icons.remove_circle_sharp,
                       size: 15,

@@ -199,6 +199,28 @@ mixin _$StockController on _StockControllerBase, Store {
   }
 
   @override
+  dynamic stockLeftSubmit(dynamic text) {
+    final _$actionInfo = _$_StockControllerBaseActionController.startAction(
+        name: '_StockControllerBase.stockLeftSubmit');
+    try {
+      return super.stockLeftSubmit(text);
+    } finally {
+      _$_StockControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic reloadStockList(List<Stock> updatedList) {
+    final _$actionInfo = _$_StockControllerBaseActionController.startAction(
+        name: '_StockControllerBase.reloadStockList');
+    try {
+      return super.reloadStockList(updatedList);
+    } finally {
+      _$_StockControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 selectedDateString: ${selectedDateString},

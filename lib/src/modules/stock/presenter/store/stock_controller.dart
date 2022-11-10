@@ -90,8 +90,6 @@ abstract class _StockControllerBase with Store {
     selectedProvider = null;
     stockList.clear();
 
-    await Future.delayed(const Duration(seconds: 3));
-
     providerList = ObservableList.of([
       ProviderModel(
           id: '0',
@@ -191,5 +189,25 @@ abstract class _StockControllerBase with Store {
               value: provider,
             ))
         .toList();
+  }
+
+  @action
+  stockLeftSubmit(text) {
+    int stockLeft = int.parse(text);
+
+    for (var s in stockList) {
+      s.totalOrdered = s.total + stockLeft;
+    }
+
+    //modifying stockList to mobx reaction get the state
+    final List<Stock> updatedList = stockList;
+    stockList = ObservableList.of([]);
+
+    reloadStockList(updatedList);
+  }
+
+  @action
+  reloadStockList(List<Stock> updatedList) {
+    stockList = ObservableList.of(updatedList);
   }
 }
