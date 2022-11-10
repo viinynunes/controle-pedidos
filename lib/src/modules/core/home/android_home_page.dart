@@ -23,12 +23,10 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Observer(
-        builder: (_) => PageView(
-          controller: controller.pageController,
-          onPageChanged: controller.changeIndex,
-          children: controller.bottomNavigationElements,
-        ),
+      body: PageView(
+        controller: controller.pageController,
+        onPageChanged: controller.changeIndex,
+        children: controller.bottomNavigationElements,
       ),
       bottomNavigationBar: Observer(
         builder: (_) => BottomNavigationBar(
