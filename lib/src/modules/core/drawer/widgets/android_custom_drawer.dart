@@ -1,4 +1,3 @@
-import 'package:controle_pedidos/src/modules/core/registration/android_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_list_page.dart';
 import 'package:controle_pedidos/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -94,8 +93,8 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
                 icon: Icons.category,
                 text: 'CADASTROS',
                 onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const AndroidRegistrationNavigation()));
+                  /*      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => const AndroidRegistrationNavigation()));*/
                 },
               ),
               AndroidDrawerTile(

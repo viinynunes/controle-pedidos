@@ -5,62 +5,76 @@ import '../../client/presenter/pages/android/android_client_list_page.dart';
 import '../../establishment/presenter/pages/android/android_establishment_list_page.dart';
 import '../../provider/presenter/pages/android/android_provider_list_page.dart';
 
-class AndroidRegistrationNavigation extends StatefulWidget {
-  const AndroidRegistrationNavigation({Key? key}) : super(key: key);
+class AndroidRegistrationsPage extends StatefulWidget {
+  const AndroidRegistrationsPage({Key? key}) : super(key: key);
 
   @override
-  State<AndroidRegistrationNavigation> createState() =>
-      _AndroidRegistrationNavigationState();
+  State<AndroidRegistrationsPage> createState() =>
+      _AndroidRegistrationsPageState();
 }
 
-class _AndroidRegistrationNavigationState
-    extends State<AndroidRegistrationNavigation> {
-  int _registrationPageIndex = 0;
-
+class _AndroidRegistrationsPageState extends State<AndroidRegistrationsPage> {
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _registrationPageElements = [
-      const AndroidProductListPage(),
-      const AndroidClientListPage(),
-      const AndroidProviderListPage(),
-      const AndroidEstablishmentListPage(),
-    ];
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: _registrationPageElements.elementAt(_registrationPageIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.deepPurple,
-        currentIndex: _registrationPageIndex,
-        elevation: 10,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.production_quantity_limits,
-              ),
-              label: 'Produtos'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_circle_outlined,
-              ),
-              label: 'Clientes'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.sports_handball_outlined,
-              ),
-              label: 'Fornecedores'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_balance_sharp,
-              ),
-              label: 'Estabelecimentos'),
-        ],
-        onTap: (index) {
-          setState(() {
-            _registrationPageIndex = index;
-          });
-        },
+      appBar: AppBar(
+        title: const Text('Cadastros'),
+        centerTitle: true,
+      ),
+      body: SafeArea(
+        child: SizedBox(
+          height: size.height,
+          child: GridView(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            children: [
+              _buildTile(
+                  icon: Icons.production_quantity_limits,
+                  text: 'Produto',
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const AndroidProductListPage()))),
+              _buildTile(
+                  icon: Icons.account_circle_outlined,
+                  text: 'Clientes',
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const AndroidClientListPage()))),
+              _buildTile(
+                  icon: Icons.sports_handball_outlined,
+                  text: 'Fornecedores',
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const AndroidProviderListPage()))),
+              _buildTile(
+                  icon: Icons.account_balance_sharp,
+                  text: 'Estabelecimentos',
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const AndroidEstablishmentListPage()))),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildTile({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(child: Icon(icon)),
+            Flexible(
+              child: Text(text),
+            ),
+          ],
+        ),
       ),
     );
   }

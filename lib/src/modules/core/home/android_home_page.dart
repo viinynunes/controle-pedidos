@@ -22,17 +22,20 @@ class AndroidHomePage extends StatelessWidget {
           currentIndex: controller.bottomNavigationIndex,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.border_color,
-              ),
-              label: ''
-            ),
+                icon: Icon(
+                  Icons.border_color,
+                ),
+                label: ''),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add_task_outlined,
-              ),
-              label: ''
-            ),
+                icon: Icon(
+                  Icons.add_task_outlined,
+                ),
+                label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.account_circle,
+                ),
+                label: ''),
           ],
           onTap: (index) {
             controller.bottomNavigationIndex = index;
