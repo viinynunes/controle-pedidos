@@ -1,4 +1,3 @@
-import 'package:controle_pedidos/src/modules/core/drawer/widgets/android_custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -40,7 +39,6 @@ class _AndroidClientListPageState extends State<AndroidClientListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AndroidCustomDrawer(),
       appBar: AppBar(
         title: Observer(
             builder: (_) => controller.searching

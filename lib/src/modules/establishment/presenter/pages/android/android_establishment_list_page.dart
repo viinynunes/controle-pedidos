@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../core/drawer/widgets/android_custom_drawer.dart';
 import '../../../../core/widgets/custom_material_banner_error.dart';
 import 'android_establishment_registration_page.dart';
 import 'tiles/android_establishment_list_tile.dart';
@@ -42,7 +41,6 @@ class _AndroidEstablishmentListPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AndroidCustomDrawer(),
       appBar: AppBar(
         title: Observer(
           builder: (_) => controller.searching

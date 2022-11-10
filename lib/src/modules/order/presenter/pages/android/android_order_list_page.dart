@@ -5,7 +5,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/drawer/widgets/android_custom_drawer.dart';
 import 'tiles/android_order_list_tile.dart';
 
 class AndroidOrderListPage extends StatefulWidget {
@@ -30,7 +29,6 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AndroidCustomDrawer(),
       appBar: AppBar(
         title: Observer(
             builder: (_) => controller.searching

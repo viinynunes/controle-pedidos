@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../core/drawer/widgets/android_custom_drawer.dart';
 import '../../store/stock_controller.dart';
 import '../i_stock_page.dart';
 import 'widgets/get_provider_by_date_widget.dart';
@@ -29,7 +28,6 @@ class _AndroidStockPageState extends IStockPageState {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AndroidCustomDrawer(),
       appBar: AppBar(
         title: const Text('Estoque'),
         centerTitle: true,
