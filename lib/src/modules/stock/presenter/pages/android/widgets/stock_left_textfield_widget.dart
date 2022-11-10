@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../store/stock_controller.dart';
+
+class StockLeftTextFieldWidget extends StatefulWidget {
+  const StockLeftTextFieldWidget({Key? key}) : super(key: key);
+
+  @override
+  State<StockLeftTextFieldWidget> createState() =>
+      _StockLeftTextFieldWidgetState();
+}
+
+class _StockLeftTextFieldWidgetState extends State<StockLeftTextFieldWidget> {
+  final controller = GetIt.I.get<StockController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller.stockDefaultLeftController,
+      decoration: const InputDecoration(
+        labelText: 'Sobra',
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+}
