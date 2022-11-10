@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_list_page.dart';
 import 'package:flutter/material.dart';
 
@@ -34,23 +35,27 @@ class _AndroidRegistrationsPageState extends State<AndroidRegistrationsPage> {
               _buildTile(
                   icon: Icons.production_quantity_limits,
                   text: 'Produto',
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const AndroidProductListPage()))),
+                  onTap: () => Navigator.of(context).push(CustomPageRoute(
+                      child: const AndroidProductListPage(),
+                      direction: AxisDirection.left))),
               _buildTile(
                   icon: Icons.account_circle_outlined,
                   text: 'Clientes',
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const AndroidClientListPage()))),
+                  onTap: () => Navigator.of(context).push(CustomPageRoute(
+                      child: const AndroidClientListPage(),
+                      direction: AxisDirection.left))),
               _buildTile(
                   icon: Icons.sports_handball_outlined,
                   text: 'Fornecedores',
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const AndroidProviderListPage()))),
+                  onTap: () => Navigator.of(context).push(CustomPageRoute(
+                      child: const AndroidProviderListPage(),
+                      direction: AxisDirection.left))),
               _buildTile(
                   icon: Icons.account_balance_sharp,
                   text: 'Estabelecimentos',
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const AndroidEstablishmentListPage()))),
+                  onTap: () => Navigator.of(context).push(CustomPageRoute(
+                      child: const AndroidEstablishmentListPage(),
+                      direction: AxisDirection.left))),
             ],
           ),
         ),

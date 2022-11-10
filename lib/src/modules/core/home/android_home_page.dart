@@ -3,17 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-class AndroidHomePage extends StatelessWidget {
+class AndroidHomePage extends StatefulWidget {
   const AndroidHomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final controller = GetIt.I.get<HomePageController>();
+  State<AndroidHomePage> createState() => _AndroidHomePageState();
+}
 
+class _AndroidHomePageState extends State<AndroidHomePage> {
+  final controller = GetIt.I.get<HomePageController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Observer(
-        builder: (_) => controller.bottomNavigationElements
-            .elementAt(controller.bottomNavigationIndex),
+        builder: (_) => PageView(
+          controller: controller.pageController,
+          onPageChanged: controller.changeIndex,
+          children: controller.bottomNavigationElements,
+        ),
       ),
       bottomNavigationBar: Observer(
         builder: (_) => BottomNavigationBar(
@@ -38,7 +53,11 @@ class AndroidHomePage extends StatelessWidget {
                 label: ''),
           ],
           onTap: (index) {
-            controller.bottomNavigationIndex = index;
+            controller.changeIndex(index);
+            controller.pageController.animateToPage(
+                controller.bottomNavigationIndex,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.linear);
           },
         ),
       ),

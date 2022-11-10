@@ -26,6 +26,31 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
     });
   }
 
+  late final _$_HomePageControllerBaseActionController =
+      ActionController(name: '_HomePageControllerBase', context: context);
+
+  @override
+  dynamic initState() {
+    final _$actionInfo = _$_HomePageControllerBaseActionController.startAction(
+        name: '_HomePageControllerBase.initState');
+    try {
+      return super.initState();
+    } finally {
+      _$_HomePageControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic changeIndex(int index) {
+    final _$actionInfo = _$_HomePageControllerBaseActionController.startAction(
+        name: '_HomePageControllerBase.changeIndex');
+    try {
+      return super.changeIndex(index);
+    } finally {
+      _$_HomePageControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
