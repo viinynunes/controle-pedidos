@@ -1,6 +1,7 @@
 import 'package:controle_pedidos/src/domain/entities/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 
 class AndroidOrderListTile extends StatelessWidget {
   const AndroidOrderListTile(
@@ -16,6 +17,8 @@ class AndroidOrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat('dd-MM-yyyy');
+
     return Slidable(
       key: UniqueKey(),
       startActionPane: ActionPane(
@@ -39,38 +42,41 @@ class AndroidOrderListTile extends StatelessWidget {
                   Flexible(
                     flex: 4,
                     fit: FlexFit.tight,
-                    child: Text(
-                      order.client.name,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          order.client.name,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          order.orderItemLength > 1
+                              ? '${order.orderItemLength.toString()} Itens'
+                              : '${order.orderItemLength.toString()} Item',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          dateFormat.format(order.registrationDate),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
                     ),
                   ),
                   Flexible(
                     flex: 3,
                     fit: FlexFit.tight,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(order.orderItemLength > 1
-                              ? '${order.orderItemLength.toString()} Itens'
-                              : '${order.orderItemLength.toString()} Item'),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: ListView(
-                            children: order.orderItemList
-                                .map((e) => Text(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      child: ListView(
+                        children: order.orderItemList
+                            .map((e) => Text(
                                   e.toString(),
                                   textAlign: TextAlign.start,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ))
-                                .toList(),
-                          ),
-                        )
-                      ],
+                            .toList(),
+                      ),
                     ),
                   ),
                 ],
