@@ -92,12 +92,17 @@ abstract class _StockControllerBase with Store {
   getProviderListByStockBetweenDates() async {
     loading = true;
 
+    stockList.clear();
+    providerList.clear();
+
     final providerResult =
         await stockUsecase.getProviderListByStockBetweenDates(iniDate, endDate);
 
     providerResult.fold((l) => error = optionOf(l), (r) {
       providerList = ObservableList.of(r);
-      selectedProvider = providerList.first;
+      if (providerList.isNotEmpty) {
+        selectedProvider = providerList.first;
+      }
     });
 
     loading = false;
@@ -190,7 +195,7 @@ abstract class _StockControllerBase with Store {
 
     createResult.fold((l) => error = optionOf(l), (r) {
       setSelectedProvider(r.product.provider!);
-
+      getProviderListByStockBetweenDates();
       getStockListByProviderBetweenDates();
     });
   }
