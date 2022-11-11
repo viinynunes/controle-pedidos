@@ -66,7 +66,6 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
                       children: [
                         Text(
                           widget.order.client.name,
-                          textAlign: TextAlign.right,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
