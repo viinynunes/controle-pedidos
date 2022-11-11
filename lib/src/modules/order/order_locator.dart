@@ -6,6 +6,7 @@ import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_dat
 import 'package:controle_pedidos/src/modules/order/infra/repositories/order_repository_impl.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_controller.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_controller.dart';
+import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_tile_controller.dart';
 import 'package:get_it/get_it.dart';
 
 import 'services/i_order_service.dart';
@@ -25,4 +26,6 @@ void setUpOrderLocator() {
       orderLocator(), orderLocator(), orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderRegistrationController>(
       () => OrderRegistrationController(orderLocator()));
+  orderLocator.registerFactory<OrderRegistrationTileController>(
+      () => OrderRegistrationTileController());
 }

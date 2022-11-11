@@ -202,7 +202,7 @@ abstract class _OrderRegistrationControllerBase with Store {
     noteController.text = '';
   }
 
-  quantityControllerTextSelection(){
+  quantityControllerTextSelection() {
     quantityController.selection = TextSelection(
         baseOffset: 0, extentOffset: quantityController.value.text.length);
   }

@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_registration_tile.dart';
+import 'package:controle_pedidos/src/modules/order/presenter/pages/android/tiles/android_order_item_registration_tile.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/i_order_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_controller.dart';
 import 'package:flutter/material.dart';
