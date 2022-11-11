@@ -76,7 +76,7 @@ class StockUsecaseImpl implements IStockUsecase {
       {required Provider provider,
       required DateTime iniDate,
       required DateTime endDate}) {
-    // TODO: implement getStockListByProviderBetweenDates
-    throw UnimplementedError();
+    return _repository.getStockListByProviderBetweenDates(
+        provider: provider, iniDate: iniDate, endDate: endDate);
   }
 }

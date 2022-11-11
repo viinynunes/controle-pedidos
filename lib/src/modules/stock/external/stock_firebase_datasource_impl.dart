@@ -108,9 +108,24 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   Future<List<StockModel>> getStockListByProviderBetweenDates(
       {required ProviderModel provider,
       required DateTime iniDate,
-      required DateTime endDate}) {
-    // TODO: implement getStockListByProviderBetweenDates
-    throw UnimplementedError();
+      required DateTime endDate}) async {
+    List<StockModel> stockList = [];
+
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
+    final snap = await _stockCollection
+        .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('registrationDate', isLessThanOrEqualTo: endDate)
+        .where('product.provider.id', isEqualTo: provider.id)
+        //.orderBy('stock.product.name')
+        .get();
+
+    for (var s in snap.docs) {
+      stockList.add(StockModel.fromMap(s.data()));
+    }
+
+    return stockList;
   }
 
   _getProvider(String providerId) async {
