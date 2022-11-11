@@ -2,12 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/order_item_model.dart';
 import 'package:controle_pedidos/src/domain/models/order_model.dart';
 import 'package:controle_pedidos/src/domain/models/product_model.dart';
+import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
+import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_stock_datasource.dart';
 
 class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   final _orderCollection =
       FirebaseHelper.firebaseCollection.collection('order');
+
+  final IStockDatasource _stockDatasource;
+
+  OrderFirebaseDatasourceImpl(this._stockDatasource);
 
   @override
   Future<OrderModel> createOrder(OrderModel order) async {
@@ -21,15 +27,12 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     order.id = snap.id;
 
     for (var item in order.orderItemList) {
-/*      await _orderCollection
-          .doc(order.id)
-          .collection('orderItem')
-          .doc(item.productId)
-          .set(OrderItemModel.fromOrderItem(item: item).toMap())
-          .catchError((e) => throw FirebaseException(
-              plugin: 'CREATE ORDER ITEM ERROR', message: e.toString()));*/
-
-      //await create stock
+      _stockDatasource.createStock(StockModel(
+          id: '0',
+          total: item.quantity,
+          totalOrdered: 0,
+          registrationDate: order.registrationHour,
+          product: item.product));
     }
 
     await _orderCollection.doc(order.id).update(order.toMap());

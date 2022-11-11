@@ -17,7 +17,7 @@ final orderLocator = GetIt.instance;
 void setUpOrderLocator() {
   orderLocator.registerLazySingleton<IOrderService>(() => OrderServiceImpl());
   orderLocator.registerLazySingleton<IOrderDatasource>(
-      () => OrderFirebaseDatasourceImpl());
+      () => OrderFirebaseDatasourceImpl(orderLocator()));
   orderLocator.registerLazySingleton<IOrderRepository>(
       () => OrderRepositoryImpl(orderLocator()));
   orderLocator.registerLazySingleton<IOrderUsecase>(

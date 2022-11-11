@@ -17,6 +17,7 @@ Future initGlobalServiceLocator() async {
   setUpEstablishmentLocator();
   setUpProviderLocator();
   setUpProductLocator();
-  setUpOrderLocator();
   setUpStockLocator();
+  setUpOrderLocator();
+
 }
