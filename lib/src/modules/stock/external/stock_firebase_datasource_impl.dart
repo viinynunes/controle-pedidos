@@ -14,40 +14,30 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     stock.registrationDate = DateTime(stock.registrationDate.year,
         stock.registrationDate.month, stock.registrationDate.day);
 
-    final alreadyExistsSnap = await _stockCollection
-        .where('registrationDate', isEqualTo: stock.registrationDate)
-        .where('product.id', isEqualTo: stock.product.id)
-        .where('product.providerId', isEqualTo: stock.product.providerId)
-        .get()
-        .catchError((e) => throw FirebaseException(
-            plugin: 'CREATE STOCK ERROR - GET STOCK LIST BY DAY',
-            message: e.toString()));
+    stock.id =
+        stock.product.id + stock.product.providerId + stock.registrationDate.toString();
 
-    if (alreadyExistsSnap.docs.isEmpty) {
+    final alreadyInStockSnap = await _stockCollection.doc(stock.id).get();
+
+    if (alreadyInStockSnap.data() == null) {
       stock.product.provider = await _getProvider(stock.product.providerId);
-
-      final result = await _stockCollection.add({}).catchError((e) =>
-          throw FirebaseException(
-              plugin: 'CREATE STOCK ERROR', message: e.toString()));
-
-      stock.id = result.id;
-
-      _stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
-          throw FirebaseException(
-              plugin: 'CREATE STOCK ERROR', message: e.toString()));
-
-      return stock;
+    } else {
+      final outdatedStock = StockModel.fromMap(alreadyInStockSnap.data()!);
+      stock.total += outdatedStock.total;
     }
 
-    throw FirebaseException(
-        plugin: 'CREATE STOCK ERROR', message: 'Produto já esta no estoque');
+    _stockCollection.doc(stock.id).set(stock.toMap()).catchError((e) =>
+        throw FirebaseException(
+            plugin: 'CREATE STOCK ERROR', message: e.toString()));
+
+    return stock;
   }
 
   @override
   Future<StockModel> updateStock(StockModel stock) async {
     await _stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
-    throw FirebaseException(
-        plugin: 'UPDATE STOCK ERROR', message: e.toString()));
+        throw FirebaseException(
+            plugin: 'UPDATE STOCK ERROR', message: e.toString()));
 
     return stock;
   }
