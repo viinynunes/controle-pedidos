@@ -33,6 +33,8 @@ abstract class _OrderControllerBase with Store {
   @observable
   bool loading = false;
   @observable
+  bool sortByDate = true;
+  @observable
   Option<OrderError> error = none();
   @observable
   var productList = ObservableList<Product>.of([]);
@@ -85,10 +87,19 @@ abstract class _OrderControllerBase with Store {
       orderList = ObservableList.of(r);
       filteredOrderList = ObservableList.of(r);
 
-      orderService.sortOrderListByRegistrationHour(orderList);
+      changeSortMethod();
     });
 
     loading = false;
+  }
+
+  @action
+  changeSortMethod() {
+    sortByDate = !sortByDate;
+
+    sortByDate
+        ? orderService.sortOrderListByClientName(orderList)
+        : orderService.sortOrderListByRegistrationHour(orderList);
   }
 
   @action

@@ -5,7 +5,20 @@ import '../i_order_service.dart';
 class OrderServiceImpl implements IOrderService {
   @override
   void sortOrderListByRegistrationHour(List<Order> orderList) {
-    orderList
-        .sort((a, b) => b.registrationHour.compareTo(a.registrationHour));
+    orderList.sort((a, b) => b.registrationHour.compareTo(a.registrationHour));
+  }
+
+  @override
+  void sortOrderListByClientName(List<Order> orderList) {
+    orderList.sort((a, b) {
+      final compare =  a.client.name.toLowerCase().compareTo(b.client.name.toLowerCase());
+
+
+      if(compare == 0){
+        return a.registrationHour.compareTo(b.registrationHour);
+      }
+
+      return compare;
+    });
   }
 }

@@ -83,30 +83,48 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Observer(
-                    builder: (_) => controller.loading
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: () async {
-                              await showDateRangePicker(
-                                context: context,
-                                initialDateRange: DateTimeRange(
-                                  start: controller.iniDate,
-                                  end: controller.endDate,
-                                ),
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime(2050),
-                              ).then((result) {
-                                if (result != null) {
-                                  controller.changeDateRangeSelected(
-                                      result.start, result.end);
-                                }
-                              });
-                            },
-                            child: Text(controller.dateRangeSelected),
-                          ),
-                  ),
+                Observer(
+                  builder: (_) => controller.loading
+                      ? const LinearProgressIndicator()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                await showDateRangePicker(
+                                  context: context,
+                                  initialDateRange: DateTimeRange(
+                                    start: controller.iniDate,
+                                    end: controller.endDate,
+                                  ),
+                                  firstDate: DateTime(2020),
+                                  lastDate: DateTime(2050),
+                                ).then(
+                                  (result) {
+                                    if (result != null) {
+                                      controller.changeDateRangeSelected(
+                                          result.start, result.end);
+                                    }
+                                  },
+                                );
+                              },
+                              child: Text(controller.dateRangeSelected),
+                            ),
+                            controller.sortByDate
+                                ? IconButton(
+                                    onPressed: controller.changeSortMethod,
+                                    icon: Icon(
+                                      Icons.sort_by_alpha,
+                                      color: Theme.of(context).indicatorColor,
+                                    ))
+                                : IconButton(
+                                    onPressed: controller.changeSortMethod,
+                                    icon: Icon(
+                                      Icons.calendar_month,
+                                      color: Theme.of(context).indicatorColor,
+                                    )),
+                          ],
+                        ),
                 ),
                 Expanded(
                   child: Observer(builder: (_) {
