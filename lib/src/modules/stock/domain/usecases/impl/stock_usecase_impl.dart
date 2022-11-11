@@ -29,14 +29,29 @@ class StockUsecaseImpl implements IStockUsecase {
   }
 
   @override
-  Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
-    // TODO: implement createDuplicatedStock
-    throw UnimplementedError();
+  Future<Either<StockError, Stock>> updateStock(Stock stock) async {
+    if (stock.id.isEmpty) {
+      return Left(StockError('Id cannot be empty'));
+    }
+
+    if (stock.product.id.isEmpty) {
+      return Left(StockError('Product id cannot be empty'));
+    }
+
+    if (stock.product.providerId.isEmpty) {
+      return Left(StockError('Product provider cannot be empty'));
+    }
+
+    if (stock.total.isNegative) {
+      return Left(StockError('Stock total cannot be negative'));
+    }
+
+    return _repository.updateStock(stock);
   }
 
   @override
-  Future<Either<StockError, Stock>> updateStock(Stock stock) {
-    // TODO: implement updateStock
+  Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
+    // TODO: implement createDuplicatedStock
     throw UnimplementedError();
   }
 

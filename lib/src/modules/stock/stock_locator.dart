@@ -24,5 +24,5 @@ void setUpStockLocator() {
   stockLocator.registerSingleton<StockController>(
       StockController(stockLocator(), stockLocator(), stockLocator()));
   stockLocator
-      .registerFactory<StockTileController>(() => StockTileController());
+      .registerFactory<StockTileController>(() => StockTileController(stockLocator()));
 }

@@ -44,6 +44,15 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   }
 
   @override
+  Future<StockModel> updateStock(StockModel stock) async {
+    await _stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
+    throw FirebaseException(
+        plugin: 'UPDATE STOCK ERROR', message: e.toString()));
+
+    return stock;
+  }
+
+  @override
   Future<StockModel> createDuplicatedStock(StockModel stock) {
     // TODO: implement createDuplicatedStock
     throw UnimplementedError();
@@ -58,12 +67,6 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   @override
   Future<StockModel> decreaseStock(StockModel stock) {
     // TODO: implement decreaseStock
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<StockModel> updateStock(StockModel stock) {
-    // TODO: implement updateStock
     throw UnimplementedError();
   }
 

@@ -25,6 +25,22 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
     });
   }
 
+  late final _$errorAtom =
+      Atom(name: '_StockTileControllerBase.error', context: context);
+
+  @override
+  Option<StockError> get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(Option<StockError> value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   late final _$_StockTileControllerBaseActionController =
       ActionController(name: '_StockTileControllerBase', context: context);
 
@@ -45,17 +61,6 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
         name: '_StockTileControllerBase.updateTotalOrderedController');
     try {
       return super.updateTotalOrderedController();
-    } finally {
-      _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic updateStockLeft() {
-    final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
-        name: '_StockTileControllerBase.updateStockLeft');
-    try {
-      return super.updateStockLeft();
     } finally {
       _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -95,9 +100,21 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
   }
 
   @override
+  dynamic updateStockLeft() {
+    final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
+        name: '_StockTileControllerBase.updateStockLeft');
+    try {
+      return super.updateStockLeft();
+    } finally {
+      _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-stockLeft: ${stockLeft}
+stockLeft: ${stockLeft},
+error: ${error}
     ''';
   }
 }

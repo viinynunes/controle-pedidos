@@ -25,14 +25,19 @@ class StockRepositoryImpl implements IStockRepository {
   }
 
   @override
-  Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
-    // TODO: implement createDuplicatedStock
-    throw UnimplementedError();
+  Future<Either<StockError, Stock>> updateStock(Stock stock) async {
+    try {
+      final result = await _datasource.updateStock(StockModel.fromStock(stock));
+
+      return Right(result);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
   }
 
   @override
-  Future<Either<StockError, Stock>> updateStock(Stock stock) {
-    // TODO: implement updateStock
+  Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
+    // TODO: implement createDuplicatedStock
     throw UnimplementedError();
   }
 
