@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:controle_pedidos/src/domain/entities/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
-class AndroidOrderListTile extends StatelessWidget {
+class AndroidOrderListTile extends StatefulWidget {
   const AndroidOrderListTile(
       {Key? key,
       required this.order,
@@ -16,8 +18,25 @@ class AndroidOrderListTile extends StatelessWidget {
   final VoidCallback onDisable;
 
   @override
+  State<AndroidOrderListTile> createState() => _AndroidOrderListTileState();
+}
+
+class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
+  final dateFormat = DateFormat('dd-MM-yyyy');
+  final scrollController = ScrollController();
+
+  scrollListToBottom() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(scrollController.position.maxScrollExtent,
+          duration: const Duration(seconds: 1), curve: Curves.elasticOut);
+    } else {
+      Timer(const Duration(milliseconds: 400), () => scrollListToBottom());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd-MM-yyyy');
+    WidgetsBinding.instance.addPostFrameCallback((_) => scrollListToBottom());
 
     return Slidable(
       key: UniqueKey(),
@@ -25,7 +44,7 @@ class AndroidOrderListTile extends StatelessWidget {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (_) => onDisable(),
+            onPressed: (_) => widget.onDisable(),
             backgroundColor: Theme.of(context).errorColor,
             icon: Icons.delete_forever,
           )
@@ -33,7 +52,7 @@ class AndroidOrderListTile extends StatelessWidget {
       ),
       child: Ink(
         child: InkWell(
-          onTap: onTap,
+          onTap: widget.onTap,
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(8),
@@ -46,17 +65,18 @@ class AndroidOrderListTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          order.client.name,
-                          style: Theme.of(context).textTheme.titleMedium,
+                          widget.order.client.name,
+                          textAlign: TextAlign.right,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
-                          order.orderItemLength > 1
-                              ? '${order.orderItemLength.toString()} Itens'
-                              : '${order.orderItemLength.toString()} Item',
+                          widget.order.orderItemLength > 1
+                              ? '${widget.order.orderItemLength.toString()} Itens'
+                              : '${widget.order.orderItemLength.toString()} Item',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          dateFormat.format(order.registrationDate),
+                          dateFormat.format(widget.order.registrationDate),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
@@ -68,7 +88,9 @@ class AndroidOrderListTile extends StatelessWidget {
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.05,
                       child: ListView(
-                        children: order.orderItemList
+                        controller: scrollController,
+                        reverse: true,
+                        children: widget.order.orderItemList
                             .map((e) => Text(
                                   e.toString(),
                                   textAlign: TextAlign.start,
