@@ -57,22 +57,6 @@ mixin _$OrderController on _OrderControllerBase, Store {
     });
   }
 
-  late final _$selectedDateAtom =
-      Atom(name: '_OrderControllerBase.selectedDate', context: context);
-
-  @override
-  DateTime get selectedDate {
-    _$selectedDateAtom.reportRead();
-    return super.selectedDate;
-  }
-
-  @override
-  set selectedDate(DateTime value) {
-    _$selectedDateAtom.reportWrite(value, super.selectedDate, () {
-      super.selectedDate = value;
-    });
-  }
-
   late final _$errorAtom =
       Atom(name: '_OrderControllerBase.error', context: context);
 
@@ -153,6 +137,22 @@ mixin _$OrderController on _OrderControllerBase, Store {
     });
   }
 
+  late final _$dateRangeSelectedAtom =
+      Atom(name: '_OrderControllerBase.dateRangeSelected', context: context);
+
+  @override
+  String get dateRangeSelected {
+    _$dateRangeSelectedAtom.reportRead();
+    return super.dateRangeSelected;
+  }
+
+  @override
+  set dateRangeSelected(String value) {
+    _$dateRangeSelectedAtom.reportWrite(value, super.dateRangeSelected, () {
+      super.dateRangeSelected = value;
+    });
+  }
+
   late final _$initStateAsyncAction =
       AsyncAction('_OrderControllerBase.initState', context: context);
 
@@ -161,13 +161,24 @@ mixin _$OrderController on _OrderControllerBase, Store {
     return _$initStateAsyncAction.run(() => super.initState());
   }
 
-  late final _$getOrderListByDateAsyncAction =
-      AsyncAction('_OrderControllerBase.getOrderListByDate', context: context);
+  late final _$changeDateRangeSelectedAsyncAction = AsyncAction(
+      '_OrderControllerBase.changeDateRangeSelected',
+      context: context);
 
   @override
-  Future getOrderListByDate() {
-    return _$getOrderListByDateAsyncAction
-        .run(() => super.getOrderListByDate());
+  Future changeDateRangeSelected(DateTime iniDate, DateTime endDate) {
+    return _$changeDateRangeSelectedAsyncAction
+        .run(() => super.changeDateRangeSelected(iniDate, endDate));
+  }
+
+  late final _$getOrderListBetweenDatesAsyncAction = AsyncAction(
+      '_OrderControllerBase.getOrderListBetweenDates',
+      context: context);
+
+  @override
+  Future getOrderListBetweenDates() {
+    return _$getOrderListBetweenDatesAsyncAction
+        .run(() => super.getOrderListBetweenDates());
   }
 
   late final _$callOrderRegistrationPageAsyncAction = AsyncAction(
@@ -226,28 +237,17 @@ mixin _$OrderController on _OrderControllerBase, Store {
   }
 
   @override
-  dynamic changeSelectedDate(DateTime date) {
-    final _$actionInfo = _$_OrderControllerBaseActionController.startAction(
-        name: '_OrderControllerBase.changeSelectedDate');
-    try {
-      return super.changeSelectedDate(date);
-    } finally {
-      _$_OrderControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 searchText: ${searchText},
 searching: ${searching},
 loading: ${loading},
-selectedDate: ${selectedDate},
 error: ${error},
 productList: ${productList},
 clientList: ${clientList},
 orderList: ${orderList},
-filteredOrderList: ${filteredOrderList}
+filteredOrderList: ${filteredOrderList},
+dateRangeSelected: ${dateRangeSelected}
     ''';
   }
 }

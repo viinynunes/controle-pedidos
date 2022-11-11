@@ -3,7 +3,6 @@ import 'package:controle_pedidos/src/modules/order/presenter/stores/order_contro
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 
 import 'tiles/android_order_list_tile.dart';
 
@@ -16,8 +15,6 @@ class AndroidOrderListPage extends StatefulWidget {
 
 class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
   final controller = GetIt.I.get<OrderController>();
-
-  final dateFormat = DateFormat('dd-MM-yyyy');
 
   @override
   void initState() {
@@ -41,6 +38,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                       controller.searchText = text;
                       controller.filterOrderListByText();
                     },
+                    keyboardType: TextInputType.url,
                   )
                 : const Text('Pedidos')),
         centerTitle: true,
@@ -51,7 +49,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                     onPressed: () {
                       controller.searching = false;
                       controller.searchText = '';
-                      controller.getOrderListByDate();
+                      controller.getOrderListBetweenDates();
                     },
                     icon: const Icon(Icons.clear),
                   )
@@ -91,19 +89,22 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
                             onPressed: () async {
-                              final date = await showDatePicker(
-                                  context: context,
-                                  initialDate: controller.selectedDate,
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(2200));
-
-                              if (date != null) {
-                                controller.changeSelectedDate(date);
-                              }
+                              await showDateRangePicker(
+                                context: context,
+                                initialDateRange: DateTimeRange(
+                                  start: controller.iniDate,
+                                  end: controller.endDate,
+                                ),
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime(2050),
+                              ).then((result) {
+                                if (result != null) {
+                                  controller.changeDateRangeSelected(
+                                      result.start, result.end);
+                                }
+                              });
                             },
-                            child: Text(
-                              dateFormat.format(controller.selectedDate),
-                            ),
+                            child: Text(controller.dateRangeSelected),
                           ),
                   ),
                 ),

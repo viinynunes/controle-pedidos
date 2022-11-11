@@ -4,6 +4,7 @@ import 'package:controle_pedidos/src/modules/order/domain/usecase/i_order_usecas
 import 'package:controle_pedidos/src/modules/order/presenter/pages/i_order_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/order.dart' as o;
@@ -32,8 +33,6 @@ abstract class _OrderControllerBase with Store {
   @observable
   bool loading = false;
   @observable
-  DateTime selectedDate = DateTime.now();
-  @observable
   Option<OrderError> error = none();
   @observable
   var productList = ObservableList<Product>.of([]);
@@ -43,12 +42,18 @@ abstract class _OrderControllerBase with Store {
   var orderList = ObservableList<o.Order>.of([]);
   @observable
   var filteredOrderList = ObservableList<o.Order>.of([]);
+  @observable
+  String dateRangeSelected = '';
 
+  late DateTime iniDate;
+  late DateTime endDate;
+
+  final dateFormat = DateFormat('dd-MM-yyyy');
   final searchFocus = FocusNode();
 
   @action
   initState() async {
-    await getOrderListByDate();
+    changeDateRangeSelected(DateTime.now(), DateTime.now());
     if (productList.isEmpty || clientList.isEmpty) {
       await getProductListByEnabled();
       await getClientListByEnabled();
@@ -56,11 +61,22 @@ abstract class _OrderControllerBase with Store {
   }
 
   @action
-  getOrderListByDate() async {
+  changeDateRangeSelected(DateTime iniDate, DateTime endDate) async {
+    this.iniDate = iniDate;
+    this.endDate = endDate;
+
+    dateRangeSelected =
+        (dateFormat.format(iniDate) + ' | ' + dateFormat.format(endDate));
+
+    await getOrderListBetweenDates();
+  }
+
+  @action
+  getOrderListBetweenDates() async {
     loading = true;
 
     final result =
-        await orderUsecase.getOrderListByEnabledAndDate(selectedDate);
+        await orderUsecase.getOrderListByEnabledBetweenDates(iniDate, endDate);
 
     result.fold((l) {
       error = optionOf(l);
@@ -94,11 +110,6 @@ abstract class _OrderControllerBase with Store {
     }
 
     filteredOrderList = ObservableList.of(auxList);
-  }
-
-  @action
-  changeSelectedDate(DateTime date) {
-    selectedDate = date;
   }
 
   @action
