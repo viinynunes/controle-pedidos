@@ -20,7 +20,7 @@ class ProductModel extends Product {
             stockDefault: map['stockDefault'],
             providerId: map['providerId'],
             providerName: map['providerName'],
-            provider: map['provider'] == ''
+            provider: map['provider'] != ''
                 ? ProviderModel.fromMap(map: map['provider'])
                 : null);
 
