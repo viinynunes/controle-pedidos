@@ -1,5 +1,4 @@
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
-import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
 import 'package:dartz/dartz.dart';
@@ -7,18 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
-import '../../../../domain/models/product_model.dart';
+import '../../../core/widgets/show_entity_selection_dialog.dart';
+import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../errors/stock_error.dart';
+import '../../services/i_stock_service.dart';
 
 part 'stock_controller.g.dart';
 
 class StockController = _StockControllerBase with _$StockController;
 
 abstract class _StockControllerBase with Store {
+  final IStockService stockService;
   final IStockUsecase stockUsecase;
+  final IProductUsecase productUsecase;
 
-  _StockControllerBase(this.stockUsecase);
+  _StockControllerBase(
+      this.stockUsecase, this.productUsecase, this.stockService);
 
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -87,32 +92,6 @@ abstract class _StockControllerBase with Store {
   getProviderListByStockBetweenDates() async {
     loading = true;
 
-    selectedProvider = null;
-    stockList.clear();
-
-    providerList = ObservableList.of([
-      ProviderModel(
-          id: '0',
-          name: 'Nunes',
-          location: 'Box E11',
-          registrationDate: DateTime.now(),
-          enabled: true,
-          establishmentId: '0',
-          establishmentName: 'Veiling'),
-      ProviderModel(
-          id: '1',
-          name: 'Vinicius',
-          location: 'Box E16',
-          registrationDate: DateTime.now(),
-          enabled: true,
-          establishmentId: '1',
-          establishmentName: 'Ceaflor'),
-    ]);
-
-    loading = false;
-
-    /*loading = true;
-
     final providerResult =
         await stockUsecase.getProviderListByStockBetweenDates(iniDate, endDate);
 
@@ -121,48 +100,12 @@ abstract class _StockControllerBase with Store {
       selectedProvider = providerList.first;
     });
 
-    loading = false;*/
+    loading = false;
   }
 
   @action
   getStockListByProviderBetweenDates() async {
-    final product = ProductModel(
-        id: '0',
-        category: 'vs',
-        enabled: true,
-        name: 'raphis p/17',
-        stockDefault: false,
-        providerId: '0',
-        providerName: 'Nunes');
-
-    stockList = ObservableList.of([
-      StockModel(
-          id: '3',
-          total: 9,
-          totalOrdered: 0,
-          registrationDate: DateTime.now(),
-          product: product),
-      StockModel(
-          id: '0',
-          total: 2,
-          totalOrdered: 0,
-          registrationDate: DateTime.now(),
-          product: product),
-      StockModel(
-          id: '1',
-          total: 4,
-          totalOrdered: 0,
-          registrationDate: DateTime.now(),
-          product: product),
-      StockModel(
-          id: '2',
-          total: 14,
-          totalOrdered: 0,
-          registrationDate: DateTime.now(),
-          product: product),
-    ]);
-
-/*    if (selectedProvider != null) {
+    if (selectedProvider != null) {
       loading = true;
 
       stockList.clear();
@@ -171,11 +114,13 @@ abstract class _StockControllerBase with Store {
           await stockUsecase.getStockListByProviderBetweenDates(
               provider: selectedProvider!, iniDate: iniDate, endDate: endDate);
 
-      providerResult.fold(
-          (l) => error = optionOf(l), (r) => stockList = ObservableList.of(r));
+      providerResult.fold((l) => error = optionOf(l), (r) {
+        stockService.sortStockListByProductName(r);
+        stockList = ObservableList.of(r);
+      });
 
       loading = false;
-    }*/
+    }
   }
 
   @action
@@ -209,5 +154,44 @@ abstract class _StockControllerBase with Store {
   @action
   reloadStockList(List<Stock> updatedList) {
     stockList = ObservableList.of(updatedList);
+  }
+
+  @action
+  callEntitySelection(BuildContext context) async {
+    List<Product> productList = [];
+
+    final productResult = await productUsecase.getProductListByEnabled();
+
+    productResult.fold(
+        (l) => error = optionOf(StockError(l.message)), (r) => productList = r);
+
+    await showDialog(
+      context: context,
+      builder: (_) => ShowEntitySelectionDialog(
+        entityList: productList,
+      ),
+    ).then((value) {
+      if (value != null && value is Product) {
+        createEmptyStock(value);
+      }
+    });
+  }
+
+  @action
+  createEmptyStock(Product product) async {
+    final stock = StockModel(
+        id: '0',
+        registrationDate: DateTime.now(),
+        total: 0,
+        totalOrdered: 0,
+        product: product);
+
+    final createResult = await stockUsecase.createStock(stock);
+
+    createResult.fold((l) => error = optionOf(l), (r) {
+      setSelectedProvider(r.product.provider!);
+
+      getStockListByProviderBetweenDates();
+    });
   }
 }

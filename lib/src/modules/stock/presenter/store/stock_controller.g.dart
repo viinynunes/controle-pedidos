@@ -151,6 +151,24 @@ mixin _$StockController on _StockControllerBase, Store {
         .run(() => super.getStockListByProviderBetweenDates());
   }
 
+  late final _$callEntitySelectionAsyncAction =
+      AsyncAction('_StockControllerBase.callEntitySelection', context: context);
+
+  @override
+  Future callEntitySelection(BuildContext context) {
+    return _$callEntitySelectionAsyncAction
+        .run(() => super.callEntitySelection(context));
+  }
+
+  late final _$createEmptyStockAsyncAction =
+      AsyncAction('_StockControllerBase.createEmptyStock', context: context);
+
+  @override
+  Future createEmptyStock(Product product) {
+    return _$createEmptyStockAsyncAction
+        .run(() => super.createEmptyStock(product));
+  }
+
   late final _$_StockControllerBaseActionController =
       ActionController(name: '_StockControllerBase', context: context);
 

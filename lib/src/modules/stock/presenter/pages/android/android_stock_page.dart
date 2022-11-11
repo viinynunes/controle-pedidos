@@ -1,5 +1,7 @@
+import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
 import '../../store/stock_controller.dart';
 import '../i_stock_page.dart';
@@ -22,6 +24,13 @@ class _AndroidStockPageState extends IStockPageState {
   void initState() {
     super.initState();
 
+    reaction((p0) => controller.error, (p0) {
+      controller.error.map((error) {
+        CustomMaterialBannerError.showMaterialBannerError(
+            context: context, message: error.message, onClose: () {});
+      });
+    });
+
     controller.initState();
   }
 
@@ -34,6 +43,14 @@ class _AndroidStockPageState extends IStockPageState {
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.refresh)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+          PopupMenuButton(
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                onTap: () => controller.callEntitySelection(context),
+                child: const Text('Adicionar Produto'),
+              ),
+            ],
+          ),
         ],
       ),
       body: SafeArea(
