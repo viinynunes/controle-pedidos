@@ -3,6 +3,7 @@ import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../domain/models/stock_model.dart';
 import '../../domain/repositories/i_stock_repository.dart';
 import '../datasources/i_stock_datasource.dart';
 
@@ -12,19 +13,24 @@ class StockRepositoryImpl implements IStockRepository {
   StockRepositoryImpl(this._datasource);
 
   @override
-  Future<Either<StockError, Stock>> createStock() {
-    // TODO: implement createStock
-    throw UnimplementedError();
+  Future<Either<StockError, Stock>> createStock(Stock stock) async {
+    try {
+      final result = await _datasource.createStock(StockModel.fromStock(stock));
+
+      return Right(result);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
   }
 
   @override
-  Future<Either<StockError, Stock>> createDuplicatedStock() {
+  Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
     // TODO: implement createDuplicatedStock
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<StockError, Stock>> updateStock() {
+  Future<Either<StockError, Stock>> updateStock(Stock stock) {
     // TODO: implement updateStock
     throw UnimplementedError();
   }
@@ -49,9 +55,15 @@ class StockRepositoryImpl implements IStockRepository {
 
   @override
   Future<Either<StockError, Set<Provider>>> getProviderListByStockBetweenDates(
-      DateTime iniDate, DateTime endDate) {
-    // TODO: implement getProviderListByStockBetweenDates
-    throw UnimplementedError();
+      DateTime iniDate, DateTime endDate) async {
+    try {
+      final result = await _datasource.getProviderListByStockBetweenDates(
+          iniDate, endDate);
+
+      return Right(result);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
   }
 
   @override

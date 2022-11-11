@@ -12,19 +12,30 @@ class StockUsecaseImpl implements IStockUsecase {
   StockUsecaseImpl(this._repository);
 
   @override
-  Future<Either<StockError, Stock>> createStock() {
-    // TODO: implement createStock
-    throw UnimplementedError();
+  Future<Either<StockError, Stock>> createStock(Stock stock) async {
+    if (stock.product.id.isEmpty) {
+      return Left(StockError('Product id cannot be empty'));
+    }
+
+    if (stock.product.providerId.isEmpty) {
+      return Left(StockError('Product provider cannot be empty'));
+    }
+
+    if (stock.total.isNegative) {
+      return Left(StockError('Stock total cannot be negative'));
+    }
+
+    return _repository.createStock(stock);
   }
 
   @override
-  Future<Either<StockError, Stock>> createDuplicatedStock() {
+  Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
     // TODO: implement createDuplicatedStock
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<StockError, Stock>> updateStock() {
+  Future<Either<StockError, Stock>> updateStock(Stock stock) {
     // TODO: implement updateStock
     throw UnimplementedError();
   }
@@ -50,8 +61,7 @@ class StockUsecaseImpl implements IStockUsecase {
   @override
   Future<Either<StockError, Set<Provider>>> getProviderListByStockBetweenDates(
       DateTime iniDate, DateTime endDate) {
-    // TODO: implement getProviderListByStockBetweenDates
-    throw UnimplementedError();
+    return _repository.getProviderListByStockBetweenDates(iniDate, endDate);
   }
 
   @override

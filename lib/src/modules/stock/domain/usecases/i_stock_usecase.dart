@@ -5,11 +5,11 @@ import '../../../../domain/entities/stock.dart';
 import '../../errors/stock_error.dart';
 
 abstract class IStockUsecase {
-  Future<Either<StockError, Stock>> createStock();
+  Future<Either<StockError, Stock>> createStock(Stock stock);
 
-  Future<Either<StockError, Stock>> createDuplicatedStock();
+  Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock);
 
-  Future<Either<StockError, Stock>> updateStock();
+  Future<Either<StockError, Stock>> updateStock(Stock stock);
 
   Future<Either<StockError, Stock>> increaseStock(Stock stock);
 

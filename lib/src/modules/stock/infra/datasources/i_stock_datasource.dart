@@ -2,11 +2,11 @@ import '../../../../domain/models/provider_model.dart';
 import '../../../../domain/models/stock_model.dart';
 
 abstract class IStockDatasource {
-  Future<StockModel> createStock();
+  Future<StockModel> createStock(StockModel stock);
 
-  Future<StockModel> createDuplicatedStock();
+  Future<StockModel> createDuplicatedStock(StockModel stock);
 
-  Future<StockModel> updateStock();
+  Future<StockModel> updateStock(StockModel stock);
 
   Future<StockModel> increaseStock(StockModel stock);
 
