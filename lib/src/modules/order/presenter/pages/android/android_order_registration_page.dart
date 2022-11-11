@@ -127,7 +127,7 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                               context: context,
                               entityList: controller.productList),
                           child: Container(
-                            height: size.height * 0.1,
+                            height: 60,
                             decoration: BoxDecoration(
                                 color: Theme.of(context).backgroundColor,
                                 borderRadius: BorderRadius.circular(8)),
