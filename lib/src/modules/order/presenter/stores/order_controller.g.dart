@@ -57,6 +57,22 @@ mixin _$OrderController on _OrderControllerBase, Store {
     });
   }
 
+  late final _$sortByDateAtom =
+      Atom(name: '_OrderControllerBase.sortByDate', context: context);
+
+  @override
+  bool get sortByDate {
+    _$sortByDateAtom.reportRead();
+    return super.sortByDate;
+  }
+
+  @override
+  set sortByDate(bool value) {
+    _$sortByDateAtom.reportWrite(value, super.sortByDate, () {
+      super.sortByDate = value;
+    });
+  }
+
   late final _$errorAtom =
       Atom(name: '_OrderControllerBase.error', context: context);
 
@@ -226,6 +242,17 @@ mixin _$OrderController on _OrderControllerBase, Store {
       ActionController(name: '_OrderControllerBase', context: context);
 
   @override
+  dynamic changeSortMethod() {
+    final _$actionInfo = _$_OrderControllerBaseActionController.startAction(
+        name: '_OrderControllerBase.changeSortMethod');
+    try {
+      return super.changeSortMethod();
+    } finally {
+      _$_OrderControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic filterOrderListByText() {
     final _$actionInfo = _$_OrderControllerBaseActionController.startAction(
         name: '_OrderControllerBase.filterOrderListByText');
@@ -242,6 +269,7 @@ mixin _$OrderController on _OrderControllerBase, Store {
 searchText: ${searchText},
 searching: ${searching},
 loading: ${loading},
+sortByDate: ${sortByDate},
 error: ${error},
 productList: ${productList},
 clientList: ${clientList},
