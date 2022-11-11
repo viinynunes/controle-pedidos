@@ -14,19 +14,24 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     stock.registrationDate = DateTime(stock.registrationDate.year,
         stock.registrationDate.month, stock.registrationDate.day);
 
-    stock.id =
-        stock.product.id + stock.product.providerId + stock.registrationDate.toString();
+    stock.id = stock.product.id +
+        stock.product.providerId +
+        stock.registrationDate.toString();
 
     final alreadyInStockSnap = await _stockCollection.doc(stock.id).get();
 
-    if (alreadyInStockSnap.data() == null) {
-      stock.product.provider = await _getProvider(stock.product.providerId);
+    late StockModel newStock;
+
+    if (alreadyInStockSnap.data() != null) {
+      newStock = StockModel.fromMap(alreadyInStockSnap.data()!);
+      newStock.total += stock.total;
     } else {
-      final outdatedStock = StockModel.fromMap(alreadyInStockSnap.data()!);
-      stock.total += outdatedStock.total;
+      newStock = StockModel.fromStock(stock);
     }
 
-    _stockCollection.doc(stock.id).set(stock.toMap()).catchError((e) =>
+    stock.product.provider ??= await _getProvider(stock.product.providerId);
+
+    _stockCollection.doc(stock.id).set(newStock.toMap()).catchError((e) =>
         throw FirebaseException(
             plugin: 'CREATE STOCK ERROR', message: e.toString()));
 
