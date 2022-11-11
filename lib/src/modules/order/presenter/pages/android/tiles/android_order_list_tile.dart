@@ -66,6 +66,7 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
                       children: [
                         Text(
                           widget.order.client.name,
+                          maxLines: 1,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
@@ -85,7 +86,7 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
                     flex: 3,
                     fit: FlexFit.tight,
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
+                      height: MediaQuery.of(context).size.height * 0.057,
                       child: ListView(
                         controller: scrollController,
                         reverse: true,
