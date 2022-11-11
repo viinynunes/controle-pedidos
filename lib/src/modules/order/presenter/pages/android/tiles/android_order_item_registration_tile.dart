@@ -6,6 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/widgets/add_remove_quantity_widget.dart';
 import '../../../stores/order_registration_tile_controller.dart';
 
 class AndroidOrderItemRegistrationTile extends StatefulWidget {
@@ -56,8 +57,7 @@ class _AndroidOrderItemRegistrationTileState
             backgroundColor: Colors.red,
           ),
           SlidableAction(
-            onPressed: (e) {
-            },
+            onPressed: (e) {},
             icon: Icons.edit,
             backgroundColor: Theme.of(context).primaryColor,
           )
@@ -75,23 +75,15 @@ class _AndroidOrderItemRegistrationTileState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () => tileController.updateQuantity(true),
-                      child: const Icon(
-                        Icons.add_circle_sharp,
-                        size: 15,
-                        color: Colors.green,
-                      ),
-                    ),
+                    AddRemoveQuantityWidget(
+                        onTap: () => tileController.updateQuantity(true),
+                        icon: Icons.add_circle_sharp,
+                        color: Colors.green),
                     const SizedBox(height: 10),
-                    GestureDetector(
-                      onTap: () => tileController.updateQuantity(false),
-                      child: const Icon(
-                        Icons.remove_circle_sharp,
-                        size: 15,
-                        color: Colors.red,
-                      ),
-                    ),
+                    AddRemoveQuantityWidget(
+                        onTap: () => tileController.updateQuantity(false),
+                        icon: Icons.remove_circle_sharp,
+                        color: Colors.red),
                   ],
                 ),
               ),

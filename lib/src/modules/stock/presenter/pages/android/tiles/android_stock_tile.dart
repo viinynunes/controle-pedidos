@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/widgets/add_remove_quantity_widget.dart';
 import '../../../store/stock_controller.dart';
 import '../../../store/stock_tile_controller.dart';
 
@@ -61,29 +62,25 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () => tileController.updateTotalOrderedByButton(true),
-                    child: const Icon(
-                      Icons.add_circle_sharp,
-                      size: 15,
-                      color: Colors.green,
-                    ),
+                  AddRemoveQuantityWidget(
+                    onTap: () =>
+                        tileController.updateTotalOrderedByButton(true),
+                    icon: Icons.add_circle_sharp,
+                    color: Colors.green,
                   ),
                   const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () => tileController.updateTotalOrderedByButton(false),
-                    child: const Icon(
-                      Icons.remove_circle_sharp,
-                      size: 15,
-                      color: Colors.red,
-                    ),
+                  AddRemoveQuantityWidget(
+                    onTap: () =>
+                        tileController.updateTotalOrderedByButton(false),
+                    icon: Icons.remove_circle_sharp,
+                    color: Colors.red,
                   ),
                 ],
               ),
             ),
             Observer(
-              builder: (_) =>
-                  _getFlexible(flex: 3, text: tileController.stockLeft.toString()),
+              builder: (_) => _getFlexible(
+                  flex: 3, text: tileController.stockLeft.toString()),
             ),
             Flexible(
               flex: 2,
@@ -92,22 +89,16 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  GestureDetector(
+                  AddRemoveQuantityWidget(
                     onTap: () => tileController.updateStockLeftByButton(true),
-                    child: const Icon(
-                      Icons.add_circle_sharp,
-                      size: 15,
-                      color: Colors.green,
-                    ),
+                    icon: Icons.add_circle_sharp,
+                    color: Colors.green,
                   ),
                   const SizedBox(height: 10),
-                  GestureDetector(
+                  AddRemoveQuantityWidget(
                     onTap: () => tileController.updateStockLeftByButton(false),
-                    child: const Icon(
-                      Icons.remove_circle_sharp,
-                      size: 15,
-                      color: Colors.red,
-                    ),
+                    icon: Icons.remove_circle_sharp,
+                    color: Colors.red,
                   ),
                 ],
               ),
