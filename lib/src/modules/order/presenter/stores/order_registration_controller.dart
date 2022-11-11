@@ -198,9 +198,13 @@ abstract class _OrderRegistrationControllerBase with Store {
     selectedOrderItem = null;
     quantityFocus.requestFocus();
     quantityController.text = '1';
+    quantityControllerTextSelection();
+    noteController.text = '';
+  }
+
+  quantityControllerTextSelection(){
     quantityController.selection = TextSelection(
         baseOffset: 0, extentOffset: quantityController.value.text.length);
-    noteController.text = '';
   }
 
   @action

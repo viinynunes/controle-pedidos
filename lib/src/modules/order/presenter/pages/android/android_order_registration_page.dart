@@ -115,6 +115,7 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                               controller.callEntitySelectionDialog(
                                   context: context,
                                   entityList: controller.productList),
+                          onTap: controller.quantityControllerTextSelection,
                         ),
                       ),
                       SizedBox(width: size.width * 0.03),
