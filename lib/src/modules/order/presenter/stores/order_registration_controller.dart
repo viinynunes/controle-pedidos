@@ -175,30 +175,36 @@ abstract class _OrderRegistrationControllerBase with Store {
   addSelectedOrderItemToList() {
     initOrderItem();
 
-    if (formKey.currentState!.validate() && selectedOrderItem != null) {
-      if (orderItemList.contains(selectedOrderItem)) {
-        error = optionOf(OrderError('Produto já adicionado'));
-      } else {
-        orderItemList.add(selectedOrderItem!);
-        listIndex++;
-        sortOrderItemList();
-      }
-      prepareToSelectNewProduct();
-    } else {
-      error = optionOf(OrderError('Nenhum produto selecionado'));
+    if (!formKey.currentState!.validate() || selectedOrderItem == null) {
+      error = optionOf(
+          OrderError('Nenhum produto selecionado ou quantidade invalida'));
+      return;
     }
+
+    if (orderItemList.contains(selectedOrderItem)) {
+      error = optionOf(OrderError('Produto já adicionado'));
+      return;
+    }
+
+    orderItemList.add(selectedOrderItem!);
+    listIndex++;
+    sortOrderItemList();
+    prepareToSelectNewProduct();
   }
 
   @action
   initOrderItem() {
-    if (selectedProduct != null) {
-      selectedOrderItem = OrderItemModel(
-          listIndex: listIndex,
-          productId: selectedProduct!.id,
-          quantity: int.parse(quantityController.text),
-          note: noteController.text,
-          product: selectedProduct!);
+    if (selectedProduct == null) {
+      error = optionOf(OrderError('Nenhum produto selecionado'));
+      return;
     }
+
+    selectedOrderItem = OrderItemModel(
+        listIndex: listIndex,
+        productId: selectedProduct!.id,
+        quantity: int.parse(quantityController.text),
+        note: noteController.text,
+        product: selectedProduct!);
   }
 
   @action
@@ -235,23 +241,27 @@ abstract class _OrderRegistrationControllerBase with Store {
 
   @action
   saveOrder(BuildContext context) async {
-    if (orderItemList.isNotEmpty && selectedClient != null) {
-      initNewOrderData();
-      if (newOrder) {
-        final createResult = await orderUsecase.createOrder(newOrderData!);
+    if (orderItemList.isEmpty || selectedClient == null) {
+      error = optionOf(OrderError('Verifique os dados do pedido'));
+      return;
+    }
 
-        createResult.fold((l) => error = optionOf(l), (r) {
-          success = optionOf(r);
-          Navigator.of(context).pop(r);
-        });
-      } else {
-        final updateResult = await orderUsecase.updateOrder(newOrderData!);
+    initNewOrderData();
 
-        updateResult.fold((l) => error = optionOf(l), (r) {
-          success = optionOf(r);
-          Navigator.of(context).pop(r);
-        });
-      }
+    if (newOrder) {
+      final createResult = await orderUsecase.createOrder(newOrderData!);
+
+      createResult.fold((l) => error = optionOf(l), (r) {
+        success = optionOf(r);
+        Navigator.of(context).pop(r);
+      });
+    } else {
+      final updateResult = await orderUsecase.updateOrder(newOrderData!);
+
+      updateResult.fold((l) => error = optionOf(l), (r) {
+        success = optionOf(r);
+        Navigator.of(context).pop(r);
+      });
     }
   }
 
