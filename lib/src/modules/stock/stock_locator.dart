@@ -22,7 +22,7 @@ void setUpStockLocator() {
   stockLocator.registerLazySingleton<IStockUsecase>(
       () => StockUsecaseImpl(stockLocator()));
   stockLocator.registerSingleton<StockController>(
-      StockController(stockLocator(), stockLocator(), stockLocator()));
-  stockLocator
-      .registerFactory<StockTileController>(() => StockTileController(stockLocator()));
+      StockController(stockLocator(), stockLocator()));
+  stockLocator.registerFactory<StockTileController>(
+      () => StockTileController(stockLocator()));
 }

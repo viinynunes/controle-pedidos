@@ -31,7 +31,7 @@ class _AndroidStockPageState extends IStockPageState {
       });
     });
 
-    controller.initState();
+    controller.initState(productList: widget.productList);
   }
 
   @override
@@ -46,10 +46,20 @@ class _AndroidStockPageState extends IStockPageState {
           PopupMenuButton(
             itemBuilder: (_) => [
               PopupMenuItem(
-                onTap: () => controller.callEntitySelection(context),
+                value: 1,
+                onTap: () async {},
                 child: const Text('Adicionar Produto'),
               ),
             ],
+            onSelected: (value) {
+              switch (value) {
+                case 1:
+                  {
+                    controller.showEntitySelectionDialog(context);
+                    break;
+                  }
+              }
+            },
           ),
         ],
       ),

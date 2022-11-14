@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:controle_pedidos/src/domain/models/stock_model.dart';
+import 'package:controle_pedidos/src/modules/core/widgets/show_entity_selection_dialog.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,6 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
-import '../../../core/widgets/show_entity_selection_dialog.dart';
-import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../errors/stock_error.dart';
 import '../../services/i_stock_service.dart';
 
@@ -20,10 +19,8 @@ class StockController = _StockControllerBase with _$StockController;
 abstract class _StockControllerBase with Store {
   final IStockService stockService;
   final IStockUsecase stockUsecase;
-  final IProductUsecase productUsecase;
 
-  _StockControllerBase(
-      this.stockUsecase, this.productUsecase, this.stockService);
+  _StockControllerBase(this.stockUsecase, this.stockService);
 
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -42,13 +39,17 @@ abstract class _StockControllerBase with Store {
   @observable
   Option<Stock> success = none();
 
+  List<Product> productList = [];
+
   late DateTime iniDate;
   late DateTime endDate;
 
   final stockDefaultLeftController = TextEditingController();
 
   @action
-  initState() {
+  initState({required List<Product> productList}) {
+    this.productList = productList;
+
     iniDate = DateTime.now();
     endDate = DateTime.now();
 
@@ -109,6 +110,20 @@ abstract class _StockControllerBase with Store {
   }
 
   @action
+  showEntitySelectionDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (_) => ShowEntitySelectionDialog(
+        entityList: productList,
+      ),
+    ).then((value) {
+      if (value != null && value is Product) {
+        createEmptyStock(value);
+      }
+    });
+  }
+
+  @action
   getStockListByProviderBetweenDates() async {
     if (selectedProvider != null) {
       loading = true;
@@ -159,27 +174,6 @@ abstract class _StockControllerBase with Store {
   @action
   reloadStockList(List<Stock> updatedList) {
     stockList = ObservableList.of(updatedList);
-  }
-
-  @action
-  callEntitySelection(BuildContext context) async {
-    List<Product> productList = [];
-
-    final productResult = await productUsecase.getProductListByEnabled();
-
-    productResult.fold(
-        (l) => error = optionOf(StockError(l.message)), (r) => productList = r);
-
-    await showDialog(
-      context: context,
-      builder: (_) => ShowEntitySelectionDialog(
-        entityList: productList,
-      ),
-    ).then((value) {
-      if (value != null && value is Product) {
-        createEmptyStock(value);
-      }
-    });
   }
 
   @action
