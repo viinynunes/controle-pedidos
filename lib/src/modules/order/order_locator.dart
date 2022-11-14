@@ -21,8 +21,8 @@ void setUpOrderLocator() {
       () => OrderRepositoryImpl(orderLocator()));
   orderLocator.registerLazySingleton<IOrderUsecase>(
       () => OrderUsecaseImpl(orderLocator()));
-  orderLocator.registerSingleton<OrderController>(OrderController(
-      orderLocator(), orderLocator(), orderLocator(), orderLocator()));
+  orderLocator.registerSingleton<OrderController>(
+      OrderController(orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderRegistrationController>(
       () => OrderRegistrationController(orderLocator()));
 }

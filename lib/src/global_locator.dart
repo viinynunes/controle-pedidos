@@ -10,7 +10,6 @@ import 'modules/provider/provider_locator.dart';
 import 'modules/stock/stock_locator.dart';
 
 Future initGlobalServiceLocator() async {
-  setUpHomeLocator();
   setUpWidgetsLocator();
   setUpDrawerLocator();
   setUpClientLocator();
@@ -19,5 +18,5 @@ Future initGlobalServiceLocator() async {
   setUpProductLocator();
   setUpStockLocator();
   setUpOrderLocator();
-
+  setUpHomeLocator();
 }

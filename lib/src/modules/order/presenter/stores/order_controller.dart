@@ -8,8 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/order.dart' as o;
-import '../../../client/domain/usecases/i_client_usecase.dart';
-import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../errors/order_error.dart';
 import '../../services/i_order_service.dart';
 
@@ -20,11 +18,8 @@ class OrderController = _OrderControllerBase with _$OrderController;
 abstract class _OrderControllerBase with Store {
   final IOrderService orderService;
   final IOrderUsecase orderUsecase;
-  final IClientUsecase clientUsecase;
-  final IProductUsecase productUsecase;
 
-  _OrderControllerBase(this.orderUsecase, this.clientUsecase,
-      this.productUsecase, this.orderService);
+  _OrderControllerBase(this.orderUsecase, this.orderService);
 
   @observable
   String searchText = '';
@@ -54,12 +49,13 @@ abstract class _OrderControllerBase with Store {
   final searchFocus = FocusNode();
 
   @action
-  initState() async {
+  initState(
+      {required List<Product> productList,
+      required List<Client> clientList}) async {
     changeDateRangeSelected(DateTime.now(), DateTime.now());
-    if (productList.isEmpty || clientList.isEmpty) {
-      await getProductListByEnabled();
-      await getClientListByEnabled();
-    }
+
+    this.productList = ObservableList.of(productList);
+    this.clientList = ObservableList.of(clientList);
   }
 
   @action
@@ -146,30 +142,6 @@ abstract class _OrderControllerBase with Store {
       orderList.remove(order);
       filteredOrderList.remove(order);
     });
-
-    loading = false;
-  }
-
-  @action
-  getProductListByEnabled() async {
-    loading = true;
-
-    final result = await productUsecase.getProductListByEnabled();
-
-    result.fold((l) => error = optionOf(OrderError(l.message)),
-        (r) => productList = ObservableList.of(r));
-
-    loading = false;
-  }
-
-  @action
-  getClientListByEnabled() async {
-    loading = true;
-
-    final result = await clientUsecase.getClientEnabled();
-
-    result.fold((l) => error = optionOf(OrderError(l.message)),
-        (r) => clientList = ObservableList.of(r));
 
     loading = false;
   }

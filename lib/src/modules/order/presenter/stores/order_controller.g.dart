@@ -173,8 +173,10 @@ mixin _$OrderController on _OrderControllerBase, Store {
       AsyncAction('_OrderControllerBase.initState', context: context);
 
   @override
-  Future initState() {
-    return _$initStateAsyncAction.run(() => super.initState());
+  Future initState(
+      {required List<Product> productList, required List<Client> clientList}) {
+    return _$initStateAsyncAction.run(() =>
+        super.initState(productList: productList, clientList: clientList));
   }
 
   late final _$changeDateRangeSelectedAsyncAction = AsyncAction(
@@ -216,26 +218,6 @@ mixin _$OrderController on _OrderControllerBase, Store {
   @override
   Future disableOrder(o.Order order) {
     return _$disableOrderAsyncAction.run(() => super.disableOrder(order));
-  }
-
-  late final _$getProductListByEnabledAsyncAction = AsyncAction(
-      '_OrderControllerBase.getProductListByEnabled',
-      context: context);
-
-  @override
-  Future getProductListByEnabled() {
-    return _$getProductListByEnabledAsyncAction
-        .run(() => super.getProductListByEnabled());
-  }
-
-  late final _$getClientListByEnabledAsyncAction = AsyncAction(
-      '_OrderControllerBase.getClientListByEnabled',
-      context: context);
-
-  @override
-  Future getClientListByEnabled() {
-    return _$getClientListByEnabledAsyncAction
-        .run(() => super.getClientListByEnabled());
   }
 
   late final _$_OrderControllerBaseActionController =

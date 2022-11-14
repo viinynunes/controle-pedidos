@@ -1,7 +1,9 @@
 import 'package:controle_pedidos/src/modules/core/home/stores/home_page_controller.dart';
+import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
 class AndroidHomePage extends StatefulWidget {
   const AndroidHomePage({Key? key}) : super(key: key);
@@ -17,16 +19,38 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
   void initState() {
     super.initState();
 
+    reaction((p0) => controller.productError, (p0) {
+      controller.productError.map((error) =>
+          CustomMaterialBannerError.showMaterialBannerError(
+              context: context,
+              message: error.message,
+              onClose: () => controller.getProductListByEnabled()));
+    });
+
+    reaction((p0) => controller.clientError, (p0) {
+      controller.clientError.map((error) =>
+          CustomMaterialBannerError.showMaterialBannerError(
+              context: context,
+              message: error.message,
+              onClose: () => controller.getProductListByEnabled()));
+    });
+
     controller.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: controller.pageController,
-        onPageChanged: controller.changeIndex,
-        children: controller.bottomNavigationElements,
+      body: Observer(
+        builder: (_) => controller.loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : PageView(
+                controller: controller.pageController,
+                onPageChanged: controller.changeIndex,
+                children: controller.getBottomNavigationElements(),
+              ),
       ),
       bottomNavigationBar: Observer(
         builder: (_) => BottomNavigationBar(
