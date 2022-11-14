@@ -128,17 +128,10 @@ abstract class _OrderControllerBase with Store {
     required BuildContext context,
     required IOrderRegistrationPage registrationPage,
   }) async {
-    final result = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => registrationPage,
-    ));
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => registrationPage));
 
-    if (result != null && result is o.Order) {
-      if (registrationPage.order != null) {
-        orderList.remove(registrationPage.order);
-      }
-
-      orderList.add(result);
-    }
+    await getOrderListBetweenDates();
 
     orderService.sortOrderListByRegistrationHour(orderList);
   }
