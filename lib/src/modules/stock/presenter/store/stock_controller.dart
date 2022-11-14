@@ -187,10 +187,10 @@ abstract class _StockControllerBase with Store {
 
     final createResult = await stockUsecase.createStock(stock);
 
-    createResult.fold((l) => error = optionOf(l), (r) {
+    createResult.fold((l) => error = optionOf(l), (r) async {
+      await getProviderListByStockBetweenDates();
       setSelectedProvider(r.product.provider!);
-      getProviderListByStockBetweenDates();
-      getStockListByProviderBetweenDates();
+      await getStockListByProviderBetweenDates();
     });
   }
 }
