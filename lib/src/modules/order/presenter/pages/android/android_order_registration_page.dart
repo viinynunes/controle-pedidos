@@ -46,6 +46,12 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
@@ -188,6 +194,12 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                                     onRemove: () => controller
                                         .removeItemFromOrderItemList(item),
                                     onEdit: () {},
+                                    increaseQuantity: () =>
+                                        controller.updateOrderItemQuantity(
+                                            item: item, increase: true),
+                                    decreaseQuantity: () =>
+                                        controller.updateOrderItemQuantity(
+                                            item: item, increase: false),
                                   );
                                 },
                               )

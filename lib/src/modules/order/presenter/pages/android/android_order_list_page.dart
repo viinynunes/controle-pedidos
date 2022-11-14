@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../domain/models/order_model.dart';
 import 'tiles/android_order_list_tile.dart';
 
 class AndroidOrderListPage extends StatefulWidget {
@@ -147,7 +148,8 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                         ? ListView.builder(
                             itemCount: orderList.length,
                             itemBuilder: (_, index) {
-                              final order = orderList[index];
+                              final order =
+                                  OrderModel.fromOrder(order: orderList[index]);
 
                               return AndroidOrderListTile(
                                 order: order,

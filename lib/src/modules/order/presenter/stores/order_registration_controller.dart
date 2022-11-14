@@ -77,6 +77,15 @@ abstract class _OrderRegistrationControllerBase with Store {
   }
 
   @action
+  dispose() {
+    selectedClient = null;
+    selectedProduct = null;
+    selectedOrderItem = null;
+    quantityController.dispose();
+    orderItemList.clear();
+  }
+
+  @action
   callEntitySelectionDialog(
       {required BuildContext context, required List<Object> entityList}) async {
     await showDialog(
@@ -116,7 +125,7 @@ abstract class _OrderRegistrationControllerBase with Store {
     if (fromTile) {
       selectProduct(product);
     } else {
-      selectedProduct = product;
+      selectProduct(product);
       addSelectedOrderItemToList();
     }
   }
@@ -258,5 +267,18 @@ abstract class _OrderRegistrationControllerBase with Store {
       return 'Quantidade Inválida';
     }
     return null;
+  }
+
+  @action
+  updateOrderItemQuantity({required OrderItem item, required bool increase}) {
+    if (increase) {
+      item.quantity++;
+    } else {
+      item.quantity--;
+    }
+
+    orderItemList.remove(item);
+    orderItemList.add(item);
+    sortOrderItemList();
   }
 }

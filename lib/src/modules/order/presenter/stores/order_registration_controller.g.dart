@@ -223,6 +223,18 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   }
 
   @override
+  dynamic dispose() {
+    final _$actionInfo = _$_OrderRegistrationControllerBaseActionController
+        .startAction(name: '_OrderRegistrationControllerBase.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic selectedClientHandler(Client client) {
     final _$actionInfo =
         _$_OrderRegistrationControllerBaseActionController.startAction(
@@ -331,6 +343,20 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
         .startAction(name: '_OrderRegistrationControllerBase.initNewOrderData');
     try {
       return super.initNewOrderData();
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateOrderItemQuantity(
+      {required OrderItem item, required bool increase}) {
+    final _$actionInfo =
+        _$_OrderRegistrationControllerBaseActionController.startAction(
+            name: '_OrderRegistrationControllerBase.updateOrderItemQuantity');
+    try {
+      return super.updateOrderItemQuantity(item: item, increase: increase);
     } finally {
       _$_OrderRegistrationControllerBaseActionController
           .endAction(_$actionInfo);
