@@ -12,7 +12,7 @@ abstract class IStockDatasource {
 
   Future<StockModel> decreaseStock(StockModel stock);
 
-  Future<bool> deleteStock();
+  Future<bool> deleteStock(StockModel stock);
 
   Future<Set<ProviderModel>> getProviderListByStockBetweenDates(
       DateTime iniDate, DateTime endDate);

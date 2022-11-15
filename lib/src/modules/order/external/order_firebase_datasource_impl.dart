@@ -57,11 +57,21 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             plugin: 'UPDATE ORDER ERROR', message: e.toString()));
 
     for (var item in order.orderItemList) {
-      //await add stock
+      await _stockDatasource.createStock(StockModel(
+          id: '0',
+          total: item.quantity,
+          totalOrdered: 0,
+          registrationDate: order.registrationHour,
+          product: item.product));
     }
 
     for (var item in beforeUpdateOrderItemsList) {
-      //await remove stock
+      await _stockDatasource.decreaseStock(StockModel(
+          id: '0',
+          total: item.quantity,
+          totalOrdered: 0,
+          registrationDate: order.registrationHour,
+          product: item.product));
     }
 
     return order;

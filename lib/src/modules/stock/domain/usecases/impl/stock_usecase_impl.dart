@@ -68,9 +68,12 @@ class StockUsecaseImpl implements IStockUsecase {
   }
 
   @override
-  Future<Either<StockError, bool>> deleteStock() {
-    // TODO: implement deleteStock
-    throw UnimplementedError();
+  Future<Either<StockError, bool>> deleteStock(Stock stock) async {
+    if(stock.id.isEmpty){
+      return Left(StockError('Id cannot be empty'));
+    }
+
+    return _repository.deleteStock(stock);
   }
 
   @override

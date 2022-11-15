@@ -15,7 +15,7 @@ abstract class IStockRepository {
 
   Future<Either<StockError, Stock>> decreaseStock(Stock stock);
 
-  Future<Either<StockError, bool>> deleteStock();
+  Future<Either<StockError, bool>> deleteStock(Stock stock);
 
   Future<Either<StockError, Set<Provider>>> getProviderListByStockBetweenDates(
       DateTime iniDate, DateTime endDate);

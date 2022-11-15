@@ -54,9 +54,14 @@ class StockRepositoryImpl implements IStockRepository {
   }
 
   @override
-  Future<Either<StockError, bool>> deleteStock() {
-    // TODO: implement deleteStock
-    throw UnimplementedError();
+  Future<Either<StockError, bool>> deleteStock(Stock stock) async {
+    try {
+      final result = await _datasource.deleteStock(StockModel.fromStock(stock));
+
+      return Right(result);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
   }
 
   @override

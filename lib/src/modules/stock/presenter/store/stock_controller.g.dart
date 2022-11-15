@@ -141,6 +141,16 @@ mixin _$StockController on _StockControllerBase, Store {
         .run(() => super.getProviderListByStockBetweenDates());
   }
 
+  late final _$showEntitySelectionDialogAsyncAction = AsyncAction(
+      '_StockControllerBase.showEntitySelectionDialog',
+      context: context);
+
+  @override
+  Future showEntitySelectionDialog(BuildContext context) {
+    return _$showEntitySelectionDialogAsyncAction
+        .run(() => super.showEntitySelectionDialog(context));
+  }
+
   late final _$getStockListByProviderBetweenDatesAsyncAction = AsyncAction(
       '_StockControllerBase.getStockListByProviderBetweenDates',
       context: context);

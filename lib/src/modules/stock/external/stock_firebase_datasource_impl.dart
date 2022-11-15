@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
@@ -11,12 +12,8 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
 
   @override
   Future<StockModel> createStock(StockModel stock) async {
-    stock.registrationDate = DateTime(stock.registrationDate.year,
-        stock.registrationDate.month, stock.registrationDate.day);
-
-    stock.id = stock.product.id +
-        stock.product.providerId +
-        stock.registrationDate.toString();
+    _setStockDate(stock);
+    _setStockId(stock);
 
     final alreadyInStockSnap = await _stockCollection.doc(stock.id).get();
 
@@ -39,6 +36,12 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   }
 
   @override
+  Future<StockModel> createDuplicatedStock(StockModel stock) {
+    // TODO: implement createDuplicatedStock
+    throw UnimplementedError();
+  }
+
+  @override
   Future<StockModel> updateStock(StockModel stock) async {
     await _stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
         throw FirebaseException(
@@ -47,28 +50,54 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     return stock;
   }
 
-  @override
-  Future<StockModel> createDuplicatedStock(StockModel stock) {
-    // TODO: implement createDuplicatedStock
-    throw UnimplementedError();
+  _getStockFromFirebase(Stock stock) async {
+    final stockToUpdate = await _stockCollection.doc(stock.id).get().catchError(
+        (e) => throw FirebaseException(
+            plugin: 'GET STOCK ERROR', message: e.toString()));
+
+    if (stockToUpdate.data() == null) {
+      throw FirebaseException(
+          plugin: 'GET STOCK ERROR', message: 'STOCK NOT FOUND');
+    }
+
+    return StockModel.fromMap(stockToUpdate.data()!);
   }
 
   @override
-  Future<StockModel> increaseStock(StockModel stock) {
-    // TODO: implement increaseStock
-    throw UnimplementedError();
+  Future<StockModel> increaseStock(StockModel stock) async {
+    _setStockDate(stock);
+    _setStockId(stock);
+    var newStock = await _getStockFromFirebase(stock);
+
+    newStock.total += stock.total;
+
+    return await updateStock(newStock);
   }
 
   @override
-  Future<StockModel> decreaseStock(StockModel stock) {
-    // TODO: implement decreaseStock
-    throw UnimplementedError();
+  Future<StockModel> decreaseStock(StockModel stock) async {
+    _setStockDate(stock);
+    _setStockId(stock);
+    var newStock = await _getStockFromFirebase(stock);
+
+    newStock.total -= stock.total;
+
+    if (newStock.total == 0 && newStock.totalOrdered == 0) {
+      await deleteStock(stock);
+    } else {
+      return await updateStock(newStock);
+    }
+
+    return stock;
   }
 
   @override
-  Future<bool> deleteStock() {
-    // TODO: implement deleteStock
-    throw UnimplementedError();
+  Future<bool> deleteStock(StockModel stock) async {
+    await _stockCollection.doc(stock.id).delete().catchError((e) =>
+        throw FirebaseException(
+            plugin: 'DECREASE STOCK ERROR', message: 'STOCK NOT FOUND'));
+
+    return true;
   }
 
   @override
@@ -141,5 +170,16 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
           plugin: 'GET STOCK PROVIDER ERROR',
           message: 'Fornecedor não encontrado');
     }
+  }
+
+  void _setStockId(StockModel stock) {
+    stock.id = stock.product.id +
+        stock.product.providerId +
+        stock.registrationDate.toString();
+  }
+
+  void _setStockDate(StockModel stock) {
+    stock.registrationDate = DateTime(stock.registrationDate.year,
+        stock.registrationDate.month, stock.registrationDate.day);
   }
 }
