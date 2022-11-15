@@ -165,14 +165,13 @@ abstract class _StockControllerBase with Store {
     }
 
     //modifying stockList to mobx reaction get the state
-    final List<Stock> updatedList = stockList;
-    stockList = ObservableList.of([]);
-
-    reloadStockList(updatedList);
+    reloadStockList();
   }
 
   @action
-  reloadStockList(List<Stock> updatedList) {
+  reloadStockList() {
+    final List<Stock> updatedList = stockList;
+    stockList = ObservableList.of([]);
     stockList = ObservableList.of(updatedList);
   }
 
@@ -191,6 +190,15 @@ abstract class _StockControllerBase with Store {
       await getProviderListByStockBetweenDates();
       setSelectedProvider(r.product.provider!);
       await getStockListByProviderBetweenDates();
+    });
+  }
+
+  @action
+  removeStock(Stock stock) async {
+    final result = await stockUsecase.deleteStock(stock);
+
+    result.fold((l) => error = optionOf(l), (r) {
+      stockList.remove(stock);
     });
   }
 }

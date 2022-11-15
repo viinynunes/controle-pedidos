@@ -170,6 +170,14 @@ mixin _$StockController on _StockControllerBase, Store {
         .run(() => super.createEmptyStock(product));
   }
 
+  late final _$removeStockAsyncAction =
+      AsyncAction('_StockControllerBase.removeStock', context: context);
+
+  @override
+  Future removeStock(Stock stock) {
+    return _$removeStockAsyncAction.run(() => super.removeStock(stock));
+  }
+
   late final _$_StockControllerBaseActionController =
       ActionController(name: '_StockControllerBase', context: context);
 
@@ -229,11 +237,11 @@ mixin _$StockController on _StockControllerBase, Store {
   }
 
   @override
-  dynamic reloadStockList(List<Stock> updatedList) {
+  dynamic reloadStockList() {
     final _$actionInfo = _$_StockControllerBaseActionController.startAction(
         name: '_StockControllerBase.reloadStockList');
     try {
-      return super.reloadStockList(updatedList);
+      return super.reloadStockList();
     } finally {
       _$_StockControllerBaseActionController.endAction(_$actionInfo);
     }

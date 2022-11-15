@@ -95,7 +95,7 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   Future<bool> deleteStock(StockModel stock) async {
     await _stockCollection.doc(stock.id).delete().catchError((e) =>
         throw FirebaseException(
-            plugin: 'DECREASE STOCK ERROR', message: 'STOCK NOT FOUND'));
+            plugin: 'DELETE STOCK ERROR', message: 'STOCK NOT FOUND'));
 
     return true;
   }

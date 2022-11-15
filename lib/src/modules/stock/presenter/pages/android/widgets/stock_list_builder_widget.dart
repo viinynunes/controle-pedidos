@@ -20,7 +20,9 @@ class StockListBuilderWidget extends StatelessWidget {
                 itemBuilder: (_, index) {
                   final stock = controller.stockList[index];
                   return AndroidStockTile(
+                    key: ObjectKey(stock),
                     stock: stock,
+                    onRemove: () => controller.removeStock(stock),
                   );
                 },
               )
