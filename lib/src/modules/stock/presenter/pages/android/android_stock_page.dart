@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
@@ -41,7 +42,13 @@ class _AndroidStockPageState extends IStockPageState {
         title: const Text('Estoque'),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.refresh)),
+          Observer(
+            builder: (_) => controller.selectedProvider != null
+                ? IconButton(
+                    onPressed: controller.getStockListByProviderBetweenDates,
+                    icon: const Icon(Icons.refresh))
+                : Container(),
+          ),
           IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
           PopupMenuButton(
             itemBuilder: (_) => [
