@@ -25,6 +25,22 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
     });
   }
 
+  late final _$loadingAtom =
+      Atom(name: '_OrderRegistrationControllerBase.loading', context: context);
+
+  @override
+  bool get loading {
+    _$loadingAtom.reportRead();
+    return super.loading;
+  }
+
+  @override
+  set loading(bool value) {
+    _$loadingAtom.reportWrite(value, super.loading, () {
+      super.loading = value;
+    });
+  }
+
   late final _$selectedClientAtom = Atom(
       name: '_OrderRegistrationControllerBase.selectedClient',
       context: context);
@@ -367,6 +383,7 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   String toString() {
     return '''
 newOrder: ${newOrder},
+loading: ${loading},
 selectedClient: ${selectedClient},
 newOrderData: ${newOrderData},
 selectedProduct: ${selectedProduct},

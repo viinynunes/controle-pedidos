@@ -180,6 +180,24 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                       builder: (_) {
                         var orderItemList = controller.orderItemList;
 
+                        if (controller.loading) {
+                          return Overlay(
+                            initialEntries: [
+                              OverlayEntry(
+                                builder: (_) => Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black12,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
                         return orderItemList.isNotEmpty
                             ? ListView.builder(
                                 physics: const BouncingScrollPhysics(),

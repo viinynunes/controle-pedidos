@@ -26,6 +26,8 @@ abstract class _OrderRegistrationControllerBase with Store {
   @observable
   bool newOrder = true;
   @observable
+  bool loading = false;
+  @observable
   Client? selectedClient;
   @observable
   OrderModel? newOrderData;
@@ -246,6 +248,8 @@ abstract class _OrderRegistrationControllerBase with Store {
       return;
     }
 
+    loading = true;
+
     initNewOrderData();
 
     if (newOrder) {
@@ -263,6 +267,8 @@ abstract class _OrderRegistrationControllerBase with Store {
         Navigator.of(context).pop(r);
       });
     }
+
+    loading = false;
   }
 
   sortOrderItemList() {
