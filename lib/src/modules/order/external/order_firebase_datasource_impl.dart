@@ -83,7 +83,14 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     await _orderCollection.doc(order.id).update(order.toMap()).catchError(
         (e) => throw FirebaseException(plugin: 'DISABLE ORDER ERROR'));
 
-    //await disable stock
+    for(var item in order.orderItemList){
+      await _stockDatasource.decreaseStock(StockModel(
+          id: '0',
+          total: item.quantity,
+          totalOrdered: 0,
+          registrationDate: order.registrationHour,
+          product: item.product));
+    }
 
     return true;
   }
@@ -140,6 +147,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
     final snap = await _orderCollection
+        .where('enabled', isEqualTo: true)
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
         .orderBy('registrationDate', descending: false)

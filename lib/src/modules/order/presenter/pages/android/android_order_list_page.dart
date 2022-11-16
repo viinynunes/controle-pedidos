@@ -163,6 +163,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                                   OrderModel.fromOrder(order: orderList[index]);
 
                               return AndroidOrderListTile(
+                                key: ObjectKey(order),
                                 order: order,
                                 onTap: () =>
                                     controller.callOrderRegistrationPage(

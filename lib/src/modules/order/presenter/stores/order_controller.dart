@@ -138,9 +138,8 @@ abstract class _OrderControllerBase with Store {
 
     final disableResult = await orderUsecase.disableOrder(order);
 
-    disableResult.fold((l) => error = optionOf(l), (r) {
-      orderList.remove(order);
-      filteredOrderList.remove(order);
+    disableResult.fold((l) => error = optionOf(l), (r) async {
+      await getOrderListBetweenDates();
     });
 
     loading = false;

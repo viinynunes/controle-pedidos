@@ -39,14 +39,16 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
     WidgetsBinding.instance.addPostFrameCallback((_) => scrollListToBottom());
 
     return Slidable(
-      key: UniqueKey(),
       startActionPane: ActionPane(
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
             onPressed: (_) => widget.onDisable(),
+            icon: Icons.delete,
             backgroundColor: Theme.of(context).errorColor,
-            icon: Icons.delete_forever,
+            autoClose: false,
+            borderRadius: BorderRadius.circular(50),
+            spacing: 10,
           )
         ],
       ),
