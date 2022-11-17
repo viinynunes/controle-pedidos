@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../store/stock_controller.dart';
 import 'provider_dropdown_selection_widget.dart';
 import 'stock_left_textfield_widget.dart';
@@ -13,11 +14,30 @@ class ProviderSelectionAndStockLeftWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = GetIt.I.get<StockController>();
 
+    final size = MediaQuery.of(context).size;
+
     return Observer(
       builder: (_) => controller.loading
-          ? const Center(
-              heightFactor: 10,
-              child: LinearProgressIndicator(),
+          ? SizedBox(
+              height: size.height * 0.1,
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 3,
+                    child: ShimmerListBuilder(
+                        height: size.height * 0.07,
+                        width: double.maxFinite,
+                        itemCount: 1),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: ShimmerListBuilder(
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        width: double.maxFinite,
+                        itemCount: 1),
+                  ),
+                ],
+              ),
             )
           : controller.providerList.isNotEmpty
               ? Row(

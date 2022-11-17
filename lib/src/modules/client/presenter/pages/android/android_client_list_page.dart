@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../core/widgets/custom_material_banner_error.dart';
+import '../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../stores/client_controller.dart';
 import 'android_client_registration_page.dart';
 import 'tiles/android_client_list_tile.dart';
@@ -96,9 +97,10 @@ class _AndroidClientListPageState extends State<AndroidClientListPage> {
                 var clientList = [];
 
                 if (controller.loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return ShimmerListBuilder(
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      width: double.maxFinite,
+                      itemCount: 10);
                 }
 
                 if (controller.searching && controller.searchText.isNotEmpty) {

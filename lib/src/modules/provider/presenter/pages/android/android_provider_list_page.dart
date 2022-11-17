@@ -7,6 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import 'tiles/android_provider_list_tile.dart';
 
 class AndroidProviderListPage extends StatefulWidget {
@@ -92,9 +93,10 @@ class _AndroidProviderListPageState extends State<AndroidProviderListPage> {
               List<Provider> providerList = [];
 
               if (controller.loading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return ShimmerListBuilder(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    width: double.maxFinite,
+                    itemCount: 10);
               }
 
               if (controller.searching && controller.searchText.isNotEmpty) {

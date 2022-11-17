@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/core/widgets/shimmer/shimmer_list_builder.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_controller.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,8 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Observer(
@@ -96,47 +99,45 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Observer(
-                  builder: (_) => controller.loading
-                      ? const LinearProgressIndicator()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                await showDateRangePicker(
-                                  context: context,
-                                  initialDateRange: DateTimeRange(
-                                    start: controller.iniDate,
-                                    end: controller.endDate,
-                                  ),
-                                  firstDate: DateTime(2020),
-                                  lastDate: DateTime(2050),
-                                ).then(
-                                  (result) {
-                                    if (result != null) {
-                                      controller.changeDateRangeSelected(
-                                          result.start, result.end);
-                                    }
-                                  },
-                                );
-                              },
-                              child: Text(controller.dateRangeSelected),
+                  builder: (_) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          await showDateRangePicker(
+                            context: context,
+                            initialDateRange: DateTimeRange(
+                              start: controller.iniDate,
+                              end: controller.endDate,
                             ),
-                            controller.sortByDate
-                                ? IconButton(
-                                    onPressed: controller.changeSortMethod,
-                                    icon: Icon(
-                                      Icons.sort_by_alpha,
-                                      color: Theme.of(context).indicatorColor,
-                                    ))
-                                : IconButton(
-                                    onPressed: controller.changeSortMethod,
-                                    icon: Icon(
-                                      Icons.calendar_month,
-                                      color: Theme.of(context).indicatorColor,
-                                    )),
-                          ],
-                        ),
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2050),
+                          ).then(
+                            (result) {
+                              if (result != null) {
+                                controller.changeDateRangeSelected(
+                                    result.start, result.end);
+                              }
+                            },
+                          );
+                        },
+                        child: Text(controller.dateRangeSelected),
+                      ),
+                      controller.sortByDate
+                          ? IconButton(
+                              onPressed: controller.changeSortMethod,
+                              icon: Icon(
+                                Icons.sort_by_alpha,
+                                color: Theme.of(context).indicatorColor,
+                              ))
+                          : IconButton(
+                              onPressed: controller.changeSortMethod,
+                              icon: Icon(
+                                Icons.calendar_month,
+                                color: Theme.of(context).indicatorColor,
+                              )),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Observer(builder: (_) {
@@ -150,9 +151,10 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                     }
 
                     if (controller.loading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return ShimmerListBuilder(
+                          height: size.height * 0.1,
+                          width: double.maxFinite,
+                          itemCount: 10);
                     }
 
                     return orderList.isNotEmpty

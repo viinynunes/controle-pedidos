@@ -57,6 +57,7 @@ dependencies:
   mobx: any
   flutter_mobx: any
   get_it: any
+  shimmer: ^2.0.0
 
 
 dev_dependencies:

@@ -93,6 +93,8 @@ abstract class _StockControllerBase with Store {
   getProviderListByStockBetweenDates() async {
     loading = true;
 
+    selectedProvider = null;
+
     stockList.clear();
     providerList.clear();
 

@@ -6,6 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import 'android_product_registration_page.dart';
 
 class AndroidProductListPage extends StatefulWidget {
@@ -38,6 +39,8 @@ class _AndroidProductListPageState extends State<AndroidProductListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Observer(
@@ -91,8 +94,10 @@ class _AndroidProductListPageState extends State<AndroidProductListPage> {
             var productList = [];
 
             if (controller.loading) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return ShimmerListBuilder(
+                itemCount: 30,
+                height: size.height * 0.05,
+                width: double.maxFinite,
               );
             }
 
