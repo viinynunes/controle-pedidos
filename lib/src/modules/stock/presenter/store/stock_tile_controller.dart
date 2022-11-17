@@ -3,6 +3,7 @@ import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:rect_getter/rect_getter.dart';
 
 import '../../../../domain/entities/stock.dart';
 
@@ -23,6 +24,7 @@ abstract class _StockTileControllerBase with Store {
   bool selected = false;
 
   late Stock stock;
+  final rectKey = RectGetter.createGlobalKey();
 
   final stockTotalOrderedController = TextEditingController();
 
@@ -38,7 +40,7 @@ abstract class _StockTileControllerBase with Store {
   }
 
   @action
-  setSelected(){
+  setSelected() {
     selected = !selected;
   }
 

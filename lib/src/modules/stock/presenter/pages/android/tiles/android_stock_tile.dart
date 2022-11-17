@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:rect_getter/rect_getter.dart';
 
 import '../../../../../core/widgets/add_remove_quantity_widget.dart';
 import '../../../store/stock_controller.dart';
@@ -40,11 +41,32 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
     tileController.initState(widget.stock);
   }
 
+  _showTileMenu() async {
+    final rect = RectGetter.getRectFromKey(tileController.rectKey);
+
+    await showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(
+            rect!.left, rect.top, rect.right, rect.bottom),
+        items: [
+          PopupMenuItem(
+            child: Text(
+              widget.stock.product.name.toUpperCase(),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            enabled: false,
+          ),
+          PopupMenuItem(onTap: () {}, child: const Text('alterar data')),
+        ],
+        elevation: 10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Slidable(
       direction: Axis.horizontal,
-      startActionPane: ActionPane(
+      endActionPane: ActionPane(
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
@@ -55,6 +77,24 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
             borderRadius: BorderRadius.circular(50),
             spacing: 10,
           ),
+        ],
+      ),
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          RectGetter(
+            key: tileController.rectKey,
+            child: SlidableAction(
+              onPressed: (_) async {
+                await _showTileMenu();
+              },
+              icon: Icons.menu_sharp,
+              backgroundColor: Theme.of(context).highlightColor,
+              autoClose: true,
+              borderRadius: BorderRadius.circular(50),
+              spacing: 10,
+            ),
+          )
         ],
       ),
       child: InkWell(
