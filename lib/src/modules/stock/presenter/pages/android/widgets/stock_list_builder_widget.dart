@@ -34,6 +34,7 @@ class StockListBuilderWidget extends StatelessWidget {
                       key: ObjectKey(stock),
                       stock: stock,
                       onRemove: () => controller.removeStock(stock),
+                      onLongPress: (){},
                     );
                   },
                 )

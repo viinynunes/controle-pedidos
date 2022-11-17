@@ -19,6 +19,8 @@ abstract class _StockTileControllerBase with Store {
   int stockLeft = 0;
   @observable
   Option<StockError> error = none();
+  @observable
+  bool selected = false;
 
   late Stock stock;
 
@@ -33,6 +35,11 @@ abstract class _StockTileControllerBase with Store {
     updateTotalOrderedController();
 
     updateStockLeft();
+  }
+
+  @action
+  setSelected(){
+    selected = !selected;
   }
 
   @action

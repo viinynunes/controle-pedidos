@@ -41,6 +41,22 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
     });
   }
 
+  late final _$selectedAtom =
+      Atom(name: '_StockTileControllerBase.selected', context: context);
+
+  @override
+  bool get selected {
+    _$selectedAtom.reportRead();
+    return super.selected;
+  }
+
+  @override
+  set selected(bool value) {
+    _$selectedAtom.reportWrite(value, super.selected, () {
+      super.selected = value;
+    });
+  }
+
   late final _$_StockTileControllerBaseActionController =
       ActionController(name: '_StockTileControllerBase', context: context);
 
@@ -50,6 +66,17 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
         name: '_StockTileControllerBase.initState');
     try {
       return super.initState(stock);
+    } finally {
+      _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setSelected() {
+    final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
+        name: '_StockTileControllerBase.setSelected');
+    try {
+      return super.setSelected();
     } finally {
       _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -114,7 +141,8 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
   String toString() {
     return '''
 stockLeft: ${stockLeft},
-error: ${error}
+error: ${error},
+selected: ${selected}
     ''';
   }
 }
