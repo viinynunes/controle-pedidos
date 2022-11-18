@@ -32,7 +32,7 @@ class GetProviderByDateWidget extends StatelessWidget {
           fit: FlexFit.tight,
           child: ElevatedButton(
             onPressed: controller.getProviderListByStockBetweenDates,
-            child: const Text('Buscar Fornecedores'),
+            child: const Text('Buscar Fornecedores', textAlign: TextAlign.center,),
           ),
         ),
       ],
