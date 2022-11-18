@@ -11,16 +11,9 @@ import '../../../store/stock_controller.dart';
 import '../../../store/stock_tile_controller.dart';
 
 class AndroidStockTile extends StatefulWidget {
-  const AndroidStockTile(
-      {Key? key,
-      required this.stock,
-      required this.onRemove,
-      required this.onLongPress})
-      : super(key: key);
+  const AndroidStockTile({Key? key, required this.stock}) : super(key: key);
 
   final Stock stock;
-  final VoidCallback onRemove;
-  final VoidCallback onLongPress;
 
   @override
   State<AndroidStockTile> createState() => _AndroidStockTileState();
@@ -53,7 +46,8 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                 autoClose: true,
                 onPressed: (_) {
                   tileController.setSelected();
-                  widget.onLongPress();
+                  stockController
+                      .addRemoveStockFromSelectedStockList(widget.stock);
                 },
                 icon: tileController.selected
                     ? Icons.check_box
@@ -85,7 +79,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                         borderRadius: BorderRadius.circular(50)),
                     child: ModalBottomSheetStockTile(
                       stock: widget.stock,
-                      onDelete: widget.onRemove,
+                      onDelete: () => stockController.removeStock(widget.stock),
                       onChangeDate: (date) {
                         tileController.updateStockDate(date);
                         stockController.getStockListByProviderBetweenDates();
