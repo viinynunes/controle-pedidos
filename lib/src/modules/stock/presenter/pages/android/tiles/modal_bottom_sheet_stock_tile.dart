@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../../../../domain/entities/stock.dart';
 
 class ModalBottomSheetStockTile extends StatelessWidget {
-  const ModalBottomSheetStockTile(
-      {Key? key, required this.stock, required this.onDelete})
-      : super(key: key);
+  const ModalBottomSheetStockTile({
+    Key? key,
+    required this.stock,
+    required this.onDelete,
+    required this.onChangeDate,
+  }) : super(key: key);
 
   final Stock stock;
   final VoidCallback onDelete;
+  final Function(DateTime selectedDate) onChangeDate;
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +74,15 @@ class ModalBottomSheetStockTile extends StatelessWidget {
         _getListItem(
             onTap: () async {
               await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2019),
-                  lastDate: DateTime(2200));
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2019),
+                      lastDate: DateTime(2200))
+                  .then((value) {
+                if (value != null) {
+                  onChangeDate(value);
+                }
+              });
 
               Navigator.of(context).pop();
             },

@@ -92,6 +92,13 @@ abstract class _StockTileControllerBase with Store {
         (int.parse(stockTotalOrderedController.text) - stock.total).toString());
   }
 
+  @action
+  updateStockDate(DateTime date) async {
+    stock.registrationDate = date;
+
+    await updateStockUsecase();
+  }
+
   updateStockUsecase() async {
     final result = await stockUsecase.updateStock(stock);
 

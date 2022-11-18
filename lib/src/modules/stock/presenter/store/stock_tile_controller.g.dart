@@ -57,6 +57,14 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
     });
   }
 
+  late final _$updateStockDateAsyncAction =
+      AsyncAction('_StockTileControllerBase.updateStockDate', context: context);
+
+  @override
+  Future updateStockDate(DateTime date) {
+    return _$updateStockDateAsyncAction.run(() => super.updateStockDate(date));
+  }
+
   late final _$_StockTileControllerBaseActionController =
       ActionController(name: '_StockTileControllerBase', context: context);
 

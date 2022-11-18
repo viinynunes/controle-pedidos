@@ -74,6 +74,8 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                               child: ModalBottomSheetStockTile(
                                 stock: widget.stock,
                                 onDelete: widget.onRemove,
+                                onChangeDate: (date) =>
+                                    tileController.updateStockDate(date),
                               ),
                             ),
                           ),
