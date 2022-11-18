@@ -96,9 +96,9 @@ class _ShowEntitySelectionDialogState extends State<ShowEntitySelectionDialog> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Flexible(
+                      Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(16),
                           child: Text(
                             entity.toString(),
                             style: Theme.of(context).textTheme.titleMedium,
