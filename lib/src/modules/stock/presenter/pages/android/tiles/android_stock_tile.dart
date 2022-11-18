@@ -2,6 +2,7 @@ import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:controle_pedidos/src/modules/stock/presenter/pages/android/tiles/modal_bottom_sheet_stock_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
@@ -42,11 +43,26 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onLongPress: () {
-        tileController.setSelected();
-        widget.onLongPress();
-      },
+    return Slidable(
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          Observer(
+            builder: (_) {
+              return SlidableAction(
+                autoClose: true,
+                onPressed: (_) {
+                  tileController.setSelected();
+                  widget.onLongPress();
+                },
+                icon: tileController.selected
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank,
+              );
+            },
+          )
+        ],
+      ),
       child: Observer(
         builder: (_) => Card(
           color: tileController.selected
@@ -54,103 +70,102 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
               : Theme.of(context).cardColor,
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: GestureDetector(
-                      onTap: () => showModalBottomSheet(
-                            context: context,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            backgroundColor: Theme.of(context).backgroundColor,
-                            builder: (_) => Container(
-                              height: MediaQuery.of(context).size.height * 0.4,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).backgroundColor,
-                                  borderRadius: BorderRadius.circular(50)),
-                              child: ModalBottomSheetStockTile(
-                                stock: widget.stock,
-                                onDelete: widget.onRemove,
-                                onChangeDate: (date) =>
-                                    tileController.updateStockDate(date),
-                              ),
-                            ),
-                          ),
-                      child: const Icon(Icons.more_vert)),
-                ),
-                const SizedBox(width: 0.8),
-                _getFlexible(flex: 5, text: tileController.stock.product.name),
-                _getFlexible(
-                    flex: 2, text: tileController.stock.product.category),
-                _getFlexible(
-                    flex: 2, text: tileController.stock.total.toString()),
-                Flexible(
-                  flex: 2,
-                  fit: FlexFit.tight,
-                  child: TextField(
-                    controller: tileController.stockTotalOrderedController,
-                    focusNode: tileController.stockTotalOrderedFocus,
-                    textAlign: TextAlign.center,
-                    onTap: tileController.stockTextFieldTap,
-                    onSubmitted: tileController.updateTotalOrderedByKeyboard,
-                    keyboardType: const TextInputType.numberWithOptions(),
-                    textInputAction: TextInputAction.next,
+            child: InkWell(
+              onLongPress: () {
+                showModalBottomSheet(
+                  context: context,
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  builder: (_) => Container(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).backgroundColor,
+                        borderRadius: BorderRadius.circular(50)),
+                    child: ModalBottomSheetStockTile(
+                      stock: widget.stock,
+                      onDelete: widget.onRemove,
+                      onChangeDate: (date) =>
+                          tileController.updateStockDate(date),
+                    ),
                   ),
-                ),
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      AddRemoveQuantityWidget(
-                        onTap: () =>
-                            tileController.updateTotalOrderedByButton(true),
-                        icon: Icons.add_circle_sharp,
-                        color: Colors.green,
-                      ),
-                      const SizedBox(height: 10),
-                      AddRemoveQuantityWidget(
-                        onTap: () =>
-                            tileController.updateTotalOrderedByButton(false),
-                        icon: Icons.remove_circle_sharp,
-                        color: Colors.red,
-                      ),
-                    ],
+                );
+              },
+              child: Row(
+                children: [
+                  const SizedBox(width: 0.8),
+                  _getFlexible(
+                      flex: 5, text: tileController.stock.product.name),
+                  _getFlexible(
+                      flex: 2, text: tileController.stock.product.category),
+                  _getFlexible(
+                      flex: 2, text: tileController.stock.total.toString()),
+                  Flexible(
+                    flex: 2,
+                    fit: FlexFit.tight,
+                    child: TextField(
+                      controller: tileController.stockTotalOrderedController,
+                      focusNode: tileController.stockTotalOrderedFocus,
+                      textAlign: TextAlign.center,
+                      onTap: tileController.stockTextFieldTap,
+                      onSubmitted: tileController.updateTotalOrderedByKeyboard,
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      textInputAction: TextInputAction.next,
+                    ),
                   ),
-                ),
-                Observer(
-                  builder: (_) => _getFlexible(
-                      flex: 1, text: tileController.stockLeft.toString()),
-                ),
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      AddRemoveQuantityWidget(
-                        onTap: () =>
-                            tileController.updateStockLeftByButton(true),
-                        icon: Icons.add_circle_sharp,
-                        color: Colors.green,
-                      ),
-                      const SizedBox(height: 10),
-                      AddRemoveQuantityWidget(
-                        onTap: () =>
-                            tileController.updateStockLeftByButton(false),
-                        icon: Icons.remove_circle_sharp,
-                        color: Colors.red,
-                      ),
-                    ],
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AddRemoveQuantityWidget(
+                          onTap: () =>
+                              tileController.updateTotalOrderedByButton(true),
+                          icon: Icons.add_circle_sharp,
+                          color: Colors.green,
+                        ),
+                        const SizedBox(height: 10),
+                        AddRemoveQuantityWidget(
+                          onTap: () =>
+                              tileController.updateTotalOrderedByButton(false),
+                          icon: Icons.remove_circle_sharp,
+                          color: Colors.red,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Observer(
+                    builder: (_) => _getFlexible(
+                        flex: 1, text: tileController.stockLeft.toString()),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AddRemoveQuantityWidget(
+                          onTap: () =>
+                              tileController.updateStockLeftByButton(true),
+                          icon: Icons.add_circle_sharp,
+                          color: Colors.green,
+                        ),
+                        const SizedBox(height: 10),
+                        AddRemoveQuantityWidget(
+                          onTap: () =>
+                              tileController.updateStockLeftByButton(false),
+                          icon: Icons.remove_circle_sharp,
+                          color: Colors.red,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
