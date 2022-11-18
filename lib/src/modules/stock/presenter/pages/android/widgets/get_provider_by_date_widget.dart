@@ -19,6 +19,7 @@ class GetProviderByDateWidget extends StatelessWidget {
           child: Observer(
             builder: (_) => ElevatedButton(
               onPressed: () => controller.showDateTimeRangeSelector(context),
+              onLongPress: controller.resetDateToToday,
               child: Text(
                 controller.selectedDateString,
                 textAlign: TextAlign.center,

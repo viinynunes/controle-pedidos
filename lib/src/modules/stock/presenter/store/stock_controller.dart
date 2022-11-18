@@ -52,8 +52,7 @@ abstract class _StockControllerBase with Store {
   initState({required List<Product> productList}) {
     this.productList = productList;
 
-    iniDate = DateTime.now();
-    endDate = DateTime.now();
+    resetDateToToday();
 
     setSelectedDateString();
 
@@ -84,6 +83,14 @@ abstract class _StockControllerBase with Store {
   setSelectedDateString() {
     selectedDateString =
         dateFormat.format(iniDate) + ' | ' + dateFormat.format(endDate);
+  }
+
+  @action
+  resetDateToToday() {
+    iniDate = DateTime.now();
+    endDate = DateTime.now();
+
+    setSelectedDateString();
   }
 
   @action
