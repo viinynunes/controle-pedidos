@@ -197,10 +197,13 @@ abstract class _StockControllerBase with Store {
 
   @action
   removeStock(Stock stock) async {
+    loading = true;
     final result = await stockUsecase.deleteStock(stock);
 
     result.fold((l) => error = optionOf(l), (r) {
       stockList.remove(stock);
     });
+
+    loading = false;
   }
 }
