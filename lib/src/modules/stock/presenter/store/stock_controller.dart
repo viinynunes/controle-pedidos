@@ -33,6 +33,8 @@ abstract class _StockControllerBase with Store {
   @observable
   var stockList = ObservableList<Stock>.of([]);
   @observable
+  var selectedStockList = ObservableList<Stock>.of([]);
+  @observable
   Provider? selectedProvider;
   @observable
   Option<StockError> error = none();
@@ -156,6 +158,15 @@ abstract class _StockControllerBase with Store {
               value: provider,
             ))
         .toList();
+  }
+
+  @action
+  addRemoveStockFromSelectedStockList(Stock stock) {
+    selectedStockList.contains(stock)
+        ? selectedStockList.remove(stock)
+        : selectedStockList.add(stock);
+
+    stockService.sortStockListByProductName(selectedStockList);
   }
 
   @action

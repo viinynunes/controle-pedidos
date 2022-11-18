@@ -73,6 +73,22 @@ mixin _$StockController on _StockControllerBase, Store {
     });
   }
 
+  late final _$selectedStockListAtom =
+      Atom(name: '_StockControllerBase.selectedStockList', context: context);
+
+  @override
+  ObservableList<Stock> get selectedStockList {
+    _$selectedStockListAtom.reportRead();
+    return super.selectedStockList;
+  }
+
+  @override
+  set selectedStockList(ObservableList<Stock> value) {
+    _$selectedStockListAtom.reportWrite(value, super.selectedStockList, () {
+      super.selectedStockList = value;
+    });
+  }
+
   late final _$selectedProviderAtom =
       Atom(name: '_StockControllerBase.selectedProvider', context: context);
 
@@ -226,6 +242,17 @@ mixin _$StockController on _StockControllerBase, Store {
   }
 
   @override
+  dynamic addRemoveStockFromSelectedStockList(Stock stock) {
+    final _$actionInfo = _$_StockControllerBaseActionController.startAction(
+        name: '_StockControllerBase.addRemoveStockFromSelectedStockList');
+    try {
+      return super.addRemoveStockFromSelectedStockList(stock);
+    } finally {
+      _$_StockControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic stockLeftSubmit(dynamic text) {
     final _$actionInfo = _$_StockControllerBaseActionController.startAction(
         name: '_StockControllerBase.stockLeftSubmit');
@@ -254,6 +281,7 @@ selectedDateString: ${selectedDateString},
 loading: ${loading},
 providerList: ${providerList},
 stockList: ${stockList},
+selectedStockList: ${selectedStockList},
 selectedProvider: ${selectedProvider},
 error: ${error},
 success: ${success}
