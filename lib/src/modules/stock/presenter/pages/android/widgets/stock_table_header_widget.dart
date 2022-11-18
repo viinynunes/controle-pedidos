@@ -28,10 +28,10 @@ class StockTableHeaderWidget extends StatelessWidget {
                 child: Row(
                   children: [
                     _getStockTableHeader(flex: 8, text: 'Produto'),
-                    _getStockTableHeader(flex: 2, text: 'Emb'),
-                    _getStockTableHeader(flex: 4, text: 'Pedido'),
-                    _getStockTableHeader(flex: 5, text: 'Total'),
-                    _getStockTableHeader(flex: 5, text: 'Sobra'),
+                    _getStockTableHeader(flex: 3, text: 'Emb'),
+                    _getStockTableHeader(flex: 3, text: 'Pedido'),
+                    _getStockTableHeader(flex: 3, text: 'Total'),
+                    _getStockTableHeader(flex: 3, text: 'Sobra'),
                   ],
                 ),
               )
