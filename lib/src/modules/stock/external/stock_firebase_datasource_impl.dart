@@ -15,24 +15,27 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     _setStockDate(stock);
     _setStockId(stock);
 
-    final alreadyInStockSnap = await _stockCollection.doc(stock.id).get();
+    final alreadyInStockSnap = await _getStockFromFirebase(stock);
 
-    late StockModel newStock;
+    if (alreadyInStockSnap == null) {
+      stock.product.provider ??= await _getProvider(stock.product.providerId);
 
-    if (alreadyInStockSnap.data() != null) {
-      newStock = StockModel.fromMap(alreadyInStockSnap.data()!);
-      newStock.total += stock.total;
-    } else {
-      newStock = StockModel.fromStock(stock);
+      await _stockCollection.add(stock.toMap()).catchError((e) =>
+          throw FirebaseException(
+              plugin: 'CREATE STOCK ERROR', message: e.toString()));
+
+      return stock;
     }
 
-    stock.product.provider ??= await _getProvider(stock.product.providerId);
+    if (alreadyInStockSnap.docs.length == 1) {
+      var newStock = StockModel.fromMap(alreadyInStockSnap.docs.first.data());
+      newStock.total += stock.total;
 
-    _stockCollection.doc(stock.id).set(newStock.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'CREATE STOCK ERROR', message: e.toString()));
+      return updateStock(newStock);
+    }
 
-    return stock;
+    throw FirebaseException(
+        plugin: 'CREATE STOCK ERROR', message: 'UNEXPECTED ERROR');
   }
 
   @override
@@ -42,32 +45,56 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   }
 
   @override
-  Future<StockModel> updateStock(StockModel stock) async {
-    await _stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'UPDATE STOCK ERROR', message: e.toString()));
+  Future<StockModel> updateStockDate(
+      StockModel toDeleteStock, StockModel updatedStock) async {
+    _setStockId(updatedStock);
 
-    return stock;
-  }
+    final snap = await _getStockFromFirebase(updatedStock);
 
-  _getStockFromFirebase(Stock stock) async {
-    final stockToUpdate = await _stockCollection.doc(stock.id).get().catchError(
-        (e) => throw FirebaseException(
-            plugin: 'GET STOCK ERROR', message: e.toString()));
-
-    if (stockToUpdate.data() == null) {
-      throw FirebaseException(
-          plugin: 'GET STOCK ERROR', message: 'STOCK NOT FOUND');
+    if (snap == null) {
+      await createStock(updatedStock);
+      await deleteStock(toDeleteStock);
+      return updatedStock;
     }
 
-    return StockModel.fromMap(stockToUpdate.data()!);
+    var stockOnDB = StockModel.fromMap(snap.docs.first.data());
+
+    stockOnDB.total += updatedStock.total;
+    stockOnDB.totalOrdered += updatedStock.totalOrdered;
+
+    await updateStock(stockOnDB);
+    await deleteStock(toDeleteStock);
+
+    return stockOnDB;
+  }
+
+  @override
+  Future<StockModel> updateStock(StockModel stock) async {
+    final snap = await _getStockFromFirebase(stock);
+
+    if (snap == null) {
+      throw FirebaseException(
+          plugin: 'GET STOCK ERROR', message: 'NENHUM ITEM ENCONTRADO');
+    }
+
+    await _stockCollection.doc(snap.docs.first.id).update(stock.toMap());
+
+    return stock;
   }
 
   @override
   Future<StockModel> increaseStock(StockModel stock) async {
     _setStockDate(stock);
     _setStockId(stock);
-    var newStock = await _getStockFromFirebase(stock);
+
+    final snap = await _getStockFromFirebase(stock);
+
+    if (snap == null) {
+      throw FirebaseException(
+          plugin: 'GET STOCK ERROR', message: 'NENHUM ITEM ENCONTRADO');
+    }
+
+    var newStock = StockModel.fromMap(snap.docs.first.data());
 
     newStock.total += stock.total;
 
@@ -78,7 +105,14 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   Future<StockModel> decreaseStock(StockModel stock) async {
     _setStockDate(stock);
     _setStockId(stock);
-    var newStock = await _getStockFromFirebase(stock);
+    final snap = await _getStockFromFirebase(stock);
+
+    if (snap == null) {
+      throw FirebaseException(
+          plugin: 'GET STOCK ERROR', message: 'NENHUM ITEM ENCONTRADO');
+    }
+
+    var newStock = StockModel.fromMap(snap.docs.first.data());
 
     newStock.total -= stock.total;
 
@@ -93,8 +127,15 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
 
   @override
   Future<bool> deleteStock(StockModel stock) async {
-    await _stockCollection.doc(stock.id).delete().catchError((e) =>
-        throw FirebaseException(
+    final stockFromFB = await _getStockFromFirebase(stock);
+
+    if (stockFromFB == null) {
+      throw FirebaseException(
+          plugin: 'GET STOCK ERROR', message: 'NENHUM ITEM ENCONTRADO');
+    }
+
+    await _stockCollection.doc(stockFromFB.docs.first.id).delete().catchError(
+        (e) => throw FirebaseException(
             plugin: 'DELETE STOCK ERROR', message: 'STOCK NOT FOUND'));
 
     return true;
@@ -145,7 +186,6 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
         .where('product.provider.id', isEqualTo: provider.id)
-        //.orderBy('stock.product.name')
         .get();
 
     for (var s in snap.docs) {
@@ -153,6 +193,40 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     }
 
     return stockList;
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>?> _getStockFromFirebase(
+      Stock stock) async {
+    final stockToUpdate = await _stockCollection
+        .where('id', isEqualTo: stock.id)
+        .where('registrationDate', isEqualTo: stock.registrationDate)
+        .get()
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET STOCK FROM FIREBASE ERROR', message: e.toString()));
+
+    if (stockToUpdate.docs.length > 1) {
+      throw FirebaseException(
+          plugin: 'GET STOCK ERROR', message: 'MAIS DE 1 ITEM ENCONTRADO');
+    }
+
+    if (stockToUpdate.docs.isEmpty) {
+      return null;
+    }
+
+    return stockToUpdate;
+  }
+
+  void _setStockId(StockModel stock) {
+    stock.id = stock.product.id +
+        stock.product.providerId +
+        DateTime(stock.registrationDate.year, stock.registrationDate.month,
+                stock.registrationDate.day)
+            .toString();
+  }
+
+  void _setStockDate(StockModel stock) {
+    stock.registrationDate = DateTime(stock.registrationDate.year,
+        stock.registrationDate.month, stock.registrationDate.day);
   }
 
   _getProvider(String providerId) async {
@@ -170,16 +244,5 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
           plugin: 'GET STOCK PROVIDER ERROR',
           message: 'Fornecedor não encontrado');
     }
-  }
-
-  void _setStockId(StockModel stock) {
-    stock.id = stock.product.id +
-        stock.product.providerId +
-        stock.registrationDate.toString();
-  }
-
-  void _setStockDate(StockModel stock) {
-    stock.registrationDate = DateTime(stock.registrationDate.year,
-        stock.registrationDate.month, stock.registrationDate.day);
   }
 }
