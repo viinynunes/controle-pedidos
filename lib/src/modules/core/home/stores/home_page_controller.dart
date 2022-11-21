@@ -1,6 +1,5 @@
 import 'package:controle_pedidos/src/modules/client/domain/usecases/i_client_usecase.dart';
 import 'package:controle_pedidos/src/modules/core/registration/android_registration_page.dart';
-import 'package:controle_pedidos/src/modules/order/domain/usecase/i_order_usecase.dart';
 import 'package:controle_pedidos/src/modules/product/domain/usecases/i_product_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,12 +17,10 @@ part 'home_page_controller.g.dart';
 class HomePageController = _HomePageControllerBase with _$HomePageController;
 
 abstract class _HomePageControllerBase with Store {
-  final IOrderUsecase orderUsecase;
   final IProductUsecase productUsecase;
   final IClientUsecase clientUsecase;
 
-  _HomePageControllerBase(
-      this.orderUsecase, this.productUsecase, this.clientUsecase);
+  _HomePageControllerBase(this.productUsecase, this.clientUsecase);
 
   @observable
   bool loading = false;
