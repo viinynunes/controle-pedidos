@@ -14,4 +14,14 @@ class Stock {
       required this.totalOrdered,
       required this.registrationDate,
       required this.product});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Stock &&
+          runtimeType == other.runtimeType &&
+          product == other.product;
+
+  @override
+  int get hashCode => product.hashCode;
 }

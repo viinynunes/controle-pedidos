@@ -20,4 +20,15 @@ class Product {
       required this.providerId,
       required this.providerName,
       this.provider});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Product &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          providerId == other.providerId;
+
+  @override
+  int get hashCode => id.hashCode ^ providerId.hashCode;
 }
