@@ -189,7 +189,17 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
         .get();
 
     for (var s in snap.docs) {
-      stockList.add(StockModel.fromMap(s.data()));
+      var newStock = StockModel.fromMap(s.data());
+
+      if (stockList.contains(newStock)) {
+        var stockFromList = stockList.singleWhere(
+            (stockFromList) => stockFromList.product == newStock.product);
+
+        stockFromList.total += newStock.total;
+        stockFromList.totalOrdered += newStock.totalOrdered;
+      } else {
+        stockList.add(newStock);
+      }
     }
 
     return stockList;
