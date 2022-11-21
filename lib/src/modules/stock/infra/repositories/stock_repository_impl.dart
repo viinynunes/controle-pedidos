@@ -36,6 +36,20 @@ class StockRepositoryImpl implements IStockRepository {
   }
 
   @override
+  Future<Either<StockError, Stock>> updateStockDate(
+      Stock toDeleteStock, Stock updatedStock) async {
+    try {
+      final result = await _datasource.updateStockDate(
+          StockModel.fromStock(toDeleteStock),
+          StockModel.fromStock(updatedStock));
+
+      return Right(result);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
     // TODO: implement createDuplicatedStock
     throw UnimplementedError();

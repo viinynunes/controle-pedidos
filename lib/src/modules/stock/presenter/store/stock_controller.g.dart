@@ -220,6 +220,17 @@ mixin _$StockController on _StockControllerBase, Store {
   }
 
   @override
+  dynamic resetDateToToday() {
+    final _$actionInfo = _$_StockControllerBaseActionController.startAction(
+        name: '_StockControllerBase.resetDateToToday');
+    try {
+      return super.resetDateToToday();
+    } finally {
+      _$_StockControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic setSelectedProvider(Provider provider) {
     final _$actionInfo = _$_StockControllerBaseActionController.startAction(
         name: '_StockControllerBase.setSelectedProvider');

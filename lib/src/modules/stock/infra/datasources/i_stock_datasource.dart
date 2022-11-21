@@ -8,6 +8,9 @@ abstract class IStockDatasource {
 
   Future<StockModel> updateStock(StockModel stock);
 
+  Future<StockModel> updateStockDate(
+      StockModel toDeleteStock, StockModel updatedStock);
+
   Future<StockModel> increaseStock(StockModel stock);
 
   Future<StockModel> decreaseStock(StockModel stock);

@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:dartz/dartz.dart';
@@ -94,9 +95,13 @@ abstract class _StockTileControllerBase with Store {
 
   @action
   updateStockDate(DateTime date) async {
+    final toDeleteStock = StockModel.fromStock(stock);
+
     stock.registrationDate = date;
 
-    await updateStockUsecase();
+    final result = await stockUsecase.updateStockDate(toDeleteStock, stock);
+
+    result.fold((l) => error = optionOf(l), (r) => {});
   }
 
   updateStockUsecase() async {
