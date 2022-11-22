@@ -3,7 +3,6 @@ import 'package:controle_pedidos/src/modules/core/helpers.dart';
 import 'package:controle_pedidos/src/modules/stock/presenter/pages/android/tiles/modal_bottom_sheet_stock_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
@@ -45,29 +44,13 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      startActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        children: [
-          Observer(
-            builder: (_) {
-              return SlidableAction(
-                autoClose: true,
-                onPressed: (_) {
-                  tileController.setSelected();
-                  stockController
-                      .addRemoveStockFromSelectedStockList(widget.stock);
-                },
-                icon: tileController.selected
-                    ? Icons.check_box
-                    : Icons.check_box_outline_blank,
-              );
-            },
-          )
-        ],
-      ),
-      child: Observer(
-        builder: (_) => Card(
+    return Observer(
+      builder: (_) => GestureDetector(
+        onDoubleTap: () {
+          tileController.setSelected();
+          stockController.addRemoveStockFromSelectedStockList(widget.stock);
+        },
+        child: Card(
           color: tileController.selected
               ? Theme.of(context).backgroundColor.withOpacity(0.5)
               : Theme.of(context).cardColor,
@@ -89,7 +72,8 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                     child: ModalBottomSheetStockTile(
                       stock: widget.stock,
                       onDelete: () => stockController.removeStock(widget.stock),
-                      deleteEnabled: Helpers.compareOnlyDateFromDateTime(stockController.iniDate, stockController.endDate),
+                      deleteEnabled: Helpers.compareOnlyDateFromDateTime(
+                          stockController.iniDate, stockController.endDate),
                       onChangeDate: (date) async {
                         await tileController.updateStockDate(date);
                         await stockController
