@@ -222,6 +222,7 @@ abstract class _StockControllerBase with Store {
 
   @action
   removeStock(Stock stock) async {
+
     loading = true;
     final result = await stockUsecase.deleteStock(stock);
 

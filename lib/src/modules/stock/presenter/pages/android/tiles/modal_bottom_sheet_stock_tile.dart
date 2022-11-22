@@ -8,26 +8,31 @@ class ModalBottomSheetStockTile extends StatelessWidget {
     required this.stock,
     required this.onDelete,
     required this.onChangeDate,
+    required this.deleteEnabled,
   }) : super(key: key);
 
   final Stock stock;
+  final bool deleteEnabled;
   final VoidCallback onDelete;
   final Function(DateTime selectedDate) onChangeDate;
 
   @override
   Widget build(BuildContext context) {
-    _getListItem(
-        {required VoidCallback onTap,
-        required IconData icon,
-        required String titleText,
-        required String subtitleText,
-        Color? textColor,
-        Color? iconColor}) {
+    _getListItem({
+      required VoidCallback onTap,
+      required IconData icon,
+      required String titleText,
+      required String subtitleText,
+      required bool enabled,
+      Color? textColor,
+      Color? iconColor,
+    }) {
       return Flexible(
         flex: 1,
         fit: FlexFit.tight,
         child: ListTile(
           onTap: onTap,
+          enabled: enabled,
           leading: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -68,10 +73,12 @@ class ModalBottomSheetStockTile extends StatelessWidget {
 
               Navigator.of(context).pop();
             },
+            enabled: true,
             icon: Icons.safety_divider,
             titleText: 'Dividir Entre Fornecedores',
             subtitleText: 'Divide o item entre 2 ou mais fornecedores'),
         _getListItem(
+            enabled: true,
             onTap: () async {
               await showDatePicker(
                       context: context,
@@ -90,12 +97,14 @@ class ModalBottomSheetStockTile extends StatelessWidget {
             titleText: 'Alterar Data',
             subtitleText: 'Move o item e suas propriedades para outra data'),
         _getListItem(
+            enabled: true,
             onTap: () {},
             icon: Icons.list_rounded,
             titleText: 'Ver Pedidos',
             subtitleText:
                 'Exibe a lista de pedidos onde o item foi adicionado'),
         _getListItem(
+            enabled: deleteEnabled,
             onTap: () {
               onDelete();
               Navigator.of(context).pop();
