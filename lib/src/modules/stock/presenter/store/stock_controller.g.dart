@@ -286,6 +286,17 @@ mixin _$StockController on _StockControllerBase, Store {
   }
 
   @override
+  dynamic resetStockLeft() {
+    final _$actionInfo = _$_StockControllerBaseActionController.startAction(
+        name: '_StockControllerBase.resetStockLeft');
+    try {
+      return super.resetStockLeft();
+    } finally {
+      _$_StockControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 selectedDateString: ${selectedDateString},
