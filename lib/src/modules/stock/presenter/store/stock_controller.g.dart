@@ -177,6 +177,17 @@ mixin _$StockController on _StockControllerBase, Store {
         .run(() => super.getStockListByProviderBetweenDates());
   }
 
+  late final _$createDuplicatedStockAsyncAction = AsyncAction(
+      '_StockControllerBase.createDuplicatedStock',
+      context: context);
+
+  @override
+  Future createDuplicatedStock(
+      Stock stock, Provider provider, bool movePropertiesAndDelete) {
+    return _$createDuplicatedStockAsyncAction.run(() =>
+        super.createDuplicatedStock(stock, provider, movePropertiesAndDelete));
+  }
+
   late final _$createEmptyStockAsyncAction =
       AsyncAction('_StockControllerBase.createEmptyStock', context: context);
 
@@ -184,6 +195,16 @@ mixin _$StockController on _StockControllerBase, Store {
   Future createEmptyStock(Product product) {
     return _$createEmptyStockAsyncAction
         .run(() => super.createEmptyStock(product));
+  }
+
+  late final _$reloadProviderListAndStockListAsyncAction = AsyncAction(
+      '_StockControllerBase.reloadProviderListAndStockList',
+      context: context);
+
+  @override
+  Future reloadProviderListAndStockList(Provider provider) {
+    return _$reloadProviderListAndStockListAsyncAction
+        .run(() => super.reloadProviderListAndStockList(provider));
   }
 
   late final _$removeStockAsyncAction =

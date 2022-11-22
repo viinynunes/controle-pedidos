@@ -72,7 +72,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                     child: ModalBottomSheetStockTile(
                       stock: widget.stock,
                       onDelete: () => stockController.removeStock(widget.stock),
-                      deleteEnabled: Helpers.compareOnlyDateFromDateTime(
+                      equalDates: Helpers.compareOnlyDateFromDateTime(
                           stockController.iniDate, stockController.endDate),
                       onChangeDate: (date) async {
                         await tileController.updateStockDate(date);

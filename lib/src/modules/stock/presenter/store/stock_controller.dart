@@ -198,6 +198,40 @@ abstract class _StockControllerBase with Store {
   }
 
   @action
+  createDuplicatedStock(
+      Stock stock, Provider provider, bool movePropertiesAndDelete) async {
+    if (stock.product.provider == provider) {
+      return;
+    }
+
+    var newStock = StockModel.fromStock(stock);
+
+    newStock.product.provider = provider;
+    newStock.product.providerName = provider.name;
+    newStock.product.providerId = provider.id;
+
+    if (!movePropertiesAndDelete) {
+      newStock.total = 0;
+      newStock.totalOrdered = 0;
+    }
+
+    final createResult = await stockUsecase.createStock(newStock);
+
+    createResult.fold(
+      (l) => error = optionOf(l),
+      (newStock) async {
+        if (movePropertiesAndDelete) {
+          final deleteResult = await stockUsecase.deleteStock(stock);
+
+          deleteResult.fold((l) => error = optionOf(l), (r) => {});
+        }
+
+        reloadProviderListAndStockList(newStock.product.provider!);
+      },
+    );
+  }
+
+  @action
   createEmptyStock(Product product) async {
     final stock = StockModel(
         id: '0',
@@ -209,10 +243,15 @@ abstract class _StockControllerBase with Store {
     final createResult = await stockUsecase.createStock(stock);
 
     createResult.fold((l) => error = optionOf(l), (r) async {
-      await getProviderListByStockBetweenDates();
-      setSelectedProvider(r.product.provider!);
-      await getStockListByProviderBetweenDates();
+      reloadProviderListAndStockList(r.product.provider!);
     });
+  }
+
+  @action
+  reloadProviderListAndStockList(Provider provider) async {
+    await getProviderListByStockBetweenDates();
+    setSelectedProvider(provider);
+    await getStockListByProviderBetweenDates();
   }
 
   @action
@@ -222,7 +261,6 @@ abstract class _StockControllerBase with Store {
 
   @action
   removeStock(Stock stock) async {
-
     loading = true;
     final result = await stockUsecase.deleteStock(stock);
 

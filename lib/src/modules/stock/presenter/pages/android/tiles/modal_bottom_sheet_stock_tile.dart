@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../domain/entities/stock.dart';
+import '../widgets/divide_stock_between_providers_dialog.dart';
 
 class ModalBottomSheetStockTile extends StatelessWidget {
   const ModalBottomSheetStockTile({
@@ -8,11 +9,11 @@ class ModalBottomSheetStockTile extends StatelessWidget {
     required this.stock,
     required this.onDelete,
     required this.onChangeDate,
-    required this.deleteEnabled,
+    required this.equalDates,
   }) : super(key: key);
 
   final Stock stock;
-  final bool deleteEnabled;
+  final bool equalDates;
   final VoidCallback onDelete;
   final Function(DateTime selectedDate) onChangeDate;
 
@@ -65,20 +66,20 @@ class ModalBottomSheetStockTile extends StatelessWidget {
         ),
         _getListItem(
             onTap: () async {
-              await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2019),
-                  lastDate: DateTime(2200));
-
               Navigator.of(context).pop();
+              await showDialog(
+                context: context,
+                builder: (_) => DivideStockBetweenProvidersDialog(
+                  stock: stock,
+                ),
+              );
             },
-            enabled: true,
+            enabled: equalDates,
             icon: Icons.safety_divider,
             titleText: 'Dividir Entre Fornecedores',
             subtitleText: 'Divide o item entre 2 ou mais fornecedores'),
         _getListItem(
-            enabled: true,
+            enabled: equalDates,
             onTap: () async {
               await showDatePicker(
                       context: context,
@@ -104,7 +105,7 @@ class ModalBottomSheetStockTile extends StatelessWidget {
             subtitleText:
                 'Exibe a lista de pedidos onde o item foi adicionado'),
         _getListItem(
-            enabled: deleteEnabled,
+            enabled: equalDates,
             onTap: () {
               onDelete();
               Navigator.of(context).pop();

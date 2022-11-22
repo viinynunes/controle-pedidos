@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/stock/presenter/store/divide_stock_dialog_controller.dart';
 import 'package:controle_pedidos/src/modules/stock/presenter/store/stock_controller.dart';
 import 'package:controle_pedidos/src/modules/stock/services/i_stock_service.dart';
 import 'package:get_it/get_it.dart';
@@ -25,4 +26,6 @@ void setUpStockLocator() {
       StockController(stockLocator(), stockLocator()));
   stockLocator.registerFactory<StockTileController>(
       () => StockTileController(stockLocator()));
+  stockLocator.registerFactory<DivideStockDialogController>(
+          () => DivideStockDialogController(stockLocator()));
 }
