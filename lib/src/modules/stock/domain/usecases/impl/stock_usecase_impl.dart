@@ -50,10 +50,9 @@ class StockUsecaseImpl implements IStockUsecase {
   }
 
   @override
-  Future<Either<StockError, Stock>> updateStockDate(Stock toDeleteStock,
-      Stock updatedStock) async {
-
-    if(toDeleteStock.id.isEmpty){
+  Future<Either<StockError, Stock>> updateStockDate(
+      Stock toDeleteStock, Stock updatedStock) async {
+    if (toDeleteStock.id.isEmpty) {
       return Left(StockError('to delete stock id cannot be empty'));
     }
 
@@ -74,6 +73,32 @@ class StockUsecaseImpl implements IStockUsecase {
     }
 
     return _repository.updateStockDate(toDeleteStock, updatedStock);
+  }
+
+  @override
+  Future<Either<StockError, Stock>> updateStockByEndDate(
+      Stock stock, DateTime endDate, bool increase) async {
+    if (stock.id.isEmpty) {
+      return Left(StockError('to delete stock id cannot be empty'));
+    }
+
+    if (stock.id.isEmpty) {
+      return Left(StockError('updated stock id cannot be empty'));
+    }
+
+    if (stock.product.id.isEmpty) {
+      return Left(StockError('Product id cannot be empty'));
+    }
+
+    if (stock.product.providerId.isEmpty) {
+      return Left(StockError('Product provider cannot be empty'));
+    }
+
+    if (stock.total.isNegative) {
+      return Left(StockError('Stock total cannot be negative'));
+    }
+
+    return _repository.updateStockByEndDate(stock, endDate, increase);
   }
 
   @override
@@ -119,8 +144,8 @@ class StockUsecaseImpl implements IStockUsecase {
   @override
   Future<Either<StockError, List<Stock>>> getStockListByProviderBetweenDates(
       {required Provider provider,
-        required DateTime iniDate,
-        required DateTime endDate}) {
+      required DateTime iniDate,
+      required DateTime endDate}) {
     return _repository.getStockListByProviderBetweenDates(
         provider: provider, iniDate: iniDate, endDate: endDate);
   }

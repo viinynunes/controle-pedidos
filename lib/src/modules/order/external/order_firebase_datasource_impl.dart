@@ -66,12 +66,14 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     }
 
     for (var item in beforeUpdateOrderItemsList) {
-      await _stockDatasource.decreaseStock(StockModel(
-          id: '0',
-          total: item.quantity,
-          totalOrdered: 0,
-          registrationDate: order.registrationHour,
-          product: item.product));
+      await _stockDatasource.decreaseStock(
+          StockModel(
+              id: '0',
+              total: item.quantity,
+              totalOrdered: 0,
+              registrationDate: order.registrationHour,
+              product: item.product),
+          true);
     }
 
     return order;
@@ -83,13 +85,15 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     await _orderCollection.doc(order.id).update(order.toMap()).catchError(
         (e) => throw FirebaseException(plugin: 'DISABLE ORDER ERROR'));
 
-    for(var item in order.orderItemList){
-      await _stockDatasource.decreaseStock(StockModel(
-          id: '0',
-          total: item.quantity,
-          totalOrdered: 0,
-          registrationDate: order.registrationHour,
-          product: item.product));
+    for (var item in order.orderItemList) {
+      await _stockDatasource.decreaseStock(
+          StockModel(
+              id: '0',
+              total: item.quantity,
+              totalOrdered: 0,
+              registrationDate: order.registrationHour,
+              product: item.product),
+          true);
     }
 
     return true;

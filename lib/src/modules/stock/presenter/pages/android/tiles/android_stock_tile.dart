@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
+import 'package:controle_pedidos/src/modules/core/helpers.dart';
 import 'package:controle_pedidos/src/modules/stock/presenter/pages/android/tiles/modal_bottom_sheet_stock_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -28,10 +29,18 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
     super.initState();
 
     reaction((p0) => stockController.stockList, (p0) {
-      tileController.initState(widget.stock);
+      tileController.initState(
+          stock: widget.stock,
+          searchDatesAreEqual: Helpers.compareOnlyDateFromDateTime(
+              stockController.iniDate, stockController.endDate),
+          endDate: stockController.endDate);
     });
 
-    tileController.initState(widget.stock);
+    tileController.initState(
+        stock: widget.stock,
+        searchDatesAreEqual: Helpers.compareOnlyDateFromDateTime(
+            stockController.iniDate, stockController.endDate),
+        endDate: stockController.endDate);
   }
 
   @override
@@ -82,7 +91,8 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       onDelete: () => stockController.removeStock(widget.stock),
                       onChangeDate: (date) async {
                         await tileController.updateStockDate(date);
-                        await stockController.getStockListByProviderBetweenDates();
+                        await stockController
+                            .getStockListByProviderBetweenDates();
                       },
                     ),
                   ),
@@ -101,6 +111,8 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                     flex: 2,
                     fit: FlexFit.tight,
                     child: TextField(
+                      enabled: Helpers.compareOnlyDateFromDateTime(
+                          stockController.iniDate, stockController.endDate),
                       controller: tileController.stockTotalOrderedController,
                       focusNode: tileController.stockTotalOrderedFocus,
                       textAlign: TextAlign.center,

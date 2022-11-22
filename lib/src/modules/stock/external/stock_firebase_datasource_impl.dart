@@ -83,10 +83,42 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   }
 
   @override
-  Future<StockModel> increaseStock(StockModel stock) async {
+  Future<StockModel> updateStockByEndDate(
+      StockModel stock, DateTime endDate, bool increase) async {
+    stock.registrationDate = endDate;
     _setStockDate(stock);
     _setStockId(stock);
 
+    return increase
+        ? await increaseStock(stock)
+        : await decreaseStock(stock, false);
+
+    /*final toUpdateStockSnap = await _getStockFromFirebase(stock);
+
+    if (toUpdateStockSnap == null) {
+      throw FirebaseException(
+          plugin: 'GET STOCK ERROR', message: 'NENHUM ITEM ENCONTRADO');
+    }
+
+    var toUpdateStock = StockModel.fromMap(toUpdateStockSnap.docs.first.data());
+
+    toUpdateStock.totalOrdered++;*/
+/*
+
+
+
+    ///updating stock by endDate
+
+
+
+
+    return await updateStock(toUpdateStock);
+
+ */
+  }
+
+  @override
+  Future<StockModel> increaseStock(StockModel stock) async {
     final snap = await _getStockFromFirebase(stock);
 
     if (snap == null) {
@@ -96,13 +128,13 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
 
     var newStock = StockModel.fromMap(snap.docs.first.data());
 
-    newStock.total += stock.total;
+    newStock.totalOrdered++;
 
     return await updateStock(newStock);
   }
 
   @override
-  Future<StockModel> decreaseStock(StockModel stock) async {
+  Future<StockModel> decreaseStock(StockModel stock, bool fromOrder) async {
     _setStockDate(stock);
     _setStockId(stock);
     final snap = await _getStockFromFirebase(stock);
@@ -114,7 +146,7 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
 
     var newStock = StockModel.fromMap(snap.docs.first.data());
 
-    newStock.total -= stock.total;
+    fromOrder ? newStock.total -= stock.total : newStock.totalOrdered--;
 
     if (newStock.total == 0 && newStock.totalOrdered == 0) {
       await deleteStock(stock);

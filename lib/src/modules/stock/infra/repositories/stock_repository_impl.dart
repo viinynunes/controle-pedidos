@@ -50,6 +50,19 @@ class StockRepositoryImpl implements IStockRepository {
   }
 
   @override
+  Future<Either<StockError, Stock>> updateStockByEndDate(
+      Stock stock, DateTime endDate, bool increase) async {
+    try {
+      final result = await _datasource.updateStockByEndDate(
+          StockModel.fromStock(stock), endDate, increase);
+
+      return Right(result);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
     // TODO: implement createDuplicatedStock
     throw UnimplementedError();

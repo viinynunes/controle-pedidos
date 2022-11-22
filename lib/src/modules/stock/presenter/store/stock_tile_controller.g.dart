@@ -57,6 +57,22 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
     });
   }
 
+  late final _$searchDatesAreEqualAtom = Atom(
+      name: '_StockTileControllerBase.searchDatesAreEqual', context: context);
+
+  @override
+  bool get searchDatesAreEqual {
+    _$searchDatesAreEqualAtom.reportRead();
+    return super.searchDatesAreEqual;
+  }
+
+  @override
+  set searchDatesAreEqual(bool value) {
+    _$searchDatesAreEqualAtom.reportWrite(value, super.searchDatesAreEqual, () {
+      super.searchDatesAreEqual = value;
+    });
+  }
+
   late final _$updateStockDateAsyncAction =
       AsyncAction('_StockTileControllerBase.updateStockDate', context: context);
 
@@ -69,11 +85,17 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
       ActionController(name: '_StockTileControllerBase', context: context);
 
   @override
-  dynamic initState(Stock stock) {
+  dynamic initState(
+      {required Stock stock,
+      required bool searchDatesAreEqual,
+      required DateTime endDate}) {
     final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
         name: '_StockTileControllerBase.initState');
     try {
-      return super.initState(stock);
+      return super.initState(
+          stock: stock,
+          searchDatesAreEqual: searchDatesAreEqual,
+          endDate: endDate);
     } finally {
       _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -150,7 +172,8 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
     return '''
 stockLeft: ${stockLeft},
 error: ${error},
-selected: ${selected}
+selected: ${selected},
+searchDatesAreEqual: ${searchDatesAreEqual}
     ''';
   }
 }

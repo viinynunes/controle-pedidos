@@ -14,6 +14,9 @@ abstract class IStockRepository {
   Future<Either<StockError, Stock>> updateStockDate(
       Stock toDeleteStock, Stock updatedStock);
 
+  Future<Either<StockError, Stock>> updateStockByEndDate(
+      Stock stock, DateTime endDate, bool increase);
+
   Future<Either<StockError, Stock>> increaseStock(Stock stock);
 
   Future<Either<StockError, Stock>> decreaseStock(Stock stock);

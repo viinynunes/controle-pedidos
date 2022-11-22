@@ -22,16 +22,23 @@ abstract class _StockTileControllerBase with Store {
   Option<StockError> error = none();
   @observable
   bool selected = false;
+  @observable
+  bool searchDatesAreEqual = true;
 
   late Stock stock;
-
+  late DateTime endDate;
   final stockTotalOrderedController = TextEditingController();
 
   final stockTotalOrderedFocus = FocusNode();
 
   @action
-  initState(Stock stock) {
+  initState(
+      {required Stock stock,
+      required bool searchDatesAreEqual,
+      required DateTime endDate}) {
     this.stock = stock;
+    this.searchDatesAreEqual = searchDatesAreEqual;
+    this.endDate = endDate;
 
     updateTotalOrderedController();
 
@@ -58,7 +65,7 @@ abstract class _StockTileControllerBase with Store {
 
     updateTotalOrderedController();
     updateStockLeft();
-    updateStockUsecase();
+    updateStockUsecase(increase);
   }
 
   @action
@@ -76,7 +83,7 @@ abstract class _StockTileControllerBase with Store {
     }
 
     updateTotalOrderedController();
-    updateStockUsecase();
+    updateStockUsecase(increase);
   }
 
   @action
@@ -84,7 +91,7 @@ abstract class _StockTileControllerBase with Store {
     stockTotalOrderedController.text = newStock;
     stock.totalOrdered = int.parse(newStock);
     updateStockLeft();
-    updateStockUsecase();
+    updateStockUsecase(true);
   }
 
   @action
@@ -104,8 +111,10 @@ abstract class _StockTileControllerBase with Store {
     result.fold((l) => error = optionOf(l), (r) => {});
   }
 
-  updateStockUsecase() async {
-    final result = await stockUsecase.updateStock(stock);
+  updateStockUsecase(bool increase) async {
+    final result = searchDatesAreEqual
+        ? await stockUsecase.updateStock(stock)
+        : await stockUsecase.updateStockByEndDate(stock, endDate, increase);
 
     result.fold((l) => error = optionOf(l), (r) => {});
   }
