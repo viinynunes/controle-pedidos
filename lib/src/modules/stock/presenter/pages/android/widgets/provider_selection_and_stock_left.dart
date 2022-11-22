@@ -43,17 +43,27 @@ class ProviderSelectionAndStockLeftWidget extends StatelessWidget {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    Flexible(
+                  children: [
+                    const Flexible(
                       flex: 3,
                       fit: FlexFit.tight,
                       child: ProviderDropdownSelectionWidget(),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
-                      child: StockLeftTextFieldWidget(),
+                      child: controller.stockList.isNotEmpty
+                          ? const StockLeftTextFieldWidget()
+                          : IconButton(
+                              onPressed: () {
+                                controller.getStockListByProviderBetweenDates();
+                              },
+                              icon: Icon(
+                                Icons.search,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
                     ),
                   ],
                 )
