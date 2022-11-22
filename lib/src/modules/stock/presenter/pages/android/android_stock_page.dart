@@ -40,7 +40,7 @@ class _AndroidStockPageState extends IStockPageState {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Estoque'),
-        centerTitle: true,
+        centerTitle: false,
         actions: [
           Observer(
             builder: (_) => controller.stockList.isNotEmpty
