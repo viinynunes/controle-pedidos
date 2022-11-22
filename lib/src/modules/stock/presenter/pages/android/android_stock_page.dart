@@ -43,7 +43,7 @@ class _AndroidStockPageState extends IStockPageState {
         centerTitle: true,
         actions: [
           Observer(
-            builder: (_) => controller.selectedProvider != null
+            builder: (_) => controller.stockList.isNotEmpty
                 ? IconButton(
                     onPressed: controller.getStockListByProviderBetweenDates,
                     icon: const Icon(Icons.refresh))
