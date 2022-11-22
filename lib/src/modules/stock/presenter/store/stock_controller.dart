@@ -56,7 +56,7 @@ abstract class _StockControllerBase with Store {
 
     setSelectedDateString();
 
-    stockDefaultLeftController.text = '0';
+    resetStockLeft();
   }
 
   @action
@@ -101,11 +101,12 @@ abstract class _StockControllerBase with Store {
   @action
   getProviderListByStockBetweenDates() async {
     loading = true;
-
     selectedProvider = null;
 
     stockList.clear();
     providerList.clear();
+
+    resetStockLeft();
 
     final providerResult =
         await stockUsecase.getProviderListByStockBetweenDates(iniDate, endDate);
@@ -182,6 +183,7 @@ abstract class _StockControllerBase with Store {
 
     for (var s in stockList) {
       s.totalOrdered = s.total + stockLeft;
+      stockUsecase.updateStock(s);
     }
 
     //modifying stockList to mobx reaction get the state
@@ -211,6 +213,11 @@ abstract class _StockControllerBase with Store {
       setSelectedProvider(r.product.provider!);
       await getStockListByProviderBetweenDates();
     });
+  }
+
+  @action
+  resetStockLeft() {
+    stockDefaultLeftController.text = '0';
   }
 
   @action

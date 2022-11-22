@@ -11,21 +11,20 @@ class ProviderDropdownSelectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = GetIt.I.get<StockController>();
 
-    return
-      DropdownButtonFormField<Provider>(
-        value: controller.selectedProvider,
-        alignment: Alignment.center,
-        items: controller.getProviderDropdownItems(context),
-        decoration: InputDecoration(
-            labelText: 'Fornecedores',
-            labelStyle: Theme.of(context).textTheme.titleSmall),
-        onChanged: (provider) {
-          if (provider != null) {
-            controller.setSelectedProvider(provider);
-
-            controller.getStockListByProviderBetweenDates();
-          }
-        },
+    return DropdownButtonFormField<Provider>(
+      value: controller.selectedProvider,
+      alignment: Alignment.center,
+      items: controller.getProviderDropdownItems(context),
+      decoration: InputDecoration(
+          labelText: 'Fornecedores',
+          labelStyle: Theme.of(context).textTheme.titleSmall),
+      onChanged: (provider) {
+        if (provider != null) {
+          controller.setSelectedProvider(provider);
+          controller.getStockListByProviderBetweenDates();
+          controller.resetStockLeft();
+        }
+      },
     );
   }
 }

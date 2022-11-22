@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/core/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -17,6 +18,8 @@ class _StockLeftTextFieldWidgetState extends State<StockLeftTextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: Helpers.compareOnlyDateFromDateTime(
+          controller.iniDate, controller.endDate),
       controller: controller.stockDefaultLeftController,
       decoration: const InputDecoration(
         labelText: 'Sobra',
