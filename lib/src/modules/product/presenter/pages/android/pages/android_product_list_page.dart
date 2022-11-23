@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
-import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/tiles/android_provider_list_tile.dart';
+import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/tiles/android_product_list_tile.dart';
 import 'package:controle_pedidos/src/modules/product/presenter/stores/product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
