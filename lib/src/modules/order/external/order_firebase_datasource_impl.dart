@@ -169,20 +169,42 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   }
 
   @override
-  Future<List<OrderModel>> getOrderListByEnabledAndProduct(
-      ProductModel product) async {
+  Future<List<OrderModel>> getOrderListByEnabledAndProductAndDate(
+      ProductModel product, DateTime iniDate, DateTime endDate) async {
     List<OrderModel> orderList = [];
 
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
     final snap = await _orderCollection
-        .where('orderItemList', arrayContains: product)
+        .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('registrationDate', isLessThanOrEqualTo: endDate)
+        .where('enabled', isEqualTo: true)
         .get()
-        .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
       orderList.add(
         OrderModel.fromMap(
             map: o.data(), orderItemList: _getOrderItemList(o.data())),
       );
+    }
+    final oi = OrderItemModel(
+        listIndex: 0,
+        productId: product.id,
+        quantity: 0,
+        product: product,
+        note: '');
+
+    orderList.removeWhere((order) => !order.orderItemList.contains(oi));
+
+    for (var o in orderList) {
+      o.orderItemList.removeWhere((element) => element != oi);
+
+      if (o.orderItemList.length != 1) {
+        throw Exception('Erro ao remover order items from list');
+      }
     }
 
     return orderList;

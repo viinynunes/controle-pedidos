@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../domain/entities/stock.dart';
-import '../widgets/divide_stock_between_providers_dialog.dart';
+import '../dialogs/divide_stock_between_providers_dialog.dart';
+import '../dialogs/show_orders_by_stock_dialog.dart';
 
 class ModalBottomSheetStockTile extends StatelessWidget {
   const ModalBottomSheetStockTile({
@@ -99,7 +100,9 @@ class ModalBottomSheetStockTile extends StatelessWidget {
             subtitleText: 'Move o item e suas propriedades para outra data'),
         _getListItem(
             enabled: true,
-            onTap: () {},
+            onTap: () async {
+              await showDialog(context: context, builder: (_) => ShowOrdersByStockDialog(stock: stock));
+            },
             icon: Icons.list_rounded,
             titleText: 'Ver Pedidos',
             subtitleText:

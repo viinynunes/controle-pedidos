@@ -15,6 +15,6 @@ abstract class IOrderDatasource {
   Future<List<OrderModel>> getOrderListByEnabledBetweenDates(
       DateTime iniDate, DateTime endDate);
 
-  Future<List<OrderModel>> getOrderListByEnabledAndProduct(
-      ProductModel product);
+  Future<List<OrderModel>> getOrderListByEnabledAndProductAndDate(
+      ProductModel product, DateTime iniDate, DateTime endDate);
 }

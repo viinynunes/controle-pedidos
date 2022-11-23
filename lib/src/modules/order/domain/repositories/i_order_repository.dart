@@ -19,6 +19,6 @@ abstract class IOrderRepository {
   Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledBetweenDates(
       DateTime iniDate, DateTime endDate);
 
-  Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledAndProduct(
-      Product product);
+  Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledAndProductAndDate(
+      Product product, DateTime iniDate, DateTime endDate);
 }

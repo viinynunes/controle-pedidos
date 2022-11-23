@@ -75,12 +75,14 @@ class OrderUsecaseImpl implements IOrderUsecase {
   }
 
   @override
-  Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledAndProduct(
-      Product product) async {
+  Future<Either<OrderError, List<o.Order>>>
+      getOrderListByEnabledAndProductAndDate(
+          Product product, DateTime iniDate, DateTime endDate) async {
     if (product.id.isEmpty) {
       return Left(OrderError('Invalid product ID'));
     }
 
-    return _repository.getOrderListByEnabledAndProduct(product);
+    return _repository.getOrderListByEnabledAndProductAndDate(
+        product, iniDate, endDate);
   }
 }

@@ -86,11 +86,11 @@ class OrderRepositoryImpl implements IOrderRepository {
   }
 
   @override
-  Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledAndProduct(
-      Product product) async {
+  Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledAndProductAndDate(
+      Product product, DateTime iniDate, DateTime endDate) async {
     try {
-      final result = await _datasource.getOrderListByEnabledAndProduct(
-          ProductModel.fromProduct(product: product));
+      final result = await _datasource.getOrderListByEnabledAndProductAndDate(
+          ProductModel.fromProduct(product: product), iniDate, endDate);
 
       return Right(result);
     } catch (e) {

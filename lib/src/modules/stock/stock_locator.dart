@@ -9,6 +9,7 @@ import 'domain/usecases/impl/stock_usecase_impl.dart';
 import 'external/stock_firebase_datasource_impl.dart';
 import 'infra/datasources/i_stock_datasource.dart';
 import 'infra/repositories/stock_repository_impl.dart';
+import 'presenter/store/show_orders_by_stock_dialog_controller.dart';
 import 'presenter/store/stock_tile_controller.dart';
 import 'services/impl/stock_service_impl.dart';
 
@@ -27,5 +28,7 @@ void setUpStockLocator() {
   stockLocator.registerFactory<StockTileController>(
       () => StockTileController(stockLocator()));
   stockLocator.registerFactory<DivideStockDialogController>(
-          () => DivideStockDialogController(stockLocator()));
+      () => DivideStockDialogController(stockLocator()));
+  stockLocator.registerFactory<ShowOrdersByStockDialogController>(
+      () => ShowOrdersByStockDialogController(stockLocator()));
 }
