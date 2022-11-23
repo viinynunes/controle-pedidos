@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 
 import 'external/product_firebase_datasource_impl.dart';
 import 'presenter/stores/product_registration_controller.dart';
+import 'presenter/stores/product_stock_default_controller.dart';
 
 final productLocator = GetIt.instance;
 
@@ -20,6 +21,9 @@ void setUpProductLocator() {
       () => ProductUsecaseImpl(productLocator()));
   productLocator.registerLazySingleton<ProductController>(
       () => ProductController(productLocator()));
-  productLocator.registerFactory<ProductRegistrationController>(
-      () => ProductRegistrationController(productLocator(), productLocator(), productLocator()));
+  productLocator.registerFactory<ProductRegistrationController>(() =>
+      ProductRegistrationController(
+          productLocator(), productLocator(), productLocator()));
+  productLocator.registerFactory<ProductStockDefaultController>(
+      () => ProductStockDefaultController(productLocator(), productLocator()));
 }

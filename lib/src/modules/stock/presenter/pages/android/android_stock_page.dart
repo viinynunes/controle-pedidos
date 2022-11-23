@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
+import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_stock_default_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -52,10 +53,13 @@ class _AndroidStockPageState extends IStockPageState {
           IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
           PopupMenuButton(
             itemBuilder: (_) => [
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 1,
-                onTap: () async {},
-                child: const Text('Adicionar Produto'),
+                child: Text('Adicionar Produto'),
+              ),
+              const PopupMenuItem(
+                value: 2,
+                child: Text('Editar Produtos Fixos'),
               ),
             ],
             onSelected: (value) {
@@ -64,6 +68,12 @@ class _AndroidStockPageState extends IStockPageState {
                   {
                     controller.showEntitySelectionDialog(context);
                     break;
+                  }
+                case 2:
+                  {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) =>
+                            const AndroidProductStockDefaultPage()));
                   }
               }
             },
