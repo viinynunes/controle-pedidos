@@ -113,6 +113,7 @@ class _DivideStockBetweenProvidersDialogState
                           divideController.toggleMovePropertiesAndDelete());
                 },
               ),
+              const Divider(),
             ],
           ),
         ),
