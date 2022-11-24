@@ -72,21 +72,12 @@ class _AndroidProductStockDefaultPageState
                 ),
                 Expanded(
                   child: Observer(builder: (_) {
-                    var productList = controller.productList;
-
-                    return productList.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: productList.length,
-                            itemBuilder: (_, index) {
-                              final product = productList[index];
-
-                              return AndroidProductStockDefaultTile(
-                                product: product,
-                                onChecked: () {
-                                  controller.toggleCheckbox(product);
-                                  controller.updateProduct(product);
-                                },
-                              );
+                    return controller.productList.isNotEmpty
+                        ? AndroidProductStockDefaultTile(
+                            productList: controller.productList,
+                            onChanged: (product) {
+                              controller.toggleCheckbox(product);
+                              controller.updateProduct(product);
                             },
                           )
                         : const Center(
