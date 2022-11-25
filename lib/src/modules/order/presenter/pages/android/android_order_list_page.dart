@@ -53,7 +53,6 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                     keyboardType: TextInputType.url,
                   )
                 : const Text('Pedidos')),
-        centerTitle: true,
         actions: [
           Observer(
             builder: (_) => controller.searching
