@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_stock_default_page.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../store/stock_controller.dart';
 import '../i_stock_page.dart';
+import 'android_share_stock_list_by_provider_page.dart';
 import 'widgets/get_provider_by_date_widget.dart';
 import 'widgets/provider_selection_and_stock_left.dart';
 import 'widgets/stock_list_builder_widget.dart';
@@ -50,7 +52,23 @@ class _AndroidStockPageState extends IStockPageState {
                     icon: const Icon(Icons.refresh))
                 : Container(),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+          Observer(
+            builder: (context) => controller.stockList.isNotEmpty
+                ? IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(CustomPageRoute(
+                          child: AndroidShareStockListByProviderPage(
+                            providerName: controller.selectedProvider?.name ??
+                                'Nenhum Fornecedor Selecionado',
+                            stockList: controller.selectedStockList.isEmpty
+                                ? controller.stockList
+                                : controller.selectedStockList,
+                          ),
+                          direction: AxisDirection.left));
+                    },
+                    icon: const Icon(Icons.share))
+                : Container(),
+          ),
           PopupMenuButton(
             itemBuilder: (_) => [
               const PopupMenuItem(

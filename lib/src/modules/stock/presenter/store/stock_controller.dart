@@ -146,6 +146,7 @@ abstract class _StockControllerBase with Store {
     if (selectedProvider != null) {
       loading = true;
 
+      selectedStockList.clear();
       stockList.clear();
 
       final providerResult =
