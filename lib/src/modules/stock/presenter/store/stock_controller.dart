@@ -9,6 +9,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
+import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../errors/stock_error.dart';
 import '../../services/i_stock_service.dart';
 
@@ -19,8 +20,10 @@ class StockController = _StockControllerBase with _$StockController;
 abstract class _StockControllerBase with Store {
   final IStockService stockService;
   final IStockUsecase stockUsecase;
+  final IProductUsecase productUsecase;
 
-  _StockControllerBase(this.stockUsecase, this.stockService);
+  _StockControllerBase(
+      this.stockUsecase, this.stockService, this.productUsecase);
 
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -130,7 +133,7 @@ abstract class _StockControllerBase with Store {
       ),
     ).then((value) {
       if (value != null && value is Product) {
-        createEmptyStock(value);
+        createEmptyStock(value, true);
       }
     });
   }
@@ -232,7 +235,27 @@ abstract class _StockControllerBase with Store {
   }
 
   @action
-  createEmptyStock(Product product) async {
+  loadStockDefault() async {
+    loading = true;
+
+    final result =
+        await productUsecase.getProductListByEnabledAndStockDefaultTrue();
+
+    result.fold((l) => error = optionOf(StockError(l.message)),
+        (productList) async {
+      for (var p in productList) {
+        createEmptyStock(p, false);
+      }
+    });
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    await getProviderListByStockBetweenDates();
+    loading = false;
+  }
+
+  @action
+  createEmptyStock(Product product, bool reloadAfterCreate) async {
     final stock = StockModel(
         id: '0',
         registrationDate: DateTime.now(),
@@ -243,7 +266,7 @@ abstract class _StockControllerBase with Store {
     final createResult = await stockUsecase.createStock(stock);
 
     createResult.fold((l) => error = optionOf(l), (r) async {
-      reloadProviderListAndStockList(r.product.provider!);
+      if (reloadAfterCreate) {}
     });
   }
 

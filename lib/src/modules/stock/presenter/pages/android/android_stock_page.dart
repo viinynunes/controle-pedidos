@@ -59,6 +59,10 @@ class _AndroidStockPageState extends IStockPageState {
               ),
               const PopupMenuItem(
                 value: 2,
+                child: Text('Carregar Produtos Fixos'),
+              ),
+              const PopupMenuItem(
+                value: 3,
                 child: Text('Editar Produtos Fixos'),
               ),
             ],
@@ -70,6 +74,11 @@ class _AndroidStockPageState extends IStockPageState {
                     break;
                   }
                 case 2:
+                  {
+                    controller.loadStockDefault();
+                    break;
+                  }
+                case 3:
                   {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) =>

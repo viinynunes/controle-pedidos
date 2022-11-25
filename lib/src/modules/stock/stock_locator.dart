@@ -24,7 +24,7 @@ void setUpStockLocator() {
   stockLocator.registerLazySingleton<IStockUsecase>(
       () => StockUsecaseImpl(stockLocator()));
   stockLocator.registerSingleton<StockController>(
-      StockController(stockLocator(), stockLocator()));
+      StockController(stockLocator(), stockLocator(), stockLocator()));
   stockLocator.registerFactory<StockTileController>(
       () => StockTileController(stockLocator()));
   stockLocator.registerFactory<DivideStockDialogController>(

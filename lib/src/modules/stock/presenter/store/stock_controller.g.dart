@@ -188,13 +188,21 @@ mixin _$StockController on _StockControllerBase, Store {
         super.createDuplicatedStock(stock, provider, movePropertiesAndDelete));
   }
 
+  late final _$loadStockDefaultAsyncAction =
+      AsyncAction('_StockControllerBase.loadStockDefault', context: context);
+
+  @override
+  Future loadStockDefault() {
+    return _$loadStockDefaultAsyncAction.run(() => super.loadStockDefault());
+  }
+
   late final _$createEmptyStockAsyncAction =
       AsyncAction('_StockControllerBase.createEmptyStock', context: context);
 
   @override
-  Future createEmptyStock(Product product) {
+  Future createEmptyStock(Product product, bool reloadAfterCreate) {
     return _$createEmptyStockAsyncAction
-        .run(() => super.createEmptyStock(product));
+        .run(() => super.createEmptyStock(product, reloadAfterCreate));
   }
 
   late final _$reloadProviderListAndStockListAsyncAction = AsyncAction(
