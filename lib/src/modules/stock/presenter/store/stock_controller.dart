@@ -10,6 +10,7 @@ import 'package:mobx/mobx.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
+import '../../../provider/services/i_provider_service.dart';
 import '../../errors/stock_error.dart';
 import '../../services/i_stock_service.dart';
 
@@ -21,9 +22,10 @@ abstract class _StockControllerBase with Store {
   final IStockService stockService;
   final IStockUsecase stockUsecase;
   final IProductUsecase productUsecase;
+  final IProviderService providerService;
 
-  _StockControllerBase(
-      this.stockUsecase, this.stockService, this.productUsecase);
+  _StockControllerBase(this.stockUsecase, this.stockService,
+      this.productUsecase, this.providerService);
 
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -117,6 +119,7 @@ abstract class _StockControllerBase with Store {
     providerResult.fold((l) => error = optionOf(l), (r) {
       providerList = ObservableList.of(r);
       if (providerList.isNotEmpty) {
+        providerService.sortProviderListByRegistrationDate(providerList);
         selectedProvider = providerList.first;
       }
     });
@@ -189,7 +192,7 @@ abstract class _StockControllerBase with Store {
       stockUsecase.updateStock(s);
     }
 
-    //modifying stockList to mobx reaction get the state
+    ///modifying stockList to mobx reaction get the state
     reloadStockList();
   }
 
