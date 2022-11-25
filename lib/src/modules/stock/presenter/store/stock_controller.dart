@@ -269,7 +269,9 @@ abstract class _StockControllerBase with Store {
     final createResult = await stockUsecase.createStock(stock);
 
     createResult.fold((l) => error = optionOf(l), (r) async {
-      if (reloadAfterCreate) {}
+      if (reloadAfterCreate) {
+        await reloadProviderListAndStockList(r.product.provider!);
+      }
     });
   }
 
