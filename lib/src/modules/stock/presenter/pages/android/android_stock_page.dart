@@ -98,9 +98,11 @@ class _AndroidStockPageState extends IStockPageState {
                   }
                 case 3:
                   {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) =>
-                            const AndroidProductStockDefaultPage()));
+                    Navigator.of(context).push(
+                      CustomPageRoute(
+                          child: const AndroidProductStockDefaultPage(),
+                          direction: AxisDirection.left),
+                    );
                   }
               }
             },
