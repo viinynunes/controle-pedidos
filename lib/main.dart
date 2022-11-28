@@ -27,11 +27,15 @@ void main() async {
       useMaterial3: true,
       primarySwatch: Colors.deepPurple,
       textTheme: const TextTheme(
-        labelSmall: TextStyle(color: Colors.green),
-        titleLarge: TextStyle(fontWeight: FontWeight.w600)
-      ),
+          labelSmall: TextStyle(color: Colors.green),
+          titleLarge: TextStyle(fontWeight: FontWeight.w600)),
       canvasColor: Colors.white,
-      hintColor: Colors.grey
+      hintColor: Colors.grey,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              foregroundColor: Colors.white,
+              elevation: 5)),
     ),
   ));
 }
