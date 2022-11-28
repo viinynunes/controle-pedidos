@@ -60,7 +60,7 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.border_color,
+                  Icons.reorder,
                 ),
                 label: ''),
             BottomNavigationBarItem(
@@ -71,6 +71,11 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.account_circle,
+                ),
+                label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.insert_chart_outlined,
                 ),
                 label: ''),
           ],

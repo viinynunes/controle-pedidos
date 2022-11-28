@@ -24,11 +24,15 @@ void main() async {
   runApp(MaterialApp(
     home: const AndroidHomePage(),
     theme: ThemeData(
-        useMaterial3: true,
-        primarySwatch: Colors.deepPurple,
-        textTheme: const TextTheme(
-          labelSmall: TextStyle(color: Colors.green),
-        )),
+      useMaterial3: true,
+      primarySwatch: Colors.deepPurple,
+      textTheme: const TextTheme(
+        labelSmall: TextStyle(color: Colors.green),
+        titleLarge: TextStyle(fontWeight: FontWeight.w600)
+      ),
+      canvasColor: Colors.white,
+      hintColor: Colors.grey
+    ),
   ));
 }
 

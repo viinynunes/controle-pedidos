@@ -11,6 +11,7 @@ import '../../../client/errors/client_errors.dart';
 import '../../../order/presenter/pages/android/android_order_list_page.dart';
 import '../../../product/errors/product_error.dart';
 import '../../../stock/presenter/pages/android/android_stock_page.dart';
+import '../../reports/android_reports_page.dart';
 
 part 'home_page_controller.g.dart';
 
@@ -87,6 +88,7 @@ abstract class _HomePageControllerBase with Store {
         productList: productList,
       ),
       const AndroidRegistrationsPage(),
+      const AndroidReportsPage(),
     ];
   }
 }
