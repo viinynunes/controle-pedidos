@@ -20,8 +20,8 @@ class OrderItem {
       identical(this, other) ||
       other is OrderItem &&
           runtimeType == other.runtimeType &&
-          productId == other.productId;
+          product == other.product;
 
   @override
-  int get hashCode => productId.hashCode;
+  int get hashCode => product.hashCode;
 }

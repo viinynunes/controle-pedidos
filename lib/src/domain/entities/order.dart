@@ -29,4 +29,14 @@ class Order {
   void removeOrderItem(OrderItem item) {
     orderItemList.remove(item);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Order &&
+          runtimeType == other.runtimeType &&
+          client == other.client;
+
+  @override
+  int get hashCode => client.hashCode;
 }
