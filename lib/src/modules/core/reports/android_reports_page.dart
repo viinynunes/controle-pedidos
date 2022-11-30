@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../order/presenter/pages/android/reports/android_order_report_page.dart';
 import '../helpers/custom_page_route.dart';
 
 class AndroidReportsPage extends StatelessWidget {
@@ -84,7 +85,8 @@ class AndroidReportsPage extends StatelessWidget {
                   icon: Icons.reorder,
                   text: 'Pedidos por Data',
                   onTap: () => Navigator.of(context).push(CustomPageRoute(
-                      child: Container(), direction: AxisDirection.left))),
+                      child: const AndroidOrderReportPage(),
+                      direction: AxisDirection.left))),
             ],
           ),
         ),
