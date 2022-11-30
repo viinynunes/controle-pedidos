@@ -13,4 +13,12 @@ class Client {
       required this.email,
       required this.address,
       required this.enabled});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Client && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
