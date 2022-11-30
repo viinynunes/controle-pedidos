@@ -8,6 +8,7 @@ import 'package:controle_pedidos/src/modules/order/presenter/stores/order_contro
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_controller.dart';
 import 'package:get_it/get_it.dart';
 
+import 'presenter/stores/order_report_controller.dart';
 import 'services/i_order_service.dart';
 import 'services/impl/order_service_impl.dart';
 
@@ -25,4 +26,6 @@ void setUpOrderLocator() {
       OrderController(orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderRegistrationController>(
       () => OrderRegistrationController(orderLocator()));
+  orderLocator.registerFactory<OrderReportController>(
+      () => OrderReportController(orderLocator(), orderLocator()));
 }
