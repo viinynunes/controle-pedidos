@@ -62,24 +62,18 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                   context: context,
                   elevation: 5,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  builder: (_) => Container(
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).backgroundColor,
-                        borderRadius: BorderRadius.circular(50)),
-                    child: ModalBottomSheetStockTile(
-                      stock: widget.stock,
-                      onDelete: () => stockController.removeStock(widget.stock),
-                      equalDates: Helpers.compareOnlyDateFromDateTime(
-                          stockController.iniDate, stockController.endDate),
-                      onChangeDate: (date) async {
-                        await tileController.updateStockDate(date);
-                        await stockController
-                            .getStockListByProviderBetweenDates();
-                      },
-                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  builder: (_) => ModalBottomSheetStockTile(
+                    stock: widget.stock,
+                    onDelete: () => stockController.removeStock(widget.stock),
+                    equalDates: Helpers.compareOnlyDateFromDateTime(
+                        stockController.iniDate, stockController.endDate),
+                    onChangeDate: (date) async {
+                      await tileController.updateStockDate(date);
+                      await stockController
+                          .getStockListByProviderBetweenDates();
+                    },
                   ),
                 );
               },
