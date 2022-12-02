@@ -1,9 +1,11 @@
+import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../stores/order_report_controller.dart';
 import '../tiles/android_order_list_tile.dart';
+import 'order_to_image.dart';
 
 class AndroidOrderReportPage extends StatefulWidget {
   const AndroidOrderReportPage({Key? key}) : super(key: key);
@@ -83,9 +85,11 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
                                 final order = orderList[index];
                                 return AndroidOrderListTile(
                                   order: order,
-                                  onTap: () {
-                                    showModalBottomSheet(context: context, builder: (_) => Container());
-                                  },
+                                  onTap: () => Navigator.of(context).push(
+                                    CustomPageRoute(
+                                        child: OrderToImage(order: order),
+                                        direction: AxisDirection.left),
+                                  ),
                                   onDisable: () {},
                                 );
                               },
