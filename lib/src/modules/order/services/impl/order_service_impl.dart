@@ -9,6 +9,10 @@ class OrderServiceImpl implements IOrderService {
   @override
   void sortOrderListByRegistrationHour(List<o.Order> orderList) {
     orderList.sort((a, b) => b.registrationHour.compareTo(a.registrationHour));
+
+    for (var o in orderList) {
+      sortOrderItems(o.orderItemList);
+    }
   }
 
   @override
@@ -20,9 +24,12 @@ class OrderServiceImpl implements IOrderService {
       if (compare == 0) {
         return a.registrationHour.compareTo(b.registrationHour);
       }
-
       return compare;
     });
+
+    for (var o in orderList) {
+      sortOrderItems(o.orderItemList);
+    }
   }
 
   @override
