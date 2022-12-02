@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../../stores/order_report_controller.dart';
 import '../tiles/android_order_list_tile.dart';
+import 'order_report_modal_bottom_menu.dart';
 import 'order_to_image.dart';
 
 class AndroidOrderReportPage extends StatefulWidget {
@@ -33,6 +34,14 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
           IconButton(
             onPressed: () {
               controller.mergeOrderList();
+              showModalBottomSheet(
+                context: context,
+                builder: (_) => OrderReportModalBottomMenu(
+                  onGenerateImage: () {},
+                  onGeneratePDF: () {},
+                  onGenerateXLSX: () {},
+                ),
+              );
             },
             icon: const Icon(Icons.share),
           ),
