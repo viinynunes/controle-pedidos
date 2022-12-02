@@ -40,7 +40,6 @@ class OrderServiceImpl implements IOrderService {
         previousOrder = actualOrder;
       } else {
         for (var actualItem in actualOrder.orderItemList) {
-          ///previous order not contain the item
           if (previousOrder != null &&
               !previousOrder.orderItemList.contains(actualItem)) {
             previousOrder.orderItemList.add(actualItem);
@@ -71,8 +70,7 @@ class OrderServiceImpl implements IOrderService {
         }
       }
 
-      ///previous order and actual order have the same client
-
+      sortOrderItems(actualOrder.orderItemList);
     }
 
     return Right(mergedList);
