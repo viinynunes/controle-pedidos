@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/core/export_files/export_to_xlsx.dart';
 import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -30,22 +31,23 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Relatório de Pedidos'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              controller.mergeOrderList();
-              showModalBottomSheet(
-                context: context,
-                builder: (_) => OrderReportModalBottomMenu(
-                  onGenerateImage: () {},
-                  onGeneratePDF: () {},
-                  onGenerateXLSX: () {},
-                ),
-              );
-            },
-            icon: const Icon(Icons.share),
-          ),
-        ],
+        centerTitle: true,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.mergeOrderList();
+          showModalBottomSheet(
+            context: context,
+            builder: (_) => OrderReportModalBottomMenu(
+              onGenerateImage: () {},
+              onGeneratePDF: () {},
+              onGenerateXLSX: () {
+                ExportToXLSX().exportOrder(controller.mergedOrderList);
+              },
+            ),
+          );
+        },
+        child: const Icon(Icons.upload_file),
       ),
       body: SafeArea(
         child: SizedBox(
