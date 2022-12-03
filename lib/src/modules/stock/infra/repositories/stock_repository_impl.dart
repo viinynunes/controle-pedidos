@@ -106,9 +106,15 @@ class StockRepositoryImpl implements IStockRepository {
 
   @override
   Future<Either<StockError, List<Stock>>> getStockListBetweenDates(
-      {required DateTime iniDate, required DateTime endDate}) {
-    // TODO: implement getStockListBetweenDates
-    throw UnimplementedError();
+      {required DateTime iniDate, required DateTime endDate}) async {
+    try {
+      final result = await _datasource.getStockListBetweenDates(
+          iniDate: iniDate, endDate: endDate);
+
+      return Right(result);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
   }
 
   @override

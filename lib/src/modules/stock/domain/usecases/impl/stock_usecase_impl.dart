@@ -137,8 +137,8 @@ class StockUsecaseImpl implements IStockUsecase {
   @override
   Future<Either<StockError, List<Stock>>> getStockListBetweenDates(
       {required DateTime iniDate, required DateTime endDate}) {
-    // TODO: implement getStockListBetweenDates
-    throw UnimplementedError();
+    return _repository.getStockListBetweenDates(
+        iniDate: iniDate, endDate: endDate);
   }
 
   @override
