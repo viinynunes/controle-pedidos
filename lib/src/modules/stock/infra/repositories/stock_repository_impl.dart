@@ -124,8 +124,7 @@ class StockRepositoryImpl implements IStockRepository {
 
       return Right(result);
     } catch (e) {
-      rethrow;
-      /*return Left(StockError(e.toString()));*/
+      return Left(StockError(e.toString()));
     }
   }
 }
