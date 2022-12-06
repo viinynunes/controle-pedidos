@@ -108,6 +108,24 @@ mixin _$ReportStockByProviderController
     });
   }
 
+  late final _$selectedProviderModelListAtom = Atom(
+      name: '_ReportStockByProviderControllerBase.selectedProviderModelList',
+      context: context);
+
+  @override
+  List<ReportProviderModel> get selectedProviderModelList {
+    _$selectedProviderModelListAtom.reportRead();
+    return super.selectedProviderModelList;
+  }
+
+  @override
+  set selectedProviderModelList(List<ReportProviderModel> value) {
+    _$selectedProviderModelListAtom
+        .reportWrite(value, super.selectedProviderModelList, () {
+      super.selectedProviderModelList = value;
+    });
+  }
+
   late final _$selectedReportProviderModelAtom = Atom(
       name: '_ReportStockByProviderControllerBase.selectedReportProviderModel',
       context: context);
@@ -182,13 +200,27 @@ mixin _$ReportStockByProviderController
   }
 
   @override
-  dynamic setSelectedProviderModel(ReportProviderModel provider) {
+  dynamic addSelectedReportProviderModel(ReportProviderModel provider) {
     final _$actionInfo =
         _$_ReportStockByProviderControllerBaseActionController.startAction(
             name:
-                '_ReportStockByProviderControllerBase.setSelectedProviderModel');
+                '_ReportStockByProviderControllerBase.addSelectedReportProviderModel');
     try {
-      return super.setSelectedProviderModel(provider);
+      return super.addSelectedReportProviderModel(provider);
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic removeReportProviderModel(ReportProviderModel provider) {
+    final _$actionInfo =
+        _$_ReportStockByProviderControllerBaseActionController.startAction(
+            name:
+                '_ReportStockByProviderControllerBase.removeReportProviderModel');
+    try {
+      return super.removeReportProviderModel(provider);
     } finally {
       _$_ReportStockByProviderControllerBaseActionController
           .endAction(_$actionInfo);
@@ -204,6 +236,7 @@ stockList: ${stockList},
 error: ${error},
 providerList: ${providerList},
 providerModelList: ${providerModelList},
+selectedProviderModelList: ${selectedProviderModelList},
 selectedReportProviderModel: ${selectedReportProviderModel}
     ''';
   }

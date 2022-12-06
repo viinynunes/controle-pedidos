@@ -34,6 +34,8 @@ abstract class _ReportStockByProviderControllerBase with Store {
   @observable
   List<ReportProviderModel> providerModelList = ObservableList.of([]);
   @observable
+  List<ReportProviderModel> selectedProviderModelList = ObservableList.of([]);
+  @observable
   ReportProviderModel? selectedReportProviderModel;
   late DateTime iniDate, endDate;
   final dateFormat = DateFormat('dd-MM-yyyy');
@@ -67,17 +69,13 @@ abstract class _ReportStockByProviderControllerBase with Store {
   }
 
   @action
-  setSelectedProviderModel(ReportProviderModel provider) {
-    selectedReportProviderModel = provider;
-  }
-
-  @action
   getStockListBetweenDates() async {
     loading = true;
 
     stockList.clear();
     providerList.clear();
     providerModelList.clear();
+    selectedProviderModelList.clear();
 
     final result = await stockUsecase.getStockListBetweenDates(
         iniDate: iniDate, endDate: endDate);
@@ -96,9 +94,18 @@ abstract class _ReportStockByProviderControllerBase with Store {
                 .where((element) => element.product.providerId == p.id)
                 .toList()));
       }
-
     });
 
     loading = false;
+  }
+
+  @action
+  addSelectedReportProviderModel(ReportProviderModel provider) {
+    selectedProviderModelList.add(provider);
+  }
+
+  @action
+  removeReportProviderModel(ReportProviderModel provider) {
+    selectedProviderModelList.remove(provider);
   }
 }

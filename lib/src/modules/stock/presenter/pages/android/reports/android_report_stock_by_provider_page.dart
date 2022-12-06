@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../store/report_stock_by_provider_controller.dart';
 
 class AndroidReportStockByProviderPage extends StatefulWidget {
@@ -29,6 +30,30 @@ class _AndroidReportStockByProviderPageState
       appBar: AppBar(
         title: const Text('Relatório por Fornecedor'),
         centerTitle: true,
+        actions: [
+          Observer(
+            builder: (_) => controller.selectedProviderModelList.isNotEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        controller.selectedProviderModelList.length.toString(),
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  )
+                : Container(),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (_) => ModelBottomMenuExportOptions(
+                    onGenerateXLSX: () {},
+                  ));
+        },
       ),
       body: SafeArea(
         child: SizedBox(
@@ -77,47 +102,42 @@ class _AndroidReportStockByProviderPageState
                         children: controller.providerModelList
                             .map(
                               (provider) => ExpansionPanelRadio(
-                                backgroundColor: Theme.of(context)
-                                    .hintColor
-                                    .withOpacity(0.2),
                                 value: UniqueKey(),
                                 canTapOnHeader: true,
                                 headerBuilder: (_, isOpen) {
-                                  return GestureDetector(
-                                    onLongPress: () {
-                                      controller
-                                          .setSelectedProviderModel(provider);
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (_) => SingleChildScrollView(
+                                  return Observer(
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onLongPress: () {
+                                          controller.selectedProviderModelList
+                                                  .contains(provider)
+                                              ? controller
+                                                  .removeReportProviderModel(
+                                                      provider)
+                                              : controller
+                                                  .addSelectedReportProviderModel(
+                                                      provider);
+                                        },
+                                        child: Card(
+                                          color: controller
+                                                  .selectedProviderModelList
+                                                  .contains(provider)
+                                              ? Theme.of(context)
+                                                  .backgroundColor
+                                                  .withOpacity(0.7)
+                                              : Theme.of(context).cardColor,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Center(
-                                                    child: Text(
-                                                  provider.providerName,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleLarge,
-                                                ))
-                                              ],
+                                            child: Text(
+                                              provider.providerName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium,
                                             ),
                                           ),
                                         ),
                                       );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        provider.providerName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                    ),
+                                    }
                                   );
                                 },
                                 body: DataTable(
