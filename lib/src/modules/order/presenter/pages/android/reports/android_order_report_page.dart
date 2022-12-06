@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../stores/order_report_controller.dart';
 import '../tiles/android_order_list_tile.dart';
-import 'order_report_modal_bottom_menu.dart';
 import 'order_to_image.dart';
 
 class AndroidOrderReportPage extends StatefulWidget {
@@ -38,9 +38,7 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
           controller.mergeOrderList();
           showModalBottomSheet(
             context: context,
-            builder: (_) => OrderReportModalBottomMenu(
-              onGenerateImage: () {},
-              onGeneratePDF: () {},
+            builder: (_) => ModelBottomMenuExportOptions(
               onGenerateXLSX: () {
                 ExportToXLSX().exportOrder(controller.mergedOrderList);
               },

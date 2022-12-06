@@ -2,9 +2,9 @@ import 'package:controle_pedidos/src/domain/entities/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
 import '../../../../../core/widget_to_image/transform_widget_to_image.dart';
-import 'order_report_modal_bottom_menu.dart';
 
 class OrderToImage extends StatefulWidget {
   const OrderToImage({Key? key, required this.order}) : super(key: key);
@@ -132,14 +132,13 @@ class _OrderToImageState extends State<OrderToImage> {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (_) => OrderReportModalBottomMenu(
-                    order: widget.order,
+                  builder: (_) => ModelBottomMenuExportOptions(
                     onGenerateImage: () {
-                      TransformWidgetToImage.transformAndLaunch(repaintKey,
-                          '${widget.order.client.name} - ${dateFormat.format(widget.order.registrationDate)}');
+                      TransformWidgetToImage.transformAndLaunch(
+                        repaintKey,
+                        '${widget.order.client.name} - ${dateFormat.format(widget.order.registrationDate)}',
+                      );
                     },
-                    onGeneratePDF: () {},
-                    onGenerateXLSX: () {},
                   ),
                 );
               },

@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import '../../../../../../domain/entities/order.dart';
-
-class OrderReportModalBottomMenu extends StatelessWidget {
-  const OrderReportModalBottomMenu(
-      {Key? key,
-      this.order,
-      required this.onGenerateImage,
-      required this.onGeneratePDF,
-      required this.onGenerateXLSX})
+class ModelBottomMenuExportOptions extends StatelessWidget {
+  const ModelBottomMenuExportOptions(
+      {Key? key, this.onGenerateImage, this.onGeneratePDF, this.onGenerateXLSX})
       : super(key: key);
 
-  final Order? order;
-  final VoidCallback onGenerateImage;
-  final VoidCallback onGeneratePDF;
-  final VoidCallback onGenerateXLSX;
+  final VoidCallback? onGenerateImage;
+  final VoidCallback? onGeneratePDF;
+  final VoidCallback? onGenerateXLSX;
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd-MM-yyyy');
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -28,19 +18,9 @@ class OrderReportModalBottomMenu extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            order != null
+            onGenerateImage != null
                 ? Column(
                     children: [
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            order!.client.name,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        ),
-                      ),
-                      Text(dateFormat.format(order!.registrationDate)),
                       ListTile(
                         onTap: onGenerateImage,
                         leading: Column(
@@ -58,23 +38,28 @@ class OrderReportModalBottomMenu extends StatelessWidget {
                     ],
                   )
                 : Container(),
-            ListTile(
-              onTap: onGeneratePDF,
-              leading: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    Icons.picture_as_pdf,
-                  ),
-                ],
-              ),
-              title: const Text('Gerar PDF'),
-              subtitle: const Text('Gera um arquivo em formato PDF'),
-            ),
-            const Divider(),
-            order != null
-                ? Container()
-                : ListTile(
+            onGeneratePDF != null
+                ? Column(
+                    children: [
+                      ListTile(
+                        onTap: onGeneratePDF,
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.picture_as_pdf,
+                            ),
+                          ],
+                        ),
+                        title: const Text('Gerar PDF'),
+                        subtitle: const Text('Gera um arquivo em formato PDF'),
+                      ),
+                      const Divider(),
+                    ],
+                  )
+                : Container(),
+            onGenerateXLSX != null
+                ? ListTile(
                     onTap: onGenerateXLSX,
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +72,8 @@ class OrderReportModalBottomMenu extends StatelessWidget {
                     title: const Text('Gerar XLSX'),
                     subtitle:
                         const Text('Gera um arquivo em formato XLSX (Excel)'),
-                  ),
+                  )
+                : Container(),
           ],
         ),
       ),
