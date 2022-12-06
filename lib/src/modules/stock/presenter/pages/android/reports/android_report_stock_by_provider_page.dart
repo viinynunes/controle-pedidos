@@ -62,88 +62,97 @@ class _AndroidReportStockByProviderPageState
                     ),
                   ),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: ExpansionPanelList.radio(
-                      expandedHeaderPadding: const EdgeInsets.all(8),
-                      elevation: 0,
-                      children: controller.providerModelList
-                          .map(
-                            (provider) => ExpansionPanelRadio(
-                              backgroundColor:
-                                  Theme.of(context).hintColor.withOpacity(0.2),
-                              value: UniqueKey(),
-                              canTapOnHeader: true,
-                              headerBuilder: (_, isOpen) {
-                                return GestureDetector(
-                                  onLongPress: () {
-                                    controller
-                                        .setSelectedProviderModel(provider);
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (_) => SingleChildScrollView(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Center(
-                                                  child: Text(
-                                                provider.providerName,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge,
-                                              ))
-                                            ],
+                  Observer(builder: (context) {
+                    if (controller.loading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: ExpansionPanelList.radio(
+                        expandedHeaderPadding: const EdgeInsets.all(8),
+                        elevation: 0,
+                        children: controller.providerModelList
+                            .map(
+                              (provider) => ExpansionPanelRadio(
+                                backgroundColor: Theme.of(context)
+                                    .hintColor
+                                    .withOpacity(0.2),
+                                value: UniqueKey(),
+                                canTapOnHeader: true,
+                                headerBuilder: (_, isOpen) {
+                                  return GestureDetector(
+                                    onLongPress: () {
+                                      controller
+                                          .setSelectedProviderModel(provider);
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (_) => SingleChildScrollView(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Center(
+                                                    child: Text(
+                                                  provider.providerName,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleLarge,
+                                                ))
+                                              ],
+                                            ),
                                           ),
                                         ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        provider.providerName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
                                       ),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      provider.providerName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
                                     ),
-                                  ),
-                                );
-                              },
-                              body: DataTable(
-                                columnSpacing: 10,
-                                columns: const [
-                                  DataColumn(label: Text('Produto')),
-                                  DataColumn(label: Text('Emb')),
-                                  DataColumn(label: Text('Pedido')),
-                                  DataColumn(label: Text('Total')),
-                                  DataColumn(label: Text('Sobra')),
-                                ],
-                                rows: provider.stockList
-                                    .map(
-                                      (stock) => DataRow(
-                                        cells: [
-                                          DataCell(Text(stock.product.name)),
-                                          DataCell(
-                                              Text(stock.product.category)),
-                                          DataCell(
-                                              Text(stock.total.toString())),
-                                          DataCell(Text(
-                                              stock.totalOrdered.toString())),
-                                          DataCell(Text(
-                                              '${(stock.totalOrdered - stock.total)}')),
-                                        ],
-                                      ),
-                                    )
-                                    .toList(),
+                                  );
+                                },
+                                body: DataTable(
+                                  columnSpacing: 10,
+                                  columns: const [
+                                    DataColumn(label: Text('Produto')),
+                                    DataColumn(label: Text('Emb')),
+                                    DataColumn(label: Text('Pedido')),
+                                    DataColumn(label: Text('Total')),
+                                    DataColumn(label: Text('Sobra')),
+                                  ],
+                                  rows: provider.stockList
+                                      .map(
+                                        (stock) => DataRow(
+                                          cells: [
+                                            DataCell(Text(stock.product.name)),
+                                            DataCell(
+                                                Text(stock.product.category)),
+                                            DataCell(
+                                                Text(stock.total.toString())),
+                                            DataCell(Text(
+                                                stock.totalOrdered.toString())),
+                                            DataCell(Text(
+                                                '${(stock.totalOrdered - stock.total)}')),
+                                          ],
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+                            )
+                            .toList(),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
