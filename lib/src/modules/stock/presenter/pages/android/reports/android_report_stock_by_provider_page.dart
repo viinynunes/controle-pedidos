@@ -46,7 +46,8 @@ class _AndroidReportStockByProviderPageState
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        icon: const Icon(Icons.arrow_right_alt),
         onPressed: () {
           showModalBottomSheet(
               context: context,
@@ -54,6 +55,7 @@ class _AndroidReportStockByProviderPageState
                     onGenerateXLSX: () {},
                   ));
         },
+        label: const Text('Gerar'),
       ),
       body: SafeArea(
         child: SizedBox(
@@ -105,40 +107,57 @@ class _AndroidReportStockByProviderPageState
                                 value: UniqueKey(),
                                 canTapOnHeader: true,
                                 headerBuilder: (_, isOpen) {
-                                  return Observer(
-                                    builder: (context) {
-                                      return GestureDetector(
-                                        onLongPress: () {
-                                          controller.selectedProviderModelList
-                                                  .contains(provider)
-                                              ? controller
-                                                  .removeReportProviderModel(
-                                                      provider)
-                                              : controller
-                                                  .addSelectedReportProviderModel(
-                                                      provider);
-                                        },
-                                        child: Card(
-                                          color: controller
-                                                  .selectedProviderModelList
-                                                  .contains(provider)
-                                              ? Theme.of(context)
-                                                  .backgroundColor
-                                                  .withOpacity(0.7)
-                                              : Theme.of(context).cardColor,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              provider.providerName,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium,
+                                  return Observer(builder: (context) {
+                                    return GestureDetector(
+                                      onLongPress: () {
+                                        controller.selectedProviderModelList
+                                                .contains(provider)
+                                            ? controller
+                                                .removeReportProviderModel(
+                                                    provider)
+                                            : controller
+                                                .addSelectedReportProviderModel(
+                                                    provider);
+                                      },
+                                      child: Card(
+                                        color: controller
+                                                .selectedProviderModelList
+                                                .contains(provider)
+                                            ? Theme.of(context)
+                                                .backgroundColor
+                                                .withOpacity(0.7)
+                                            : Theme.of(context).cardColor,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                provider.providerName,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium,
+                                              ),
                                             ),
-                                          ),
+                                            controller.selectedProviderModelList
+                                                    .contains(provider)
+                                                ? Switch(
+                                                    value: provider.merge,
+                                                    activeColor: Theme.of(context).scaffoldBackgroundColor,
+                                                    onChanged: (_) {
+                                                      setState(() {
+                                                        controller.toggleMerge(
+                                                            provider);
+                                                      });
+                                                    })
+                                                : Container(),
+                                          ],
                                         ),
-                                      );
-                                    }
-                                  );
+                                      ),
+                                    );
+                                  });
                                 },
                                 body: DataTable(
                                   columnSpacing: 10,

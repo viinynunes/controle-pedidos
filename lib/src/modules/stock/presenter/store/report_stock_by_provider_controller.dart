@@ -92,7 +92,8 @@ abstract class _ReportStockByProviderControllerBase with Store {
             providerName: p.name,
             stockList: stockList
                 .where((element) => element.product.providerId == p.id)
-                .toList()));
+                .toList(),
+            merge: false));
       }
     });
 
@@ -107,5 +108,11 @@ abstract class _ReportStockByProviderControllerBase with Store {
   @action
   removeReportProviderModel(ReportProviderModel provider) {
     selectedProviderModelList.remove(provider);
+    provider.merge = false;
+  }
+
+  @action
+  toggleMerge(ReportProviderModel provider) {
+    provider.merge = !provider.merge;
   }
 }

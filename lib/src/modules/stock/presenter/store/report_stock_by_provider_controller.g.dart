@@ -228,6 +228,18 @@ mixin _$ReportStockByProviderController
   }
 
   @override
+  dynamic toggleMerge(ReportProviderModel provider) {
+    final _$actionInfo = _$_ReportStockByProviderControllerBaseActionController
+        .startAction(name: '_ReportStockByProviderControllerBase.toggleMerge');
+    try {
+      return super.toggleMerge(provider);
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 dateRange: ${dateRange},
