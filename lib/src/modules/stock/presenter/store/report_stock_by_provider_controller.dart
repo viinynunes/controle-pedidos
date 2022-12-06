@@ -40,9 +40,7 @@ abstract class _ReportStockByProviderControllerBase with Store {
 
   @action
   initState() async {
-    resetDateRange();
-
-    await getStockListBetweenDates();
+    await resetDateRange();
   }
 
   @action
@@ -77,25 +75,29 @@ abstract class _ReportStockByProviderControllerBase with Store {
   getStockListBetweenDates() async {
     loading = true;
 
+    stockList.clear();
+    providerList.clear();
+    providerModelList.clear();
+
     final result = await stockUsecase.getStockListBetweenDates(
         iniDate: iniDate, endDate: endDate);
 
     result.fold((l) => error = optionOf(l), (r) {
       stockService.sortStockListByProviderAndProductName(r);
+      stockList = ObservableList.of(r);
       for (var s in r) {
         providerList.add(s.product.provider!);
       }
-      stockList = ObservableList.of(r);
-    });
+      for (var p in providerList) {
+        providerModelList.add(ReportProviderModel(
+            providerId: p.id,
+            providerName: p.name,
+            stockList: stockList
+                .where((element) => element.product.providerId == p.id)
+                .toList()));
+      }
 
-    for (var p in providerList) {
-      providerModelList.add(ReportProviderModel(
-          providerId: p.id,
-          providerName: p.name,
-          stockList: stockList
-              .where((element) => element.product.providerId == p.id)
-              .toList()));
-    }
+    });
 
     loading = false;
   }
