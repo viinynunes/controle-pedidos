@@ -7,7 +7,7 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 
 import '../../../domain/entities/order.dart';
 
-class ExportToXLSX {
+class OrderToXLSX {
   final _dateFormat = DateFormat('dd-MM-yyyy');
 
   void exportOrder(List<Order> orderList) {
