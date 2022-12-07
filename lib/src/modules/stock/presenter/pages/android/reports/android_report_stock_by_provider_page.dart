@@ -50,13 +50,13 @@ class _AndroidReportStockByProviderPageState
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.arrow_right_alt),
         onPressed: () {
-          Navigator.of(context).push(CustomPageRoute(
-              child: AndroidCustomMergedStockByProviderPage(
-                providerList: controller.selectedProviderModelList.isNotEmpty
-                    ? controller.selectedProviderModelList
-                    : [],
-              ),
-              direction: AxisDirection.left));
+          Navigator.of(context)
+              .push(CustomPageRoute(
+                  child: AndroidCustomMergedStockByProviderPage(
+                    providerList: controller.selectedProviderModelList,
+                  ),
+                  direction: AxisDirection.left))
+              .then((value) => controller.getStockListBetweenDates());
         },
         label: const Text('Gerar'),
       ),
