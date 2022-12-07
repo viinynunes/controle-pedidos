@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../domain/models/stock_model.dart';
+import '../../../../../core/export_files/stock_by_provider_to_xlsx.dart';
 import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
 import '../../../../../core/widget_to_image/transform_widget_to_image.dart';
@@ -40,7 +41,7 @@ class _AndroidCustomMergedStockByProviderPageState
     if (mergedList.isNotEmpty) {
       widget.providerList.add(ReportProviderModel(
           providerId: '0',
-          providerName: 'merged',
+          providerName: 'Relatório Agrupado',
           providerLocation: '',
           stockList: mergedList,
           merge: true));
@@ -58,7 +59,7 @@ class _AndroidCustomMergedStockByProviderPageState
             repaintKey = key;
             return Container(
               color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: ListView(
                 children: [
                   SizedBox(
@@ -160,7 +161,10 @@ class _AndroidCustomMergedStockByProviderPageState
                         'TESTE',
                       );
                     },
-                    onGenerateXLSX: () {},
+                    onGenerateXLSX: () {
+                      StockByProviderToXLSX().exportReportByProvider(
+                          providerList: widget.providerList);
+                    },
                   ),
                 );
               },
