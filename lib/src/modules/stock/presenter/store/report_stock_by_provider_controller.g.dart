@@ -200,6 +200,20 @@ mixin _$ReportStockByProviderController
   }
 
   @override
+  List<ReportProviderModel> getProviderListToShare() {
+    final _$actionInfo =
+        _$_ReportStockByProviderControllerBaseActionController.startAction(
+            name:
+                '_ReportStockByProviderControllerBase.getProviderListToShare');
+    try {
+      return super.getProviderListToShare();
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic addSelectedReportProviderModel(ReportProviderModel provider) {
     final _$actionInfo =
         _$_ReportStockByProviderControllerBaseActionController.startAction(

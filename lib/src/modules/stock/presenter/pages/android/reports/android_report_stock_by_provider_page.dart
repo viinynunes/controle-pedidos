@@ -53,7 +53,7 @@ class _AndroidReportStockByProviderPageState
           Navigator.of(context)
               .push(CustomPageRoute(
                   child: AndroidCustomMergedStockByProviderPage(
-                    providerList: controller.selectedProviderModelList,
+                    providerList: controller.getProviderListToShare(),
                   ),
                   direction: AxisDirection.left))
               .then((value) => controller.getStockListBetweenDates());

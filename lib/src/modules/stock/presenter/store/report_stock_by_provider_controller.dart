@@ -69,6 +69,26 @@ abstract class _ReportStockByProviderControllerBase with Store {
   }
 
   @action
+  List<ReportProviderModel> getProviderListToShare() {
+    if (selectedProviderModelList.isEmpty) {
+      for (var p in providerList) {
+        selectedProviderModelList.add(
+          ReportProviderModel(
+              providerId: p.id,
+              providerName: p.name,
+              providerLocation: p.location,
+              stockList: stockList
+                  .where((element) => element.product.providerId == p.id)
+                  .toList(),
+              merge: false),
+        );
+      }
+    }
+
+    return selectedProviderModelList;
+  }
+
+  @action
   getStockListBetweenDates() async {
     loading = true;
 
