@@ -96,7 +96,7 @@ class _AndroidCustomMergedStockByProviderPageState
                                         Flexible(
                                             flex: 4,
                                             fit: FlexFit.tight,
-                                            child: Text(stock.product.name)),
+                                            child: Text(stock.product.name, maxLines: 1,)),
                                         Flexible(
                                             flex: 1,
                                             fit: FlexFit.tight,
