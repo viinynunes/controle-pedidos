@@ -78,7 +78,7 @@ class _AndroidCustomMergedStockByProviderPageState
                             columns: [
                               DataColumn(
                                 label: SizedBox(
-                                  width: size.width * 0.3,
+                                  width: size.width * 0.4,
                                   child: provider.merge
                                       ? TextField(
                                           decoration: InputDecoration(
@@ -87,8 +87,7 @@ class _AndroidCustomMergedStockByProviderPageState
                                                   .textTheme
                                                   .bodySmall),
                                         )
-                                      : Text(
-                                          '${provider.providerName} - ${provider.providerLocation}'),
+                                      : Text('${provider.providerName} - ${provider.providerLocation}'),
                                 ),
                               ),
                               DataColumn(
