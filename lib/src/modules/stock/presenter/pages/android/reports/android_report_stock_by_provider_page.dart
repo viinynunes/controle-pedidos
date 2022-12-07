@@ -1,9 +1,10 @@
+import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../store/report_stock_by_provider_controller.dart';
+import 'android_custom_merged_stock_by_provider_page.dart';
 
 class AndroidReportStockByProviderPage extends StatefulWidget {
   const AndroidReportStockByProviderPage({Key? key}) : super(key: key);
@@ -49,11 +50,13 @@ class _AndroidReportStockByProviderPageState
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.arrow_right_alt),
         onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (_) => ModelBottomMenuExportOptions(
-                    onGenerateXLSX: () {},
-                  ));
+          Navigator.of(context).push(CustomPageRoute(
+              child: AndroidCustomMergedStockByProviderPage(
+                providerList: controller.selectedProviderModelList.isNotEmpty
+                    ? controller.selectedProviderModelList
+                    : [],
+              ),
+              direction: AxisDirection.left));
         },
         label: const Text('Gerar'),
       ),
@@ -145,7 +148,9 @@ class _AndroidReportStockByProviderPageState
                                                     .contains(provider)
                                                 ? Switch(
                                                     value: provider.merge,
-                                                    activeColor: Theme.of(context).scaffoldBackgroundColor,
+                                                    activeColor: Theme.of(
+                                                            context)
+                                                        .scaffoldBackgroundColor,
                                                     onChanged: (_) {
                                                       setState(() {
                                                         controller.toggleMerge(

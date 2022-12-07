@@ -90,6 +90,7 @@ abstract class _ReportStockByProviderControllerBase with Store {
         providerModelList.add(ReportProviderModel(
             providerId: p.id,
             providerName: p.name,
+            providerLocation: p.location,
             stockList: stockList
                 .where((element) => element.product.providerId == p.id)
                 .toList(),
