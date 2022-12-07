@@ -92,29 +92,6 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     return increase
         ? await increaseStock(stock)
         : await decreaseStock(stock, false);
-
-    /*final toUpdateStockSnap = await _getStockFromFirebase(stock);
-
-    if (toUpdateStockSnap == null) {
-      throw FirebaseException(
-          plugin: 'GET STOCK ERROR', message: 'NENHUM ITEM ENCONTRADO');
-    }
-
-    var toUpdateStock = StockModel.fromMap(toUpdateStockSnap.docs.first.data());
-
-    toUpdateStock.totalOrdered++;*/
-/*
-
-
-
-    ///updating stock by endDate
-
-
-
-
-    return await updateStock(toUpdateStock);
-
- */
   }
 
   @override
@@ -210,9 +187,7 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
         .where('registrationDate', isLessThanOrEqualTo: endDate)
         .get();
 
-    for (var s in snap.docs) {
-      stockList.add(StockModel.fromMap(s.data()));
-    }
+    _mergeStockList(snap.docs, stockList);
 
     return stockList;
   }
@@ -233,19 +208,7 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
         .where('product.provider.id', isEqualTo: provider.id)
         .get();
 
-    for (var s in snap.docs) {
-      var newStock = StockModel.fromMap(s.data());
-
-      if (stockList.contains(newStock)) {
-        var stockFromList = stockList.singleWhere(
-            (stockFromList) => stockFromList.product == newStock.product);
-
-        stockFromList.total += newStock.total;
-        stockFromList.totalOrdered += newStock.totalOrdered;
-      } else {
-        stockList.add(newStock);
-      }
-    }
+    _mergeStockList(snap.docs, stockList);
 
     return stockList;
   }
@@ -282,6 +245,24 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
   void _setStockDate(StockModel stock) {
     stock.registrationDate = DateTime(stock.registrationDate.year,
         stock.registrationDate.month, stock.registrationDate.day);
+  }
+
+  _mergeStockList(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> snapStockList,
+      List<StockModel> stockList) {
+    for (var s in snapStockList) {
+      var newStock = StockModel.fromMap(s.data());
+
+      if (stockList.contains(newStock)) {
+        var stockFromList = stockList.singleWhere(
+            (stockFromList) => stockFromList.product == newStock.product);
+
+        stockFromList.total += newStock.total;
+        stockFromList.totalOrdered += newStock.totalOrdered;
+      } else {
+        stockList.add(newStock);
+      }
+    }
   }
 
   _getProvider(String providerId) async {
