@@ -194,12 +194,11 @@ class _AndroidReportStockByProviderPageState
                                   },
                                   body: DataTable(
                                       horizontalMargin: 0,
+                                      showBottomBorder: true,
                                       columnSpacing: 10,
                                       dataRowHeight: 20,
-                                      headingRowHeight: 30,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16)),
+                                      headingRowHeight: 40,
+                                      headingTextStyle: Theme.of(context).textTheme.titleMedium,
                                       columns: const [
                                         DataColumn(label: Text('Produto')),
                                         DataColumn(label: Text('Emb')),
