@@ -95,7 +95,7 @@ class _AndroidCustomMergedStockByProviderPageState
                                       ? ConstrainedBox(
                                           constraints: BoxConstraints(
                                               minWidth: size.width * 0.1),
-                                          child: const Text('Forn'))
+                                          child: const Text('Local'))
                                       : Container()),
                               const DataColumn(label: Text('Emb')),
                               const DataColumn(label: Text('Total')),
