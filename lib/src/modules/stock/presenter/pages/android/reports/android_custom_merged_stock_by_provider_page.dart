@@ -59,7 +59,7 @@ class _AndroidCustomMergedStockByProviderPageState
             repaintKey = key;
             return Container(
               color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: ListView(
                 children: [
                   SizedBox(
@@ -122,7 +122,7 @@ class _AndroidCustomMergedStockByProviderPageState
                                       )),
                                       DataCell(Padding(
                                         padding: const EdgeInsets.only(left: 8),
-                                        child: Text(stock.total.toString()),
+                                        child: Text(stock.totalOrdered.toString()),
                                       )),
                                       DataCell(Padding(
                                         padding: const EdgeInsets.only(left: 8),
