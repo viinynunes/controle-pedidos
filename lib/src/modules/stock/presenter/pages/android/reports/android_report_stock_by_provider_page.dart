@@ -27,6 +27,8 @@ class _AndroidReportStockByProviderPageState
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Observer(
@@ -50,22 +52,22 @@ class _AndroidReportStockByProviderPageState
         ),
         actions: [
           Observer(
-            builder: (_) => controller.selecting
-                ? Switch(
-                    value: controller.mergeAllSelected,
-                    onChanged: (merge) {
-                      controller.toggleMergeAllSelectedProviders(merge);
-                      setState(() {});
-                    })
-                : Container(),
-          ),
-          Observer(
-            builder: (_) => controller.selecting
-                ? IconButton(
-                    onPressed: controller.clearSelectedReportProviderModelList,
-                    icon: const Icon(Icons.clear))
-                : Container(),
-          ),
+              builder: (_) => controller.selecting
+                  ? Row(
+                      children: [
+                        Switch(
+                            value: controller.mergeAllSelected,
+                            onChanged: (merge) {
+                              controller.toggleMergeAllSelectedProviders(merge);
+                              setState(() {});
+                            }),
+                        IconButton(
+                            onPressed:
+                                controller.clearSelectedReportProviderModelList,
+                            icon: const Icon(Icons.clear))
+                      ],
+                    )
+                  : Container()),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -131,91 +133,117 @@ class _AndroidReportStockByProviderPageState
                         children: controller.providerModelList
                             .map(
                               (provider) => ExpansionPanelRadio(
-                                value: UniqueKey(),
-                                canTapOnHeader: true,
-                                headerBuilder: (_, isOpen) {
-                                  return Observer(builder: (context) {
-                                    return GestureDetector(
-                                      onTap: controller.selecting
-                                          ? () => controller
+                                  value: UniqueKey(),
+                                  canTapOnHeader: true,
+                                  headerBuilder: (_, isOpen) {
+                                    return Observer(builder: (context) {
+                                      return GestureDetector(
+                                        onTap: controller.selecting
+                                            ? () => controller
+                                                .addRemoveSelectedReportProviderModel(
+                                                    provider)
+                                            : null,
+                                        onLongPress: () {
+                                          controller
                                               .addRemoveSelectedReportProviderModel(
-                                                  provider)
-                                          : null,
-                                      onLongPress: () {
-                                        controller
-                                            .addRemoveSelectedReportProviderModel(
-                                                provider);
-                                      },
-                                      child: Card(
-                                        color: controller
-                                                .selectedProviderModelList
-                                                .contains(provider)
-                                            ? Theme.of(context)
-                                                .backgroundColor
-                                                .withOpacity(0.7)
-                                            : Theme.of(context).cardColor,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                provider.providerName,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium,
+                                                  provider);
+                                        },
+                                        child: Card(
+                                          color: controller
+                                                  .selectedProviderModelList
+                                                  .contains(provider)
+                                              ? Theme.of(context)
+                                                  .backgroundColor
+                                                  .withOpacity(0.7)
+                                              : Theme.of(context).cardColor,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  '${provider.providerName} - ${provider.providerLocation}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium,
+                                                ),
                                               ),
+                                              controller
+                                                      .selectedProviderModelList
+                                                      .contains(provider)
+                                                  ? Switch(
+                                                      value: provider.merge,
+                                                      activeColor: Theme.of(
+                                                              context)
+                                                          .scaffoldBackgroundColor,
+                                                      onChanged: (_) {
+                                                        setState(() {
+                                                          controller
+                                                              .toggleMerge(
+                                                                  provider);
+                                                        });
+                                                      })
+                                                  : Container(),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  body: DataTable(
+                                      horizontalMargin: 0,
+                                      columnSpacing: 10,
+                                      dataRowHeight: 20,
+                                      headingRowHeight: 30,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      columns: const [
+                                        DataColumn(label: Text('Produto')),
+                                        DataColumn(label: Text('Emb')),
+                                        DataColumn(label: Text('Total')),
+                                        DataColumn(label: Text('Sobra')),
+                                      ],
+                                      rows: provider.stockList
+                                          .map(
+                                            (stock) => DataRow(
+                                              cells: [
+                                                DataCell(Container(
+                                                  width: size.width * 0.4,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5),
+                                                  child:
+                                                      Text(stock.product.name),
+                                                )),
+                                                DataCell(Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 6),
+                                                  child: Text(
+                                                      stock.product.category),
+                                                )),
+                                                DataCell(Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8),
+                                                  child: Text(stock.totalOrdered
+                                                      .toString()),
+                                                )),
+                                                DataCell(Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8),
+                                                  child: Text(
+                                                    '${(stock.totalOrdered - stock.total)}',
+                                                  ),
+                                                )),
+                                              ],
                                             ),
-                                            controller.selectedProviderModelList
-                                                    .contains(provider)
-                                                ? Switch(
-                                                    value: provider.merge,
-                                                    activeColor: Theme.of(
-                                                            context)
-                                                        .scaffoldBackgroundColor,
-                                                    onChanged: (_) {
-                                                      setState(() {
-                                                        controller.toggleMerge(
-                                                            provider);
-                                                      });
-                                                    })
-                                                : Container(),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  });
-                                },
-                                body: DataTable(
-                                  columnSpacing: 10,
-                                  columns: const [
-                                    DataColumn(label: Text('Produto')),
-                                    DataColumn(label: Text('Emb')),
-                                    DataColumn(label: Text('Pedido')),
-                                    DataColumn(label: Text('Total')),
-                                    DataColumn(label: Text('Sobra')),
-                                  ],
-                                  rows: provider.stockList
-                                      .map(
-                                        (stock) => DataRow(
-                                          cells: [
-                                            DataCell(Text(stock.product.name)),
-                                            DataCell(
-                                                Text(stock.product.category)),
-                                            DataCell(
-                                                Text(stock.total.toString())),
-                                            DataCell(Text(
-                                                stock.totalOrdered.toString())),
-                                            DataCell(Text(
-                                                '${(stock.totalOrdered - stock.total)}')),
-                                          ],
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              ),
+                                          )
+                                          .toList())),
                             )
                             .toList(),
                       ),
