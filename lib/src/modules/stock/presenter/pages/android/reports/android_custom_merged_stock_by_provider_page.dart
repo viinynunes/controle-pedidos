@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../domain/models/stock_model.dart';
 import '../../../../../core/export_files/stock_by_provider_to_xlsx.dart';
@@ -99,7 +100,7 @@ class _AndroidCustomMergedStockByProviderPageState
                     onGenerateImage: () {
                       TransformWidgetToImage.transformAndLaunch(
                         repaintKey,
-                        'TESTE',
+                        'Custom Report By Provider ${DateFormat('dd-MM-yyyy').format(DateTime.now())}',
                       );
                     },
                     onGenerateXLSX: () {
