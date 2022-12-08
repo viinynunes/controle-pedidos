@@ -1,4 +1,4 @@
-import '../../../../domain/entities/stock.dart';
+import '../entities/stock.dart';
 
 class ReportProviderModel {
   final String providerId;

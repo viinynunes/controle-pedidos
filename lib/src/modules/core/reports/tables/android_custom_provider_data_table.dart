@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../stock/presenter/model/report_provider_model.dart';
+import '../../../../domain/models/report_provider_model.dart';
 
 class AndroidCustomProviderDataTable extends StatelessWidget {
   const AndroidCustomProviderDataTable(

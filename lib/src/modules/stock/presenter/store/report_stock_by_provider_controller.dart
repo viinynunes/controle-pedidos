@@ -7,7 +7,7 @@ import 'package:mobx/mobx.dart';
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/entities/stock.dart';
 import '../../errors/stock_error.dart';
-import '../model/report_provider_model.dart';
+import '../../../../domain/models/report_provider_model.dart';
 
 part 'report_stock_by_provider_controller.g.dart';
 
