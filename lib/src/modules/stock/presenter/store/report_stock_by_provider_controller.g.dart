@@ -42,6 +42,39 @@ mixin _$ReportStockByProviderController
     });
   }
 
+  late final _$selectingAtom = Atom(
+      name: '_ReportStockByProviderControllerBase.selecting', context: context);
+
+  @override
+  bool get selecting {
+    _$selectingAtom.reportRead();
+    return super.selecting;
+  }
+
+  @override
+  set selecting(bool value) {
+    _$selectingAtom.reportWrite(value, super.selecting, () {
+      super.selecting = value;
+    });
+  }
+
+  late final _$mergeAllSelectedAtom = Atom(
+      name: '_ReportStockByProviderControllerBase.mergeAllSelected',
+      context: context);
+
+  @override
+  bool get mergeAllSelected {
+    _$mergeAllSelectedAtom.reportRead();
+    return super.mergeAllSelected;
+  }
+
+  @override
+  set mergeAllSelected(bool value) {
+    _$mergeAllSelectedAtom.reportWrite(value, super.mergeAllSelected, () {
+      super.mergeAllSelected = value;
+    });
+  }
+
   late final _$stockListAtom = Atom(
       name: '_ReportStockByProviderControllerBase.stockList', context: context);
 
@@ -214,6 +247,48 @@ mixin _$ReportStockByProviderController
   }
 
   @override
+  dynamic selectAllProvidersToShare() {
+    final _$actionInfo =
+        _$_ReportStockByProviderControllerBaseActionController.startAction(
+            name:
+                '_ReportStockByProviderControllerBase.selectAllProvidersToShare');
+    try {
+      return super.selectAllProvidersToShare();
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic toggleMergeAllSelectedProviders(bool merge) {
+    final _$actionInfo =
+        _$_ReportStockByProviderControllerBaseActionController.startAction(
+            name:
+                '_ReportStockByProviderControllerBase.toggleMergeAllSelectedProviders');
+    try {
+      return super.toggleMergeAllSelectedProviders(merge);
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic addRemoveSelectedReportProviderModel(ReportProviderModel provider) {
+    final _$actionInfo =
+        _$_ReportStockByProviderControllerBaseActionController.startAction(
+            name:
+                '_ReportStockByProviderControllerBase.addRemoveSelectedReportProviderModel');
+    try {
+      return super.addRemoveSelectedReportProviderModel(provider);
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic addSelectedReportProviderModel(ReportProviderModel provider) {
     final _$actionInfo =
         _$_ReportStockByProviderControllerBaseActionController.startAction(
@@ -242,6 +317,20 @@ mixin _$ReportStockByProviderController
   }
 
   @override
+  dynamic clearSelectedReportProviderModelList() {
+    final _$actionInfo =
+        _$_ReportStockByProviderControllerBaseActionController.startAction(
+            name:
+                '_ReportStockByProviderControllerBase.clearSelectedReportProviderModelList');
+    try {
+      return super.clearSelectedReportProviderModelList();
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic toggleMerge(ReportProviderModel provider) {
     final _$actionInfo = _$_ReportStockByProviderControllerBaseActionController
         .startAction(name: '_ReportStockByProviderControllerBase.toggleMerge');
@@ -254,10 +343,25 @@ mixin _$ReportStockByProviderController
   }
 
   @override
+  dynamic toggleSelecting() {
+    final _$actionInfo =
+        _$_ReportStockByProviderControllerBaseActionController.startAction(
+            name: '_ReportStockByProviderControllerBase.toggleSelecting');
+    try {
+      return super.toggleSelecting();
+    } finally {
+      _$_ReportStockByProviderControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 dateRange: ${dateRange},
 loading: ${loading},
+selecting: ${selecting},
+mergeAllSelected: ${mergeAllSelected},
 stockList: ${stockList},
 error: ${error},
 providerList: ${providerList},

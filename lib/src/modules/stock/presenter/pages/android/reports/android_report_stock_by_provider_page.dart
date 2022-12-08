@@ -29,22 +29,43 @@ class _AndroidReportStockByProviderPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Relatório por Fornecedor'),
+        title: Observer(
+          builder: (_) => controller.selecting
+              ? Container()
+              : const Text('Customize o Relatório'),
+        ),
         centerTitle: true,
+        leading: Observer(
+          builder: (_) => controller.selectedProviderModelList.isNotEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      controller.selectedProviderModelList.length.toString(),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                )
+              : Container(),
+        ),
         actions: [
           Observer(
-            builder: (_) => controller.selectedProviderModelList.isNotEmpty
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        controller.selectedProviderModelList.length.toString(),
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                  )
+            builder: (_) => controller.selecting
+                ? Switch(
+                    value: controller.mergeAllSelected,
+                    onChanged: (merge) {
+                      controller.toggleMergeAllSelectedProviders(merge);
+                      setState(() {});
+                    })
                 : Container(),
-          )
+          ),
+          Observer(
+            builder: (_) => controller.selecting
+                ? IconButton(
+                    onPressed: controller.clearSelectedReportProviderModelList,
+                    icon: const Icon(Icons.clear))
+                : Container(),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -56,7 +77,10 @@ class _AndroidReportStockByProviderPageState
                     providerList: controller.getProviderListToShare(),
                   ),
                   direction: AxisDirection.left))
-              .then((value) => controller.getStockListBetweenDates());
+              .then((value) {
+            controller.getStockListBetweenDates();
+            controller.clearSelectedReportProviderModelList();
+          });
         },
         label: const Text('Gerar'),
       ),
@@ -112,15 +136,15 @@ class _AndroidReportStockByProviderPageState
                                 headerBuilder: (_, isOpen) {
                                   return Observer(builder: (context) {
                                     return GestureDetector(
+                                      onTap: controller.selecting
+                                          ? () => controller
+                                              .addRemoveSelectedReportProviderModel(
+                                                  provider)
+                                          : null,
                                       onLongPress: () {
-                                        controller.selectedProviderModelList
-                                                .contains(provider)
-                                            ? controller
-                                                .removeReportProviderModel(
-                                                    provider)
-                                            : controller
-                                                .addSelectedReportProviderModel(
-                                                    provider);
+                                        controller
+                                            .addRemoveSelectedReportProviderModel(
+                                                provider);
                                       },
                                       child: Card(
                                         color: controller

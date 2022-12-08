@@ -25,6 +25,10 @@ abstract class _ReportStockByProviderControllerBase with Store {
   @observable
   bool loading = false;
   @observable
+  bool selecting = false;
+  @observable
+  bool mergeAllSelected = false;
+  @observable
   var stockList = ObservableList<Stock>.of([]);
   @observable
   Option<StockError> error = none();
@@ -71,21 +75,35 @@ abstract class _ReportStockByProviderControllerBase with Store {
   @action
   List<ReportProviderModel> getProviderListToShare() {
     if (selectedProviderModelList.isEmpty) {
-      for (var p in providerList) {
-        selectedProviderModelList.add(
-          ReportProviderModel(
-              providerId: p.id,
-              providerName: p.name,
-              providerLocation: p.location,
-              stockList: stockList
-                  .where((element) => element.product.providerId == p.id)
-                  .toList(),
-              merge: false),
-        );
-      }
+      selectAllProvidersToShare();
     }
 
     return selectedProviderModelList;
+  }
+
+  @action
+  selectAllProvidersToShare() {
+    selectedProviderModelList.clear();
+    for (var p in providerList) {
+      selectedProviderModelList.add(
+        ReportProviderModel(
+            providerId: p.id,
+            providerName: p.name,
+            providerLocation: p.location,
+            stockList: stockList
+                .where((element) => element.product.providerId == p.id)
+                .toList(),
+            merge: false),
+      );
+    }
+  }
+
+  @action
+  toggleMergeAllSelectedProviders(bool merge) {
+    mergeAllSelected = merge;
+    for (var p in selectedProviderModelList) {
+      p.merge = merge;
+    }
   }
 
   @action
@@ -122,6 +140,15 @@ abstract class _ReportStockByProviderControllerBase with Store {
   }
 
   @action
+  addRemoveSelectedReportProviderModel(ReportProviderModel provider) {
+    selectedProviderModelList.contains(provider)
+        ? removeReportProviderModel(provider)
+        : addSelectedReportProviderModel(provider);
+
+    toggleSelecting();
+  }
+
+  @action
   addSelectedReportProviderModel(ReportProviderModel provider) {
     selectedProviderModelList.add(provider);
   }
@@ -133,7 +160,23 @@ abstract class _ReportStockByProviderControllerBase with Store {
   }
 
   @action
+  clearSelectedReportProviderModelList() {
+    selectedProviderModelList.clear();
+    toggleSelecting();
+  }
+
+  @action
   toggleMerge(ReportProviderModel provider) {
     provider.merge = !provider.merge;
+  }
+
+  @action
+  toggleSelecting() {
+    if (selectedProviderModelList.isNotEmpty) {
+      selecting = true;
+      mergeAllSelected = false;
+    } else {
+      selecting = false;
+    }
   }
 }
