@@ -14,4 +14,14 @@ class ReportProviderModel {
     required this.stockList,
     required this.merge,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReportProviderModel &&
+          runtimeType == other.runtimeType &&
+          providerId == other.providerId;
+
+  @override
+  int get hashCode => providerId.hashCode;
 }
