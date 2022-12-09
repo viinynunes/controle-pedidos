@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../establishment/presenter/pages/android/reports/android_report_providers_by_establishment_page.dart';
 import '../../order/presenter/pages/android/reports/android_order_report_page.dart';
 import '../../stock/presenter/pages/android/reports/android_report_stock_by_provider_page.dart';
 import '../helpers/custom_page_route.dart';
@@ -65,7 +66,8 @@ class AndroidReportsPage extends StatelessWidget {
                   icon: Icons.account_balance_sharp,
                   text: 'Produtos Por Estabelecimento',
                   onTap: () => Navigator.of(context).push(CustomPageRoute(
-                      child: Container(), direction: AxisDirection.left))),
+                      child: const AndroidReportProvidersByEstablishmentPage(),
+                      direction: AxisDirection.left))),
               _buildTile(
                   icon: Icons.sports_handball_outlined,
                   text: 'Produtos Por Fornecedor',
