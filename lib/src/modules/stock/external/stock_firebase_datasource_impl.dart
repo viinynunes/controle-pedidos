@@ -18,7 +18,6 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     final alreadyInStockSnap = await _getStockFromFirebase(stock);
 
     if (alreadyInStockSnap == null) {
-      stock.product.provider ??= await _getProvider(stock.product.providerId);
 
       await _stockCollection.add(stock.toMap()).catchError((e) =>
           throw FirebaseException(
@@ -164,7 +163,7 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
         .get();
 
     for (var s in snapStock.docs) {
-      String providerId = s.get('product.providerId');
+      String providerId = s.get('product.provider.id');
 
       if (!providerList.any((element) => element.id == providerId)) {
         providerList.add(await _getProvider(providerId));
@@ -236,7 +235,7 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
 
   void _setStockId(StockModel stock) {
     stock.id = stock.product.id +
-        stock.product.providerId +
+        stock.product.provider.id +
         DateTime(stock.registrationDate.year, stock.registrationDate.month,
                 stock.registrationDate.day)
             .toString();

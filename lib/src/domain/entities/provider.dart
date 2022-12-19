@@ -6,10 +6,8 @@ class Provider {
   String location;
   DateTime registrationDate;
   bool enabled;
-  String establishmentId;
-  String establishmentName;
 
-  Establishment? establishment;
+  Establishment establishment;
 
   Provider(
       {required this.id,
@@ -17,7 +15,5 @@ class Provider {
       required this.location,
       required this.registrationDate,
       required this.enabled,
-      required this.establishmentId,
-      required this.establishmentName,
-      this.establishment});
+      required this.establishment});
 }

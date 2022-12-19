@@ -39,7 +39,7 @@ class AndroidProviderListTile extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      provider.establishmentName,
+                      provider.establishment.name,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(

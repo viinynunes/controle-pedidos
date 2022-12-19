@@ -75,7 +75,7 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
     result.fold((l) => error = optionOf(l), (stockList) {
 
       for (var s in stockList) {
-        providerSet.add(s.product.provider!);
+        providerSet.add(s.product.provider);
       }
 
       for (var p in providerSet) {
@@ -83,9 +83,9 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
             providerId: p.id,
             providerName: p.name,
             providerLocation: p.location,
-            providerEstablishment: p.establishment!,
+            providerEstablishment: p.establishment,
             stockList: stockList
-                .where((element) => element.product.providerId == p.id)
+                .where((element) => element.product.provider.id == p.id)
                 .toList(),
             merge: false));
       }

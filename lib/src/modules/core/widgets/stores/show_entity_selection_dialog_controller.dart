@@ -126,7 +126,7 @@ abstract class _ShowEntitySelectionDialogControllerBase with Store {
 
     for (Product p in objectList) {
       if (p.name.toLowerCase().contains(searchText) ||
-          p.providerName.toLowerCase().contains(searchText) ||
+          p.provider.name.toLowerCase().contains(searchText) ||
           p.category.toLowerCase().contains(searchText) ||
           p.enabled.toString().toLowerCase().contains(searchText)) {
         auxList.add(p);

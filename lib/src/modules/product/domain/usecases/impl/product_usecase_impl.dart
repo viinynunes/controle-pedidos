@@ -19,11 +19,11 @@ class ProductUsecaseImpl implements IProductUsecase {
       return Left(ProductError('Invalid category'));
     }
 
-    if (product.providerId.isEmpty) {
+    if (product.provider.id.isEmpty) {
       return Left(ProductError('Invalid provider name'));
     }
 
-    if (product.providerName.isEmpty) {
+    if (product.provider.name.isEmpty) {
       return Left(ProductError('Invalid provider name'));
     }
 
@@ -44,11 +44,11 @@ class ProductUsecaseImpl implements IProductUsecase {
       return Left(ProductError('Invalid category'));
     }
 
-    if (product.providerId.isEmpty) {
+    if (product.provider.id.isEmpty) {
       return Left(ProductError('Invalid provider name'));
     }
 
-    if (product.providerName.isEmpty) {
+    if (product.provider.name.isEmpty) {
       return Left(ProductError('Invalid provider name'));
     }
 

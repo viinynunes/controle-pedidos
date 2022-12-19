@@ -57,7 +57,7 @@ abstract class _ProductControllerBase with Store {
     for (var p in productList) {
       if (p.name.toLowerCase().contains(searchText) ||
           p.category.toLowerCase().contains(searchText) ||
-          p.providerName.toLowerCase().contains(searchText)) {
+          p.provider.name.toLowerCase().contains(searchText)) {
         auxList.add(p);
       }
     }

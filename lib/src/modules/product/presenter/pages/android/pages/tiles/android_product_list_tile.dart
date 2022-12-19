@@ -36,7 +36,7 @@ class AndroidProductListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      product.providerName,
+                      product.provider.name,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(

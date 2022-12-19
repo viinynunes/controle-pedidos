@@ -76,4 +76,14 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
     return clientList;
   }
+
+  void moveToV2() async {
+    final snap = await FirebaseFirestore.instance.collection('clients').get();
+
+    for (var p in snap.docs) {
+      _clientCollection
+          .doc(p.id)
+          .set(ClientModel.fromMap(p.data()).toMap());
+    }
+  }
 }

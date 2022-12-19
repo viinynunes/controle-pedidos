@@ -56,7 +56,7 @@ abstract class _ProviderControllerBase with Store {
     for (var p in providerList) {
       if (p.name.toLowerCase().contains(searchText) ||
           p.location.toLowerCase().contains(searchText) ||
-          p.establishmentName.toLowerCase().contains(searchText)) {
+          p.establishment.name.toLowerCase().contains(searchText)) {
         auxList.add(p);
       }
     }

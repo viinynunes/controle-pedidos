@@ -8,8 +8,7 @@ class ProductModel extends Product {
       required super.category,
       required super.enabled,
       required super.stockDefault,
-      required super.providerId,
-      required super.providerName});
+      required super.provider});
 
   ProductModel.fromMap({required Map<String, dynamic> map})
       : super(
@@ -18,11 +17,7 @@ class ProductModel extends Product {
             category: map['category'],
             enabled: map['enabled'],
             stockDefault: map['stockDefault'],
-            providerId: map['providerId'],
-            providerName: map['providerName'],
-            provider: map['provider'] != ''
-                ? ProviderModel.fromMap(map: map['provider'])
-                : null);
+            provider: ProviderModel.fromMap(map: map['provider']));
 
   ProductModel.fromProduct({required Product product})
       : super(
@@ -31,8 +26,6 @@ class ProductModel extends Product {
             category: product.category,
             enabled: product.enabled,
             stockDefault: product.stockDefault,
-            providerId: product.providerId,
-            providerName: product.providerName,
             provider: product.provider);
 
   Map<String, dynamic> toMap() {
@@ -42,15 +35,12 @@ class ProductModel extends Product {
       'category': category,
       'enabled': enabled,
       'stockDefault': stockDefault,
-      'providerId': providerId,
-      'providerName': providerName,
-      'provider':
-          provider != null ? ProviderModel.fromProvider(provider!).toMap() : '',
+      'provider': ProviderModel.fromProvider(provider).toMap(),
     };
   }
 
   @override
   String toString() {
-    return '$name - $category - $providerName';
+    return '$name - $category - ${provider.name}';
   }
 }

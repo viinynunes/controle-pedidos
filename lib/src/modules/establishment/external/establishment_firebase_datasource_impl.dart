@@ -74,4 +74,14 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
 
     return estabList;
   }
+
+  void moveToV2() async {
+    final snap = await FirebaseFirestore.instance.collection('establishments').get();
+
+    for (var p in snap.docs) {
+      _establishmentCollection
+          .doc(p.id)
+          .set(EstablishmentModel.fromMap(map: p.data()).toMap());
+    }
+  }
 }

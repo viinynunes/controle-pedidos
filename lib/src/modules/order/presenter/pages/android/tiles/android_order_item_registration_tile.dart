@@ -95,7 +95,7 @@ class AndroidOrderItemRegistrationTile extends StatelessWidget {
                 flex: 3,
                 fit: FlexFit.tight,
                 child: Text(
-                  item.product.providerName,
+                  item.product.provider.name,
                   textAlign: TextAlign.center,
                 ),
               ),

@@ -6,10 +6,8 @@ class Product {
   String category;
   bool enabled;
   bool stockDefault;
-  String providerId;
-  String providerName;
 
-  Provider? provider;
+  Provider provider;
 
   Product(
       {required this.id,
@@ -17,9 +15,7 @@ class Product {
       required this.category,
       required this.enabled,
       required this.stockDefault,
-      required this.providerId,
-      required this.providerName,
-      this.provider});
+      required this.provider});
 
   @override
   bool operator ==(Object other) =>
@@ -27,8 +23,8 @@ class Product {
       other is Product &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          providerId == other.providerId;
+          provider == other.provider;
 
   @override
-  int get hashCode => id.hashCode ^ providerId.hashCode;
+  int get hashCode => id.hashCode ^ provider.hashCode;
 }

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
-import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 
 class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   final _providerCollection =
@@ -75,12 +75,12 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   }
 
   void moveToV2() async {
-    final snap = await _providerCollection.get();
+    final snap = await FirebaseFirestore.instance.collection('providers').get();
 
-    for (var i in snap.docs) {
-      _providerCollection.doc(i.id).update(
-          ProviderModel.fromMapWithEstablishment(map: i.data())
-              .toMapWithEstablishment());
+    for (var p in snap.docs) {
+      _providerCollection
+          .doc(p.id)
+          .set(ProviderModel.fromMap(map: p.data()).toMap());
     }
   }
 }

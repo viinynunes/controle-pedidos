@@ -109,7 +109,7 @@ abstract class _OrderControllerBase with Store {
       if (i.client.name.toLowerCase().contains(searchText) ||
           i.orderItemList.any((element) =>
               element.product.name.toLowerCase().contains(searchText) ||
-              element.product.providerName
+              element.product.provider.name
                   .toLowerCase()
                   .contains(searchText))) {
         auxList.add(i);

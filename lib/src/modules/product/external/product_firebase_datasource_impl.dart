@@ -6,7 +6,7 @@ import '../infra/datasources/i_product_datasource.dart';
 
 class ProductFirebaseDatasourceImpl implements IProductDatasource {
   final _productCollection =
-      FirebaseHelper.firebaseCollection.collection('products');
+      FirebaseHelper.firebaseCollection.collection('product');
 
   @override
   Future<ProductModel> createProduct(ProductModel product) async {
@@ -89,5 +89,15 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     }
 
     return productList;
+  }
+
+  void moveToV2() async {
+    final snap = await FirebaseFirestore.instance.collection('products').get();
+
+    for (var p in snap.docs) {
+      _productCollection
+          .doc(p.id)
+          .set(ProductModel.fromMap(map: p.data()).toMap());
+    }
   }
 }

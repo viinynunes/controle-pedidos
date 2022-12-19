@@ -17,7 +17,7 @@ class StockUsecaseImpl implements IStockUsecase {
       return Left(StockError('Product id cannot be empty'));
     }
 
-    if (stock.product.providerId.isEmpty) {
+    if (stock.product.provider.id.isEmpty) {
       return Left(StockError('Product provider cannot be empty'));
     }
 
@@ -38,7 +38,7 @@ class StockUsecaseImpl implements IStockUsecase {
       return Left(StockError('Product id cannot be empty'));
     }
 
-    if (stock.product.providerId.isEmpty) {
+    if (stock.product.provider.id.isEmpty) {
       return Left(StockError('Product provider cannot be empty'));
     }
 
@@ -64,7 +64,7 @@ class StockUsecaseImpl implements IStockUsecase {
       return Left(StockError('Product id cannot be empty'));
     }
 
-    if (updatedStock.product.providerId.isEmpty) {
+    if (updatedStock.product.provider.id.isEmpty) {
       return Left(StockError('Product provider cannot be empty'));
     }
 
@@ -90,7 +90,7 @@ class StockUsecaseImpl implements IStockUsecase {
       return Left(StockError('Product id cannot be empty'));
     }
 
-    if (stock.product.providerId.isEmpty) {
+    if (stock.product.provider.id.isEmpty) {
       return Left(StockError('Product provider cannot be empty'));
     }
 

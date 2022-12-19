@@ -90,9 +90,9 @@ abstract class _ReportStockByProviderControllerBase with Store {
             providerId: p.id,
             providerName: p.name,
             providerLocation: p.location,
-            providerEstablishment: p.establishment!,
+            providerEstablishment: p.establishment,
             stockList: stockList
-                .where((element) => element.product.providerId == p.id)
+                .where((element) => element.product.provider.id == p.id)
                 .toList(),
             merge: false),
       );
@@ -123,16 +123,16 @@ abstract class _ReportStockByProviderControllerBase with Store {
       stockService.sortStockListByProviderAndProductName(r);
       stockList = ObservableList.of(r);
       for (var s in r) {
-        providerList.add(s.product.provider!);
+        providerList.add(s.product.provider);
       }
       for (var p in providerList) {
         providerModelList.add(ReportProviderModel(
             providerId: p.id,
             providerName: p.name,
             providerLocation: p.location,
-            providerEstablishment: p.establishment!,
+            providerEstablishment: p.establishment,
             stockList: stockList
-                .where((element) => element.product.providerId == p.id)
+                .where((element) => element.product.provider.id == p.id)
                 .toList(),
             merge: false));
       }

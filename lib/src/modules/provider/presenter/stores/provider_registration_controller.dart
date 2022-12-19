@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/establishment.dart';
+import '../../../../domain/entities/provider.dart';
+import '../../../../domain/models/establish_model.dart';
+import '../../../../domain/models/provider_model.dart';
 import '../../../establishment/domain/services/i_establishment_service.dart';
 import '../../../establishment/domain/usecases/i_establishment_usecase.dart';
-import '../../../../domain/models/establish_model.dart';
-import '../../../../domain/entities/provider.dart';
 import '../../domain/usecases/I_provider_usecase.dart';
-import '../../../../domain/models/provider_model.dart';
 
 part 'provider_registration_controller.g.dart';
 
@@ -83,7 +83,7 @@ abstract class _ProviderRegistrationControllerBase with Store {
     if (!newProvider) {
       loading = true;
       final result = await establishmentUsecase
-          .getEstablishmentById(newProviderData.establishmentId);
+          .getEstablishmentById(newProviderData.establishment.id);
 
       result.fold((l) => error = optionOf(ProviderError(l.message)),
           (r) => selectedEstablishment = r);
@@ -151,14 +151,15 @@ abstract class _ProviderRegistrationControllerBase with Store {
   }
 
   initNewProvider() {
-    newProviderData = ProviderModel(
-        id: newProvider ? '0' : newProviderData.id,
-        name: nameController.text,
-        location: locationController.text,
-        registrationDate:
-            newProvider ? DateTime.now() : newProviderData.registrationDate,
-        enabled: enabled,
-        establishmentId: selectedEstablishment?.id ?? '',
-        establishmentName: selectedEstablishment?.name ?? '');
+    if (selectedEstablishment != null) {
+      newProviderData = ProviderModel(
+          id: newProvider ? '0' : newProviderData.id,
+          name: nameController.text,
+          location: locationController.text,
+          registrationDate:
+              newProvider ? DateTime.now() : newProviderData.registrationDate,
+          enabled: enabled,
+          establishment: selectedEstablishment!);
+    }
   }
 }

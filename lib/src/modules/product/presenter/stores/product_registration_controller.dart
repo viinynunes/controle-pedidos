@@ -83,7 +83,8 @@ abstract class _ProductRegistrationControllerBase with Store {
     if (!newProduct) {
       loading = true;
 
-      final result = await providerUsecase.getProviderById(newProductData.providerId);
+      final result =
+          await providerUsecase.getProviderById(newProductData.provider.id);
 
       result.fold((l) => error = optionOf(ProductError(l.message)),
           (r) => selectedProvider = r);
@@ -149,13 +150,14 @@ abstract class _ProductRegistrationControllerBase with Store {
   }
 
   initNewProduct() {
-    newProductData = ProductModel(
-        id: newProduct ? '0' : newProductData.id,
-        name: nameController.text,
-        category: categoryController.text,
-        enabled: enabled,
-        stockDefault: false,
-        providerId: selectedProvider?.id ?? '',
-        providerName: selectedProvider?.name ?? '');
+    if (selectedProvider != null) {
+      newProductData = ProductModel(
+          id: newProduct ? '0' : newProductData.id,
+          name: nameController.text,
+          category: categoryController.text,
+          enabled: enabled,
+          stockDefault: false,
+          provider: selectedProvider!);
+    }
   }
 }

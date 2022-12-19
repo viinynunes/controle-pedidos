@@ -214,8 +214,8 @@ abstract class _StockControllerBase with Store {
     var newStock = StockModel.fromStock(stock);
 
     newStock.product.provider = provider;
-    newStock.product.providerName = provider.name;
-    newStock.product.providerId = provider.id;
+    newStock.product.provider.name = provider.name;
+    newStock.product.provider.id = provider.id;
 
     if (!movePropertiesAndDelete) {
       newStock.total = 0;
@@ -233,7 +233,7 @@ abstract class _StockControllerBase with Store {
           deleteResult.fold((l) => error = optionOf(l), (r) => {});
         }
 
-        reloadProviderListAndStockList(newStock.product.provider!);
+        reloadProviderListAndStockList(newStock.product.provider);
       },
     );
   }
@@ -271,7 +271,7 @@ abstract class _StockControllerBase with Store {
 
     createResult.fold((l) => error = optionOf(l), (r) async {
       if (reloadAfterCreate) {
-        await reloadProviderListAndStockList(r.product.provider!);
+        await reloadProviderListAndStockList(r.product.provider);
       }
     });
   }

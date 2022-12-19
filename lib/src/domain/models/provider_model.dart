@@ -10,9 +10,7 @@ class ProviderModel extends Provider {
       required super.location,
       required super.registrationDate,
       required super.enabled,
-      required super.establishmentId,
-      required super.establishmentName,
-      super.establishment});
+      required super.establishment});
 
   ProviderModel.fromProvider(Provider provider)
       : super(
@@ -21,8 +19,6 @@ class ProviderModel extends Provider {
             location: provider.location,
             registrationDate: provider.registrationDate,
             enabled: provider.enabled,
-            establishmentId: provider.establishmentId,
-            establishmentName: provider.establishmentName,
             establishment: provider.establishment);
 
   ProviderModel.fromMap({required Map<String, dynamic> map})
@@ -33,19 +29,6 @@ class ProviderModel extends Provider {
             registrationDate:
                 Helpers.convertTimestampToDateTime(map['registrationDate']),
             enabled: map['enabled'],
-            establishmentId: map['establishmentId'],
-            establishmentName: map['establishmentName']);
-
-  ProviderModel.fromMapWithEstablishment({required Map<String, dynamic> map})
-      : super(
-            id: map['id'],
-            name: map['name'],
-            location: map['location'],
-            registrationDate:
-                Helpers.convertTimestampToDateTime(map['registrationDate']),
-            enabled: map['enabled'],
-            establishmentId: map['establishmentId'],
-            establishmentName: map['establishmentName'],
             establishment:
                 EstablishmentModel.fromMap(map: map['establishment']));
 
@@ -56,34 +39,7 @@ class ProviderModel extends Provider {
       'location': location,
       'registrationDate': registrationDate,
       'enabled': enabled,
-      'establishmentId': establishmentId,
-      'establishmentName': establishmentName,
-      'establishment': establishment != null
-          ? EstablishmentModel.fromEstablishment(establishment: establishment!)
-              .toIdMap()
-          : '',
-    };
-  }
-
-  Map<String, dynamic> toMapWithEstablishment() {
-    return {
-      'id': id,
-      'name': name,
-      'location': location,
-      'registrationDate': registrationDate,
-      'enabled': enabled,
-      'establishmentId': establishmentId,
-      'establishmentName': establishmentName,
-      'establishment':
-          EstablishmentModel.fromEstablishment(establishment: establishment!)
-              .toMap()
-    };
-  }
-
-  Map<String, dynamic> toResumedMap() {
-    return {
-      'id': id,
-      'name': name,
+      'establishment': EstablishmentModel.fromEstablishment(establishment: establishment).toMap()
     };
   }
 
@@ -99,6 +55,6 @@ class ProviderModel extends Provider {
 
   @override
   String toString() {
-    return name + ' - ' + location + ' - ' + establishmentName;
+    return name + ' - ' + location + ' - ' + establishment.name;
   }
 }
