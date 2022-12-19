@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -45,6 +46,11 @@ class _AndroidCustomMergedStockByProviderPageState
           providerId: '0',
           providerName: 'Relatório Agrupado',
           providerLocation: '',
+          providerEstablishment: Establishment(
+              id: '',
+              name: '',
+              registrationDate: DateTime.now(),
+              enabled: true),
           stockList: mergedList,
           merge: true));
     }

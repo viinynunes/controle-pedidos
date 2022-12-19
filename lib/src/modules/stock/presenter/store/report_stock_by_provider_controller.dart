@@ -90,6 +90,7 @@ abstract class _ReportStockByProviderControllerBase with Store {
             providerId: p.id,
             providerName: p.name,
             providerLocation: p.location,
+            providerEstablishment: p.establishment!,
             stockList: stockList
                 .where((element) => element.product.providerId == p.id)
                 .toList(),
@@ -129,6 +130,7 @@ abstract class _ReportStockByProviderControllerBase with Store {
             providerId: p.id,
             providerName: p.name,
             providerLocation: p.location,
+            providerEstablishment: p.establishment!,
             stockList: stockList
                 .where((element) => element.product.providerId == p.id)
                 .toList(),
