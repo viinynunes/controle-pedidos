@@ -2,6 +2,7 @@ import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../../domain/entities/provider.dart';
 import '../../../../../../domain/models/stock_model.dart';
 import '../../../../../core/export_files/stock_by_provider_to_xlsx.dart';
 import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
@@ -43,14 +44,17 @@ class _AndroidCustomMergedStockByProviderPageState
 
     if (mergedList.isNotEmpty) {
       widget.providerList.add(ReportProviderModel(
-          providerId: '0',
-          providerName: 'Relatório Agrupado',
-          providerLocation: '',
-          providerEstablishment: Establishment(
-              id: '',
-              name: '',
+          provider: Provider(
+              id: '0',
+              name: 'Relatório Agrupado',
+              location: '',
+              enabled: true,
               registrationDate: DateTime.now(),
-              enabled: true),
+              establishment: Establishment(
+                  id: '',
+                  name: '',
+                  registrationDate: DateTime.now(),
+                  enabled: true)),
           stockList: mergedList,
           merge: true));
     }
@@ -79,7 +83,7 @@ class _AndroidCustomMergedStockByProviderPageState
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: AndroidCustomProviderDataTable(
-                            provider: provider,
+                            providerModel: provider,
                             withMergeOptions: true,
                           ),
                         );

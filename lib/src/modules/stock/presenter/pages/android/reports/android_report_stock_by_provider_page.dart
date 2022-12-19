@@ -131,7 +131,7 @@ class _AndroidReportStockByProviderPageState
                         elevation: 0,
                         children: controller.providerModelList
                             .map(
-                              (provider) => ExpansionPanelRadio(
+                              (providerModel) => ExpansionPanelRadio(
                                 value: UniqueKey(),
                                 canTapOnHeader: true,
                                 headerBuilder: (_, isOpen) {
@@ -140,17 +140,17 @@ class _AndroidReportStockByProviderPageState
                                       onTap: controller.selecting
                                           ? () => controller
                                               .addRemoveSelectedReportProviderModel(
-                                                  provider)
+                                                  providerModel)
                                           : null,
                                       onLongPress: () {
                                         controller
                                             .addRemoveSelectedReportProviderModel(
-                                                provider);
+                                                providerModel);
                                       },
                                       child: Card(
                                         color: controller
                                                 .selectedProviderModelList
-                                                .contains(provider)
+                                                .contains(providerModel)
                                             ? Theme.of(context)
                                                 .backgroundColor
                                                 .withOpacity(0.7)
@@ -163,23 +163,23 @@ class _AndroidReportStockByProviderPageState
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                '${provider.providerName} - ${provider.providerLocation}',
+                                                '${providerModel.provider.name} - ${providerModel.provider.location}',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleMedium,
                                               ),
                                             ),
                                             controller.selectedProviderModelList
-                                                    .contains(provider)
+                                                    .contains(providerModel)
                                                 ? Switch(
-                                                    value: provider.merge,
+                                                    value: providerModel.merge,
                                                     activeColor: Theme.of(
                                                             context)
                                                         .scaffoldBackgroundColor,
                                                     onChanged: (_) {
                                                       setState(() {
                                                         controller.toggleMerge(
-                                                            provider);
+                                                            providerModel);
                                                       });
                                                     })
                                                 : Container(),
@@ -190,7 +190,7 @@ class _AndroidReportStockByProviderPageState
                                   });
                                 },
                                 body: AndroidCustomProviderDataTable(
-                                  provider: provider,
+                                  providerModel: providerModel,
                                   columnSpacing: 20,
                                   withMergeOptions: false,
                                 ),

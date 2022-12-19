@@ -21,14 +21,14 @@ class StockByProviderToXLSX {
 
     int rowIndex = 1, columnIndex = 1, columnInitValue = 1;
 
-    for (final provider in providerList) {
+    for (final providerModel in providerList) {
       rowIndex++;
 
       columnIndex = columnInitValue;
 
       _buildSheet(
           sheet: sheet,
-          text: '${provider.providerName} '' ${provider.providerLocation}',
+          text: '${providerModel.provider.name} '' ${providerModel.provider.location}',
           rowIndex: rowIndex,
           columnIndex: columnIndex,
           style: providerStyle);
@@ -62,7 +62,7 @@ class StockByProviderToXLSX {
           style: providerStyle);
       rowIndex++;
 
-      for (final stock in provider.stockList) {
+      for (final stock in providerModel.stockList) {
         columnIndex = columnInitValue;
         _buildSheet(
             sheet: sheet,
@@ -75,7 +75,7 @@ class StockByProviderToXLSX {
 
         _buildSheet(
             sheet: sheet,
-            text: stock.product.provider!.location,
+            text: stock.product.provider.location,
             rowIndex: rowIndex,
             columnIndex: columnIndex,
             style: stockStyle);

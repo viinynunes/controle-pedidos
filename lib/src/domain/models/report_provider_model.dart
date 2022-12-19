@@ -1,19 +1,13 @@
-import '../entities/establishment.dart';
+import '../entities/provider.dart';
 import '../entities/stock.dart';
 
 class ReportProviderModel {
-  final String providerId;
-  final String providerName;
-  final String providerLocation;
-  final Establishment providerEstablishment;
+  final Provider provider;
   final List<Stock> stockList;
   bool merge;
 
   ReportProviderModel({
-    required this.providerId,
-    required this.providerName,
-    required this.providerLocation,
-    required this.providerEstablishment,
+    required this.provider,
     required this.stockList,
     required this.merge,
   });
@@ -23,8 +17,8 @@ class ReportProviderModel {
       identical(this, other) ||
       other is ReportProviderModel &&
           runtimeType == other.runtimeType &&
-          providerId == other.providerId;
+          provider == other.provider;
 
   @override
-  int get hashCode => providerId.hashCode;
+  int get hashCode => provider.hashCode;
 }

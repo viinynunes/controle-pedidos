@@ -1,14 +1,13 @@
+import '../entities/establishment.dart';
 import 'report_provider_model.dart';
 
 class ReportEstablishmentModel {
-  final String establishmentId;
-  final String establishmentName;
+  final Establishment establishment;
   final List<ReportProviderModel> providerList;
   bool selected;
 
   ReportEstablishmentModel(
-      {required this.establishmentId,
-      required this.establishmentName,
+      {required this.establishment,
       required this.selected,
       required this.providerList});
 
@@ -17,8 +16,13 @@ class ReportEstablishmentModel {
       identical(this, other) ||
       other is ReportEstablishmentModel &&
           runtimeType == other.runtimeType &&
-          establishmentId == other.establishmentId;
+          establishment == other.establishment;
 
   @override
-  int get hashCode => establishmentId.hashCode;
+  int get hashCode => establishment.hashCode;
+
+  @override
+  String toString() {
+    return establishment.name;
+  }
 }

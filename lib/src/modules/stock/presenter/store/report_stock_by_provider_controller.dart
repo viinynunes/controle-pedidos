@@ -6,8 +6,8 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/entities/stock.dart';
-import '../../errors/stock_error.dart';
 import '../../../../domain/models/report_provider_model.dart';
+import '../../errors/stock_error.dart';
 
 part 'report_stock_by_provider_controller.g.dart';
 
@@ -87,10 +87,7 @@ abstract class _ReportStockByProviderControllerBase with Store {
     for (var p in providerList) {
       selectedProviderModelList.add(
         ReportProviderModel(
-            providerId: p.id,
-            providerName: p.name,
-            providerLocation: p.location,
-            providerEstablishment: p.establishment,
+            provider: p,
             stockList: stockList
                 .where((element) => element.product.provider.id == p.id)
                 .toList(),
@@ -127,10 +124,7 @@ abstract class _ReportStockByProviderControllerBase with Store {
       }
       for (var p in providerList) {
         providerModelList.add(ReportProviderModel(
-            providerId: p.id,
-            providerName: p.name,
-            providerLocation: p.location,
-            providerEstablishment: p.establishment,
+            provider: p,
             stockList: stockList
                 .where((element) => element.product.provider.id == p.id)
                 .toList(),

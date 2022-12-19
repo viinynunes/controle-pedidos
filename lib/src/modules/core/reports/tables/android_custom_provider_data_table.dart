@@ -5,12 +5,12 @@ import '../../../../domain/models/report_provider_model.dart';
 class AndroidCustomProviderDataTable extends StatelessWidget {
   const AndroidCustomProviderDataTable(
       {Key? key,
-      required this.provider,
+      required this.providerModel,
       this.columnSpacing,
       required this.withMergeOptions})
       : super(key: key);
 
-  final ReportProviderModel provider;
+  final ReportProviderModel providerModel;
   final double? columnSpacing;
   final bool withMergeOptions;
 
@@ -29,7 +29,7 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
           DataColumn(
             label: SizedBox(
               width: size.width * 0.4,
-              child: provider.merge
+              child: providerModel.merge
                   ? TextField(
                       decoration: InputDecoration(
                           hintText: 'Nomeie a tabela',
@@ -41,7 +41,7 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                '${provider.providerName} - ${provider.providerLocation}',
+                                '${providerModel.provider.name} - ${providerModel.provider.name}',
                               ),
                             ),
                             const Flexible(
@@ -52,7 +52,7 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
             ),
           ),
           DataColumn(
-              label: provider.merge
+              label: providerModel.merge
                   ? ConstrainedBox(
                       constraints: BoxConstraints(minWidth: size.width * 0.1),
                       child: const Text('Local'))
@@ -61,7 +61,7 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
           const DataColumn(label: Text('Total'), numeric: true),
           const DataColumn(label: Text('Sobra'), numeric: true),
         ],
-        rows: provider.stockList
+        rows: providerModel.stockList
             .map(
               (stock) => DataRow(
                 cells: [
@@ -73,9 +73,9 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
                       maxLines: 1,
                     ),
                   )),
-                  DataCell(provider.merge
+                  DataCell(providerModel.merge
                       ? Text(
-                          stock.product.provider!.location,
+                          stock.product.provider.location,
                           textAlign: TextAlign.left,
                         )
                       : Container()),
