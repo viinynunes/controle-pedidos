@@ -78,6 +78,23 @@ mixin _$ReportStockByEstablishmentController
     });
   }
 
+  late final _$errorAtom = Atom(
+      name: '_ReportStockByEstablishmentControllerBase.error',
+      context: context);
+
+  @override
+  Option<StockError> get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(Option<StockError> value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   late final _$initStateAsyncAction = AsyncAction(
       '_ReportStockByEstablishmentControllerBase.initState',
       context: context);
@@ -106,6 +123,16 @@ mixin _$ReportStockByEstablishmentController
     return _$resetDateRangeAsyncAction.run(() => super.resetDateRange());
   }
 
+  late final _$getStockListBetweenDatesAsyncAction = AsyncAction(
+      '_ReportStockByEstablishmentControllerBase.getStockListBetweenDates',
+      context: context);
+
+  @override
+  Future getStockListBetweenDates() {
+    return _$getStockListBetweenDatesAsyncAction
+        .run(() => super.getStockListBetweenDates());
+  }
+
   late final _$_ReportStockByEstablishmentControllerBaseActionController =
       ActionController(
           name: '_ReportStockByEstablishmentControllerBase', context: context);
@@ -130,7 +157,8 @@ mixin _$ReportStockByEstablishmentController
 dateRange: ${dateRange},
 loading: ${loading},
 selecting: ${selecting},
-establishmentList: ${establishmentList}
+establishmentList: ${establishmentList},
+error: ${error}
     ''';
   }
 }
