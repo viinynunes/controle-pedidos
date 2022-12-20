@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_datasource.dart';
 import 'package:controle_pedidos/src/domain/models/client_model.dart';
+import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_datasource.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 
 class ClientFirebaseDatasourceImpl implements IClientDatasource {
+  final db = FirebaseFirestore.instance;
+
   final _clientCollection =
       FirebaseHelper.firebaseCollection.collection('client');
 
@@ -19,8 +21,20 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
   @override
   Future<ClientModel> updateClient(ClientModel client) async {
-    _clientCollection.doc(client.id).update(client.toMap()).catchError(
-        (e) => throw FirebaseException(plugin: 'UPDATE CLIENT ERROR'));
+    final clientRef = _clientCollection.doc(client.id);
+    db.runTransaction((transaction) async {
+      final orderSnap = await FirebaseHelper.firebaseCollection
+          .collection('order')
+          .where('client.id', isEqualTo: client.id)
+          .get();
+
+      for (var o in orderSnap.docs) {
+        transaction.update(o.reference, {'client': client.toMap()});
+      }
+
+      transaction.update(clientRef, client.toMap());
+    }).onError((error, stackTrace) => throw FirebaseException(
+        plugin: 'UPDATE CLIENT ERROR', message: error.toString()));
 
     return client;
   }
@@ -81,9 +95,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
     final snap = await FirebaseFirestore.instance.collection('clients').get();
 
     for (var p in snap.docs) {
-      _clientCollection
-          .doc(p.id)
-          .set(ClientModel.fromMap(p.data()).toMap());
+      _clientCollection.doc(p.id).set(ClientModel.fromMap(p.data()).toMap());
     }
   }
 }
