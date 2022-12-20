@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../domain/models/report_provider_model.dart';
 
 class AndroidCustomProviderDataTable extends StatelessWidget {
-  const AndroidCustomProviderDataTable(
-      {Key? key,
-      required this.providerModel,
-      this.columnSpacing,
-      required this.withMergeOptions})
-      : super(key: key);
+  const AndroidCustomProviderDataTable({
+    Key? key,
+    required this.providerModel,
+    this.columnSpacing,
+    required this.withMergeOptions,
+  }) : super(key: key);
 
   final ReportProviderModel providerModel;
   final double? columnSpacing;
@@ -36,8 +36,16 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
                           hintStyle: Theme.of(context).textTheme.bodySmall),
                     )
                   : withMergeOptions
-                      ? Text(
-                          '${providerModel.provider.name} - ${providerModel.provider.location}',
+                      ? Column(
+                          children: [
+                            Text(
+                              providerModel.provider.name,
+                            ),
+                            Text(
+                              providerModel.provider.location,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
                         )
                       : const Center(child: Text('Produto')),
             ),
