@@ -18,7 +18,6 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
     final alreadyInStockSnap = await _getStockFromFirebase(stock);
 
     if (alreadyInStockSnap == null) {
-
       await _stockCollection.add(stock.toMap()).catchError((e) =>
           throw FirebaseException(
               plugin: 'CREATE STOCK ERROR', message: e.toString()));
@@ -161,13 +160,8 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
         .get();
-
     for (var s in snapStock.docs) {
-      String providerId = s.get('product.provider.id');
-
-      if (!providerList.any((element) => element.id == providerId)) {
-        providerList.add(await _getProvider(providerId));
-      }
+      providerList.add(ProviderModel.fromMap(map: s.get('product.provider')));
     }
 
     return providerList;
@@ -261,23 +255,6 @@ class StockFirebaseDatasourceImpl implements IStockDatasource {
       } else {
         stockList.add(newStock);
       }
-    }
-  }
-
-  _getProvider(String providerId) async {
-    final providerSnap = await FirebaseHelper.firebaseCollection
-        .collection('provider')
-        .doc(providerId)
-        .get()
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET STOCK PROVIDER ERROR', message: e.toString()));
-
-    if (providerSnap.data() != null) {
-      return ProviderModel.fromMap(map: providerSnap.data()!);
-    } else {
-      throw FirebaseException(
-          plugin: 'GET STOCK PROVIDER ERROR',
-          message: 'Fornecedor não encontrado');
     }
   }
 }
