@@ -120,6 +120,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                             },
                           );
                         },
+                        onLongPress: controller.resetDateRange,
                         child: Text(controller.dateRangeSelected),
                       ),
                       controller.sortByDate

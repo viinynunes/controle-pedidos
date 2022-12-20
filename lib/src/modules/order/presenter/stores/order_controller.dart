@@ -52,7 +52,7 @@ abstract class _OrderControllerBase with Store {
   initState(
       {required List<Product> productList,
       required List<Client> clientList}) async {
-    changeDateRangeSelected(DateTime.now(), DateTime.now());
+    resetDateRange();
 
     this.productList = ObservableList.of(productList);
     this.clientList = ObservableList.of(clientList);
@@ -63,9 +63,22 @@ abstract class _OrderControllerBase with Store {
     this.iniDate = iniDate;
     this.endDate = endDate;
 
-    dateRangeSelected =
-        (dateFormat.format(iniDate) + ' | ' + dateFormat.format(endDate));
+    _setDateRangeString();
 
+    await getOrderListBetweenDates();
+  }
+
+  @action
+  _setDateRangeString() {
+    dateRangeSelected = '${dateFormat.format(iniDate)} | ${dateFormat.format(endDate)}';
+  }
+
+  @action
+  resetDateRange() async {
+    iniDate = DateTime.now();
+    endDate = DateTime.now();
+
+    _setDateRangeString();
     await getOrderListBetweenDates();
   }
 
