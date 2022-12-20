@@ -189,6 +189,14 @@ mixin _$OrderController on _OrderControllerBase, Store {
         .run(() => super.changeDateRangeSelected(iniDate, endDate));
   }
 
+  late final _$resetDateRangeAsyncAction =
+      AsyncAction('_OrderControllerBase.resetDateRange', context: context);
+
+  @override
+  Future resetDateRange() {
+    return _$resetDateRangeAsyncAction.run(() => super.resetDateRange());
+  }
+
   late final _$getOrderListBetweenDatesAsyncAction = AsyncAction(
       '_OrderControllerBase.getOrderListBetweenDates',
       context: context);
@@ -222,6 +230,17 @@ mixin _$OrderController on _OrderControllerBase, Store {
 
   late final _$_OrderControllerBaseActionController =
       ActionController(name: '_OrderControllerBase', context: context);
+
+  @override
+  dynamic _setDateRangeString() {
+    final _$actionInfo = _$_OrderControllerBaseActionController.startAction(
+        name: '_OrderControllerBase._setDateRangeString');
+    try {
+      return super._setDateRangeString();
+    } finally {
+      _$_OrderControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic changeSortMethod() {
