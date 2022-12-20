@@ -73,21 +73,27 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
         iniDate: iniDate, endDate: endDate);
 
     result.fold((l) => error = optionOf(l), (stockList) {
-
       for (var s in stockList) {
         providerSet.add(s.product.provider);
       }
 
       for (var p in providerSet) {
         providerList.add(ReportProviderModel(
-            providerId: p.id,
-            providerName: p.name,
-            providerLocation: p.location,
-            providerEstablishment: p.establishment,
+            provider: p,
             stockList: stockList
                 .where((element) => element.product.provider.id == p.id)
                 .toList(),
             merge: false));
+      }
+
+      for (var p in providerList) {
+        establishmentModelSet.add(ReportEstablishmentModel(
+            establishment: p.provider.establishment,
+            selected: false,
+            providerList: providerList
+                .where((element) =>
+                    element.provider.establishment == p.provider.establishment)
+                .toList()));
       }
     });
 
