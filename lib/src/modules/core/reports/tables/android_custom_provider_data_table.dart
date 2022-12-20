@@ -36,17 +36,8 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
                           hintStyle: Theme.of(context).textTheme.bodySmall),
                     )
                   : withMergeOptions
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                '${providerModel.provider.name} - ${providerModel.provider.name}',
-                              ),
-                            ),
-                            const Flexible(
-                                child: Center(child: Text('Produto')))
-                          ],
+                      ? Text(
+                          '${providerModel.provider.name} - ${providerModel.provider.location}',
                         )
                       : const Center(child: Text('Produto')),
             ),
