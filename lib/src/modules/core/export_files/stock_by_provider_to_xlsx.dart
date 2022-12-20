@@ -28,7 +28,7 @@ class StockByProviderToXLSX {
 
       _buildSheet(
           sheet: sheet,
-          text: '${providerModel.provider.name} '' ${providerModel.provider.location}',
+          text: providerModel.provider.name,
           rowIndex: rowIndex,
           columnIndex: columnIndex,
           style: providerStyle);
@@ -123,7 +123,7 @@ class StockByProviderToXLSX {
     workbook.dispose();
 
     _saveAndOpenFile(bytes,
-        'Relatório Final ${DateFormat('dd-MM-yyyy').format(DateTime.now())}');
+        'Relatório Por Fornecedor ${DateFormat('dd-MM-yyyy').format(DateTime.now())}');
   }
 
   void _saveAndOpenFile(List<int> bytes, String name) async {
