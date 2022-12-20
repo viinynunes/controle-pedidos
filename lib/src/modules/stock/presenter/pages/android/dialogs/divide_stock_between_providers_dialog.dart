@@ -59,7 +59,7 @@ class _DivideStockBetweenProvidersDialogState
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               Text(
-                'Fornecedor Atual: ${widget.stock.product.provider?.name ?? ''}',
+                'Fornecedor Atual: ${widget.stock.product.provider.name}',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const Divider(),

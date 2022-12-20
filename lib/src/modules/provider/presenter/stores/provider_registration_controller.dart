@@ -9,7 +9,7 @@ import '../../../../domain/models/establish_model.dart';
 import '../../../../domain/models/provider_model.dart';
 import '../../../establishment/domain/services/i_establishment_service.dart';
 import '../../../establishment/domain/usecases/i_establishment_usecase.dart';
-import '../../domain/usecases/I_provider_usecase.dart';
+import '../../domain/usecases/i_provider_usecase.dart';
 
 part 'provider_registration_controller.g.dart';
 

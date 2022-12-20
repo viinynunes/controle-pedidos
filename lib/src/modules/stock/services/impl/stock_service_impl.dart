@@ -12,9 +12,9 @@ class StockServiceImpl implements IStockService {
   @override
   void sortStockListByProviderAndProductName(List<Stock> stockList) {
     stockList.sort((a, b) {
-      int result = a.product.provider!.name
+      int result = a.product.provider.name
           .toLowerCase()
-          .compareTo(b.product.provider!.name.toLowerCase());
+          .compareTo(b.product.provider.name.toLowerCase());
 
       if (result == 0) {
         return a.product.name

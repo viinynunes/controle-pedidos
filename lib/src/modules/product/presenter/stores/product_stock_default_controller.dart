@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/provider.dart';
-import '../../../provider/domain/usecases/I_provider_usecase.dart';
+import '../../../provider/domain/usecases/i_provider_usecase.dart';
 import '../../errors/product_error.dart';
 
 part 'product_stock_default_controller.g.dart';

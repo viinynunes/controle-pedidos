@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/provider/domain/usecases/I_provider_usecase.dart';
+import 'package:controle_pedidos/src/modules/provider/domain/usecases/i_provider_usecase.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/provider.dart';

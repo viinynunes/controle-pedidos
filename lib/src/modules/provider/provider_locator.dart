@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/src/modules/provider/domain/repositories/i_provider_repository.dart';
-import 'package:controle_pedidos/src/modules/provider/domain/usecases/I_provider_usecase.dart';
+import 'package:controle_pedidos/src/modules/provider/domain/usecases/i_provider_usecase.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/usecases/impl/provider_usecase_impl.dart';
 import 'package:controle_pedidos/src/modules/provider/external/provider_firebase_datasource_impl.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
