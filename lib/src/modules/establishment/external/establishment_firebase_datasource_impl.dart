@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
 import 'package:controle_pedidos/src/domain/models/establish_model.dart';
+import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
+import 'package:controle_pedidos/src/modules/provider/external/provider_firebase_datasource_impl.dart';
+
+import '../../../domain/models/provider_model.dart';
 
 class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   final _establishmentCollection = FirebaseHelper.establishmentCollection;
@@ -28,6 +31,25 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
         .catchError(
           (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
         );
+
+    FirebaseHelper.firebaseDb.runTransaction((transaction) async {
+      final establishmentRef = _establishmentCollection.doc(establishment.id);
+
+      final providerSnap = await FirebaseHelper.providerCollection
+          .where('establishment.id', isEqualTo: establishment.id)
+          .get();
+
+      for (var p in providerSnap.docs) {
+        var provider = ProviderModel.fromMap(map: p.data());
+        provider.establishment = establishment;
+
+        ProviderFirebaseDatasourceImpl().updateProvider(provider);
+      }
+
+      transaction.update(establishmentRef, establishment.toMap());
+    }).catchError(
+      (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
+    );
 
     return establishment;
   }

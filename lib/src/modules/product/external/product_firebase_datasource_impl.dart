@@ -19,9 +19,6 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
-    await _productCollection.doc(product.id).update(product.toMap()).catchError(
-        (e) => throw FirebaseException(plugin: 'UPDATE PRODUCT ERROR'));
-
     FirebaseHelper.firebaseDb.runTransaction((transaction) async {
       final productRef = _productCollection.doc(product.id);
 
@@ -34,7 +31,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       }
 
       transaction.update(productRef, product.toMap());
-    });
+    }).catchError(
+        (e) => throw FirebaseException(plugin: 'UPDATE PRODUCT ERROR'));
 
     return product;
   }
