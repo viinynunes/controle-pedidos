@@ -4,10 +4,7 @@ import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_d
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 
 class ClientFirebaseDatasourceImpl implements IClientDatasource {
-  final db = FirebaseFirestore.instance;
-
-  final _clientCollection =
-      FirebaseHelper.firebaseCollection.collection('client');
+  final _clientCollection = FirebaseHelper.clientCollection;
 
   @override
   Future<ClientModel> createClient(ClientModel client) async {
@@ -22,7 +19,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   @override
   Future<ClientModel> updateClient(ClientModel client) async {
     final clientRef = _clientCollection.doc(client.id);
-    db.runTransaction((transaction) async {
+    FirebaseHelper.firebaseDb.runTransaction((transaction) async {
       final orderSnap = await FirebaseHelper.firebaseCollection
           .collection('order')
           .where('client.id', isEqualTo: client.id)
