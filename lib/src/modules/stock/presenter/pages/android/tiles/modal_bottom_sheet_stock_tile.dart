@@ -11,11 +11,13 @@ class ModalBottomSheetStockTile extends StatelessWidget {
     required this.onDelete,
     required this.onChangeDate,
     required this.equalDates,
+    required this.onEditProduct,
   }) : super(key: key);
 
   final Stock stock;
   final bool equalDates;
   final VoidCallback onDelete;
+  final VoidCallback onEditProduct;
   final Function(DateTime selectedDate) onChangeDate;
 
   @override
@@ -29,8 +31,8 @@ class ModalBottomSheetStockTile extends StatelessWidget {
       Color? textColor,
       Color? iconColor,
     }) {
-      return Container( decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50)),
+      return Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
         child: ListTile(
           onTap: onTap,
           enabled: enabled,
@@ -54,14 +56,28 @@ class ModalBottomSheetStockTile extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                stock.product.name.toUpperCase(),
-                style: Theme.of(context).textTheme.titleLarge,
+          Stack(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    stock.product.name.toUpperCase(),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                right: 10,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    onPressed: onEditProduct,
+                    icon: const Icon(Icons.edit),
+                  ),
+                ),
+              ),
+            ],
           ),
           _getListItem(
               onTap: () async {

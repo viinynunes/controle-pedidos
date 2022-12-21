@@ -6,7 +6,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/helpers/custom_page_route.dart';
 import '../../../../../core/widgets/add_remove_quantity_widget.dart';
+import '../../../../../product/presenter/pages/android/pages/android_product_registration_page.dart';
 import '../../../store/stock_controller.dart';
 import '../../../store/stock_tile_controller.dart';
 
@@ -66,6 +68,25 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                   ),
                   builder: (_) => ModalBottomSheetStockTile(
                     stock: widget.stock,
+                    onEditProduct: () async {
+                      Navigator.of(context).pop();
+
+                      await Navigator.of(context)
+                          .push(
+                        CustomPageRoute(
+                            child: AndroidProductRegistrationPage(
+                              product: widget.stock.product,
+                            ),
+                            direction: AxisDirection.left),
+                      )
+                          .then((result) async {
+                        if (result != null) {
+                          await Future.delayed(const Duration(milliseconds: 800));
+                          await stockController
+                              .getStockListByProviderBetweenDates();
+                        }
+                      });
+                    },
                     onDelete: () => stockController.removeStock(widget.stock),
                     equalDates: Helpers.compareOnlyDateFromDateTime(
                         stockController.iniDate, stockController.endDate),
