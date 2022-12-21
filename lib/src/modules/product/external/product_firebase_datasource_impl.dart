@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:controle_pedidos/src/domain/models/product_model.dart';
+import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 
 import '../infra/datasources/i_product_datasource.dart';
 
 class ProductFirebaseDatasourceImpl implements IProductDatasource {
-  final _productCollection =
-      FirebaseHelper.firebaseCollection.collection('product');
+  final _productCollection = FirebaseHelper.productCollection;
 
   @override
   Future<ProductModel> createProduct(ProductModel product) async {
@@ -22,6 +21,20 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   Future<ProductModel> updateProduct(ProductModel product) async {
     await _productCollection.doc(product.id).update(product.toMap()).catchError(
         (e) => throw FirebaseException(plugin: 'UPDATE PRODUCT ERROR'));
+
+    FirebaseHelper.firebaseDb.runTransaction((transaction) async {
+      final productRef = _productCollection.doc(product.id);
+
+      final stockSnap = await FirebaseHelper.stockCollection
+          .where('product.id', isEqualTo: product.id)
+          .get();
+
+      for (var s in stockSnap.docs) {
+        transaction.update(s.reference, {'product': product.toMap()});
+      }
+
+      transaction.update(productRef, product.toMap());
+    });
 
     return product;
   }
