@@ -8,8 +8,7 @@ import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_dat
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_stock_datasource.dart';
 
 class OrderFirebaseDatasourceImpl implements IOrderDatasource {
-  final _orderCollection =
-      FirebaseHelper.firebaseCollection.collection('order');
+  final _orderCollection = FirebaseHelper.orderCollection;
 
   final IStockDatasource _stockDatasource;
 

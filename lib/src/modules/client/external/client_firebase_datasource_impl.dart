@@ -20,7 +20,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   Future<ClientModel> updateClient(ClientModel client) async {
     final clientRef = _clientCollection.doc(client.id);
     FirebaseHelper.firebaseDb.runTransaction((transaction) async {
-      final orderSnap = await FirebaseHelper.firebaseCollection
+      final orderSnap = await FirebaseHelper.firebaseCompany
           .collection('order')
           .where('client.id', isEqualTo: client.id)
           .get();

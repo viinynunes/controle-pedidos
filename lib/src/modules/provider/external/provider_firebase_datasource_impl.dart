@@ -4,8 +4,7 @@ import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
 
 class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
-  final _providerCollection =
-      FirebaseHelper.firebaseCollection.collection('provider');
+  final _providerCollection = FirebaseHelper.providerCollection;
 
   @override
   Future<ProviderModel> createProvider(ProviderModel provider) async {

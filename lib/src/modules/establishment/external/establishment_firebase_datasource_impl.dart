@@ -4,8 +4,7 @@ import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 
 class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
-  final _establishmentCollection =
-  FirebaseHelper.firebaseCollection.collection('establishment');
+  final _establishmentCollection = FirebaseHelper.establishmentCollection;
 
   @override
   Future<EstablishmentModel> createEstablishment(
@@ -13,7 +12,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
     final rec = await _establishmentCollection
         .add(establishment.toMap())
         .catchError((e) =>
-    throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'));
+            throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'));
 
     establishment.id = rec.id;
 
@@ -28,7 +27,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
         .update(establishment.toMap())
         .catchError(
           (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
-    );
+        );
 
     return establishment;
   }
@@ -36,7 +35,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   @override
   Future<EstablishmentModel> getEstablishmentById(String id) async {
     final snap = await _establishmentCollection.doc(id).get().catchError((e) =>
-    throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR'));
+        throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR'));
 
     if (snap.data() == null) {
       throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR');
@@ -50,7 +49,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
     List<EstablishmentModel> estabList = [];
 
     final snap =
-    await _establishmentCollection.orderBy('name', descending: false).get();
+        await _establishmentCollection.orderBy('name', descending: false).get();
 
     for (var i in snap.docs) {
       estabList.add(EstablishmentModel.fromMap(map: i.data()));
@@ -76,7 +75,8 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   }
 
   void moveToV2() async {
-    final snap = await FirebaseFirestore.instance.collection('establishments').get();
+    final snap =
+        await FirebaseFirestore.instance.collection('establishments').get();
 
     for (var p in snap.docs) {
       _establishmentCollection

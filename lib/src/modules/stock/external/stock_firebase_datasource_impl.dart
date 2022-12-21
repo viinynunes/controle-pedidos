@@ -7,8 +7,7 @@ import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import '../infra/datasources/i_stock_datasource.dart';
 
 class StockFirebaseDatasourceImpl implements IStockDatasource {
-  final _stockCollection =
-      FirebaseHelper.firebaseCollection.collection('stock');
+  final _stockCollection = FirebaseHelper.stockCollection;
 
   @override
   Future<StockModel> createStock(StockModel stock) async {
