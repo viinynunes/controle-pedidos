@@ -85,7 +85,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
     final snap = await _productCollection
         .where('enabled', isEqualTo: true)
-        .where('providerId', isEqualTo: providerId)
+        .where('provider.id', isEqualTo: providerId)
         .orderBy('name', descending: false)
         .get();
 
