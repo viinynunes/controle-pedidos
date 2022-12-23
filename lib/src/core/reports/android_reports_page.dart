@@ -52,46 +52,48 @@ class AndroidReportsPage extends StatelessWidget {
         child: Container(
           height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                child: Text(
-                  'Relatório de Produtos',
-                  style: Theme.of(context).textTheme.titleLarge,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    'Relatório de Produtos',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
-              ),
-              _buildTile(
-                  icon: Icons.account_balance_sharp,
-                  text: 'Produtos Por Estabelecimento',
-                  onTap: () => Navigator.of(context).push(CustomPageRoute(
-                      child: const AndroidReportStockByEstablishmentPage(),
-                      direction: AxisDirection.left))),
-              _buildTile(
-                  icon: Icons.sports_handball_outlined,
-                  text: 'Produtos Por Fornecedor',
-                  onTap: () => Navigator.of(context).push(CustomPageRoute(
-                      child: const AndroidReportStockByProviderPage(),
-                      direction: AxisDirection.left))),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Divider(),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                child: Text(
-                  'Relatório de Pedidos',
-                  style: Theme.of(context).textTheme.titleLarge,
+                _buildTile(
+                    icon: Icons.account_balance_sharp,
+                    text: 'Produtos Por Estabelecimento',
+                    onTap: () => Navigator.of(context).push(CustomPageRoute(
+                        child: const AndroidReportStockByEstablishmentPage(),
+                        direction: AxisDirection.left))),
+                _buildTile(
+                    icon: Icons.sports_handball_outlined,
+                    text: 'Produtos Por Fornecedor',
+                    onTap: () => Navigator.of(context).push(CustomPageRoute(
+                        child: const AndroidReportStockByProviderPage(),
+                        direction: AxisDirection.left))),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Divider(),
                 ),
-              ),
-              _buildTile(
-                  icon: Icons.reorder,
-                  text: 'Pedidos por Data',
-                  onTap: () => Navigator.of(context).push(CustomPageRoute(
-                      child: const AndroidOrderReportPage(),
-                      direction: AxisDirection.left))),
-            ],
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    'Relatório de Pedidos',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                _buildTile(
+                    icon: Icons.reorder,
+                    text: 'Pedidos por Data',
+                    onTap: () => Navigator.of(context).push(CustomPageRoute(
+                        child: const AndroidOrderReportPage(),
+                        direction: AxisDirection.left))),
+              ],
+            ),
           ),
         ),
       ),
