@@ -9,6 +9,7 @@ class FirebaseHelper {
   static final establishmentCollection = firebaseCompany.collection('establishment');
   static final stockCollection = firebaseCompany.collection('stock');
   static final orderCollection = firebaseCompany.collection('order');
+  static final productOnOrderCollection = firebaseCompany.collection('productOnOrder');
 
 
 }

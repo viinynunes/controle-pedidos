@@ -7,6 +7,8 @@ import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_stock_datasource.dart';
 
+import '../../../domain/entities/order_item.dart';
+
 class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   final _orderCollection = FirebaseHelper.orderCollection;
 
@@ -26,17 +28,44 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     order.id = snap.id;
 
     for (var item in order.orderItemList) {
-      _stockDatasource.createStock(StockModel(
-          id: '0',
-          total: item.quantity,
-          totalOrdered: 0,
-          registrationDate: order.registrationHour,
-          product: item.product));
+      _createStock(item: item, registrationHour: order.registrationHour);
+
+      _createProductReferenceToOrder(item: item, orderID: order.id);
     }
 
     await _orderCollection.doc(order.id).update(order.toMap());
 
     return order;
+  }
+
+  _createStock({required OrderItem item, required DateTime registrationHour}) {
+    _stockDatasource.createStock(StockModel(
+        id: '0',
+        total: item.quantity,
+        totalOrdered: 0,
+        registrationDate: registrationHour,
+        product: item.product));
+  }
+
+  _createProductReferenceToOrder(
+      {required OrderItem item, required String orderID}) async {
+    final pRef =
+        await FirebaseHelper.productOnOrderCollection.doc(item.productId).get();
+
+    List orderList = [];
+
+    if (pRef.exists) {
+      orderList = pRef.get('orderList');
+    }
+
+    orderList.add(orderID);
+
+    await FirebaseHelper.productOnOrderCollection
+        .doc(item.productId)
+        .set({'orderList': orderList}).catchError((e) =>
+            throw FirebaseException(
+                plugin: 'CREATE PRODUCT REFERENCE TO ORDER ERROR',
+                message: e.toString()));
   }
 
   @override

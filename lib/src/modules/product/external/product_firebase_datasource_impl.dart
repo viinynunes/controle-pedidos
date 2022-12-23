@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/product_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
+import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
+import 'package:get_it/get_it.dart';
 
+import '../../../domain/models/order_item_model.dart';
+import '../../../domain/models/order_model.dart';
 import '../infra/datasources/i_product_datasource.dart';
 
 class ProductFirebaseDatasourceImpl implements IProductDatasource {
@@ -30,11 +34,48 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
         transaction.update(s.reference, {'product': product.toMap()});
       }
 
+      await _updateOrder(product);
+
       transaction.update(productRef, product.toMap());
-    }).catchError(
-        (e) => throw FirebaseException(plugin: 'UPDATE PRODUCT ERROR'));
+    }).catchError((e) => throw FirebaseException(
+        plugin: 'UPDATE PRODUCT ERROR', message: e.toString()));
 
     return product;
+  }
+
+  _updateOrder(ProductModel product) async {
+    final productOnOrderDoc =
+        await FirebaseHelper.productOnOrderCollection.doc(product.id).get();
+
+    if (productOnOrderDoc.exists) {
+      List orderList = productOnOrderDoc.get('orderList');
+
+      for (var o in orderList) {
+        final orderSnap = await FirebaseHelper.orderCollection.doc(o).get();
+
+        var order = OrderModel.fromMap(
+            map: orderSnap.data() as Map<String, dynamic>,
+            orderItemList:
+                _getOrderItemList(orderSnap.data() as Map<String, dynamic>));
+
+        var orderItemFromProduct = order.orderItemList
+            .singleWhere((element) => element.product == product);
+
+        orderItemFromProduct.product = product;
+
+        GetIt.I.get<IOrderDatasource>().updateOrder(order);
+      }
+    }
+  }
+
+  _getOrderItemList(Map<String, dynamic> map) {
+    List<OrderItemModel> itemList = [];
+
+    for (var e in map['orderItemList']) {
+      itemList.add(OrderItemModel.fromMap(map: e));
+    }
+
+    return itemList;
   }
 
   @override
