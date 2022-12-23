@@ -81,9 +81,12 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       )
                           .then((result) async {
                         if (result != null) {
-                          await Future.delayed(const Duration(milliseconds: 800));
+                          stockController.loading = true;
+                          await Future.delayed(
+                              const Duration(milliseconds: 1500));
                           await stockController
                               .getStockListByProviderBetweenDates();
+                          stockController.loading = false;
                         }
                       });
                     },
