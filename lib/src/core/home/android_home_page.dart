@@ -71,7 +71,7 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
                 label: ''),
             BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.account_circle,
+                  Icons.app_registration,
                 ),
                 label: ''),
             BottomNavigationBarItem(
