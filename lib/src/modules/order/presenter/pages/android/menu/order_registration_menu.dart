@@ -36,9 +36,9 @@ class OrderRegistrationMenu extends StatelessWidget {
                             ),
                           ],
                         ),
-                        title: const Text('Editar Cliente'),
+                        title: const Text('Criar / Editar Cliente'),
                         subtitle: const Text(
-                            'Altere as informações do cliente selecionado'),
+                            'Crie um novo cliente ou altere as informações do cliente selecionado'),
                       ),
                       const Divider(),
                     ],

@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/client/presenter/pages/android/android_client_registration_page.dart';
 import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/tiles/android_order_item_registration_tile.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/i_order_registration_page.dart';
@@ -10,7 +11,9 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rect_getter/rect_getter.dart';
 
+import '../../../../../domain/entities/client.dart';
 import '../../../../../domain/entities/product.dart';
+import 'menu/order_registration_menu.dart';
 
 class AndroidOrderRegistrationPage extends IOrderRegistrationPage {
   const AndroidOrderRegistrationPage(
@@ -65,6 +68,39 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
           builder: (_) => TextButton(
             onPressed: () => controller.callEntitySelectionDialog(
                 context: context, entityList: controller.clientList),
+            onLongPress: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (_) => OrderRegistrationMenu(
+                  onEditClient: () async {
+                    Navigator.of(context).pop();
+                    final result =
+                        await Navigator.of(context).push(CustomPageRoute(
+                            child: AndroidClientRegistrationPage(
+                              client: controller.selectedClient,
+                            ),
+                            direction: AxisDirection.left));
+
+                    if (result != null && result is Client) {
+                      if (controller.selectedClient != null) {
+                        widget.clientList.removeWhere(
+                            (element) => element == controller.selectedClient);
+                      }
+
+                      widget.clientList.add(result);
+
+                      controller.selectClient(result);
+                    }
+                  },
+                  onRemoveClient: controller.selectedClient != null
+                      ? () {
+                          Navigator.of(context).pop();
+                          controller.unselectClient();
+                        }
+                      : null,
+                ),
+              );
+            },
             child: Text(
               controller.selectedClient?.name ?? 'Selecione o cliente',
               style: Theme.of(context).textTheme.titleMedium,
@@ -213,21 +249,37 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
 
                                   return AndroidOrderItemRegistrationTile(
                                     item: item,
-                                    onRemove: () => controller
-                                        .removeItemFromOrderItemList(item),
-                                    onEdit: () async {
-                                      final result = await Navigator.of(context)
-                                          .push(CustomPageRoute(
-                                              child:
-                                                  AndroidProductRegistrationPage(
-                                                product: item.product,
-                                              ),
-                                              direction: AxisDirection.left));
+                                    onLongPress: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (_) => OrderRegistrationMenu(
+                                          onEditProduct: () async {
+                                            Navigator.of(context).pop();
+                                            final result = await Navigator.of(
+                                                    context)
+                                                .push(CustomPageRoute(
+                                                    child:
+                                                        AndroidProductRegistrationPage(
+                                                      product: item.product,
+                                                    ),
+                                                    direction:
+                                                        AxisDirection.left));
 
-                                      if (result != null && result is Product) {
-                                        controller.editProductFromOrderItemList(
-                                            result);
-                                      }
+                                            if (result != null &&
+                                                result is Product) {
+                                              controller
+                                                  .editProductFromOrderItemList(
+                                                      result);
+                                            }
+                                          },
+                                          onRemoveProduct: () {
+                                            Navigator.of(context).pop();
+                                            controller
+                                                .removeItemFromOrderItemList(
+                                                    item);
+                                          },
+                                        ),
+                                      );
                                     },
                                     increaseQuantity: () =>
                                         controller.updateOrderItemQuantity(

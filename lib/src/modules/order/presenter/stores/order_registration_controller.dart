@@ -176,6 +176,11 @@ abstract class _OrderRegistrationControllerBase with Store {
   }
 
   @action
+  unselectClient() {
+    selectedClient = null;
+  }
+
+  @action
   addSelectedOrderItemToList() {
     initOrderItem();
 
