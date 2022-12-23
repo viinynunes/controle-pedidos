@@ -1,7 +1,7 @@
-import 'package:controle_pedidos/src/modules/core/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../../core/helpers.dart';
 import '../../../store/stock_controller.dart';
 
 class StockLeftTextFieldWidget extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 
-import '../../../domain/models/report_establishment_model.dart';
+import '../../domain/models/report_establishment_model.dart';
 
 class StockByEstablishmentToXLSX {
   exportReportByEstablishment(

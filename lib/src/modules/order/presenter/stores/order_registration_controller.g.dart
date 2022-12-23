@@ -301,6 +301,18 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   }
 
   @override
+  dynamic unselectClient() {
+    final _$actionInfo = _$_OrderRegistrationControllerBaseActionController
+        .startAction(name: '_OrderRegistrationControllerBase.unselectClient');
+    try {
+      return super.unselectClient();
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic addSelectedOrderItemToList() {
     final _$actionInfo =
         _$_OrderRegistrationControllerBaseActionController.startAction(

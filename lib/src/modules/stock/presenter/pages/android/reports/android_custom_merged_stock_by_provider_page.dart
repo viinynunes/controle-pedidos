@@ -1,15 +1,15 @@
-import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../../core/export_files/stock_by_provider_to_xlsx.dart';
+import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
+import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
+import '../../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
+import '../../../../../../core/widget_to_image/transform_widget_to_image.dart';
+import '../../../../../../domain/entities/establishment.dart';
 import '../../../../../../domain/entities/provider.dart';
-import '../../../../../../domain/models/stock_model.dart';
-import '../../../../../core/export_files/stock_by_provider_to_xlsx.dart';
-import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
-import '../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
-import '../../../../../core/widget_to_image/transform_widget_to_image.dart';
 import '../../../../../../domain/models/report_provider_model.dart';
-import '../../../../../core/reports/tables/android_custom_provider_data_table.dart';
+import '../../../../../../domain/models/stock_model.dart';
 
 class AndroidCustomMergedStockByProviderPage extends StatefulWidget {
   const AndroidCustomMergedStockByProviderPage(

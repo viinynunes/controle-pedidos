@@ -1,14 +1,14 @@
-import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/custom_text_form_field.dart';
-import 'package:controle_pedidos/src/modules/product/presenter/pages/i_product_registration_page.dart';
-import 'package:controle_pedidos/src/modules/product/presenter/stores/product_registration_controller.dart';
-import 'package:controle_pedidos/src/domain/entities/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../core/widgets/show_entity_selection_dialog.dart';
+import '../../../../../../core/widgets/custom_material_banner_error.dart';
+import '../../../../../../core/widgets/custom_text_form_field.dart';
+import '../../../../../../core/widgets/show_entity_selection_dialog.dart';
+import '../../../../../../domain/entities/provider.dart';
+import '../../../stores/product_registration_controller.dart';
+import '../../i_product_registration_page.dart';
 
 class AndroidProductRegistrationPage extends IProductRegistrationPage {
   const AndroidProductRegistrationPage({super.key, super.product});

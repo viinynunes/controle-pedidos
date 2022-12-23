@@ -1,15 +1,15 @@
-import 'package:controle_pedidos/src/domain/entities/client.dart';
-import 'package:controle_pedidos/src/domain/entities/establishment.dart';
-import 'package:controle_pedidos/src/modules/client/presenter/pages/android/android_client_registration_page.dart';
-import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_registration_page.dart';
-import 'package:controle_pedidos/src/modules/provider/presenter/pages/android/android_provider_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../domain/entities/product.dart';
-import '../../../../domain/entities/provider.dart';
-import '../../../establishment/presenter/pages/android/android_establishment_registration_page.dart';
+import '../../../domain/entities/client.dart';
+import '../../../domain/entities/establishment.dart';
+import '../../../domain/entities/product.dart';
+import '../../../domain/entities/provider.dart';
+import '../../../modules/client/presenter/pages/android/android_client_registration_page.dart';
+import '../../../modules/establishment/presenter/pages/android/android_establishment_registration_page.dart';
+import '../../../modules/product/presenter/pages/android/pages/android_product_registration_page.dart';
+import '../../../modules/provider/presenter/pages/android/android_provider_registration_page.dart';
 import '../errors/show_entity_selection_dialog_error.dart';
 
 part 'show_entity_selection_dialog_controller.g.dart';

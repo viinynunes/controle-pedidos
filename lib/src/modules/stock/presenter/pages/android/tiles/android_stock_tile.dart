@@ -1,16 +1,16 @@
-import 'package:controle_pedidos/src/domain/entities/stock.dart';
-import 'package:controle_pedidos/src/modules/core/helpers.dart';
-import 'package:controle_pedidos/src/modules/stock/presenter/pages/android/tiles/modal_bottom_sheet_stock_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../core/helpers/custom_page_route.dart';
-import '../../../../../core/widgets/add_remove_quantity_widget.dart';
+import '../../../../../../core/helpers.dart';
+import '../../../../../../core/helpers/custom_page_route.dart';
+import '../../../../../../core/widgets/add_remove_quantity_widget.dart';
+import '../../../../../../domain/entities/stock.dart';
 import '../../../../../product/presenter/pages/android/pages/android_product_registration_page.dart';
 import '../../../store/stock_controller.dart';
 import '../../../store/stock_tile_controller.dart';
+import 'modal_bottom_sheet_stock_tile.dart';
 
 class AndroidStockTile extends StatefulWidget {
   const AndroidStockTile({Key? key, required this.stock}) : super(key: key);

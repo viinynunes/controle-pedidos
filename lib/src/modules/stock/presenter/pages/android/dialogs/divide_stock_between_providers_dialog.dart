@@ -1,13 +1,13 @@
-import 'package:controle_pedidos/src/modules/core/widgets/show_entity_selection_dialog.dart';
-import 'package:controle_pedidos/src/modules/stock/presenter/store/stock_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../../core/widgets/shimmer/shimer_widget.dart';
+import '../../../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../../../domain/entities/provider.dart';
 import '../../../../../../domain/entities/stock.dart';
-import '../../../../../core/widgets/shimmer/shimer_widget.dart';
 import '../../../store/divide_stock_dialog_controller.dart';
+import '../../../store/stock_controller.dart';
 
 class DivideStockBetweenProvidersDialog extends StatefulWidget {
   const DivideStockBetweenProvidersDialog({Key? key, required this.stock})

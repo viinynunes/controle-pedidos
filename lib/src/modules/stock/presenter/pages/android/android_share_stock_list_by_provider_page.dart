@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
+import '../../../../../core/widget_to_image/transform_widget_to_image.dart';
 import '../../../../../domain/entities/stock.dart';
-import '../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
-import '../../../../core/widget_to_image/transform_widget_to_image.dart';
 
 class AndroidShareStockListByProviderPage extends StatelessWidget {
   const AndroidShareStockListByProviderPage(
@@ -66,16 +66,14 @@ class AndroidShareStockListByProviderPage extends StatelessWidget {
                           child: Row(
                             children: [
                               Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(2, 1, 2, 1),
+                                padding: const EdgeInsets.fromLTRB(2, 1, 2, 1),
                                 child: Text(
                                   item.totalOrdered.toString(),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(2, 1, 2, 1),
+                                padding: const EdgeInsets.fromLTRB(2, 1, 2, 1),
                                 child: Text(
                                   item.product.category,
                                   textAlign: TextAlign.start,

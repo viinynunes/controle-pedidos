@@ -3,8 +3,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../core/widgets/custom_material_banner_error.dart';
-import '../../../../core/widgets/shimmer/shimmer_list_builder.dart';
+import '../../../../../core/widgets/custom_material_banner_error.dart';
+import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../stores/client_controller.dart';
 import 'android_client_registration_page.dart';
 import 'tiles/android_client_list_tile.dart';

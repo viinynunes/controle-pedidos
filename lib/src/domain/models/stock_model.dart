@@ -1,5 +1,6 @@
-import 'package:controle_pedidos/src/modules/core/helpers.dart';
 
+
+import '../../core/helpers.dart';
 import '../entities/stock.dart';
 import 'product_model.dart';
 

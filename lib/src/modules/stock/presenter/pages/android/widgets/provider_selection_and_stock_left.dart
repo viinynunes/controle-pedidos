@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
+import '../../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../store/stock_controller.dart';
 import 'provider_dropdown_selection_widget.dart';
 import 'stock_left_textfield_widget.dart';

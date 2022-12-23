@@ -2,7 +2,7 @@ import 'package:controle_pedidos/src/global_locator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'src/modules/core/home/android_home_page.dart';
+import 'src/core/home/android_home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +16,7 @@ void main() async {
           projectId: "controle-de-pedidos-ca8b2"),
     );
   } catch (e) {
-    print(e);
+    debugPrint(e.toString());
   }
 
   await initGlobalServiceLocator();

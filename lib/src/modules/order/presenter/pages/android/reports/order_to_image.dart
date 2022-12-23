@@ -1,10 +1,10 @@
-import 'package:controle_pedidos/src/domain/entities/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
-import '../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
-import '../../../../../core/widget_to_image/transform_widget_to_image.dart';
+import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
+import '../../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
+import '../../../../../../core/widget_to_image/transform_widget_to_image.dart';
+import '../../../../../../domain/entities/order.dart';
 
 class OrderToImage extends StatefulWidget {
   const OrderToImage({Key? key, required this.order}) : super(key: key);

@@ -1,10 +1,10 @@
-import 'package:controle_pedidos/src/modules/core/export_files/order_to_xlsx.dart';
-import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
+import '../../../../../../core/export_files/order_to_xlsx.dart';
+import '../../../../../../core/helpers/custom_page_route.dart';
+import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../stores/order_report_controller.dart';
 import '../tiles/android_order_list_tile.dart';
 import 'order_to_image.dart';

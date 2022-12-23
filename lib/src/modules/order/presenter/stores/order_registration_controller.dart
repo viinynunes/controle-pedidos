@@ -1,17 +1,17 @@
-import 'package:controle_pedidos/src/domain/entities/order.dart' as o;
-import 'package:controle_pedidos/src/domain/models/order_model.dart';
-import 'package:controle_pedidos/src/modules/order/domain/usecase/i_order_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rect_getter/rect_getter.dart';
 
+import '../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../domain/entities/client.dart';
+import '../../../../domain/entities/order.dart' as o;
 import '../../../../domain/entities/order_item.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/models/order_item_model.dart';
-import '../../../core/widgets/show_entity_selection_dialog.dart';
+import '../../../../domain/models/order_model.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
+import '../../domain/usecase/i_order_usecase.dart';
 import '../../errors/order_error.dart';
 
 part 'order_registration_controller.g.dart';

@@ -1,5 +1,6 @@
-import 'package:controle_pedidos/src/modules/core/home/stores/home_page_controller.dart';
 import 'package:get_it/get_it.dart';
+
+import 'stores/home_page_controller.dart';
 
 final homeLocator = GetIt.instance;
 

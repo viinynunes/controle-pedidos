@@ -1,11 +1,11 @@
-import 'package:controle_pedidos/src/domain/entities/provider.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/shimmer/shimer_widget.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/show_entity_selection_dialog.dart';
-import 'package:controle_pedidos/src/modules/product/presenter/stores/product_stock_default_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../../core/widgets/shimmer/shimer_widget.dart';
+import '../../../../../../core/widgets/show_entity_selection_dialog.dart';
+import '../../../../../../domain/entities/provider.dart';
+import '../../../stores/product_stock_default_controller.dart';
 import 'tiles/android_product_stock_default_tile.dart';
 
 class AndroidProductStockDefaultPage extends StatefulWidget {

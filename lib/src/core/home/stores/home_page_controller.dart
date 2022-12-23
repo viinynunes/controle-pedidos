@@ -1,16 +1,16 @@
-import 'package:controle_pedidos/src/modules/client/domain/usecases/i_client_usecase.dart';
-import 'package:controle_pedidos/src/modules/core/registration/android_registration_page.dart';
-import 'package:controle_pedidos/src/modules/product/domain/usecases/i_product_usecase.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../domain/entities/client.dart';
-import '../../../../domain/entities/product.dart';
-import '../../../client/errors/client_errors.dart';
-import '../../../order/presenter/pages/android/android_order_list_page.dart';
-import '../../../product/errors/product_error.dart';
-import '../../../stock/presenter/pages/android/android_stock_page.dart';
+import '../../../domain/entities/client.dart';
+import '../../../domain/entities/product.dart';
+import '../../../modules/client/domain/usecases/i_client_usecase.dart';
+import '../../../modules/client/errors/client_errors.dart';
+import '../../../modules/order/presenter/pages/android/android_order_list_page.dart';
+import '../../../modules/product/domain/usecases/i_product_usecase.dart';
+import '../../../modules/product/errors/product_error.dart';
+import '../../../modules/stock/presenter/pages/android/android_stock_page.dart';
+import '../../registration/android_registration_page.dart';
 import '../../reports/android_reports_page.dart';
 
 part 'home_page_controller.g.dart';

@@ -1,16 +1,16 @@
-import 'package:controle_pedidos/src/domain/entities/stock.dart';
-import 'package:controle_pedidos/src/domain/models/stock_model.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/show_entity_selection_dialog.dart';
-import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
+import '../../../../domain/entities/stock.dart';
+import '../../../../domain/models/stock_model.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../../provider/services/i_provider_service.dart';
+import '../../domain/usecases/i_stock_usecase.dart';
 import '../../errors/stock_error.dart';
 import '../../services/i_stock_service.dart';
 

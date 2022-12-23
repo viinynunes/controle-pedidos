@@ -1,8 +1,9 @@
-import 'package:controle_pedidos/src/modules/core/widgets/custom_text_form_field.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/stores/show_entity_selection_dialog_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+
+import 'custom_text_form_field.dart';
+import 'stores/show_entity_selection_dialog_controller.dart';
 
 class ShowEntitySelectionDialog extends StatefulWidget {
   const ShowEntitySelectionDialog(

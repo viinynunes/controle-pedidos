@@ -1,6 +1,6 @@
 import 'package:controle_pedidos/src/domain/models/order_item_model.dart';
-import 'package:controle_pedidos/src/modules/core/helpers.dart';
 
+import '../../core/helpers.dart';
 import '../entities/order.dart';
 import 'client_model.dart';
 

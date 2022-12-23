@@ -1,9 +1,10 @@
-import 'package:controle_pedidos/src/modules/core/home/stores/home_page_controller.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+
+import '../widgets/custom_material_banner_error.dart';
+import 'stores/home_page_controller.dart';
 
 class AndroidHomePage extends StatefulWidget {
   const AndroidHomePage({Key? key}) : super(key: key);

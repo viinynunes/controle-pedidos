@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../../core/export_files/stock_by_establishment_to_xlsx.dart';
-import '../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
-import '../../../../../core/reports/tables/android_custom_provider_data_table.dart';
+import '../../../../../../core/export_files/stock_by_establishment_to_xlsx.dart';
+import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
+import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
 import '../../../store/report_stock_by_establishment_controller.dart';
 
 class AndroidReportStockByEstablishmentPage extends StatefulWidget {

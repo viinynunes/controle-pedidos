@@ -3,8 +3,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../../domain/entities/stock.dart';
-import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../store/show_orders_by_stock_dialog_controller.dart';
 import '../../../store/stock_controller.dart';
 

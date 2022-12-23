@@ -1,11 +1,11 @@
-import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../../core/helpers/custom_page_route.dart';
+import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
 import '../../../store/report_stock_by_provider_controller.dart';
 import 'android_custom_merged_stock_by_provider_page.dart';
-import '../../../../../core/reports/tables/android_custom_provider_data_table.dart';
 
 class AndroidReportStockByProviderPage extends StatefulWidget {
   const AndroidReportStockByProviderPage({Key? key}) : super(key: key);

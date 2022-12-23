@@ -1,11 +1,11 @@
-import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
-import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_stock_default_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/helpers/custom_page_route.dart';
+import '../../../../../core/widgets/custom_material_banner_error.dart';
+import '../../../../product/presenter/pages/android/pages/android_product_stock_default_page.dart';
 import '../../store/stock_controller.dart';
 import '../i_stock_page.dart';
 import 'android_share_stock_list_by_provider_page.dart';

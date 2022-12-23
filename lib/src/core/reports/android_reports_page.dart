@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../stock/presenter/pages/android/reports/android_report_stock_by_establishment_page.dart';
-import '../../order/presenter/pages/android/reports/android_order_report_page.dart';
-import '../../stock/presenter/pages/android/reports/android_report_stock_by_provider_page.dart';
+import '../../modules/order/presenter/pages/android/reports/android_order_report_page.dart';
+import '../../modules/stock/presenter/pages/android/reports/android_report_stock_by_establishment_page.dart';
+import '../../modules/stock/presenter/pages/android/reports/android_report_stock_by_provider_page.dart';
 import '../helpers/custom_page_route.dart';
 
 class AndroidReportsPage extends StatelessWidget {

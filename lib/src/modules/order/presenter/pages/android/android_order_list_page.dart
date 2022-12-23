@@ -1,10 +1,10 @@
-import 'package:controle_pedidos/src/modules/core/widgets/shimmer/shimmer_list_builder.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../domain/entities/client.dart';
 import '../../../../../domain/entities/product.dart';
 import '../../../../../domain/models/order_model.dart';

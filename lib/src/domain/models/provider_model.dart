@@ -1,6 +1,6 @@
 import 'package:controle_pedidos/src/domain/entities/provider.dart';
-import 'package:controle_pedidos/src/modules/core/helpers.dart';
 
+import '../../core/helpers.dart';
 import 'establish_model.dart';
 
 class ProviderModel extends Provider {
@@ -39,7 +39,9 @@ class ProviderModel extends Provider {
       'location': location,
       'registrationDate': registrationDate,
       'enabled': enabled,
-      'establishment': EstablishmentModel.fromEstablishment(establishment: establishment).toMap()
+      'establishment':
+          EstablishmentModel.fromEstablishment(establishment: establishment)
+              .toMap()
     };
   }
 

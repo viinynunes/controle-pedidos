@@ -1,8 +1,8 @@
-import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_list_page.dart';
-import 'package:controle_pedidos/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-import '../../../stock/presenter/pages/android/android_stock_page.dart';
+import '../../../../utils/utils.dart';
+import '../../../modules/order/presenter/pages/android/android_order_list_page.dart';
+import '../../../modules/stock/presenter/pages/android/android_stock_page.dart';
 import '../tiles/android_drawer_tile.dart';
 
 class AndroidCustomDrawer extends StatefulWidget {

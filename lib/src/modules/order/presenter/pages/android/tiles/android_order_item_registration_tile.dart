@@ -1,7 +1,7 @@
-import 'package:controle_pedidos/src/domain/entities/order_item.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/widgets/add_remove_quantity_widget.dart';
+import '../../../../../../core/widgets/add_remove_quantity_widget.dart';
+import '../../../../../../domain/entities/order_item.dart';
 
 class AndroidOrderItemRegistrationTile extends StatelessWidget {
   const AndroidOrderItemRegistrationTile(

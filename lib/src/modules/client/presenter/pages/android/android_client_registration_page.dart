@@ -1,12 +1,12 @@
-import 'package:controle_pedidos/src/modules/client/presenter/pages/i_client_registration_page.dart';
-import 'package:controle_pedidos/src/modules/client/presenter/stores/client_registration_controller.dart';
-import 'package:controle_pedidos/src/modules/core/widgets/custom_material_banner_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../core/widgets/custom_text_form_field.dart';
+import '../../../../../core/widgets/custom_material_banner_error.dart';
+import '../../../../../core/widgets/custom_text_form_field.dart';
+import '../../stores/client_registration_controller.dart';
+import '../i_client_registration_page.dart';
 
 class AndroidClientRegistrationPage extends IClientRegistrationPage {
   const AndroidClientRegistrationPage({super.key, super.client});

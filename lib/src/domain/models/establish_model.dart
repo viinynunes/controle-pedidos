@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 
-import '../../modules/core/helpers.dart';
+import '../../core/helpers.dart';
 
 class EstablishmentModel extends Establishment {
   EstablishmentModel(
