@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper.dart';
-import 'package:controle_pedidos/src/modules/product/external/product_firebase_datasource_impl.dart';
+import 'package:controle_pedidos/src/modules/product/infra/datasources/i_product_datasource.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../domain/models/product_model.dart';
 
@@ -37,7 +38,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
         var product = ProductModel.fromMap(map: p.data());
         product.provider = provider;
 
-        ProductFirebaseDatasourceImpl().updateProduct(product);
+        GetIt.I.get<IProductDatasource>().updateProduct(product);
       }
 
       transaction.update(providerRef, provider.toMap());
