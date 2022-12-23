@@ -11,6 +11,7 @@ import '../../../../domain/entities/order_item.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/models/order_item_model.dart';
 import '../../../core/widgets/show_entity_selection_dialog.dart';
+import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../errors/order_error.dart';
 
 part 'order_registration_controller.g.dart';
@@ -20,8 +21,9 @@ class OrderRegistrationController = _OrderRegistrationControllerBase
 
 abstract class _OrderRegistrationControllerBase with Store {
   final IOrderUsecase orderUsecase;
+  final IProductUsecase productUsecase;
 
-  _OrderRegistrationControllerBase(this.orderUsecase);
+  _OrderRegistrationControllerBase(this.orderUsecase, this.productUsecase);
 
   @observable
   bool newOrder = true;
@@ -227,6 +229,14 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   removeItemFromOrderItemList(OrderItem item) {
     orderItemList.remove(item);
+  }
+
+  @action
+  editProductFromOrderItemList(Product product) {
+    var item =
+        orderItemList.singleWhere((element) => element.product == product);
+
+    item.product = product;
   }
 
   @action

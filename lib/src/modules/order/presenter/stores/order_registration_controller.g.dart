@@ -354,6 +354,20 @@ mixin _$OrderRegistrationController on _OrderRegistrationControllerBase, Store {
   }
 
   @override
+  dynamic editProductFromOrderItemList(Product product) {
+    final _$actionInfo =
+        _$_OrderRegistrationControllerBaseActionController.startAction(
+            name:
+                '_OrderRegistrationControllerBase.editProductFromOrderItemList');
+    try {
+      return super.editProductFromOrderItemList(product);
+    } finally {
+      _$_OrderRegistrationControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic initNewOrderData() {
     final _$actionInfo = _$_OrderRegistrationControllerBaseActionController
         .startAction(name: '_OrderRegistrationControllerBase.initNewOrderData');

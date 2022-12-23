@@ -30,12 +30,12 @@ class AndroidOrderItemRegistrationTile extends StatelessWidget {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (e) => onRemove(),
+            onPressed: (_) => onRemove(),
             icon: Icons.delete_forever,
             backgroundColor: Colors.red,
           ),
           SlidableAction(
-            onPressed: (e) {},
+            onPressed: (_) => onEdit(),
             icon: Icons.edit,
             backgroundColor: Theme.of(context).primaryColor,
           )

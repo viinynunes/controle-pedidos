@@ -25,7 +25,7 @@ void setUpOrderLocator() {
   orderLocator.registerSingleton<OrderController>(
       OrderController(orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderRegistrationController>(
-      () => OrderRegistrationController(orderLocator()));
+      () => OrderRegistrationController(orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderReportController>(
       () => OrderReportController(orderLocator(), orderLocator()));
 }

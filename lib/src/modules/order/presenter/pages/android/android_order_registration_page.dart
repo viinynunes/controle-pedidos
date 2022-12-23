@@ -1,12 +1,16 @@
+import 'package:controle_pedidos/src/modules/core/helpers/custom_page_route.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/tiles/android_order_item_registration_tile.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/pages/i_order_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_registration_controller.dart';
+import 'package:controle_pedidos/src/modules/product/presenter/pages/android/pages/android_product_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rect_getter/rect_getter.dart';
+
+import '../../../../../domain/entities/product.dart';
 
 class AndroidOrderRegistrationPage extends IOrderRegistrationPage {
   const AndroidOrderRegistrationPage(
@@ -211,7 +215,20 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                                     item: item,
                                     onRemove: () => controller
                                         .removeItemFromOrderItemList(item),
-                                    onEdit: () {},
+                                    onEdit: () async {
+                                      final result = await Navigator.of(context)
+                                          .push(CustomPageRoute(
+                                              child:
+                                                  AndroidProductRegistrationPage(
+                                                product: item.product,
+                                              ),
+                                              direction: AxisDirection.left));
+
+                                      if (result != null && result is Product) {
+                                        controller.editProductFromOrderItemList(
+                                            result);
+                                      }
+                                    },
                                     increaseQuantity: () =>
                                         controller.updateOrderItemQuantity(
                                             item: item, increase: true),
