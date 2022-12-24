@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:string_validator/string_validator.dart';
 
 import '../../../../../core/helpers/custom_page_route.dart';
 import '../../../../../core/home/android_home_page.dart';
+import '../../stores/login_controller.dart';
 
 class AndroidCompanyRegistrationPage extends StatelessWidget {
   const AndroidCompanyRegistrationPage({Key? key}) : super(key: key);
@@ -9,6 +12,8 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    final controller = GetIt.I.get<LoginController>();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -27,6 +32,7 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
                 ),
               ),
               Form(
+                key: controller.formKey,
                 child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +45,8 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
                           children: const [
                             Text(
                               'Bem Vindo !',
-                              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 50, fontWeight: FontWeight.bold),
                             ),
                             Text(
                               'Realize o login para ter acesso ao Controle de Pedidos',
@@ -67,6 +74,13 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
                                       hintText: 'jose@hotmail.com'),
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
+                                  validator: (text) {
+                                    if (!isEmail(text!)) {
+                                      return 'Email inválido';
+                                    }
+
+                                    return null;
+                                  },
                                 ),
                                 SizedBox(height: size.height * 0.05),
                                 TextFormField(
@@ -101,10 +115,13 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
                                   width: size.width * 0.7,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Navigator.of(context).push(
-                                          CustomPageRoute(
-                                              child: const AndroidHomePage(),
-                                              direction: AxisDirection.up));
+                                      if (controller.formKey.currentState!
+                                          .validate()) {
+                                        Navigator.of(context).push(
+                                            CustomPageRoute(
+                                                child: const AndroidHomePage(),
+                                                direction: AxisDirection.up));
+                                      }
                                     },
                                     child: const Text('Login'),
                                   ),
