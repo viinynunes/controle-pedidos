@@ -1,8 +1,12 @@
 import 'package:controle_pedidos/src/global_locator.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'src/core/home/android_home_page.dart';
+import 'src/modules/company/presenter/pages/android/android_login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,23 +25,49 @@ void main() async {
 
   await initGlobalServiceLocator();
 
-  runApp(MaterialApp(
-    home: const AndroidHomePage(),
-    theme: ThemeData(
-      useMaterial3: true,
-      primarySwatch: Colors.deepPurple,
-      textTheme: const TextTheme(
-          labelSmall: TextStyle(color: Colors.green),
-          titleLarge: TextStyle(fontWeight: FontWeight.w600)),
-      canvasColor: Colors.white,
-      hintColor: Colors.grey,
-      elevatedButtonTheme: ElevatedButtonThemeData(
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+
+  runApp(
+    MaterialApp(
+      home: const AndroidCompanyRegistrationPage(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        primarySwatch: Colors.blue,
+        fontFamily: GoogleFonts.sacramento().fontFamily,
+        textTheme: const TextTheme(
+            labelSmall: TextStyle(color: Colors.green),
+            titleLarge: TextStyle(fontWeight: FontWeight.w600)),
+        canvasColor: Colors.white,
+        hintColor: Colors.grey,
+        elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
-              elevation: 5)),
+              elevation: 5),
+        ),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        fontFamily: GoogleFonts.montserrat().fontFamily,
+        primarySwatch: Colors.orange,
+        textTheme: const TextTheme(
+            labelSmall: TextStyle(color: Colors.green),
+            titleLarge: TextStyle(fontWeight: FontWeight.w600)
+        ),
+      ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales: const [Locale('pt')],
     ),
-  ));
+  );
 }
 
 /* void main() async {
