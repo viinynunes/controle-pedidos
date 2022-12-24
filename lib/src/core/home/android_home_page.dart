@@ -79,6 +79,11 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
                   Icons.insert_chart_outlined,
                 ),
                 label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.account_circle,
+                ),
+                label: ''),
           ],
           onTap: (index) {
             controller.changeIndex(index);
