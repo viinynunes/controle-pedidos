@@ -89,6 +89,9 @@ abstract class _HomePageControllerBase with Store {
       ),
       const AndroidRegistrationsPage(),
       const AndroidReportsPage(),
+      Container(
+        color: Colors.deepPurple,
+      ),
     ];
   }
 }
