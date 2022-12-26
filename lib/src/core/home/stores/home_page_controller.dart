@@ -6,6 +6,7 @@ import '../../../domain/entities/client.dart';
 import '../../../domain/entities/product.dart';
 import '../../../modules/client/domain/usecases/i_client_usecase.dart';
 import '../../../modules/client/errors/client_errors.dart';
+import '../../../modules/company/presenter/pages/android/android_company_details_page.dart';
 import '../../../modules/order/presenter/pages/android/android_order_list_page.dart';
 import '../../../modules/product/domain/usecases/i_product_usecase.dart';
 import '../../../modules/product/errors/product_error.dart';
@@ -89,9 +90,7 @@ abstract class _HomePageControllerBase with Store {
       ),
       const AndroidRegistrationsPage(),
       const AndroidReportsPage(),
-      Container(
-        color: Colors.deepPurple,
-      ),
+      const AndroidCompanyDetailsPage(),
     ];
   }
 }
