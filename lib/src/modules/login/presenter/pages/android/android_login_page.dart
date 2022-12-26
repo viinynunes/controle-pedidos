@@ -5,16 +5,16 @@ import 'package:mobx/mobx.dart';
 
 import '../../stores/login_controller.dart';
 
-class AndroidCompanyRegistrationPage extends StatefulWidget {
-  const AndroidCompanyRegistrationPage({Key? key}) : super(key: key);
+class AndroidLoginPage extends StatefulWidget {
+  const AndroidLoginPage({Key? key}) : super(key: key);
 
   @override
-  State<AndroidCompanyRegistrationPage> createState() =>
-      _AndroidCompanyRegistrationPageState();
+  State<AndroidLoginPage> createState() =>
+      _AndroidLoginPageState();
 }
 
-class _AndroidCompanyRegistrationPageState
-    extends State<AndroidCompanyRegistrationPage> {
+class _AndroidLoginPageState
+    extends State<AndroidLoginPage> {
   final controller = GetIt.I.get<LoginController>();
 
   @override
