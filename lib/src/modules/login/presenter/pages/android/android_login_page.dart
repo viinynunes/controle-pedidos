@@ -1,19 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:string_validator/string_validator.dart';
+import 'package:mobx/mobx.dart';
 
-import '../../../../../core/helpers/custom_page_route.dart';
-import '../../../../../core/home/android_home_page.dart';
 import '../../stores/login_controller.dart';
 
-class AndroidCompanyRegistrationPage extends StatelessWidget {
+class AndroidCompanyRegistrationPage extends StatefulWidget {
   const AndroidCompanyRegistrationPage({Key? key}) : super(key: key);
+
+  @override
+  State<AndroidCompanyRegistrationPage> createState() =>
+      _AndroidCompanyRegistrationPageState();
+}
+
+class _AndroidCompanyRegistrationPageState
+    extends State<AndroidCompanyRegistrationPage> {
+  final controller = GetIt.I.get<LoginController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    reaction((_) => controller.error, (_) {
+      controller.error.map(
+        (error) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.message),
+          ),
+        ),
+      );
+    });
+
+    controller.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
-    final controller = GetIt.I.get<LoginController>();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -69,21 +92,17 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
                             Column(
                               children: [
                                 TextFormField(
+                                  controller: controller.emailController,
                                   decoration: const InputDecoration(
                                       label: Text('Email'),
                                       hintText: 'jose@hotmail.com'),
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
-                                  validator: (text) {
-                                    if (!isEmail(text!)) {
-                                      return 'Email inválido';
-                                    }
-
-                                    return null;
-                                  },
+                                  validator: controller.emailValidator,
                                 ),
                                 SizedBox(height: size.height * 0.05),
                                 TextFormField(
+                                  controller: controller.passwordController,
                                   decoration: const InputDecoration(
                                       label: Text('Senha'),
                                       hintText: '*****************'),
@@ -91,6 +110,7 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
                                   obscuringCharacter: '*',
                                   enableSuggestions: false,
                                   autocorrect: false,
+                                  validator: controller.passwordValidator,
                                 ),
                                 Align(
                                   alignment: Alignment.centerRight,
@@ -114,16 +134,12 @@ class AndroidCompanyRegistrationPage extends StatelessWidget {
                                   height: size.height * 0.06,
                                   width: size.width * 0.7,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      if (controller.formKey.currentState!
-                                          .validate()) {
-                                        Navigator.of(context).push(
-                                            CustomPageRoute(
-                                                child: const AndroidHomePage(),
-                                                direction: AxisDirection.up));
-                                      }
-                                    },
-                                    child: const Text('Login'),
+                                    onPressed: controller.login,
+                                    child: Observer(
+                                      builder: (_) => controller.loading
+                                          ? const CircularProgressIndicator()
+                                          : const Text('Login'),
+                                    ),
                                   ),
                                 ),
                                 Padding(
