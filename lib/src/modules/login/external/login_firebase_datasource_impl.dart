@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/login/errors/login_error.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../domain/models/user_model.dart';
@@ -17,12 +18,10 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
 
   @override
   Future<UserModel> login(credential.UserCredential user) async {
-    final result = await firebaseAuth
-        .signInWithEmailAndPassword(email: user.email, password: user.password)
-        .catchError((e) => throw FirebaseAuthException(
-            code: 'LOGIN ERROR', message: e.toString()));
+    try {
+      final result = await firebaseAuth.signInWithEmailAndPassword(
+          email: user.email, password: user.password);
 
-    if (result.user != null) {
       final userSnap = await userCollection
           .doc(result.user!.uid)
           .get()
@@ -30,9 +29,17 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
               plugin: 'GET USER ERROR', message: e.toString()));
 
       return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw LoginError('Email não encontrado');
+      }
+
+      if (e.code == 'wrong-password') {
+        throw LoginError('Senha Incorreta');
+      }
     }
 
-    throw FirebaseException(plugin: 'Login Error');
+    throw FirebaseAuthException(code: '', message: 'Erro');
   }
 
   @override
