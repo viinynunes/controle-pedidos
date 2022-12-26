@@ -1,10 +1,10 @@
-import '../../../../domain/entities/user.dart';
+import '../../../../domain/models/user_model.dart';
 import '../../presenter/models/user_credential.dart';
 
 abstract class ILoginDatasource {
-  Future<User> login(UserCredential user);
+  Future<UserModel> login(UserCredential user);
 
-  Future<bool> logout();
+  Future<void> logout();
 
   Future<UserCredential> getLoggedUser();
 }
