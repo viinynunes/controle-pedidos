@@ -1,4 +1,6 @@
+import 'package:controle_pedidos/src/core/home/android_home_page.dart';
 import 'package:controle_pedidos/src/global_locator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,16 @@ void main() async {
 
   runApp(
     MaterialApp(
-      home: const AndroidCompanyRegistrationPage(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (_, snap) {
+          if (snap.hasData) {
+            return const AndroidHomePage();
+          } else {
+            return const AndroidCompanyRegistrationPage();
+          }
+        },
+      ),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
