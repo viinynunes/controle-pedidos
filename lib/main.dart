@@ -40,7 +40,7 @@ void main() async {
           if (snap.hasData) {
             return const AndroidHomePage();
           } else {
-            return const AndroidCompanyRegistrationPage();
+            return const AndroidLoginPage();
           }
         },
       ),
