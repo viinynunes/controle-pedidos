@@ -33,7 +33,6 @@ class LoginUsecaseImpl implements ILoginUsecase {
 
   @override
   Future<Either<LoginError, void>> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+    return _repository.logout();
   }
 }
