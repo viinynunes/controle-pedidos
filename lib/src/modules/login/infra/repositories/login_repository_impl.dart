@@ -23,6 +23,8 @@ class LoginRepositoryImpl implements ILoginRepository {
       final result = await _datasource.login(user);
 
       return Right(result);
+    } on LoginError catch (e) {
+      return Left(e);
     } catch (e) {
       return Left(LoginError(e.toString()));
     }
