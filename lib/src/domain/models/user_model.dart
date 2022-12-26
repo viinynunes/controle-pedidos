@@ -15,7 +15,7 @@ class UserModel extends User {
             fullName: map['fullName'],
             email: map['email'],
             phone: map['phone'],
-            company: map['company']);
+            company: CompanyModel.fromMap(map: map['company']));
 
   UserModel.fromUser({required User user})
       : super(
