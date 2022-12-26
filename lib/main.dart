@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'src/modules/company/presenter/pages/android/android_login_page.dart';
+import 'src/modules/login/presenter/pages/android/android_login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,8 +57,7 @@ void main() async {
         primarySwatch: Colors.orange,
         textTheme: const TextTheme(
             labelSmall: TextStyle(color: Colors.green),
-            titleLarge: TextStyle(fontWeight: FontWeight.w600)
-        ),
+            titleLarge: TextStyle(fontWeight: FontWeight.w600)),
       ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
