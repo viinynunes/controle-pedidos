@@ -34,4 +34,13 @@ class LoginUsecaseImpl implements ILoginUsecase {
   Future<Either<LoginError, void>> logout() {
     return _repository.logout();
   }
+
+  @override
+  Future<Either<LoginError, void>> sendPasswordResetEmail(String email) async {
+    if (!isEmail(email)) {
+      return Left(LoginError('Invalid Email'));
+    }
+
+    return _repository.sendPasswordResetEmail(email);
+  }
 }

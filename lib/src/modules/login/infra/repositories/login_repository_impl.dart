@@ -41,4 +41,15 @@ class LoginRepositoryImpl implements ILoginRepository {
       return Left(LoginError(e.toString()));
     }
   }
+
+  @override
+  Future<Either<LoginError, void>> sendPasswordResetEmail(String email) async {
+    try {
+      return Right(await _datasource.sendPasswordResetEmail(email));
+    } on LoginError catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(LoginError(e.toString()));
+    }
+  }
 }

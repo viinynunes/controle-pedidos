@@ -25,6 +25,24 @@ mixin _$LoginController on _LoginControllerBase, Store {
     });
   }
 
+  late final _$passwordResetEmailSentSucceffulyAtom = Atom(
+      name: '_LoginControllerBase.passwordResetEmailSentSucceffuly',
+      context: context);
+
+  @override
+  bool get passwordResetEmailSentSucceffuly {
+    _$passwordResetEmailSentSucceffulyAtom.reportRead();
+    return super.passwordResetEmailSentSucceffuly;
+  }
+
+  @override
+  set passwordResetEmailSentSucceffuly(bool value) {
+    _$passwordResetEmailSentSucceffulyAtom
+        .reportWrite(value, super.passwordResetEmailSentSucceffuly, () {
+      super.passwordResetEmailSentSucceffuly = value;
+    });
+  }
+
   late final _$errorAtom =
       Atom(name: '_LoginControllerBase.error', context: context);
 
@@ -39,6 +57,16 @@ mixin _$LoginController on _LoginControllerBase, Store {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });
+  }
+
+  late final _$sendPasswordResetEmailAsyncAction = AsyncAction(
+      '_LoginControllerBase.sendPasswordResetEmail',
+      context: context);
+
+  @override
+  Future<String> sendPasswordResetEmail() {
+    return _$sendPasswordResetEmailAsyncAction
+        .run(() => super.sendPasswordResetEmail());
   }
 
   late final _$_LoginControllerBaseActionController =
@@ -59,6 +87,7 @@ mixin _$LoginController on _LoginControllerBase, Store {
   String toString() {
     return '''
 loading: ${loading},
+passwordResetEmailSentSucceffuly: ${passwordResetEmailSentSucceffuly},
 error: ${error}
     ''';
   }

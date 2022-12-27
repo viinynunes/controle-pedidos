@@ -10,4 +10,6 @@ abstract class ILoginRepository {
   Future<Either<LoginError, void>> logout();
 
   Future<Either<LoginError, User>> getLoggedUser();
+
+  Future<Either<LoginError, void>> sendPasswordResetEmail(String email);
 }

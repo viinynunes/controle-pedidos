@@ -55,4 +55,19 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
     }
   }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email') {
+        throw LoginError('Email inválido');
+      }
+
+      if (e.code == 'invalid-email') {
+        throw LoginError('Email não encontrado');
+      }
+    }
+  }
 }

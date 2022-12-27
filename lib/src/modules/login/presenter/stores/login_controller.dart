@@ -19,6 +19,8 @@ abstract class _LoginControllerBase with Store {
   @observable
   bool loading = false;
   @observable
+  bool passwordResetEmailSentSucceffuly = false;
+  @observable
   Option<LoginError> error = none();
 
   late GlobalKey<FormState> formKey;
@@ -60,5 +62,23 @@ abstract class _LoginControllerBase with Store {
   initUserModel() {
     return UserCredential(
         email: emailController.text.trim(), password: passwordController.text);
+  }
+
+  @action
+  Future<String> sendPasswordResetEmail() async {
+    final result =
+        await loginUsecase.sendPasswordResetEmail(emailController.text.trim());
+
+    result.fold((l) {
+      passwordResetEmailSentSucceffuly = false;
+    }, (r) async {
+      passwordResetEmailSentSucceffuly = true;
+
+      await Future.delayed(const Duration(seconds: 10));
+
+      passwordResetEmailSentSucceffuly = false;
+    });
+
+    return '';
   }
 }

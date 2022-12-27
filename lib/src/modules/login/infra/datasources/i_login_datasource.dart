@@ -7,4 +7,6 @@ abstract class ILoginDatasource {
   Future<void> logout();
 
   Future<UserModel> getLoggedUser();
+
+  Future<void> sendPasswordResetEmail(String email);
 }
