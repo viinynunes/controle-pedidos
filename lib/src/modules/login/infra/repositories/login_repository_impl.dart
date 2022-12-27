@@ -12,9 +12,12 @@ class LoginRepositoryImpl implements ILoginRepository {
   LoginRepositoryImpl(this._datasource);
 
   @override
-  Future<Either<LoginError, User>> getLoggedUser() {
-    // TODO: implement getLoggedUser
-    throw UnimplementedError();
+  Future<Either<LoginError, User>> getLoggedUser() async {
+    try {
+      return Right(await _datasource.getLoggedUser());
+    } catch (e) {
+      return Left(LoginError(e.toString()));
+    }
   }
 
   @override

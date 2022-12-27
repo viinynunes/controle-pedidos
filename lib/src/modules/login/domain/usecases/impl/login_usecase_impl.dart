@@ -14,8 +14,7 @@ class LoginUsecaseImpl implements ILoginUsecase {
 
   @override
   Future<Either<LoginError, User>> getLoggedUser() {
-    // TODO: implement getLoggedUser
-    throw UnimplementedError();
+    return _repository.getLoggedUser();
   }
 
   @override

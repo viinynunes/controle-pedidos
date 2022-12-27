@@ -6,5 +6,5 @@ abstract class ILoginDatasource {
 
   Future<void> logout();
 
-  Future<UserCredential> getLoggedUser();
+  Future<UserModel> getLoggedUser();
 }

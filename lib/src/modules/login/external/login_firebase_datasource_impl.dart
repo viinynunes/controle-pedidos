@@ -11,9 +11,14 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   final userCollection = FirebaseHelper.userCollection;
 
   @override
-  Future<credential.UserCredential> getLoggedUser() {
-    // TODO: implement getLoggedUser
-    throw UnimplementedError();
+  Future<UserModel> getLoggedUser() async {
+    final user = firebaseAuth.currentUser;
+
+    if (user != null) {
+      return await _getUserData(user.uid);
+    }
+
+    throw FirebaseException(plugin: 'Get Logged User Error');
   }
 
   @override
@@ -22,13 +27,7 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       final result = await firebaseAuth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
 
-      final userSnap = await userCollection
-          .doc(result.user!.uid)
-          .get()
-          .catchError((e) => throw FirebaseException(
-              plugin: 'GET USER ERROR', message: e.toString()));
-
-      return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
+      await _getUserData(result.user?.uid ?? '');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw LoginError('Email não encontrado');
@@ -45,5 +44,15 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   @override
   Future<void> logout() async {
     return await firebaseAuth.signOut();
+  }
+
+  _getUserData(String id) async {
+    final userSnap = await userCollection.doc(id).get().catchError((e) =>
+        throw FirebaseException(
+            plugin: 'GET USER ERROR', message: e.toString()));
+
+    if (userSnap.exists) {
+      return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
+    }
   }
 }
