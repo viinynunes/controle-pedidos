@@ -57,19 +57,17 @@ mixin _$SignupController on _SignupControllerBase, Store {
     });
   }
 
-  late final _$_SignupControllerBaseActionController =
-      ActionController(name: '_SignupControllerBase', context: context);
+  late final _$signupAsyncAction =
+      AsyncAction('_SignupControllerBase.signup', context: context);
 
   @override
-  dynamic initState() {
-    final _$actionInfo = _$_SignupControllerBaseActionController.startAction(
-        name: '_SignupControllerBase.initState');
-    try {
-      return super.initState();
-    } finally {
-      _$_SignupControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future signup({required VoidCallback onSignupSucceffuly}) {
+    return _$signupAsyncAction
+        .run(() => super.signup(onSignupSucceffuly: onSignupSucceffuly));
   }
+
+  late final _$_SignupControllerBaseActionController =
+      ActionController(name: '_SignupControllerBase', context: context);
 
   @override
   dynamic toggleShowCompanyFields() {
@@ -77,17 +75,6 @@ mixin _$SignupController on _SignupControllerBase, Store {
         name: '_SignupControllerBase.toggleShowCompanyFields');
     try {
       return super.toggleShowCompanyFields();
-    } finally {
-      _$_SignupControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic signup() {
-    final _$actionInfo = _$_SignupControllerBaseActionController.startAction(
-        name: '_SignupControllerBase.signup');
-    try {
-      return super.signup();
     } finally {
       _$_SignupControllerBaseActionController.endAction(_$actionInfo);
     }

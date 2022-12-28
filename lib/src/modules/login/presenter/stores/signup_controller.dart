@@ -1,3 +1,5 @@
+import 'package:controle_pedidos/src/domain/models/company_model.dart';
+import 'package:controle_pedidos/src/domain/models/user_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
@@ -22,7 +24,7 @@ abstract class _SignupControllerBase with Store {
   @observable
   Option<LoginError> error = none();
 
-  late GlobalKey<FormState> formKey;
+  final formKey = GlobalKey<FormState>();
   final companyNameController = TextEditingController();
   final emailController = TextEditingController();
   final fullNameController = TextEditingController();
@@ -31,21 +33,38 @@ abstract class _SignupControllerBase with Store {
   final phoneController = TextEditingController();
 
   @action
-  initState() {
-    formKey = GlobalKey<FormState>();
-  }
-
-  @action
   toggleShowCompanyFields() {
     showCompanyFields = !showCompanyFields;
   }
 
   @action
-  signup() {
-    if (isFormKeyValidated()) {}
+  signup({required VoidCallback onSignupSucceffuly}) async {
+    if (isFormKeyValidated()) {
+      loading = true;
+
+      final result = await usecase.createUserWithEmailAndPassword(
+          initUserModel(), passwordController.text);
+
+      result.fold((l) => error = optionOf(l), (r) => onSignupSucceffuly());
+
+      loading = false;
+    }
   }
 
-  isFormKeyValidated(){
+  initUserModel() {
+    final user = UserModel(
+        id: '0',
+        fullName: fullNameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        company: CompanyModel(
+            id: '0',
+            name: companyNameController.text.trim(),
+            registrationDate: DateTime.now()));
+    return user;
+  }
+
+  isFormKeyValidated() {
     return formKey.currentState!.validate();
   }
 

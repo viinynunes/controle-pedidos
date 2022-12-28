@@ -43,4 +43,26 @@ class LoginUsecaseImpl implements ILoginUsecase {
 
     return _repository.sendPasswordResetEmail(email);
   }
+
+  @override
+  Future<Either<LoginError, User>> createUserWithEmailAndPassword(
+      User user, String password) async {
+    if (!isEmail(user.email)) {
+      return Left(LoginError('Invalid Email'));
+    }
+
+    if (password.isEmpty || password.length < 6) {
+      return Left(LoginError('Invalid Password'));
+    }
+
+    if (user.company.id.isEmpty) {
+      return Left(LoginError('Invalid Company ID'));
+    }
+
+    if (user.company.name.isEmpty) {
+      return Left(LoginError('Invalid Company Name'));
+    }
+
+    return _repository.createUserWithEmailAndPassword(user, password);
+  }
 }

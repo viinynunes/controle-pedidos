@@ -12,4 +12,7 @@ abstract class ILoginRepository {
   Future<Either<LoginError, User>> getLoggedUser();
 
   Future<Either<LoginError, void>> sendPasswordResetEmail(String email);
+
+  Future<Either<LoginError, User>> createUserWithEmailAndPassword(
+      User user, String password);
 }

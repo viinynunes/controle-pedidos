@@ -1,9 +1,11 @@
+import 'package:controle_pedidos/src/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../stores/login_controller.dart';
+import 'android_signup_page.dart';
 import 'dialogs/android_forget_password_dialog.dart';
 
 class AndroidLoginPage extends StatefulWidget {
@@ -78,15 +80,12 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                         ),
                       ),
                       Container(
-                        height: size.height * 0.5,
                         width: size.width * 0.9,
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.25),
                             borderRadius: BorderRadius.circular(20)),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Column(
                               children: [
@@ -99,7 +98,6 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                                   textInputAction: TextInputAction.next,
                                   validator: controller.emailValidator,
                                 ),
-                                SizedBox(height: size.height * 0.05),
                                 TextFormField(
                                   controller: controller.passwordController,
                                   decoration: const InputDecoration(
@@ -156,7 +154,12 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.of(context).pushReplacement(
+                                              CustomPageRoute(
+                                                  child:
+                                                      const AndroidSignupPage()));
+                                        },
                                         child: const Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Text(

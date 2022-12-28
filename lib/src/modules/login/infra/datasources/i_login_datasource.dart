@@ -9,4 +9,7 @@ abstract class ILoginDatasource {
   Future<UserModel> getLoggedUser();
 
   Future<void> sendPasswordResetEmail(String email);
+
+  Future<UserModel> createUserWithEmailAndPassword(
+      UserModel user, String password);
 }

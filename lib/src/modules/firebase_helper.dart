@@ -5,6 +5,7 @@ class FirebaseHelper {
   static final firebaseDb = FirebaseFirestore.instance;
   static final firebaseAuth = FirebaseAuth.instance;
   static final firebaseCompany = firebaseDb.collection('company').doc('JifXJRp03H9Sgj1pNHzQ');
+  static final companyCollection = firebaseDb.collection('company');
   static final userCollection = firebaseCompany.collection('user');
   static final clientCollection = firebaseCompany.collection('client');
   static final productCollection = firebaseCompany.collection('product');

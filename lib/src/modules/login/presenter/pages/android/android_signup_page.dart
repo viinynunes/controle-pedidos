@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/src/core/helpers/custom_page_route.dart';
-import 'package:controle_pedidos/src/modules/login/presenter/pages/android/widgets/android_user_registration_widget.dart';
+import 'package:controle_pedidos/src/core/home/android_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -7,7 +7,6 @@ import 'package:mobx/mobx.dart';
 
 import '../../stores/signup_controller.dart';
 import 'android_login_page.dart';
-import 'widgets/android_company_registration_widget.dart';
 
 class AndroidSignupPage extends StatefulWidget {
   const AndroidSignupPage({Key? key}) : super(key: key);
@@ -32,8 +31,6 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
         ),
       );
     });
-
-    controller.initState();
   }
 
   @override
@@ -96,8 +93,97 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               controller.showCompanyFields
-                                  ? const AndroidCompanyRegistrationWidget()
-                                  : const AndroidUserRegistrationWidget(),
+                                  ? Column(
+                                      children: [
+                                        TextFormField(
+                                          controller:
+                                              controller.companyNameController,
+                                          decoration: const InputDecoration(
+                                              label: Text('Nome da Empresa'),
+                                              hintText: 'Jeferson Caminhões'),
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          validator:
+                                              controller.companyNameValidator,
+                                        ),
+                                      ],
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: controller
+                                                .toggleShowCompanyFields,
+                                            child:
+                                                const Icon(Icons.arrow_back)),
+                                        TextFormField(
+                                          controller:
+                                              controller.fullNameController,
+                                          decoration: const InputDecoration(
+                                              label: Text('Nome Completo'),
+                                              hintText: 'Jose da Silva'),
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          validator:
+                                              controller.userFullNameValidator,
+                                        ),
+                                        TextFormField(
+                                          controller:
+                                              controller.emailController,
+                                          decoration: const InputDecoration(
+                                              label: Text('Email'),
+                                              hintText: 'jose@hotmail.com'),
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          validator: controller.emailValidator,
+                                        ),
+                                        TextFormField(
+                                          controller:
+                                              controller.phoneController,
+                                          decoration: const InputDecoration(
+                                              label: Text('Telefone'),
+                                              hintText: '()_____-____'),
+                                          keyboardType: TextInputType.phone,
+                                          textInputAction: TextInputAction.next,
+                                        ),
+                                        TextFormField(
+                                          controller:
+                                              controller.passwordController,
+                                          decoration: const InputDecoration(
+                                              label: Text('Senha'),
+                                              hintText: '************'),
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          obscureText: true,
+                                          obscuringCharacter: '*',
+                                          enableSuggestions: false,
+                                          autocorrect: false,
+                                          validator:
+                                              controller.passwordValidator,
+                                        ),
+                                        TextFormField(
+                                          controller: controller
+                                              .confirmPasswordController,
+                                          decoration: const InputDecoration(
+                                              label: Text('Confirme sua Senha'),
+                                              hintText: '************'),
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          obscureText: true,
+                                          obscuringCharacter: '*',
+                                          enableSuggestions: false,
+                                          autocorrect: false,
+                                          validator: controller
+                                              .confirmPasswordValidator,
+                                        ),
+                                      ],
+                                    ),
                               const SizedBox(height: 20),
                               Column(
                                 mainAxisAlignment:
@@ -112,7 +198,12 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                             controller.isFormKeyValidated()) {
                                           controller.toggleShowCompanyFields();
                                         } else {
-                                          controller.signup();
+                                          controller.signup(
+                                              onSignupSucceffuly: () => Navigator
+                                                      .of(context)
+                                                  .pushReplacement(CustomPageRoute(
+                                                      child:
+                                                          const AndroidHomePage())));
                                         }
                                       },
                                       child: Observer(
@@ -131,14 +222,17 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                                             .arrow_right_alt)
                                                       ]
                                                     : [
-                                                        const Text(
-                                                          'Criar Conta',
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
+                                                        controller.loading
+                                                            ? const CircularProgressIndicator()
+                                                            : const Text(
+                                                                'Criar Conta',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
                                                       ],
                                               ),
                                       ),

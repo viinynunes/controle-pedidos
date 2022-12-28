@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../domain/entities/user.dart';
+import '../../../../domain/models/user_model.dart';
 import '../../domain/repositories/i_login_repository.dart';
 import '../../errors/login_error.dart';
 import '../../presenter/models/user_credential.dart';
@@ -46,6 +47,19 @@ class LoginRepositoryImpl implements ILoginRepository {
   Future<Either<LoginError, void>> sendPasswordResetEmail(String email) async {
     try {
       return Right(await _datasource.sendPasswordResetEmail(email));
+    } on LoginError catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(LoginError(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<LoginError, User>> createUserWithEmailAndPassword(
+      User user, String password) async {
+    try {
+      return Right(await _datasource.createUserWithEmailAndPassword(
+          UserModel.fromUser(user: user), password));
     } on LoginError catch (e) {
       return Left(e);
     } catch (e) {
