@@ -59,9 +59,8 @@ class ProviderSelectionAndStockLeftWidget extends StatelessWidget {
                               onPressed: () {
                                 controller.getStockListByProviderBetweenDates();
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.search,
-                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                     ),

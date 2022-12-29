@@ -145,23 +145,26 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                       Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
-                        child: TextFormField(
-                          controller: controller.quantityController,
-                          focusNode: controller.quantityFocus,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                          decoration: const InputDecoration(
-                            labelText: 'QTD',
-                            border: OutlineInputBorder(),
+                        child: Card(
+                          child: TextFormField(
+                            controller: controller.quantityController,
+                            focusNode: controller.quantityFocus,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              labelText: 'QTD',
+                              border: OutlineInputBorder(),
+                            ),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            validator: controller.quantityValidator,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) =>
+                                controller.callEntitySelectionDialog(
+                                    context: context,
+                                    entityList: controller.productList),
+                            onTap: controller.quantityControllerTextSelection,
                           ),
-                          validator: controller.quantityValidator,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (_) =>
-                              controller.callEntitySelectionDialog(
-                                  context: context,
-                                  entityList: controller.productList),
-                          onTap: controller.quantityControllerTextSelection,
                         ),
                       ),
                       SizedBox(width: size.width * 0.03),
@@ -172,42 +175,43 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
                           onTap: () => controller.callEntitySelectionDialog(
                               context: context,
                               entityList: controller.productList),
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).backgroundColor,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Observer(
-                                  builder: (_) => Flexible(
-                                    flex: 4,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        controller.selectedProduct
-                                                ?.toString() ??
-                                            'Selecione um produto',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                        textAlign: TextAlign.center,
+                          child: Card(
+                            child: Container(
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Observer(
+                                    builder: (_) => Flexible(
+                                      flex: 4,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          controller.selectedProduct
+                                                  ?.toString() ??
+                                              'Selecione um produto',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Flexible(
-                                    flex: 1,
-                                    child: RectGetter(
-                                      key: controller.rectKey,
-                                      child: IconButton(
-                                        onPressed: () => controller
-                                            .callAddNoteDialog(context),
-                                        icon: const Icon(Icons.note),
-                                      ),
-                                    )),
-                              ],
+                                  Flexible(
+                                      flex: 1,
+                                      child: RectGetter(
+                                        key: controller.rectKey,
+                                        child: IconButton(
+                                          onPressed: () => controller
+                                              .callAddNoteDialog(context),
+                                          icon: const Icon(Icons.note),
+                                        ),
+                                      )),
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -77,6 +77,19 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                   productList: widget.productList,
                   clientList: widget.clientList),
               icon: const Icon(Icons.refresh)),
+          controller.sortByDate
+              ? IconButton(
+                  onPressed: controller.changeSortMethod,
+                  icon: const Icon(
+                    Icons.sort_by_alpha,
+                  ),
+                )
+              : IconButton(
+                  onPressed: controller.changeSortMethod,
+                  icon: const Icon(
+                    Icons.calendar_month,
+                  ),
+                ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -123,19 +136,6 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                         onLongPress: controller.resetDateRange,
                         child: Text(controller.dateRangeSelected),
                       ),
-                      controller.sortByDate
-                          ? IconButton(
-                              onPressed: controller.changeSortMethod,
-                              icon: Icon(
-                                Icons.sort_by_alpha,
-                                color: Theme.of(context).indicatorColor,
-                              ))
-                          : IconButton(
-                              onPressed: controller.changeSortMethod,
-                              icon: Icon(
-                                Icons.calendar_month,
-                                color: Theme.of(context).indicatorColor,
-                              )),
                     ],
                   ),
                 ),
