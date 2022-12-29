@@ -11,8 +11,8 @@ import 'modules/provider/provider_locator.dart';
 import 'modules/stock/stock_locator.dart';
 
 Future initGlobalServiceLocator() async {
-  setUpLoginLocator();
   setUpCompanyLocator();
+  setUpLoginLocator();
   setUpWidgetsLocator();
   setUpDrawerLocator();
   setUpClientLocator();

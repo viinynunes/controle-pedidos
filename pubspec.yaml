@@ -59,6 +59,7 @@ dependencies:
   get_it: any
   shimmer: ^2.0.0
   google_fonts: ^3.0.1
+  shared_preferences: any
 
 
 dev_dependencies:

@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/company/infra/datasources/i_company_datasource.dart';
 import 'package:controle_pedidos/src/modules/login/errors/login_error.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -11,6 +12,10 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   final firebaseAuth = FirebaseHelper.firebaseAuth;
   final userCollection = FirebaseHelper.userCollection;
   final companyCollection = FirebaseHelper.companyCollection;
+
+  final ICompanyDatasource companyDatasource;
+
+  LoginFirebaseDatasourceImpl(this.companyDatasource);
 
   @override
   Future<UserModel> getLoggedUser() async {
@@ -29,7 +34,12 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       final result = await firebaseAuth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
 
-      await _getUserData(result.user?.uid ?? '');
+      final loggedUser = await _getUserData(result.user?.uid ?? '');
+
+      await companyDatasource.saveLoggedCompany(CompanyModel.fromCompany(company: loggedUser.company));
+
+      return loggedUser;
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw LoginError('Email não encontrado');
@@ -38,6 +48,8 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       if (e.code == 'wrong-password') {
         throw LoginError('Senha Incorreta');
       }
+    } catch (e){
+      throw Exception(e.toString());
     }
 
     throw FirebaseAuthException(code: '', message: 'Erro');
@@ -48,7 +60,7 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
     return await firebaseAuth.signOut();
   }
 
-  _getUserData(String id) async {
+  Future<UserModel> _getUserData(String id) async {
     final userSnap = await userCollection.doc(id).get().catchError((e) =>
         throw FirebaseException(
             plugin: 'GET USER ERROR', message: e.toString()));
@@ -56,6 +68,9 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
     if (userSnap.exists) {
       return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
     }
+
+    throw FirebaseException(
+        plugin: 'GET USER ERROR', message: 'Error');
   }
 
   @override

@@ -13,7 +13,7 @@ final loginLocator = GetIt.instance;
 
 void setUpLoginLocator() {
   loginLocator.registerLazySingleton<ILoginDatasource>(
-      () => LoginFirebaseDatasourceImpl());
+      () => LoginFirebaseDatasourceImpl(loginLocator()));
   loginLocator.registerLazySingleton<ILoginRepository>(
       () => LoginRepositoryImpl(loginLocator()));
   loginLocator.registerLazySingleton<ILoginUsecase>(

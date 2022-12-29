@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:controle_pedidos/src/core/helpers.dart';
 
 import '../entities/company.dart';
@@ -8,12 +10,13 @@ class CompanyModel extends Company {
       required super.name,
       required super.registrationDate});
 
-  CompanyModel.fromMap({required Map<String, dynamic> map})
-      : super(
-            id: map['id'],
-            name: map['name'],
-            registrationDate:
-                Helpers.convertTimestampToDateTime(map['registrationDate']));
+  static CompanyModel fromMap({required Map<String, dynamic> map}) {
+    return CompanyModel(
+        id: map['id'],
+        name: map['name'],
+        registrationDate:
+            Helpers.convertTimestampToDateTime(map['registrationDate']));
+  }
 
   CompanyModel.fromCompany({required Company company})
       : super(
@@ -28,4 +31,15 @@ class CompanyModel extends Company {
       'registrationDate': registrationDate,
     };
   }
+
+  Map<String, dynamic> toResumedMap() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+
+  String toJson() => json.encode(toResumedMap());
+
+  static CompanyModel fromJson(String source) => fromMap(map: json.decode(source));
 }
