@@ -68,30 +68,31 @@ class _AndroidRegistrationsPageState extends State<AndroidRegistrationsPage> {
   }) {
     return InkWell(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).hintColor.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Padding(
+      child: Card(
+        child: Container(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 24.0),
-                    child: Icon(icon),
-                  ),
-                  Text(
-                    text,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ],
-              ),
-            ],
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 24.0),
+                      child: Icon(icon),
+                    ),
+                    Text(
+                      text,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
