@@ -54,7 +54,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
         },
         child: Card(
           color: tileController.selected
-              ? Theme.of(context).backgroundColor.withOpacity(0.5)
+              ? Theme.of(context).indicatorColor
               : Theme.of(context).cardColor,
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -123,6 +123,9 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       onSubmitted: tileController.updateTotalOrderedByKeyboard,
                       keyboardType: const TextInputType.numberWithOptions(),
                       textInputAction: TextInputAction.next,
+                      style: tileController.selected
+                          ? const TextStyle(color: Colors.black)
+                          : Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
                   Flexible(
@@ -191,6 +194,9 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
       child: Text(
         text,
         textAlign: TextAlign.center,
+        style: tileController.selected
+            ? const TextStyle(color: Colors.black)
+            : Theme.of(context).textTheme.bodyMedium,
       ),
     );
   }
