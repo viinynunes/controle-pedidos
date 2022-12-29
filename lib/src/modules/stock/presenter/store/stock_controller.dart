@@ -168,7 +168,7 @@ abstract class _StockControllerBase with Store {
         .map((provider) => DropdownMenuItem(
               child: Text(
                 '${provider.name} - ${provider.location}',
-                style: Theme.of(context).textTheme.titleSmall,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               value: provider,
             ))

@@ -17,7 +17,7 @@ class ProviderDropdownSelectionWidget extends StatelessWidget {
       items: controller.getProviderDropdownItems(context),
       decoration: InputDecoration(
           labelText: 'Fornecedores',
-          labelStyle: Theme.of(context).textTheme.titleSmall),
+          labelStyle: Theme.of(context).textTheme.bodyMedium),
       onChanged: (provider) {
         if (provider != null) {
           controller.setSelectedProvider(provider);
