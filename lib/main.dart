@@ -6,9 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'src/modules/login/presenter/pages/android/android_login_page.dart';
+import 'styles/color_schemes.g.dart';
+import 'styles/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,14 @@ void main() async {
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('google_fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+
+    final imgLicense = await rootBundle
+        .loadString('<a href="https://www.freepik.com/free-vector/'
+            'neon-purple-lights-background-arrow-style_8152351'
+            '.htm#page=4&query=background&position=31&from_view=search&track='
+            'sph">Image by starline</a> on Freepik');
+
+    yield LicenseEntryWithLineBreaks(['freepick'], imgLicense);
   });
 
   runApp(
@@ -47,28 +56,17 @@ void main() async {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
-        fontFamily: GoogleFonts.sacramento().fontFamily,
-        textTheme: const TextTheme(
-            labelSmall: TextStyle(color: Colors.green),
-            titleLarge: TextStyle(fontWeight: FontWeight.w600)),
-        canvasColor: Colors.white,
-        hintColor: Colors.grey,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              elevation: 5),
-        ),
+        colorScheme: lightColorScheme,
+        elevatedButtonTheme: elevatedButtonTheme,
+        fontFamily: fontFamily,
+        textTheme: textTheme,
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
-        brightness: Brightness.dark,
-        fontFamily: GoogleFonts.montserrat().fontFamily,
-        primarySwatch: Colors.orange,
-        textTheme: const TextTheme(
-            labelSmall: TextStyle(color: Colors.green),
-            titleLarge: TextStyle(fontWeight: FontWeight.w600)),
+        colorScheme: darkColorScheme,
+        elevatedButtonTheme: elevatedButtonTheme,
+        fontFamily: fontFamily,
+        textTheme: textTheme,
       ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -79,74 +77,3 @@ void main() async {
     ),
   );
 }
-
-/* void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: "AIzaSyCFGTe4EV1NyD3q65xCggS9Wvs_wxYHJ2I",
-          appId: "1:242675882008:web:9aa50610ad1af3e8f18b6d",
-          messagingSenderId: "242675882008",
-          projectId: "controle-de-pedidos-ca8b2"),
-    );
-  } catch (e) {
-    print(e);
-  }
-
-  runApp(
-    ScopedModel<UserModel>(
-      model: UserModel(),
-      child: ScopedModelDescendant<UserModel>(
-        builder: (context, child, model) {
-          return ScopedModel<StockModel>(
-            model: StockModel(),
-            child: ScopedModel<ClientModel>(
-              model: ClientModel(),
-              child: ScopedModel<OrderModel>(
-                model: OrderModel(),
-                child: ScopedModel<OrderItemModel>(
-                  model: OrderItemModel(),
-                  child: ScopedModel<ProductModel>(
-                    model: ProductModel(),
-                    child: ScopedModel<ProviderModel>(
-                      model: ProviderModel(),
-                      child: ScopedModel<EstablishmentModel>(
-                        model: EstablishmentModel(),
-                        child: MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                          home: model.isLoggedIn()
-                              ? const HomePage()
-                              : const LoginPage(),
-                          theme: ThemeData(
-                            useMaterial3: true,
-                            inputDecorationTheme: const InputDecorationTheme(
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16))),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16)))),
-                          ),
-                          localizationsDelegates: const [
-                            GlobalMaterialLocalizations.delegate,
-                            GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate
-                          ],
-                          supportedLocales: const [Locale('pt')],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    ),
-  );
-}
-*/
