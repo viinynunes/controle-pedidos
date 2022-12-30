@@ -18,6 +18,13 @@ class CompanyModel extends Company {
             Helpers.convertTimestampToDateTime(map['registrationDate']));
   }
 
+  static CompanyModel fromResumedMap({required Map<String, dynamic> map}) {
+    return CompanyModel(
+        id: map['id'],
+        name: map['name'],
+        registrationDate: DateTime.now());
+  }
+
   CompanyModel.fromCompany({required Company company})
       : super(
             id: company.id,
@@ -41,5 +48,5 @@ class CompanyModel extends Company {
 
   String toJson() => json.encode(toResumedMap());
 
-  static CompanyModel fromJson(String source) => fromMap(map: json.decode(source));
+  static CompanyModel fromJson(String source) => fromResumedMap(map: json.decode(source));
 }
