@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/src/core/home/android_home_page.dart';
+import 'package:controle_pedidos/src/domain/models/company_model.dart';
 import 'package:controle_pedidos/src/global_locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'src/modules/login/presenter/pages/android/android_login_page.dart';
 import 'styles/color_schemes.g.dart';
@@ -13,6 +15,15 @@ import 'styles/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await GetStorage.init();
+
+  if (GetStorage().read('company') == null) {
+    GetStorage().write(
+        'company',
+        CompanyModel(id: 'aaa', name: 'aaa', registrationDate: DateTime.now())
+            .toJson());
+  }
 
   try {
     await Firebase.initializeApp(
