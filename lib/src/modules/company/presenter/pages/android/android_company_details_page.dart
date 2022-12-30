@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/src/modules/company/presenter/stores/company_details_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class AndroidCompanyDetailsPage extends StatefulWidget {
@@ -23,7 +24,11 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conta'),
+        title: Observer(
+          builder: (context) {
+            return Text(controller.user?.company.name ?? 'COMPANY');
+          }
+        ),
         actions: [
           IconButton(
             onPressed: () async {
@@ -39,11 +44,8 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 0.05,
-                  color: Colors.red,
-                ),
+              children: const [
+
               ],
             ),
           ),
