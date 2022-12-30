@@ -14,10 +14,12 @@ class CompanyStorageDatasourceImpl implements ICompanyDatasource {
   @override
   void saveLoggedCompany(CompanyModel company) {
     box.write('company', company.toJson());
+    box.write('companyID', company.id);
   }
 
   @override
   void logout() {
     box.remove('company');
+    box.remove('companyID');
   }
 }

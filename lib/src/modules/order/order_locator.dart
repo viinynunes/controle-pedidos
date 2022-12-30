@@ -29,3 +29,7 @@ void setUpOrderLocator() {
   orderLocator.registerFactory<OrderReportController>(
       () => OrderReportController(orderLocator(), orderLocator()));
 }
+
+void unregisterHomeLocator(){
+  orderLocator.unregister(instance: IOrderService);
+}

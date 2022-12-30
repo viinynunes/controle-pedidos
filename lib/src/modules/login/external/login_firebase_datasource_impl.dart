@@ -1,17 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/modules/company/infra/datasources/i_company_datasource.dart';
 import 'package:controle_pedidos/src/modules/login/errors/login_error.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../domain/models/company_model.dart';
 import '../../../domain/models/user_model.dart';
-import '../../firebase_helper.dart';
+import '../../firebase_helper_impl.dart';
 import '../infra/datasources/i_login_datasource.dart';
 import '../presenter/models/user_credential.dart' as credential;
 
 class LoginFirebaseDatasourceImpl implements ILoginDatasource {
-  final firebaseAuth = FirebaseHelper.firebaseAuth;
-  final userCollection = FirebaseHelper.userCollection;
-  final companyCollection = FirebaseHelper.companyCollection;
+  final firebaseAuth = FirebaseHelperImpl.firebaseAuth;
+  final userCollection = FirebaseHelperImpl.userCollection;
+  final companyCollection = FirebaseHelperImpl.companyCollection;
 
   final ICompanyDatasource companyDatasource;
 
@@ -36,10 +37,7 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
 
       final loggedUser = await _getUserData(result.user?.uid ?? '');
 
-      await companyDatasource.saveLoggedCompany(CompanyModel.fromCompany(company: loggedUser.company));
-
       return loggedUser;
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw LoginError('Email não encontrado');
@@ -48,7 +46,7 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       if (e.code == 'wrong-password') {
         throw LoginError('Senha Incorreta');
       }
-    } catch (e){
+    } catch (e) {
       throw Exception(e.toString());
     }
 
@@ -57,6 +55,7 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
 
   @override
   Future<void> logout() async {
+    companyDatasource.logout();
     return await firebaseAuth.signOut();
   }
 
@@ -69,8 +68,7 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
     }
 
-    throw FirebaseException(
-        plugin: 'GET USER ERROR', message: 'Error');
+    throw FirebaseException(plugin: 'GET USER ERROR', message: 'Error');
   }
 
   @override
@@ -134,17 +132,19 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
     user.id = userID;
     user.company.id = companyID;
 
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(userID)
+        .set(user.toMap());
+
     await companyCollection
         .doc(companyID)
         .collection('user')
         .doc(userID)
         .set(user.toMap());
 
-    final userSnap = await companyCollection
-        .doc(companyID)
-        .collection('user')
-        .doc(userID)
-        .get();
+    final userSnap =
+        await FirebaseFirestore.instance.collection('user').doc(userID).get();
 
     return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
   }

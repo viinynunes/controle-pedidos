@@ -1,27 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/client_model.dart';
 import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_datasource.dart';
-import 'package:controle_pedidos/src/modules/firebase_helper.dart';
+
+import '../../firebase_helper_impl.dart';
 
 class ClientFirebaseDatasourceImpl implements IClientDatasource {
-  final _clientCollection = FirebaseHelper.clientCollection;
+  final firebase = FirebaseHelperImpl();
 
   @override
   Future<ClientModel> createClient(ClientModel client) async {
-    final result = await _clientCollection.add({}).catchError(
+    final result = await firebase.getClientCollection().add(client.toMap()).catchError(
         (e) => throw FirebaseException(plugin: 'CREATE CLIENT ERROR'));
 
     client.id = result.id;
 
-    return await updateClient(client);
+    await updateClient(client);
+
+    return client;
   }
 
   @override
   Future<ClientModel> updateClient(ClientModel client) async {
-    final clientRef = _clientCollection.doc(client.id);
-    FirebaseHelper.firebaseDb.runTransaction((transaction) async {
-      final orderSnap = await FirebaseHelper.firebaseCompany
-          .collection('order')
+    final clientRef = firebase.getClientCollection().doc(client.id);
+    FirebaseHelperImpl.firebaseDb.runTransaction((transaction) async {
+      final orderSnap = await firebase
+          .getOrderCollection()
           .where('client.id', isEqualTo: client.id)
           .get();
 
@@ -39,7 +42,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   @override
   Future<bool> disableClient(ClientModel client) async {
     client.enabled = false;
-    _clientCollection.doc(client.id).update(client.toMap()).catchError(
+    firebase.getClientCollection().doc(client.id).update(client.toMap()).catchError(
         (e) => throw FirebaseException(plugin: 'DISABLE CLIENT ERROR'));
 
     return true;
@@ -47,7 +50,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
   @override
   Future<ClientModel> getClientByID(String id) async {
-    final snap = await _clientCollection.doc(id).get().catchError(
+    final snap = await firebase.getClientCollection().doc(id).get().catchError(
         (e) => throw FirebaseException(plugin: 'GET CLIENT BY ID ERROR'));
 
     return ClientModel.fromMap(snap.data()!);
@@ -57,7 +60,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   Future<List<ClientModel>> getClientListByEnabled() async {
     List<ClientModel> clientList = [];
 
-    final snap = await _clientCollection
+    final snap = await firebase.getClientCollection()
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false)
         .get()
@@ -75,7 +78,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   Future<List<ClientModel>> getClientList() async {
     List<ClientModel> clientList = [];
 
-    final snap = await _clientCollection
+    final snap = await firebase.getClientCollection()
         .orderBy('name', descending: false)
         .get()
         .catchError((e) =>
@@ -92,7 +95,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
     final snap = await FirebaseFirestore.instance.collection('clients').get();
 
     for (var p in snap.docs) {
-      _clientCollection.doc(p.id).set(ClientModel.fromMap(p.data()).toMap());
+      firebase.getClientCollection().doc(p.id).set(ClientModel.fromMap(p.data()).toMap());
     }
   }
 }

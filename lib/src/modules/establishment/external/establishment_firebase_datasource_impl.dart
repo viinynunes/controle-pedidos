@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
-import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../domain/models/provider_model.dart';
+import '../../firebase_helper_impl.dart';
 import '../../provider/infra/datasources/i_provider_datasource.dart';
 
 class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
-  final _establishmentCollection = FirebaseHelper.establishmentCollection;
+    final firebase = FirebaseHelperImpl();
 
   @override
   Future<EstablishmentModel> createEstablishment(
       EstablishmentModel establishment) async {
-    final rec = await _establishmentCollection
+    final rec = await firebase.getEstablishmentCollection()
         .add(establishment.toMap())
         .catchError((e) =>
             throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'));
@@ -26,17 +26,17 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   @override
   Future<EstablishmentModel> updateEstablishment(
       EstablishmentModel establishment) async {
-    _establishmentCollection
+    firebase.getEstablishmentCollection()
         .doc(establishment.id)
         .update(establishment.toMap())
         .catchError(
           (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
         );
 
-    FirebaseHelper.firebaseDb.runTransaction((transaction) async {
-      final establishmentRef = _establishmentCollection.doc(establishment.id);
+    FirebaseHelperImpl.firebaseDb.runTransaction((transaction) async {
+      final establishmentRef = firebase.getEstablishmentCollection().doc(establishment.id);
 
-      final providerSnap = await FirebaseHelper.providerCollection
+      final providerSnap = await firebase.getProviderCollection()
           .where('establishment.id', isEqualTo: establishment.id)
           .get();
 
@@ -57,7 +57,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
 
   @override
   Future<EstablishmentModel> getEstablishmentById(String id) async {
-    final snap = await _establishmentCollection.doc(id).get().catchError((e) =>
+    final snap = await firebase.getEstablishmentCollection().doc(id).get().catchError((e) =>
         throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR'));
 
     if (snap.data() == null) {
@@ -72,7 +72,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
     List<EstablishmentModel> estabList = [];
 
     final snap =
-        await _establishmentCollection.orderBy('name', descending: false).get();
+        await firebase.getEstablishmentCollection().orderBy('name', descending: false).get();
 
     for (var i in snap.docs) {
       estabList.add(EstablishmentModel.fromMap(map: i.data()));
@@ -85,7 +85,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   Future<List<EstablishmentModel>> getEstablishmentListByEnabled() async {
     List<EstablishmentModel> estabList = [];
 
-    final snap = await _establishmentCollection
+    final snap = await firebase.getEstablishmentCollection()
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false)
         .get();
@@ -102,7 +102,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
         await FirebaseFirestore.instance.collection('establishments').get();
 
     for (var p in snap.docs) {
-      _establishmentCollection
+      firebase.getEstablishmentCollection()
           .doc(p.id)
           .set(EstablishmentModel.fromMap(map: p.data()).toMap());
     }

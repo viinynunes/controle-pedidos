@@ -1,36 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/provider_model.dart';
-import 'package:controle_pedidos/src/modules/firebase_helper.dart';
 import 'package:controle_pedidos/src/modules/product/infra/datasources/i_product_datasource.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../domain/models/product_model.dart';
+import '../../firebase_helper_impl.dart';
 
 class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
-  final _providerCollection = FirebaseHelper.providerCollection;
+  final firebase = FirebaseHelperImpl();
 
   @override
   Future<ProviderModel> createProvider(ProviderModel provider) async {
-    final result = await _providerCollection.add({}).catchError(
+    final result = await firebase.getProviderCollection().add(provider.toMap()).catchError(
         (e) => throw FirebaseException(plugin: 'CREATE PROVIDER ERROR'));
 
     provider.id = result.id;
-    return await updateProvider(provider);
+    await updateProvider(provider);
+    return provider;
   }
 
   @override
   Future<ProviderModel> updateProvider(ProviderModel provider) async {
-    await _providerCollection
+    await firebase
+        .getProviderCollection()
         .doc(provider.id)
         .update(provider.toMap())
         .catchError(
             (e) => throw FirebaseException(plugin: 'UPDATE PROVIDER ERROR'));
 
-    FirebaseHelper.firebaseDb.runTransaction((transaction) async {
-      final providerRef = _providerCollection.doc(provider.id);
+    FirebaseHelperImpl.firebaseDb.runTransaction((transaction) async {
+      final providerRef = firebase.getProviderCollection().doc(provider.id);
 
-      final productSnap = await FirebaseHelper.productCollection
+      final productSnap = await firebase
+          .getProductCollection()
           .where('provider.id', isEqualTo: provider.id)
           .get();
 
@@ -49,8 +52,12 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
 
   @override
   Future<ProviderModel> getProviderById(String id) async {
-    final snap = await _providerCollection.doc(id).get().catchError(
-        (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
+    final snap = await firebase
+        .getProviderCollection()
+        .doc(id)
+        .get()
+        .catchError(
+            (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
 
     if (snap.data() == null) {
       throw FirebaseException(plugin: 'PROVIDER NOT FOUND');
@@ -63,7 +70,8 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   Future<List<ProviderModel>> getProviderListByEnabled() async {
     List<ProviderModel> providerList = [];
 
-    final snap = await _providerCollection
+    final snap = await firebase
+        .getProviderCollection()
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false)
         .get()
@@ -81,7 +89,8 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   Future<List<ProviderModel>> getProviderList() async {
     List<ProviderModel> providerList = [];
 
-    final snap = await _providerCollection
+    final snap = await firebase
+        .getProviderCollection()
         .orderBy('name', descending: false)
         .get()
         .catchError(
@@ -98,7 +107,8 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
     final snap = await FirebaseFirestore.instance.collection('providers').get();
 
     for (var p in snap.docs) {
-      _providerCollection
+      firebase
+          .getProviderCollection()
           .doc(p.id)
           .set(ProviderModel.fromMap(map: p.data()).toMap());
     }

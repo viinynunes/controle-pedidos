@@ -6,5 +6,5 @@ final homeLocator = GetIt.instance;
 
 void setUpHomeLocator() {
   homeLocator
-      .registerSingleton(HomePageController(homeLocator(), homeLocator()));
+      .registerSingleton(HomePageController(homeLocator(), homeLocator(), homeLocator(), homeLocator()));
 }

@@ -4,9 +4,12 @@ import 'package:mobx/mobx.dart';
 
 import '../../../domain/entities/client.dart';
 import '../../../domain/entities/product.dart';
+import '../../../domain/models/company_model.dart';
 import '../../../modules/client/domain/usecases/i_client_usecase.dart';
 import '../../../modules/client/errors/client_errors.dart';
+import '../../../modules/company/infra/datasources/i_company_datasource.dart';
 import '../../../modules/company/presenter/pages/android/android_company_details_page.dart';
+import '../../../modules/login/domain/usecases/i_login_usecase.dart';
 import '../../../modules/order/presenter/pages/android/android_order_list_page.dart';
 import '../../../modules/product/domain/usecases/i_product_usecase.dart';
 import '../../../modules/product/errors/product_error.dart';
@@ -21,8 +24,11 @@ class HomePageController = _HomePageControllerBase with _$HomePageController;
 abstract class _HomePageControllerBase with Store {
   final IProductUsecase productUsecase;
   final IClientUsecase clientUsecase;
+  final ILoginUsecase loginUsecase;
+  final ICompanyDatasource companyDatasource;
 
-  _HomePageControllerBase(this.productUsecase, this.clientUsecase);
+  _HomePageControllerBase(this.productUsecase, this.clientUsecase,
+      this.loginUsecase, this.companyDatasource);
 
   @observable
   bool loading = false;
@@ -41,6 +47,14 @@ abstract class _HomePageControllerBase with Store {
   @action
   initState() async {
     loading = true;
+
+    final result = await loginUsecase.getLoggedUser();
+
+    result.fold((l) => null, (r) {
+      companyDatasource
+          .saveLoggedCompany(CompanyModel.fromCompany(company: r.company));
+    });
+
     pageController = PageController();
     if (productList.isEmpty || clientList.isEmpty) {
       await getClientListByEnabled();
