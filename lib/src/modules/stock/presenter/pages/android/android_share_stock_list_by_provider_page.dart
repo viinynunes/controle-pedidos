@@ -48,7 +48,7 @@ class AndroidShareStockListByProviderPage extends StatelessWidget {
                   Text(
                     providerName,
                     style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold),
+                        fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(
                     height: 10,
@@ -70,6 +70,7 @@ class AndroidShareStockListByProviderPage extends StatelessWidget {
                                 child: Text(
                                   item.totalOrdered.toString(),
                                   textAlign: TextAlign.start,
+                                  style: const TextStyle(color: Colors.black),
                                 ),
                               ),
                               Padding(
@@ -77,10 +78,12 @@ class AndroidShareStockListByProviderPage extends StatelessWidget {
                                 child: Text(
                                   item.product.category,
                                   textAlign: TextAlign.start,
+                                  style: const TextStyle(color: Colors.black),
                                 ),
                               ),
                               Text(
                                 item.product.name,
+                                style: const TextStyle(color: Colors.black),
                               ),
                             ],
                           ),

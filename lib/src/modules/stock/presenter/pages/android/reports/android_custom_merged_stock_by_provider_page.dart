@@ -85,6 +85,7 @@ class _AndroidCustomMergedStockByProviderPageState
                           child: AndroidCustomProviderDataTable(
                             providerModel: provider,
                             withMergeOptions: true,
+                            blackFontColor: true,
                           ),
                         );
                       },

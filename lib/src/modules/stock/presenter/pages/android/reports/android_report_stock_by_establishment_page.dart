@@ -115,6 +115,7 @@ class _AndroidReportStockByEstablishmentPageState
                                                   providerModel: e,
                                                   columnSpacing: 20,
                                                   withMergeOptions: false,
+                                                  blackFontColor: Theme.of(context).brightness == Brightness.light,
                                                 ),
                                               ],
                                             ),

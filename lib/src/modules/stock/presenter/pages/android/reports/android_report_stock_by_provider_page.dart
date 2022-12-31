@@ -152,7 +152,7 @@ class _AndroidReportStockByProviderPageState
                                                 .selectedProviderModelList
                                                 .contains(providerModel)
                                             ? Theme.of(context)
-                                                .backgroundColor
+                                                .indicatorColor
                                                 .withOpacity(0.7)
                                             : Theme.of(context).cardColor,
                                         child: Row(
@@ -193,6 +193,7 @@ class _AndroidReportStockByProviderPageState
                                   providerModel: providerModel,
                                   columnSpacing: 20,
                                   withMergeOptions: false,
+                                  blackFontColor: Theme.of(context).brightness == Brightness.light,
                                 ),
                               ),
                             )

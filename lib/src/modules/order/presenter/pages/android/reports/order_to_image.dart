@@ -52,7 +52,7 @@ class _OrderToImageState extends State<OrderToImage> {
                         child: Text(
                           widget.order.client.name,
                           style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                       ),
                       const SizedBox(
@@ -62,6 +62,7 @@ class _OrderToImageState extends State<OrderToImage> {
                         alignment: Alignment.centerRight,
                         child: Text(
                           dateFormat.format(widget.order.registrationDate),
+                          style: const TextStyle(color: Colors.black),
                         ),
                       ),
                       const SizedBox(
@@ -86,6 +87,7 @@ class _OrderToImageState extends State<OrderToImage> {
                                     child: Text(
                                       item.quantity.toString(),
                                       textAlign: TextAlign.start,
+                                      style: const TextStyle(color: Colors.black),
                                     ),
                                   ),
                                   Padding(
@@ -94,16 +96,19 @@ class _OrderToImageState extends State<OrderToImage> {
                                     child: Text(
                                       item.product.category,
                                       textAlign: TextAlign.start,
+                                      style: const TextStyle(color: Colors.black),
                                     ),
                                   ),
                                   Row(
                                     children: [
                                       Text(
                                         item.product.name,
+                                        style: const TextStyle(color: Colors.black),
                                       ),
                                       item.note.isNotEmpty
                                           ? Text(
                                               ' - ${item.note}',
+                                        style: const TextStyle(color: Colors.black),
                                             )
                                           : Container(),
                                     ],
