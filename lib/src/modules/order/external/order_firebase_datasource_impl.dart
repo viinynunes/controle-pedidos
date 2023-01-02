@@ -111,7 +111,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   Future<bool> disableOrder(OrderModel order) async {
     order.enabled = false;
     await firebase.getOrderCollection().doc(order.id).update(order.toMap()).catchError(
-        (e) => throw FirebaseException(plugin: 'DISABLE ORDER ERROR'));
+        (e) => throw FirebaseException(plugin: 'DISABLE ORDER ERROR', message: e.toString()));
 
     for (var item in order.orderItemList) {
       await _stockDatasource.decreaseStock(
