@@ -6,6 +6,7 @@ import 'package:mobx/mobx.dart';
 import '../../../../../../core/helpers.dart';
 import '../../../../../../core/helpers/custom_page_route.dart';
 import '../../../../../../core/widgets/add_remove_quantity_widget.dart';
+import '../../../../../../domain/entities/product.dart';
 import '../../../../../../domain/entities/stock.dart';
 import '../../../../../product/presenter/pages/android/pages/android_product_registration_page.dart';
 import '../../../store/stock_controller.dart';
@@ -80,13 +81,9 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                             direction: AxisDirection.left),
                       )
                           .then((result) async {
-                        if (result != null) {
-                          stockController.loading = true;
-                          await Future.delayed(
-                              const Duration(milliseconds: 1500));
+                        if (result != null && result is Product) {
                           await stockController
-                              .getStockListByProviderBetweenDates();
-                          stockController.loading = false;
+                              .reloadProviderListAndStockList(result.provider);
                         }
                       });
                     },

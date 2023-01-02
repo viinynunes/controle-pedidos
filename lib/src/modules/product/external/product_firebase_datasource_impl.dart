@@ -9,12 +9,15 @@ import '../../firebase_helper_impl.dart';
 import '../infra/datasources/i_product_datasource.dart';
 
 class ProductFirebaseDatasourceImpl implements IProductDatasource {
-    final firebase = FirebaseHelperImpl();
+  final firebase = FirebaseHelperImpl();
 
   @override
   Future<ProductModel> createProduct(ProductModel product) async {
-    final result = await firebase.getProductCollection().add(product.toMap()).catchError(
-        (e) => throw FirebaseException(plugin: 'CREATE PRODUCT ERROR'));
+    final result = await firebase
+        .getProductCollection()
+        .add(product.toMap())
+        .catchError(
+            (e) => throw FirebaseException(plugin: 'CREATE PRODUCT ERROR'));
 
     product.id = result.id;
 
@@ -24,24 +27,25 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
-    FirebaseHelperImpl.firebaseDb.runTransaction((transaction) async {
-      final productRef = firebase.getProductCollection().doc(product.id);
-
-      final stockSnap = await firebase.getStockCollection()
-          .where('product.id', isEqualTo: product.id)
-          .get();
-
-      for (var s in stockSnap.docs) {
-        transaction.update(s.reference, {'product': product.toMap()});
-      }
-
-      await _updateOrder(product);
-
-      transaction.update(productRef, product.toMap());
-    }).catchError((e) => throw FirebaseException(
-        plugin: 'UPDATE PRODUCT ERROR', message: e.toString()));
+    await firebase.getProductCollection().doc(product.id).update(product.toMap());
+    await _updateStock(product);
+    await _updateOrder(product);
 
     return product;
+  }
+
+  _updateStock(ProductModel product) async {
+    final stockSnap = await firebase
+        .getStockCollection()
+        .where('product.id', isEqualTo: product.id)
+        .get();
+
+    for (var s in stockSnap.docs) {
+      firebase
+          .getStockCollection()
+          .doc(s.id)
+          .update({'product': product.toMap()});
+    }
   }
 
   _updateOrder(ProductModel product) async {
@@ -60,7 +64,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
                 _getOrderItemList(orderSnap.data() as Map<String, dynamic>));
 
         var orderItemFromProduct = order.orderItemList
-            .singleWhere((element) => element.product == product);
+            .singleWhere((element) => element.product.id == product.id);
 
         orderItemFromProduct.product = product;
 
@@ -84,7 +88,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       String providerId) async {
     List<ProductModel> productList = [];
 
-    final snap = await firebase.getProductCollection()
+    final snap = await firebase
+        .getProductCollection()
         .where('enabled', isEqualTo: true)
         .where('provider.id', isEqualTo: providerId)
         .orderBy('name', descending: false)
@@ -101,8 +106,10 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   Future<List<ProductModel>> getProductList() async {
     List<ProductModel> productList = [];
 
-    final snap =
-        await firebase.getProductCollection().orderBy('name', descending: false).get();
+    final snap = await firebase
+        .getProductCollection()
+        .orderBy('name', descending: false)
+        .get();
 
     for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
@@ -115,7 +122,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   Future<List<ProductModel>> getProductListByEnabled() async {
     List<ProductModel> productList = [];
 
-    final snap = await firebase.getProductCollection()
+    final snap = await firebase
+        .getProductCollection()
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false)
         .get();
@@ -132,7 +140,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       getProductListByEnabledAndStockDefaultTrue() async {
     List<ProductModel> productList = [];
 
-    final snapshot = await firebase.getProductCollection()
+    final snapshot = await firebase
+        .getProductCollection()
         .where('enabled', isEqualTo: true)
         .where('stockDefault', isEqualTo: true)
         .get();
@@ -148,7 +157,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     final snap = await FirebaseFirestore.instance.collection('products').get();
 
     for (var p in snap.docs) {
-      firebase.getProductCollection()
+      firebase
+          .getProductCollection()
           .doc(p.id)
           .set(ProductModel.fromMap(map: p.data()).toMap());
     }
