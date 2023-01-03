@@ -74,6 +74,7 @@ abstract class _OrderRegistrationControllerBase with Store {
       newOrderData = OrderModel.fromOrder(order: order);
       selectedClient = newOrderData?.client;
       orderItemList = ObservableList.of(newOrderData?.orderItemList ?? []);
+      listIndex = order.orderItemList.length;
       sortOrderItemList();
     }
 
