@@ -2,10 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/modules/product/infra/datasources/i_product_datasource.dart';
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
+import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../domain/models/product_model.dart';
 import '../../firebase_helper_impl.dart';
+
+const cacheDocument = '00_cacheUpdated';
 
 class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   final firebase = FirebaseHelperImpl();
@@ -17,6 +20,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
 
     provider.id = result.id;
     await updateProvider(provider);
+    await _updateCacheDoc(DateTime.now());
     return provider;
   }
 
@@ -47,7 +51,16 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
       transaction.update(providerRef, provider.toMap());
     });
 
+    await _updateCacheDoc(DateTime.now());
+
     return provider;
+  }
+
+  _updateCacheDoc(DateTime updatedAt) async {
+    await firebase
+        .getProviderCollection()
+        .doc(cacheDocument)
+        .update({'updatedAt': updatedAt});
   }
 
   @override
@@ -70,13 +83,20 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   Future<List<ProviderModel>> getProviderListByEnabled() async {
     List<ProviderModel> providerList = [];
 
-    final snap = await firebase
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getProviderCollection().doc(cacheDocument);
+
+    final query = firebase
         .getProviderCollection()
         .where('enabled', isEqualTo: true)
-        .orderBy('name', descending: false)
-        .get()
-        .catchError(
-            (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
+        .orderBy('name', descending: false);
+
+    final snap = await FirestoreCache.getDocuments(
+        query: query,
+        cacheDocRef: cacheDocRef,
+        firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+        plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
 
     for (var i in snap.docs) {
       providerList.add(ProviderModel.fromMap(map: i.data()));
@@ -89,12 +109,19 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   Future<List<ProviderModel>> getProviderList() async {
     List<ProviderModel> providerList = [];
 
-    final snap = await firebase
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getProviderCollection().doc(cacheDocument);
+
+    final query = firebase
         .getProviderCollection()
-        .orderBy('name', descending: false)
-        .get()
-        .catchError(
-            (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
+        .orderBy('name', descending: false);
+
+    final snap = await FirestoreCache.getDocuments(
+        query: query,
+        cacheDocRef: cacheDocRef,
+        firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+        plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
 
     for (var i in snap.docs) {
       providerList.add(ProviderModel.fromMap(map: i.data()));

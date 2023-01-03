@@ -6,8 +6,11 @@ import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/firebase_helper_impl.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_stock_datasource.dart';
+import 'package:firestore_cache/firestore_cache.dart';
 
 import '../../../domain/entities/order_item.dart';
+
+const cacheDocument = '00_cacheUpdated';
 
 class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   final firebase = FirebaseHelperImpl();
@@ -21,8 +24,10 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     order.registrationDate = DateTime(order.registrationDate.year,
         order.registrationDate.month, order.registrationDate.day);
 
-    final snap = await firebase.getOrderCollection().add(order.toMap()).catchError((e) =>
-        throw FirebaseException(
+    final snap = await firebase
+        .getOrderCollection()
+        .add(order.toMap())
+        .catchError((e) => throw FirebaseException(
             plugin: 'CREATE ORDER ERROR', message: e.toString()));
 
     order.id = snap.id;
@@ -34,6 +39,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     }
 
     await firebase.getOrderCollection().doc(order.id).update(order.toMap());
+    await _updateCacheDoc(DateTime.now());
 
     return order;
   }
@@ -60,7 +66,8 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
     orderList.add(orderID);
 
-    await firebase.getProductOnOrderCollection()
+    await firebase
+        .getProductOnOrderCollection()
         .doc(item.productId)
         .set({'orderList': orderList}).catchError((e) =>
             throw FirebaseException(
@@ -72,16 +79,22 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   Future<OrderModel> updateOrder(OrderModel order) async {
     List<OrderItemModel> beforeUpdateOrderItemsList = [];
 
-    final outdatedOrder = await firebase.getOrderCollection().doc(order.id).get().catchError(
-        (e) => throw FirebaseException(
+    final outdatedOrder = await firebase
+        .getOrderCollection()
+        .doc(order.id)
+        .get()
+        .catchError((e) => throw FirebaseException(
             plugin: 'GET OUTDATED ORDER ERROR', message: e.toString()));
 
     for (var item in outdatedOrder.get('orderItemList')) {
       beforeUpdateOrderItemsList.add(OrderItemModel.fromMap(map: item));
     }
 
-    await firebase.getOrderCollection().doc(order.id).update(order.toMap()).catchError((e) =>
-        throw FirebaseException(
+    await firebase
+        .getOrderCollection()
+        .doc(order.id)
+        .update(order.toMap())
+        .catchError((e) => throw FirebaseException(
             plugin: 'UPDATE ORDER ERROR', message: e.toString()));
 
     for (var item in order.orderItemList) {
@@ -104,14 +117,26 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
           true);
     }
 
+    await _updateCacheDoc(DateTime.now());
     return order;
+  }
+
+  _updateCacheDoc(DateTime updatedAt) async {
+    await firebase
+        .getProductCollection()
+        .doc(cacheDocument)
+        .update({'updatedAt': updatedAt});
   }
 
   @override
   Future<bool> disableOrder(OrderModel order) async {
     order.enabled = false;
-    await firebase.getOrderCollection().doc(order.id).update(order.toMap()).catchError(
-        (e) => throw FirebaseException(plugin: 'DISABLE ORDER ERROR', message: e.toString()));
+    await firebase
+        .getOrderCollection()
+        .doc(order.id)
+        .update(order.toMap())
+        .catchError((e) => throw FirebaseException(
+            plugin: 'DISABLE ORDER ERROR', message: e.toString()));
 
     for (var item in order.orderItemList) {
       await _stockDatasource.decreaseStock(
@@ -124,6 +149,8 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
           true);
     }
 
+    await _updateCacheDoc(DateTime.now());
+
     return true;
   }
 
@@ -131,11 +158,21 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   Future<List<OrderModel>> getOrderListByEnabled() async {
     List<OrderModel> orderList = [];
 
-    final snap = await firebase.getOrderCollection()
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getOrderCollection().doc(cacheDocument);
+
+    final query = firebase
+        .getOrderCollection()
         .where('enabled', isEqualTo: true)
-        .orderBy('registrationDate', descending: false)
-        .get()
-        .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
+        .where('enabled', isEqualTo: true)
+        .orderBy('registrationDate', descending: false);
+
+    final snap = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
       orderList.add(
@@ -153,12 +190,21 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
     date = DateTime(date.year, date.month, date.day);
 
-    final snap = await firebase.getOrderCollection()
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getOrderCollection().doc(cacheDocument);
+
+    final query = firebase
+        .getOrderCollection()
         .where('enabled', isEqualTo: true)
         .where('registrationDate', isEqualTo: date)
-        .orderBy('registrationHour', descending: false)
-        .get()
-        .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
+        .orderBy('registrationHour', descending: false);
+
+    final snap = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
       orderList.add(
@@ -178,13 +224,22 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
-    final snap = await firebase.getOrderCollection()
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getOrderCollection().doc(cacheDocument);
+
+    final query = firebase
+        .getOrderCollection()
         .where('enabled', isEqualTo: true)
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .orderBy('registrationDate', descending: false)
-        .get()
-        .catchError((e) => throw FirebaseException(plugin: 'GET ORDER ERROR'));
+        .orderBy('registrationDate', descending: false);
+
+    final snap = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
       orderList.add(
@@ -204,11 +259,19 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
-    final snap = await firebase.getOrderCollection()
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getOrderCollection()().doc(cacheDocument);
+
+    final query = firebase
+        .getOrderCollection()
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .where('enabled', isEqualTo: true)
-        .get()
+        .where('enabled', isEqualTo: true);
+
+    final snap = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
         .catchError((e) => throw FirebaseException(
             plugin: 'GET ORDER ERROR', message: e.toString()));
 

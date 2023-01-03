@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/product_model.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
+import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../domain/models/order_item_model.dart';
 import '../../../domain/models/order_model.dart';
 import '../../firebase_helper_impl.dart';
 import '../infra/datasources/i_product_datasource.dart';
+
+const cacheDocument = '00_cacheUpdated';
 
 class ProductFirebaseDatasourceImpl implements IProductDatasource {
   final firebase = FirebaseHelperImpl();
@@ -27,11 +30,22 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
-    await firebase.getProductCollection().doc(product.id).update(product.toMap());
+    await firebase
+        .getProductCollection()
+        .doc(product.id)
+        .update(product.toMap());
     await _updateStock(product);
     await _updateOrder(product);
+    await _updateCacheDoc(DateTime.now());
 
     return product;
+  }
+
+  _updateCacheDoc(DateTime updatedAt) async {
+    await firebase
+        .getProductCollection()
+        .doc(cacheDocument)
+        .update({'updatedAt': updatedAt});
   }
 
   _updateStock(ProductModel product) async {
@@ -88,12 +102,21 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       String providerId) async {
     List<ProductModel> productList = [];
 
-    final snap = await firebase
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
+
+    final query = firebase
         .getProductCollection()
         .where('enabled', isEqualTo: true)
         .where('provider.id', isEqualTo: providerId)
-        .orderBy('name', descending: false)
-        .get();
+        .orderBy('name', descending: false);
+
+    final snap = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET PRODUCT ERROR', message: e.toString()));
 
     for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
@@ -106,12 +129,20 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   Future<List<ProductModel>> getProductList() async {
     List<ProductModel> productList = [];
 
-    final snap = await firebase
-        .getProductCollection()
-        .orderBy('name', descending: false)
-        .get();
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
 
-    for (var p in snap.docs) {
+    final query =
+        firebase.getProductCollection().orderBy('name', descending: false);
+
+    final snapCached = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET PRODUCT ERROR', message: e.toString()));
+
+    for (var p in snapCached.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
     }
 
@@ -122,11 +153,20 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   Future<List<ProductModel>> getProductListByEnabled() async {
     List<ProductModel> productList = [];
 
-    final snap = await firebase
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
+
+    final query = firebase
         .getProductCollection()
         .where('enabled', isEqualTo: true)
-        .orderBy('name', descending: false)
-        .get();
+        .orderBy('name', descending: false);
+
+    final snap = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET PRODUCT ERROR', message: e.toString()));
 
     for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
@@ -140,13 +180,22 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       getProductListByEnabledAndStockDefaultTrue() async {
     List<ProductModel> productList = [];
 
-    final snapshot = await firebase
+    const cacheField = 'updatedAt';
+    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
+
+    final query = firebase
         .getProductCollection()
         .where('enabled', isEqualTo: true)
-        .where('stockDefault', isEqualTo: true)
-        .get();
+        .orderBy('stockDefault', isEqualTo: true);
 
-    for (var p in snapshot.docs) {
+    final snap = await FirestoreCache.getDocuments(
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET PRODUCT ERROR', message: e.toString()));
+
+    for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
     }
 
