@@ -36,20 +36,20 @@ class _AndroidReportStockByProviderPageState
               : const Text('Customize o Relatório'),
         ),
         centerTitle: true,
-        leading: Observer(
-          builder: (_) => controller.selectedProviderModelList.isNotEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      controller.selectedProviderModelList.length.toString(),
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
-                )
-              : Container(),
-        ),
         actions: [
+          Observer(
+            builder: (_) => controller.selectedProviderModelList.isNotEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        controller.selectedProviderModelList.length.toString(),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                  )
+                : Container(),
+          ),
           Observer(
               builder: (_) => controller.selecting
                   ? Row(
@@ -193,7 +193,9 @@ class _AndroidReportStockByProviderPageState
                                   providerModel: providerModel,
                                   columnSpacing: 20,
                                   withMergeOptions: false,
-                                  blackFontColor: Theme.of(context).brightness == Brightness.light,
+                                  blackFontColor:
+                                      Theme.of(context).brightness ==
+                                          Brightness.light,
                                 ),
                               ),
                             )
