@@ -43,7 +43,7 @@ class _AndroidReportStockByEstablishmentPageState
                 children: [
                   Center(
                     child: ElevatedButton(
-                      onLongPress: controller.resetDateRange,
+                      onLongPress: controller.setDateRange,
                       onPressed: () async {
                         final result = await showDateRangePicker(
                             context: context,
@@ -54,7 +54,8 @@ class _AndroidReportStockByEstablishmentPageState
                             lastDate: DateTime(2200));
 
                         if (result != null) {
-                          controller.setDateRange(result.start, result.end);
+                          controller.setDateRange(
+                              iniDate: result.start, endDate: result.end);
                         }
                       },
                       child: Observer(
@@ -77,7 +78,7 @@ class _AndroidReportStockByEstablishmentPageState
                       child: ExpansionPanelList.radio(
                         expandedHeaderPadding: const EdgeInsets.all(8),
                         elevation: 0,
-                        children: controller.establishmentModelSet
+                        children: controller.establishmentList
                             .map(
                               (establishmentModel) => ExpansionPanelRadio(
                                 value: UniqueKey(),
@@ -115,7 +116,10 @@ class _AndroidReportStockByEstablishmentPageState
                                                   providerModel: e,
                                                   columnSpacing: 20,
                                                   withMergeOptions: false,
-                                                  blackFontColor: Theme.of(context).brightness == Brightness.light,
+                                                  blackFontColor:
+                                                      Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.light,
                                                 ),
                                               ],
                                             ),
@@ -149,8 +153,7 @@ class _AndroidReportStockByEstablishmentPageState
                   builder: (_) => ModelBottomMenuExportOptions(
                     onGenerateXLSX: () {
                       StockByEstablishmentToXLSX().exportReportByEstablishment(
-                          establishmentList:
-                              controller.establishmentModelSet.toList());
+                          establishmentList: controller.establishmentList);
                     },
                   ),
                 );

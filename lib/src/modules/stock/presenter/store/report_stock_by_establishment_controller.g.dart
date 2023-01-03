@@ -78,6 +78,23 @@ mixin _$ReportStockByEstablishmentController
     });
   }
 
+  late final _$providerListAtom = Atom(
+      name: '_ReportStockByEstablishmentControllerBase.providerList',
+      context: context);
+
+  @override
+  List<ReportProviderModel> get providerList {
+    _$providerListAtom.reportRead();
+    return super.providerList;
+  }
+
+  @override
+  set providerList(List<ReportProviderModel> value) {
+    _$providerListAtom.reportWrite(value, super.providerList, () {
+      super.providerList = value;
+    });
+  }
+
   late final _$errorAtom = Atom(
       name: '_ReportStockByEstablishmentControllerBase.error',
       context: context);
@@ -109,18 +126,9 @@ mixin _$ReportStockByEstablishmentController
       context: context);
 
   @override
-  Future setDateRange(DateTime iniDate, DateTime endDate) {
+  Future setDateRange({DateTime? iniDate, DateTime? endDate}) {
     return _$setDateRangeAsyncAction
-        .run(() => super.setDateRange(iniDate, endDate));
-  }
-
-  late final _$resetDateRangeAsyncAction = AsyncAction(
-      '_ReportStockByEstablishmentControllerBase.resetDateRange',
-      context: context);
-
-  @override
-  Future resetDateRange() {
-    return _$resetDateRangeAsyncAction.run(() => super.resetDateRange());
+        .run(() => super.setDateRange(iniDate: iniDate, endDate: endDate));
   }
 
   late final _$getStockListBetweenDatesAsyncAction = AsyncAction(
@@ -158,6 +166,7 @@ dateRange: ${dateRange},
 loading: ${loading},
 selecting: ${selecting},
 establishmentList: ${establishmentList},
+providerList: ${providerList},
 error: ${error}
     ''';
   }

@@ -36,5 +36,5 @@ import 'presenter/store/report_stock_by_establishment_controller.dart';
     stockLocator.registerFactory<ReportStockByProviderController>(
             () => ReportStockByProviderController(stockLocator(), stockLocator()));
     stockLocator.registerFactory<ReportStockByEstablishmentController>(
-      () => ReportStockByEstablishmentController(stockLocator()));
+      () => ReportStockByEstablishmentController(stockLocator(), stockLocator()));
 }

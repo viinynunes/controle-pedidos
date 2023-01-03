@@ -1,4 +1,5 @@
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
+import 'package:controle_pedidos/src/modules/stock/services/i_stock_service.dart';
 import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
@@ -16,8 +17,9 @@ class ReportStockByEstablishmentController = _ReportStockByEstablishmentControll
 
 abstract class _ReportStockByEstablishmentControllerBase with Store {
   final IStockUsecase usecase;
+  final IStockService service;
 
-  _ReportStockByEstablishmentControllerBase(this.usecase);
+  _ReportStockByEstablishmentControllerBase(this.usecase, this.service);
 
   @observable
   String dateRange = '';
@@ -26,11 +28,11 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
   @observable
   bool selecting = false;
   Set<Establishment> establishmentSet = {};
-  Set<ReportEstablishmentModel> establishmentModelSet = {};
-  Set<Provider> providerSet = {};
-  List<ReportProviderModel> providerList = [];
   @observable
   List<ReportEstablishmentModel> establishmentList = ObservableList.of([]);
+  Set<Provider> providerSet = {};
+  @observable
+  List<ReportProviderModel> providerList = [];
   @observable
   Option<StockError> error = none();
 
@@ -39,22 +41,13 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
 
   @action
   initState() async {
-    await resetDateRange();
+    await setDateRange();
   }
 
   @action
-  setDateRange(DateTime iniDate, DateTime endDate) async {
-    this.iniDate = iniDate;
-    this.endDate = endDate;
-
-    _setDateRangeString();
-    await getStockListBetweenDates();
-  }
-
-  @action
-  resetDateRange() async {
-    iniDate = DateTime.now();
-    endDate = DateTime.now();
+  setDateRange({DateTime? iniDate, DateTime? endDate}) async {
+    this.iniDate = iniDate ?? DateTime.now();
+    this.endDate = endDate ?? DateTime.now();
 
     _setDateRangeString();
     await getStockListBetweenDates();
@@ -69,10 +62,16 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
   getStockListBetweenDates() async {
     loading = true;
 
+    providerList.clear();
+    establishmentList.clear();
+    establishmentSet.clear();
+    providerSet.clear();
+
     final result = await usecase.getStockListBetweenDates(
         iniDate: iniDate, endDate: endDate);
 
     result.fold((l) => error = optionOf(l), (stockList) {
+      service.sortStockListByProviderAndProductName(stockList);
       for (var s in stockList) {
         providerSet.add(s.product.provider);
       }
@@ -87,12 +86,15 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
       }
 
       for (var p in providerList) {
-        establishmentModelSet.add(ReportEstablishmentModel(
-            establishment: p.provider.establishment,
+        establishmentSet.add(p.provider.establishment);
+      }
+
+      for (var e in establishmentSet) {
+        establishmentList.add(ReportEstablishmentModel(
+            establishment: e,
             selected: false,
             providerList: providerList
-                .where((element) =>
-                    element.provider.establishment == p.provider.establishment)
+                .where((element) => element.provider.establishment.id == e.id)
                 .toList()));
       }
     });
