@@ -54,6 +54,7 @@ class _AndroidProductListPageState extends State<AndroidProductListPage> {
                       controller.searchText = text;
                       controller.filterProductListByText();
                     },
+                    keyboardType: TextInputType.url,
                   )
                 : const Text('Produtos')),
         centerTitle: true,

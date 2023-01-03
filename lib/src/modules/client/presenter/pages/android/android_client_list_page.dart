@@ -43,8 +43,9 @@ class _AndroidClientListPageState extends State<AndroidClientListPage> {
       appBar: AppBar(
         title: Observer(
             builder: (_) => controller.searching
-                ? TextField(
+                ? TextFormField(
                     focusNode: controller.searchFocus,
+                    keyboardType: TextInputType.emailAddress,
                     decoration:
                         const InputDecoration(hintText: 'Pesquisar Cliente'),
                     style: Theme.of(context).textTheme.bodyMedium,

@@ -40,7 +40,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       style: Theme.of(context).textTheme.bodyMedium,
       validator: widget.validator,
       textInputAction: TextInputAction.next,
-      keyboardType: widget.textInputType,
+      keyboardType: widget.textInputType ?? TextInputType.url,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmitted,
     );

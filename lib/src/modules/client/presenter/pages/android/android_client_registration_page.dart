@@ -86,6 +86,7 @@ class _AndroidClientRegistrationPageState
                     controller: controller.emailController,
                     label: 'Email',
                     validator: controller.emailValidator,
+                    textInputType: TextInputType.emailAddress,
                   ),
                   const SizedBox(
                     height: 20,
