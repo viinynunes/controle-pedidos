@@ -74,9 +74,11 @@ abstract class _EstablishmentControllerBase with Store {
       ),
     );
 
-    if (result != null && result is Establishment) {
-      estabList.add(result);
-      filteredEstabList.add(result);
+    if (result != null) {
+      loading = true;
+      await Future.delayed(const Duration(seconds: 1));
+
+      await getEstablishmentList();
     }
 
     initState();
