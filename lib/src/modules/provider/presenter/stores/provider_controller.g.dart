@@ -106,6 +106,14 @@ mixin _$ProviderController on _ProviderControllerBase, Store {
     });
   }
 
+  late final _$initStateAsyncAction =
+      AsyncAction('_ProviderControllerBase.initState', context: context);
+
+  @override
+  Future initState() {
+    return _$initStateAsyncAction.run(() => super.initState());
+  }
+
   late final _$getProviderListAsyncAction =
       AsyncAction('_ProviderControllerBase.getProviderList', context: context);
 
@@ -129,17 +137,6 @@ mixin _$ProviderController on _ProviderControllerBase, Store {
 
   late final _$_ProviderControllerBaseActionController =
       ActionController(name: '_ProviderControllerBase', context: context);
-
-  @override
-  dynamic initState() {
-    final _$actionInfo = _$_ProviderControllerBaseActionController.startAction(
-        name: '_ProviderControllerBase.initState');
-    try {
-      return super.initState();
-    } finally {
-      _$_ProviderControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   dynamic filterProviderListByText() {
