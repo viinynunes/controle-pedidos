@@ -32,8 +32,8 @@ abstract class _ProviderControllerBase with Store {
   final searchFocus = FocusNode();
 
   @action
-  initState() {
-    getProviderList();
+  initState() async {
+    await getProviderList();
   }
 
   @action
@@ -69,10 +69,14 @@ abstract class _ProviderControllerBase with Store {
     required BuildContext context,
     required IProviderRegistrationPage registrationPage,
   }) async {
-    await Navigator.of(context).push(MaterialPageRoute(
+    loading = true;
+    final result = await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => registrationPage,
     ));
 
-    initState();
+    if (result != null) {
+      await Future.delayed(const Duration(seconds: 1));
+      await getProviderList();
+    }
   }
 }
