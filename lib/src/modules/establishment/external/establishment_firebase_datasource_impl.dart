@@ -11,12 +11,13 @@ import '../../provider/infra/datasources/i_provider_datasource.dart';
 const cacheDocument = '00_cacheUpdated';
 
 class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
-    final firebase = FirebaseHelperImpl();
+  final firebase = FirebaseHelperImpl();
 
   @override
   Future<EstablishmentModel> createEstablishment(
       EstablishmentModel establishment) async {
-    final rec = await firebase.getEstablishmentCollection()
+    final rec = await firebase
+        .getEstablishmentCollection()
         .add(establishment.toMap())
         .catchError((e) =>
             throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'));
@@ -31,17 +32,16 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   @override
   Future<EstablishmentModel> updateEstablishment(
       EstablishmentModel establishment) async {
-    firebase.getEstablishmentCollection()
-        .doc(establishment.id)
-        .update(establishment.toMap())
-        .catchError(
-          (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
-        );
-
     FirebaseHelperImpl.firebaseDb.runTransaction((transaction) async {
-      final establishmentRef = firebase.getEstablishmentCollection().doc(establishment.id);
+      final establishmentRef =
+          firebase.getEstablishmentCollection().doc(establishment.id);
 
-      final providerSnap = await firebase.getProviderCollection()
+      final cacheRef = firebase.getEstablishmentCollection().doc(cacheDocument);
+      transaction.update(establishmentRef, establishment.toMap());
+      transaction.update(cacheRef, {'updatedAt': DateTime.now()});
+
+      final providerSnap = await firebase
+          .getProviderCollection()
           .where('establishment.id', isEqualTo: establishment.id)
           .get();
 
@@ -51,28 +51,28 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
 
         GetIt.I.get<IProviderDatasource>().updateProvider(provider);
       }
-
-      transaction.update(establishmentRef, establishment.toMap());
     }).catchError(
       (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
     );
 
-    await _updateCacheDoc(DateTime.now());
-
     return establishment;
   }
 
-    _updateCacheDoc(DateTime updatedAt) async {
-      await firebase
-          .getProductCollection()
-          .doc(cacheDocument)
-          .update({'updatedAt': updatedAt});
-    }
+  _updateCacheDoc(DateTime updatedAt) async {
+    await firebase
+        .getEstablishmentCollection()
+        .doc(cacheDocument)
+        .update({'updatedAt': updatedAt});
+  }
 
   @override
   Future<EstablishmentModel> getEstablishmentById(String id) async {
-    final snap = await firebase.getEstablishmentCollection().doc(id).get().catchError((e) =>
-        throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR'));
+    final snap = await firebase
+        .getEstablishmentCollection()
+        .doc(id)
+        .get()
+        .catchError((e) =>
+            throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR'));
 
     if (snap.data() == null) {
       throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR');
@@ -86,18 +86,19 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
     List<EstablishmentModel> estabList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getEstablishmentCollection().doc(cacheDocument);
+    final cacheDocRef =
+        firebase.getEstablishmentCollection().doc(cacheDocument);
 
     final query = firebase
         .getEstablishmentCollection()
         .orderBy('name', descending: false);
 
     final snap = await FirestoreCache.getDocuments(
-        query: query,
-        cacheDocRef: cacheDocRef,
-        firestoreCacheField: cacheField)
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
         .catchError((e) => throw FirebaseException(
-        plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
+            plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
 
     for (var i in snap.docs) {
       estabList.add(EstablishmentModel.fromMap(map: i.data()));
@@ -111,7 +112,8 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
     List<EstablishmentModel> estabList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getEstablishmentCollection().doc(cacheDocument);
+    final cacheDocRef =
+        firebase.getEstablishmentCollection().doc(cacheDocument);
 
     final query = firebase
         .getEstablishmentCollection()
@@ -119,11 +121,11 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
         .orderBy('name', descending: false);
 
     final snap = await FirestoreCache.getDocuments(
-        query: query,
-        cacheDocRef: cacheDocRef,
-        firestoreCacheField: cacheField)
+            query: query,
+            cacheDocRef: cacheDocRef,
+            firestoreCacheField: cacheField)
         .catchError((e) => throw FirebaseException(
-        plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
+            plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
 
     for (var i in snap.docs) {
       estabList.add(EstablishmentModel.fromMap(map: i.data()));
@@ -137,7 +139,8 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
         await FirebaseFirestore.instance.collection('establishments').get();
 
     for (var p in snap.docs) {
-      firebase.getEstablishmentCollection()
+      firebase
+          .getEstablishmentCollection()
           .doc(p.id)
           .set(EstablishmentModel.fromMap(map: p.data()).toMap());
     }
