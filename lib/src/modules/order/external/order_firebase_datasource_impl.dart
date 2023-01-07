@@ -259,19 +259,12 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
-    const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getOrderCollection()().doc(cacheDocument);
-
-    final query = firebase
+    final snap = await firebase
         .getOrderCollection()
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .where('enabled', isEqualTo: true);
-
-    final snap = await FirestoreCache.getDocuments(
-            query: query,
-            cacheDocRef: cacheDocRef,
-            firestoreCacheField: cacheField)
+        .where('enabled', isEqualTo: true)
+        .get()
         .catchError((e) => throw FirebaseException(
             plugin: 'GET ORDER ERROR', message: e.toString()));
 
