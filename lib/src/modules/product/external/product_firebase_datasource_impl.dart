@@ -186,7 +186,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     final query = firebase
         .getProductCollection()
         .where('enabled', isEqualTo: true)
-        .orderBy('stockDefault', isEqualTo: true);
+        .where('stockDefault', isEqualTo: true);
 
     final snap = await FirestoreCache.getDocuments(
             query: query,
