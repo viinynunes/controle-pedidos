@@ -37,141 +37,147 @@ class _ShowOrdersByStockDialogState extends State<ShowOrdersByStockDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        widget.stock.product.name,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
-      content: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.4,
-        child: SingleChildScrollView(
-          child: Column(
+      title: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              widget.stock.product.name,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          Row(
             children: [
-              Text(
-                'Selecione as datas para buscar os pedidos pelo item selecionado',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Observer(builder: (context) {
-                      return ElevatedButton(
-                        onLongPress: dialogController.resetIniDate,
-                        onPressed: () async {
-                          await showDatePicker(
-                                  context: context,
-                                  initialDate: dialogController.iniDate,
-                                  firstDate: DateTime(2020),
-                                  lastDate: DateTime(2200))
-                              .then((value) {
-                            if (value != null) {
-                              dialogController.setIniDate(value);
-                              dialogController.getOrderListByStock();
-                            }
-                          });
-                        },
-                        child: Text(
-                          dateFormat.format(dialogController.iniDate),
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Observer(builder: (context) {
-                      return ElevatedButton(
-                        onLongPress: dialogController.resetEndDate,
-                        onPressed: () async {
-                          await showDatePicker(
-                                  context: context,
-                                  initialDate: dialogController.endDate,
-                                  firstDate: DateTime(2020),
-                                  lastDate: DateTime(2200))
-                              .then((value) {
-                            if (value != null) {
-                              dialogController.setEndDate(value);
-                              dialogController.getOrderListByStock();
-                            }
-                          });
-                        },
-                        child: Text(
-                          dateFormat.format(dialogController.endDate),
-                        ),
-                      );
-                    }),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: double.maxFinite,
-                width: double.maxFinite,
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
                 child: Observer(
-                  builder: (_) {
-                    if (dialogController.loading) {
-                      return const ShimmerListBuilder(
-                        itemCount: 10,
-                        height: 40,
-                        width: double.maxFinite,
-                      );
-                    }
-
-                    final orderList = dialogController.orderListByStock;
-
-                    return dialogController.orderListByStock.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: orderList.length,
-                            itemBuilder: (_, index) {
-                              final order = orderList[index];
-
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .backgroundColor
-                                          .withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                            flex: 1,
-                                            fit: FlexFit.tight,
-                                            child: Text(
-                                                '${order.orderItemList.single.quantity}   ${order.orderItemList.single.product.category}')),
-                                        Flexible(
-                                          flex: 6,
-                                          fit: FlexFit.tight,
-                                          child: Column(
-                                            children: [
-                                              Text(order.client.name),
-                                              Text(
-                                                dateFormat.format(
-                                                    order.registrationDate),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : const Center(
-                            child: Text('Nenhum pedido encontrado'),
-                          );
+                  builder: (context) {
+                    return ElevatedButton(
+                      onLongPress: dialogController.resetIniDate,
+                      onPressed: () async {
+                        await showDatePicker(
+                                context: context,
+                                initialDate: dialogController.iniDate,
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime(2200))
+                            .then((value) {
+                          if (value != null) {
+                            dialogController.setIniDate(value);
+                            dialogController.getOrderListByStock();
+                          }
+                        });
+                      },
+                      child: Text(
+                        dateFormat.format(dialogController.iniDate),
+                      ),
+                    );
                   },
                 ),
-              )
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Observer(builder: (context) {
+                  return ElevatedButton(
+                    onLongPress: dialogController.resetEndDate,
+                    onPressed: () async {
+                      await showDatePicker(
+                              context: context,
+                              initialDate: dialogController.endDate,
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2200))
+                          .then((value) {
+                        if (value != null) {
+                          dialogController.setEndDate(value);
+                          dialogController.getOrderListByStock();
+                        }
+                      });
+                    },
+                    child: Text(
+                      dateFormat.format(dialogController.endDate),
+                    ),
+                  );
+                }),
+              ),
             ],
           ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(
+              'Selecione as datas para buscar os pedidos pelo item selecionado',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
+              width: double.maxFinite,
+              child: Observer(
+                builder: (_) {
+                  if (dialogController.loading) {
+                    return const ShimmerListBuilder(
+                      itemCount: 10,
+                      height: 40,
+                      width: double.maxFinite,
+                    );
+                  }
+
+                  final orderList = dialogController.orderListByStock;
+
+                  return dialogController.orderListByStock.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: orderList.length,
+                          itemBuilder: (_, index) {
+                            final order = orderList[index];
+
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .backgroundColor
+                                        .withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                          flex: 1,
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                              '${order.orderItemList.single.quantity}   ${order.orderItemList.single.product.category}')),
+                                      Flexible(
+                                        flex: 6,
+                                        fit: FlexFit.tight,
+                                        child: Column(
+                                          children: [
+                                            Text(order.client.name),
+                                            Text(
+                                              dateFormat.format(
+                                                  order.registrationDate),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: Text('Nenhum pedido encontrado'),
+                        );
+                },
+              ),
+            )
+          ],
         ),
       ),
     );
