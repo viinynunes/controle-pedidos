@@ -224,12 +224,11 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
     endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
-    final snap = firebase
+    final snap = await firebase
         .getOrderCollection()
         .where('enabled', isEqualTo: true)
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .orderBy('registrationDate', descending: false)
         .get()
         .catchError((e) => throw FirebaseException(
             plugin: 'GET ORDER ERROR', message: e.toString()));
