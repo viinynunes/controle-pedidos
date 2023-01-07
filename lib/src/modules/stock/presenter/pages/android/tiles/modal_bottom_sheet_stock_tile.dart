@@ -117,9 +117,12 @@ class ModalBottomSheetStockTile extends StatelessWidget {
           _getListItem(
               enabled: true,
               onTap: () async {
+                Navigator.of(context).pop();
                 await showDialog(
                   context: context,
-                  builder: (_) => ShowOrdersByStockDialog(stock: stock),
+                  builder: (_) {
+                    return ShowOrdersByStockDialog(stock: stock);
+                  },
                 );
               },
               icon: Icons.list_rounded,
