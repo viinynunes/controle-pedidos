@@ -1,4 +1,4 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../core/helpers.dart';
 import '../entities/stock.dart';
@@ -7,7 +7,7 @@ import 'product_model.dart';
 class StockModel extends Stock {
   StockModel(
       {required super.id,
-        required super.code,
+      required super.code,
       required super.total,
       required super.totalOrdered,
       required super.registrationDate,
@@ -23,6 +23,16 @@ class StockModel extends Stock {
           product: stock.product,
         );
 
+  StockModel.fromDocumentSnapshot(DocumentSnapshot doc)
+      : super(
+            id: doc.id,
+            code: doc.get('code'),
+            total: doc.get('total'),
+            totalOrdered: doc.get('totalOrdered'),
+            registrationDate:
+                Helpers.convertTimestampToDateTime(doc.get('registrationDate')),
+            product: ProductModel.fromMap(map: doc.get('product')));
+
   StockModel.fromMap(Map<String, dynamic> map)
       : super(
           id: map['id'],
@@ -36,7 +46,6 @@ class StockModel extends Stock {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'code': code,
       'total': total,
       'totalOrdered': totalOrdered,
