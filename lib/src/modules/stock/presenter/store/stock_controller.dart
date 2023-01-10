@@ -262,6 +262,7 @@ abstract class _StockControllerBase with Store {
   createEmptyStock(Product product, bool reloadAfterCreate) async {
     final stock = StockModel(
         id: '0',
+        code: '0',
         registrationDate: DateTime.now(),
         total: 0,
         totalOrdered: 0,
