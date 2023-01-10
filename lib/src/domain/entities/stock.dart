@@ -2,6 +2,7 @@ import 'package:controle_pedidos/src/domain/entities/product.dart';
 
 class Stock {
   String id;
+  String code;
   int total;
   int totalOrdered;
   DateTime registrationDate;
@@ -10,6 +11,7 @@ class Stock {
 
   Stock(
       {required this.id,
+        required this.code,
       required this.total,
       required this.totalOrdered,
       required this.registrationDate,

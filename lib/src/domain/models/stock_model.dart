@@ -7,6 +7,7 @@ import 'product_model.dart';
 class StockModel extends Stock {
   StockModel(
       {required super.id,
+        required super.code,
       required super.total,
       required super.totalOrdered,
       required super.registrationDate,
@@ -15,6 +16,7 @@ class StockModel extends Stock {
   StockModel.fromStock(Stock stock)
       : super(
           id: stock.id,
+          code: stock.code,
           total: stock.total,
           totalOrdered: stock.totalOrdered,
           registrationDate: stock.registrationDate,
@@ -24,6 +26,7 @@ class StockModel extends Stock {
   StockModel.fromMap(Map<String, dynamic> map)
       : super(
           id: map['id'],
+          code: map['code'],
           total: map['total'],
           totalOrdered: map['totalOrdered'],
           registrationDate:
@@ -34,6 +37,7 @@ class StockModel extends Stock {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'code': code,
       'total': total,
       'totalOrdered': totalOrdered,
       'registrationDate': registrationDate,
