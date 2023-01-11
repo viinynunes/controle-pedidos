@@ -251,7 +251,6 @@ abstract class _OrderRegistrationControllerBase with Store {
         id: newOrderData?.id ?? '0',
         registrationDate: newOrderData?.registrationDate ?? DateTime.now(),
         registrationHour: newOrderData?.registrationHour ?? DateTime.now(),
-        orderItemLength: orderItemList.length,
         enabled: true,
         client: selectedClient!,
         orderItemList: orderItemList);

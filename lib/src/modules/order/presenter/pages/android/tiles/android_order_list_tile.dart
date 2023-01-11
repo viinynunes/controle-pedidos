@@ -72,9 +72,9 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
-                          widget.order.orderItemLength > 1
-                              ? '${widget.order.orderItemLength.toString()} Itens'
-                              : '${widget.order.orderItemLength.toString()} Item',
+                          widget.order.orderItemList.length > 1
+                              ? '${widget.order.orderItemList.length.toString()} Itens'
+                              : '${widget.order.orderItemList.length.toString()} Item',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(

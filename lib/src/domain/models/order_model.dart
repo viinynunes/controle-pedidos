@@ -9,7 +9,6 @@ class OrderModel extends Order {
       {required super.id,
       required super.registrationDate,
       required super.registrationHour,
-      required super.orderItemLength,
       required super.enabled,
       required super.client,
       required super.orderItemList});
@@ -19,7 +18,6 @@ class OrderModel extends Order {
             id: order.id,
             registrationDate: order.registrationDate,
             registrationHour: order.registrationHour,
-            orderItemLength: order.orderItemLength,
             enabled: order.enabled,
             client: order.client,
             orderItemList: order.orderItemList);
@@ -32,7 +30,6 @@ class OrderModel extends Order {
               Helpers.convertTimestampToDateTime(map['registrationDate']),
           registrationHour:
               Helpers.convertTimestampToDateTime(map['registrationHour']),
-          orderItemLength: map['orderItemLength'],
           enabled: map['enabled'],
           client: ClientModel.fromMap(map['client']),
         );
@@ -42,7 +39,6 @@ class OrderModel extends Order {
       'id': id,
       'registrationDate': registrationDate,
       'registrationHour': registrationHour,
-      'orderItemLength': orderItemLength,
       'enabled': enabled,
       'client': ClientModel.fromClient(client).toMap(),
       'orderItemList': orderItemList

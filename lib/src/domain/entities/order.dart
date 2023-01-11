@@ -6,7 +6,6 @@ class Order {
   String id;
   DateTime registrationDate;
   DateTime registrationHour;
-  int orderItemLength;
   bool enabled;
   Client client;
 
@@ -16,7 +15,6 @@ class Order {
     required this.id,
     required this.registrationDate,
     required this.registrationHour,
-    required this.orderItemLength,
     required this.enabled,
     required this.client,
     required this.orderItemList,
