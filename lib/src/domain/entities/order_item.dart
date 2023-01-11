@@ -2,7 +2,6 @@ import 'product.dart';
 
 class OrderItem {
   int listIndex;
-  String productId;
   int quantity;
   String note;
 
@@ -10,7 +9,6 @@ class OrderItem {
 
   OrderItem(
       {required this.listIndex,
-      required this.productId,
       required this.quantity,
       required this.product,
       required this.note});

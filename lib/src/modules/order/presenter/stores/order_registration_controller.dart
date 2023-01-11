@@ -211,7 +211,6 @@ abstract class _OrderRegistrationControllerBase with Store {
 
     selectedOrderItem = OrderItemModel(
         listIndex: listIndex,
-        productId: selectedProduct!.id,
         quantity: int.parse(quantityController.text),
         note: noteController.text,
         product: selectedProduct!);
