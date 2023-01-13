@@ -2,15 +2,6 @@
 
 <p align="center">Aplicativo usado para realizar o controle de pedidos de uma empresa de transporte de flores e plantas. O aplicativo controla os pedidos recebidos dos clientes e também é possivel direcionar a mercadoria para os fornecedores.</p>
 
-<p align="center">
- <a href="#Features">Objetivo</a> •
- <a href="#roadmap">Roadmap</a> • 
- <a href="#tecnologias">Tecnologias</a> • 
- <a href="#contribuicao">Contribuição</a> • 
- <a href="#licenc-a">Licença</a> • 
- <a href="#autor">Autor</a>
-</p>
-
 ### 🛠 Tecnologias
 
 As seguintes ferramentas foram usadas na construção do projeto:
