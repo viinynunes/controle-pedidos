@@ -1,0 +1,96 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../../domain/models/product_model.dart';
+import '../../../../domain/models/stock_model.dart';
+import '../../errors/stock_error.dart';
+
+class StockFirebaseHelper {
+  final CollectionReference stockCollection;
+
+  StockFirebaseHelper(this.stockCollection);
+
+  StockModel getEmptyStock({
+    required ProductModel product,
+    required DateTime date,
+    int total = 0,
+    int totalOrdered = 0,
+  }) {
+    StockModel stock = StockModel(
+        id: '0',
+        code: '0',
+        total: total,
+        totalOrdered: totalOrdered,
+        registrationDate: date,
+        product: product);
+
+    setStockCode(stock);
+
+    return stock;
+  }
+
+  void setStockCode(StockModel stock) {
+    stock.code = stock.product.id +
+        stock.product.provider.id +
+        DateTime(stock.registrationDate.year, stock.registrationDate.month,
+                stock.registrationDate.day)
+            .toString();
+  }
+
+  Future<StockModel?> getStockByCode(String code) async {
+    final result = await getDocumentReferenceByCode(code);
+
+    return result != null ? StockModel.fromDocumentSnapshot(result) : null;
+  }
+
+  Future<QueryDocumentSnapshot?> getDocumentReferenceByCode(String code) async {
+    final result = await stockCollection
+        .where('code', isEqualTo: code)
+        .get()
+        .catchError((e) => throw FirebaseException(
+            plugin: 'GET STOCK BY CODE ERROR', message: e.toString()));
+
+    if (result.docs.length > 1) {
+      throw FirebaseException(
+          plugin: 'GET STOCK BY CODE ERROR',
+          message: 'More then one document was found');
+    }
+
+    if (result.docs.length == 1) {
+      return result.docs.first;
+    }
+
+    return null;
+  }
+
+  Future<StockModel> createNewStock(StockModel stock) async {
+    final result = await stockCollection.add(stock.toMap()).catchError((e) =>
+        throw FirebaseException(
+            plugin: 'CREATE STOCK ERROR', message: e.toString()));
+
+    StockModel? createdStock = await getStockByCode(stock.code);
+
+    if (createdStock == null) {
+      throw StockError('Stock não encontrado - CODE: ${stock.code}');
+    }
+
+    createdStock.id = result.id;
+
+    return await updateStock(createdStock);
+  }
+
+  Future<StockModel> updateStock(StockModel stock) async {
+    await stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
+        throw FirebaseException(
+            plugin: 'UPDATE STOCK ERROR', message: e.toString()));
+
+    return stock;
+  }
+
+  Future<StockModel> deleteStock(StockModel stock) async {
+    await stockCollection.doc(stock.id).delete().catchError((e) =>
+        throw FirebaseException(
+            plugin: 'DELETE STOCK ERROR', message: e.toString()));
+
+    return stock;
+  }
+}
