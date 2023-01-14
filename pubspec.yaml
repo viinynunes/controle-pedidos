@@ -46,11 +46,11 @@ dependencies:
   permission_handler: ^9.0.1
   open_file: ^3.2.1
   pdf: ^3.7.1
-  share_plus: ^3.1.0
+  share_plus: 4.0.9
   syncfusion_flutter_xlsio: ^19.4.53-beta
   rect_getter: ^1.1.0
   animated_splash_screen: ^1.2.0
-  file_saver: ^0.1.0
+  file_saver: ^0.1.1
   universal_html: ^2.0.8
 
 
