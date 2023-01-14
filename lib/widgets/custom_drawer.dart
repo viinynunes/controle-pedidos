@@ -71,17 +71,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Positioned(
-                          child: Text(
-                            model.userData['company'] ?? '',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 14),
-                          ),
-                          top: 60,
-                        ),
                       ],
                     ),
                   ),
