@@ -14,10 +14,13 @@ import 'services/impl/order_service_impl.dart';
 
 final orderLocator = GetIt.instance;
 
-void setUpOrderLocator() {
+Future<void> setUpOrderLocator({bool testing = false}) async {
   orderLocator.registerLazySingleton<IOrderService>(() => OrderServiceImpl());
-  orderLocator.registerLazySingleton<IOrderDatasource>(
-      () => OrderFirebaseDatasourceImpl(orderLocator()));
+  orderLocator.registerLazySingleton<IOrderDatasource>(() =>
+      OrderFirebaseDatasourceImpl(
+          stockDatasource: orderLocator(),
+          firebase: orderLocator(),
+          companyID: testing ? 'fakeCompanyID' : null));
   orderLocator.registerLazySingleton<IOrderRepository>(
       () => OrderRepositoryImpl(orderLocator()));
   orderLocator.registerLazySingleton<IOrderUsecase>(
@@ -30,6 +33,6 @@ void setUpOrderLocator() {
       () => OrderReportController(orderLocator(), orderLocator()));
 }
 
-void unregisterHomeLocator(){
+void unregisterHomeLocator() {
   orderLocator.unregister(instance: IOrderService);
 }

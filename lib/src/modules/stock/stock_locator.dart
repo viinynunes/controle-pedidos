@@ -10,31 +10,33 @@ import 'external/stock_firebase_datasource_impl.dart';
 import 'infra/datasources/i_stock_datasource.dart';
 import 'infra/repositories/stock_repository_impl.dart';
 import 'presenter/store/report_stock_by_establishment_controller.dart';
-  import 'presenter/store/report_stock_by_provider_controller.dart';
-  import 'presenter/store/show_orders_by_stock_dialog_controller.dart';
-  import 'presenter/store/stock_tile_controller.dart';
-  import 'services/impl/stock_service_impl.dart';
+import 'presenter/store/report_stock_by_provider_controller.dart';
+import 'presenter/store/show_orders_by_stock_dialog_controller.dart';
+import 'presenter/store/stock_tile_controller.dart';
+import 'services/impl/stock_service_impl.dart';
 
-  final stockLocator = GetIt.instance;
+final stockLocator = GetIt.instance;
 
-  void setUpStockLocator() {
-    stockLocator.registerLazySingleton<IStockService>(() => StockServiceImpl());
-    stockLocator.registerLazySingleton<IStockDatasource>(
-            () => StockFirebaseDatasourceImpl());
-    stockLocator.registerLazySingleton<IStockRepository>(
-            () => StockRepositoryImpl(stockLocator()));
-    stockLocator.registerLazySingleton<IStockUsecase>(
-            () => StockUsecaseImpl(stockLocator()));
-    stockLocator.registerSingleton<StockController>(StockController(
-        stockLocator(), stockLocator(), stockLocator(), stockLocator()));
-    stockLocator.registerFactory<StockTileController>(
-            () => StockTileController(stockLocator()));
-    stockLocator.registerFactory<DivideStockDialogController>(
-            () => DivideStockDialogController(stockLocator()));
-    stockLocator.registerFactory<ShowOrdersByStockDialogController>(
-            () => ShowOrdersByStockDialogController(stockLocator()));
-    stockLocator.registerFactory<ReportStockByProviderController>(
-            () => ReportStockByProviderController(stockLocator(), stockLocator()));
-    stockLocator.registerFactory<ReportStockByEstablishmentController>(
-      () => ReportStockByEstablishmentController(stockLocator(), stockLocator()));
+void setUpStockLocator({bool testing = false}) {
+  stockLocator.registerLazySingleton<IStockService>(() => StockServiceImpl());
+  stockLocator.registerLazySingleton<IStockDatasource>(() =>
+      StockFirebaseDatasourceImpl(
+          firebase: stockLocator(),
+          companyID: testing ? 'fakeCompanyID' : null));
+  stockLocator.registerLazySingleton<IStockRepository>(
+      () => StockRepositoryImpl(stockLocator()));
+  stockLocator.registerLazySingleton<IStockUsecase>(
+      () => StockUsecaseImpl(stockLocator()));
+  stockLocator.registerSingleton<StockController>(StockController(
+      stockLocator(), stockLocator(), stockLocator(), stockLocator()));
+  stockLocator.registerFactory<StockTileController>(
+      () => StockTileController(stockLocator()));
+  stockLocator.registerFactory<DivideStockDialogController>(
+      () => DivideStockDialogController(stockLocator()));
+  stockLocator.registerFactory<ShowOrdersByStockDialogController>(
+      () => ShowOrdersByStockDialogController(stockLocator()));
+  stockLocator.registerFactory<ReportStockByProviderController>(
+      () => ReportStockByProviderController(stockLocator(), stockLocator()));
+  stockLocator.registerFactory<ReportStockByEstablishmentController>(() =>
+      ReportStockByEstablishmentController(stockLocator(), stockLocator()));
 }
