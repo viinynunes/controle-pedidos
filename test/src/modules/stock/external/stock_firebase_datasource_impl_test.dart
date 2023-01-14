@@ -75,7 +75,9 @@ main() {
       'increase function have to create a new stock if it does not exists',
       () async {
         final result = await datasource.increaseTotalFromStock(
-            stock: stock, increaseQuantity: 1);
+            product: ProductModel.fromProduct(product: stock.product),
+            date: stock.registrationDate,
+            increaseQuantity: 1);
 
         expect(result, isA<StockModel>());
         expect(result.total, equals(stock.total));
@@ -93,8 +95,12 @@ main() {
 
         _insertStockIntoDB(total: stockTotalIntoDB);
 
+        expect(true, true);
+
         final result = await datasource.increaseTotalFromStock(
-            stock: stock, increaseQuantity: increaseQuantity);
+            product: ProductModel.fromProduct(product: stock.product),
+            date: stock.registrationDate,
+            increaseQuantity: increaseQuantity);
 
         expect(result, isA<StockModel>());
         expect(result.total, equals(summedTotal));
@@ -112,7 +118,9 @@ main() {
       _insertStockIntoDB(total: stockTotalIntoDB);
 
       final result = await datasource.decreaseTotalFromStock(
-          stock: stock, decreaseQuantity: decreaseQuantity);
+          product: ProductModel.fromProduct(product: stock.product),
+          date: stock.registrationDate,
+          decreaseQuantity: decreaseQuantity);
 
       expect(result.total, equals(decreasedTotal));
     });
@@ -128,7 +136,8 @@ main() {
       _insertStockIntoDB(total: stockTotalIntoDB);
 
       final result = await datasource.decreaseTotalFromStock(
-          stock: stock,
+          product: ProductModel.fromProduct(product: stock.product),
+          date: stock.registrationDate,
           decreaseQuantity: decreaseQuantity,
           deleteIfEmpty: true);
 
@@ -150,7 +159,8 @@ main() {
       _insertStockIntoDB(total: stockTotalIntoDB);
 
       final result = await datasource.decreaseTotalFromStock(
-          stock: stock,
+          product: ProductModel.fromProduct(product: stock.product),
+          date: stock.registrationDate,
           decreaseQuantity: decreaseQuantity,
           deleteIfEmpty: true);
 
