@@ -53,4 +53,9 @@ class StockModel extends Stock {
       'product': ProductModel.fromProduct(product: product).toMap(),
     };
   }
+
+  @override
+  String toString() {
+    return 'total: $total / totalOrdered: $totalOrdered / product: ${product.name}';
+  }
 }
