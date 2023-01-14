@@ -10,6 +10,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Flutter](https://flutter.dev/)
 - [MobX](https://pub.dev/packages/mobx)
 - [GetIt](https://pub.dev/packages/get_it)
+- [Firebase](https://firebase.google.com/?hl=pt)
 
 <h4 align="center"> 
 	🚧  Versão 2.0 Em construção...  🚧
