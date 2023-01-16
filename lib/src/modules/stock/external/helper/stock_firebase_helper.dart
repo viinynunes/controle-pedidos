@@ -85,12 +85,4 @@ class StockFirebaseHelper {
 
     return stock;
   }
-
-  Future<StockModel> deleteStock(StockModel stock) async {
-    await stockCollection.doc(stock.id).delete().catchError((e) =>
-        throw FirebaseException(
-            plugin: 'DELETE STOCK ERROR', message: e.toString()));
-
-    return stock;
-  }
 }
