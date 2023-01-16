@@ -4,7 +4,6 @@ import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_dat
 import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/models/order_item_model.dart';
 import '../../../domain/models/order_model.dart';
 import '../../firebase_helper_impl.dart';
 import '../infra/datasources/i_product_datasource.dart';
@@ -72,10 +71,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       for (var o in orderList) {
         final orderSnap = await firebase.getOrderCollection().doc(o).get();
 
-        var order = OrderModel.fromMap(
-            map: orderSnap.data() as Map<String, dynamic>,
-            orderItemList:
-                _getOrderItemList(orderSnap.data() as Map<String, dynamic>));
+        var order =
+            OrderModel.fromMap(map: orderSnap.data() as Map<String, dynamic>);
 
         var orderItemFromProduct = order.orderItemList
             .singleWhere((element) => element.product.id == product.id);
@@ -85,16 +82,6 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
         GetIt.I.get<IOrderDatasource>().updateOrder(order);
       }
     }
-  }
-
-  _getOrderItemList(Map<String, dynamic> map) {
-    List<OrderItemModel> itemList = [];
-
-    for (var e in map['orderItemList']) {
-      itemList.add(OrderItemModel.fromMap(map: e));
-    }
-
-    return itemList;
   }
 
   @override

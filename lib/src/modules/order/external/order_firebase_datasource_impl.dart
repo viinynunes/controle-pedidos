@@ -55,10 +55,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     await _updateCacheDoc(DateTime.now());
 
     final createdOrder = await orderCollection.doc(order.id).get();
-    return OrderModel.fromMap(
-        map: createdOrder.data() as Map<String, dynamic>,
-        orderItemList:
-            _getOrderItemList(createdOrder.data() as Map<String, dynamic>));
+    return OrderModel.fromDocumentSnapshot(doc: createdOrder);
   }
 
   _increaseTotalFromStock(
@@ -103,7 +100,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     List<OrderItemModel> beforeUpdateOrderItemsList = [];
 
     final orderOnDBRef = await orderCollection.doc(order.id).get().catchError(
-            (e) => throw FirebaseException(
+        (e) => throw FirebaseException(
             plugin: 'GET ORDER BY ID ERROR', message: e.toString()));
 
     for (var item in orderOnDBRef.get('orderItemList')) {
@@ -169,10 +166,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
-      orderList.add(
-        OrderModel.fromMap(
-            map: o.data(), orderItemList: _getOrderItemList(o.data())),
-      );
+      orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
     }
 
     return orderList;
@@ -200,10 +194,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
-      orderList.add(
-        OrderModel.fromMap(
-            map: o.data(), orderItemList: _getOrderItemList(o.data())),
-      );
+      orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
     }
 
     return orderList;
@@ -226,10 +217,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
-      orderList.add(
-        OrderModel.fromMap(
-            map: o.data(), orderItemList: _getOrderItemList(o.data())),
-      );
+      orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
     }
 
     return orderList;
@@ -252,16 +240,10 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             plugin: 'GET ORDER ERROR', message: e.toString()));
 
     for (var o in snap.docs) {
-      orderList.add(
-        OrderModel.fromMap(
-            map: o.data(), orderItemList: _getOrderItemList(o.data())),
-      );
+      orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
     }
-    final oi = OrderItemModel(
-        listIndex: 0,
-        quantity: 0,
-        product: product,
-        note: '');
+    final oi =
+        OrderItemModel(listIndex: 0, quantity: 0, product: product, note: '');
 
     orderList.removeWhere((order) => !order.orderItemList.contains(oi));
 
@@ -274,15 +256,5 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     }
 
     return orderList;
-  }
-
-  _getOrderItemList(Map<String, dynamic> map) {
-    List<OrderItemModel> itemList = [];
-
-    for (var e in map['orderItemList']) {
-      itemList.add(OrderItemModel.fromMap(map: e));
-    }
-
-    return itemList;
   }
 }
