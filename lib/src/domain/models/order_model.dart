@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/order_item_model.dart';
 
 import '../../core/helpers.dart';
@@ -22,17 +23,34 @@ class OrderModel extends Order {
             client: order.client,
             orderItemList: order.orderItemList);
 
-  OrderModel.fromMap(
-      {required Map<String, dynamic> map, required super.orderItemList})
+  OrderModel.fromDocumentSnapshot({required DocumentSnapshot doc})
       : super(
-          id: map['id'],
-          registrationDate:
-              Helpers.convertTimestampToDateTime(map['registrationDate']),
-          registrationHour:
-              Helpers.convertTimestampToDateTime(map['registrationHour']),
-          enabled: map['enabled'],
-          client: ClientModel.fromMap(map['client']),
-        );
+            id: doc.id,
+            registrationDate:
+                Helpers.convertTimestampToDateTime(doc.get('registrationDate')),
+            registrationHour:
+                Helpers.convertTimestampToDateTime(doc.get('registrationHour')),
+            enabled: doc.get('enabled'),
+            client: ClientModel.fromMap(doc.get('client')),
+            orderItemList: doc
+                .get('orderItemList')
+                .map<OrderItemModel>(
+                    (item) => OrderItemModel.fromMap(map: item))
+                .toList());
+
+  OrderModel.fromMap({required Map<String, dynamic> map})
+      : super(
+            id: map['id'],
+            registrationDate:
+                Helpers.convertTimestampToDateTime(map['registrationDate']),
+            registrationHour:
+                Helpers.convertTimestampToDateTime(map['registrationHour']),
+            enabled: map['enabled'],
+            client: ClientModel.fromMap(map['client']),
+            orderItemList: map['orderItemList']
+                .map<OrderItemModel>(
+                    (item) => OrderItemModel.fromMap(map: item))
+                .toList());
 
   Map<String, dynamic> toMap() {
     return {
