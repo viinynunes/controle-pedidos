@@ -348,4 +348,74 @@ main() {
       }
     });
   });
+
+  group('Disable order tests', () {
+    test('have to disable an order and delete his stock', () async {
+      final order = await datasource.createOrder(OrderMock.getOneOrder());
+
+      final disableResult = await datasource.disableOrder(order);
+
+      expect(disableResult, true);
+
+      final orderSnap = await orderCollection!.doc(order.id).get();
+
+      expect(orderSnap.exists, true);
+
+      final disabledOrder = OrderModel.fromDocumentSnapshot(doc: orderSnap);
+      expect(disabledOrder.enabled, false);
+
+      for (var item in disabledOrder.orderItemList) {
+        final stockSnap = await stockCollection!
+            .where('code',
+                isEqualTo: StockMock.getStockCodeFromProduct(
+                    product: item.product, date: DateTime.now()))
+            .get();
+
+        expect(stockSnap.docs.length, 0);
+      }
+    });
+
+    test(
+        'have to disable an order and dont delete his stock when stock total is not empty',
+        () async {
+      const totalOrders = 7;
+      late OrderModel toDisableOrder;
+
+      for (int i = 1; i <= totalOrders; i++) {
+        toDisableOrder = await datasource.createOrder(OrderMock.getOneOrder());
+      }
+      for (var item in toDisableOrder.orderItemList) {
+        final stockSnap = await stockCollection!
+            .where('code',
+                isEqualTo: StockMock.getStockCodeFromProduct(
+                    product: item.product, date: DateTime.now()))
+            .get();
+
+        expect(stockSnap.docs.length, 1);
+
+        final stock = StockModel.fromDocumentSnapshot(stockSnap.docs.first);
+
+        expect(stock.total, item.quantity * totalOrders);
+      }
+
+      await datasource.disableOrder(toDisableOrder);
+
+      final orderSnap = await orderCollection!.doc(toDisableOrder.id).get();
+
+      final disabledOrder = OrderModel.fromDocumentSnapshot(doc: orderSnap);
+
+      for (var item in disabledOrder.orderItemList) {
+        final stockSnap = await stockCollection!
+            .where('code',
+                isEqualTo: StockMock.getStockCodeFromProduct(
+                    product: item.product, date: DateTime.now()))
+            .get();
+
+        expect(stockSnap.docs.length, 1);
+        final stock = StockModel.fromDocumentSnapshot(stockSnap.docs.first);
+
+        expect(stock.total, (item.quantity * totalOrders) - item.quantity);
+      }
+    });
+  });
 }
