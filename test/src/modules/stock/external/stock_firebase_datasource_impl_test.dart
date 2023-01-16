@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/product_model.dart';
 import 'package:controle_pedidos/src/domain/models/stock_model.dart';
+import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:controle_pedidos/src/modules/stock/external/helper/stock_firebase_helper.dart';
 import 'package:controle_pedidos/src/modules/stock/external/new_stock_firebase_datasource_impl.dart';
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_new_stock_datasource.dart';
@@ -105,7 +106,8 @@ main() {
 
       const decreasedTotal = stockTotalIntoDB - decreaseQuantity;
 
-      var stock = StockMock.getOneStock(total: stockTotalIntoDB, totalOrdered: 0);
+      var stock =
+          StockMock.getOneStock(total: stockTotalIntoDB, totalOrdered: 0);
       await stockCollection!.add(stock.toMap());
 
       final result = await datasource.decreaseTotalFromStock(
@@ -143,6 +145,70 @@ main() {
       final documentNotDeleted = await stockCollection!.doc(result.id).get();
 
       expect(documentNotDeleted.exists, true);
+    });
+  });
+
+  group('tests to decrease total ordered from stock', () {
+    test(
+        'hate to throw a Stock Error Exception when stock id is not found on decreaseTotalOrderedFromStock',
+        () async {
+      var stock = StockMock.getOneStock(total: 0, totalOrdered: 1);
+      await stockCollection!.add(stock.toMap());
+
+      expect(
+          () async => await datasource.decreaseTotalOrderedFromStock(
+              stockID: stock.id, decreaseQuantity: 1),
+          throwsA(isA<StockError>()));
+    });
+
+    test('have to decrease total ordered on db', () async {
+      const decreaseQuantity = 3;
+      const stockTotalOrderedOnDB = 10;
+      const summedTotalOrdered = stockTotalOrderedOnDB - decreaseQuantity;
+
+      ///insert data on db
+      var stock =
+          StockMock.getOneStock(total: 0, totalOrdered: stockTotalOrderedOnDB);
+      final result = await stockCollection!.add(stock.toMap());
+      stock.id = result.id;
+
+      ///decreasing quantity on db
+      final decreasedStock = await datasource.decreaseTotalOrderedFromStock(
+          stockID: stock.id, decreaseQuantity: decreaseQuantity);
+
+      expect(decreasedStock.totalOrdered, summedTotalOrdered);
+    });
+  });
+
+  group('tests to increase total ordered from stock', () {
+    test(
+        'have to throw a Stock Error Exception when stock id is not found on increaseTotalOrderedFromStock',
+        () async {
+      var stock = StockMock.getOneStock(total: 0, totalOrdered: 1);
+      await stockCollection!.add(stock.toMap());
+
+      expect(
+          () async => await datasource.increaseTotalOrderedFromStock(
+              stockID: stock.id, increaseQuantity: 50),
+          throwsA(isA<StockError>()));
+    });
+
+    test('have to increase total ordered on db', () async {
+      const increaseQuantity = 3;
+      const stockTotalOrderedOnDB = 10;
+      const summedTotalOrdered = stockTotalOrderedOnDB + increaseQuantity;
+
+      ///insert data on db
+      var stock =
+      StockMock.getOneStock(total: 0, totalOrdered: stockTotalOrderedOnDB);
+      final result = await stockCollection!.add(stock.toMap());
+      stock.id = result.id;
+
+      ///decreasing quantity on db
+      final increasedStock = await datasource.increaseTotalOrderedFromStock(
+          stockID: stock.id, increaseQuantity: increaseQuantity);
+
+      expect(increasedStock.totalOrdered, summedTotalOrdered);
     });
   });
 }
