@@ -42,6 +42,16 @@ class StockFirebaseHelper {
     return result != null ? StockModel.fromDocumentSnapshot(result) : null;
   }
 
+  Future<StockModel> getStockById(String id) async {
+    var stockDoc = await stockCollection.doc(id).get();
+
+    if (stockDoc.exists) {
+      return StockModel.fromDocumentSnapshot(stockDoc);
+    }
+
+    throw StockError('Stock ID - $id não encontrado');
+  }
+
   Future<QueryDocumentSnapshot?> getDocumentReferenceByCode(String code) async {
     final result = await stockCollection
         .where('code', isEqualTo: code)
