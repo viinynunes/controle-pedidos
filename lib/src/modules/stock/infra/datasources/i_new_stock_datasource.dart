@@ -12,4 +12,12 @@ abstract class INewStockDatasource {
       required DateTime date,
       required int decreaseQuantity,
       bool deleteIfEmpty = false});
+
+  Future<StockModel> increaseTotalOrderedFromStock(
+      {required String stockID, required int increaseQuantity});
+
+  Future<StockModel> decreaseTotalOrderedFromStock(
+      {required String stockID, required int decreaseQuantity});
+
+  Future<StockModel> deleteStock(StockModel stock);
 }

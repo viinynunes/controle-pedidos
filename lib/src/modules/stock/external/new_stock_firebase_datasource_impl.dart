@@ -57,7 +57,36 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
     stockFromDB.total -= decreaseQuantity;
 
     return stockFromDB.total == 0 && stockFromDB.totalOrdered == 0
-        ? await helper.deleteStock(stockFromDB)
+        ? await deleteStock(stockFromDB)
         : await helper.updateStock(stockFromDB);
+  }
+
+  @override
+  Future<StockModel> increaseTotalOrderedFromStock(
+      {required String stockID, required int increaseQuantity}) async {
+    var stock = await helper.getStockById(stockID);
+
+    stock.totalOrdered += increaseQuantity;
+
+    return await helper.updateStock(stock);
+  }
+
+  @override
+  Future<StockModel> decreaseTotalOrderedFromStock(
+      {required String stockID, required int decreaseQuantity}) async {
+    var stock = await helper.getStockById(stockID);
+
+    stock.totalOrdered -= decreaseQuantity;
+
+    return await helper.updateStock(stock);
+  }
+
+  @override
+  Future<StockModel> deleteStock(StockModel stock) async {
+    await stockCollection.doc(stock.id).delete().catchError((e) =>
+        throw FirebaseException(
+            plugin: 'DELETE STOCK ERROR', message: e.toString()));
+
+    return stock;
   }
 }
