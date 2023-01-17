@@ -29,7 +29,8 @@ main() {
 
     datasource = NewStockFirebaseDatasourceImpl(
         firebase: firebase!,
-        helper: StockFirebaseHelper(stockCollection!),
+        helper:
+            StockFirebaseHelper(firebase: firebase!, companyID: mockCompanyID),
         companyID: mockCompanyID);
 
     firebase!.collection('company').doc(mockCompanyID).delete();

@@ -37,7 +37,8 @@ main() {
         stockDatasource: NewStockFirebaseDatasourceImpl(
             firebase: firebase!,
             companyID: mockCompanyID,
-            helper: StockFirebaseHelper(stockCollection!)),
+            helper: StockFirebaseHelper(
+                firebase: firebase!, companyID: mockCompanyID)),
         firebase: firebase!,
         companyID: mockCompanyID);
   });

@@ -1,13 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../../domain/models/product_model.dart';
 import '../../../../domain/models/stock_model.dart';
 import '../../errors/stock_error.dart';
 
 class StockFirebaseHelper {
-  final CollectionReference stockCollection;
+  late final CollectionReference stockCollection;
+  final FirebaseFirestore firebase;
 
-  StockFirebaseHelper(this.stockCollection);
+  StockFirebaseHelper({required this.firebase, String? companyID}){
+    stockCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('stock');
+  }
 
   Future<StockModel> createNewStock(
       {required StockModel stock, String? stockID}) async {
