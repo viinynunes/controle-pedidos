@@ -152,13 +152,24 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
   }
 
   @override
-  Future<List<StockModel>> getStockListByProviderBetweenDates(
-      {required ProviderModel provider,
-      required DateTime iniDate,
-      required DateTime endDate}) {
-    // TODO: implement getStockListByProviderBetweenDates
-    throw UnimplementedError();
+  Future<List<StockModel>> getStockListByProviderBetweenDates({
+    required ProviderModel provider,
+    required DateTime iniDate,
+    required DateTime endDate,
+  }) async {
+    List<StockModel> stockList = [];
+
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
+    final snap = await stockCollection
+        .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('registrationDate', isLessThanOrEqualTo: endDate)
+        .where('product.provider.id', isEqualTo: provider.id)
+        .get();
+
+    helper.mergeStockList(snap.docs, stockList);
+
+    return stockList;
   }
-
-
 }
