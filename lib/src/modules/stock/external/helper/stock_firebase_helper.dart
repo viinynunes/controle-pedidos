@@ -108,4 +108,22 @@ class StockFirebaseHelper {
 
     return null;
   }
+
+  mergeStockList(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> snapStockList,
+      List<StockModel> stockList) {
+    for (var s in snapStockList) {
+      var newStock = StockModel.fromMap(s.data());
+
+      if (stockList.contains(newStock)) {
+        var stockFromList = stockList.singleWhere(
+            (stockFromList) => stockFromList.product == newStock.product);
+
+        stockFromList.total += newStock.total;
+        stockFromList.totalOrdered += newStock.totalOrdered;
+      } else {
+        stockList.add(newStock);
+      }
+    }
+  }
 }
