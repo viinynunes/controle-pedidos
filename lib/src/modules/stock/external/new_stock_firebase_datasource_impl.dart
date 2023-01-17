@@ -36,7 +36,7 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
 
       return await helper.updateStock(stockFromDB);
     } else {
-      return await helper.createNewStock(stock);
+      return await helper.createNewStock(stock: stock);
     }
   }
 
@@ -88,5 +88,28 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
             plugin: 'DELETE STOCK ERROR', message: e.toString()));
 
     return stock;
+  }
+
+  @override
+  Future<StockModel> changeStockDate(
+      {required String stockId, required DateTime newDate}) async {
+    var stock = await helper.getStockById(stockId);
+    stock.registrationDate = newDate;
+    helper.setStockCode(stock);
+
+    var stockWithNewDateInDB = await helper.getStockByCode(stock.code);
+
+    await deleteStock(stock);
+    if (stockWithNewDateInDB == null) {
+      final createdStock =
+          await helper.createNewStock(stock: stock, stockID: stockId);
+
+      return createdStock;
+    } else {
+      stockWithNewDateInDB.total += stock.total;
+      stockWithNewDateInDB.totalOrdered += stock.totalOrdered;
+
+      return helper.updateStock(stockWithNewDateInDB);
+    }
   }
 }
