@@ -9,6 +9,43 @@ class StockFirebaseHelper {
 
   StockFirebaseHelper(this.stockCollection);
 
+  Future<StockModel> createNewStock(
+      {required StockModel stock, String? stockID}) async {
+    String newID = '';
+
+    stockID != null
+        ? await stockCollection.doc(stockID).set(stock.toMap()).catchError(
+            (e) => throw FirebaseException(
+                plugin: 'CREATE STOCK ERROR', message: e.toString()))
+        : await stockCollection
+            .add(stock.toMap())
+            .catchError((e) => throw FirebaseException(
+                plugin: 'CREATE STOCK ERROR', message: e.toString()))
+            .then((value) => newID = value.id);
+
+    StockModel? createdStock = await getStockByCode(stock.code);
+
+    if (createdStock == null) {
+      throw StockError('Stock não encontrado - CODE: ${stock.code}');
+    }
+
+    if (stockID != null) {
+      return createdStock;
+    }
+
+    createdStock.id = newID;
+
+    return await updateStock(createdStock);
+  }
+
+  Future<StockModel> updateStock(StockModel stock) async {
+    await stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
+        throw FirebaseException(
+            plugin: 'UPDATE STOCK ERROR', message: e.toString()));
+
+    return stock;
+  }
+
   StockModel getEmptyStock({
     required ProductModel product,
     required DateTime date,
@@ -70,29 +107,5 @@ class StockFirebaseHelper {
     }
 
     return null;
-  }
-
-  Future<StockModel> createNewStock(StockModel stock) async {
-    final result = await stockCollection.add(stock.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'CREATE STOCK ERROR', message: e.toString()));
-
-    StockModel? createdStock = await getStockByCode(stock.code);
-
-    if (createdStock == null) {
-      throw StockError('Stock não encontrado - CODE: ${stock.code}');
-    }
-
-    createdStock.id = result.id;
-
-    return await updateStock(createdStock);
-  }
-
-  Future<StockModel> updateStock(StockModel stock) async {
-    await stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'UPDATE STOCK ERROR', message: e.toString()));
-
-    return stock;
   }
 }
