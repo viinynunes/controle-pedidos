@@ -200,7 +200,7 @@ main() {
 
       ///insert data on db
       var stock =
-      StockMock.getOneStock(total: 0, totalOrdered: stockTotalOrderedOnDB);
+          StockMock.getOneStock(total: 0, totalOrdered: stockTotalOrderedOnDB);
       final result = await stockCollection!.add(stock.toMap());
       stock.id = result.id;
 
@@ -209,6 +209,83 @@ main() {
           stockID: stock.id, increaseQuantity: increaseQuantity);
 
       expect(increasedStock.totalOrdered, summedTotalOrdered);
+    });
+  });
+
+  group('tests to change stock date', () {
+    test(
+        'have to create a new stock when theres no other stock with the same code into the new date',
+        () async {
+      const stockTotalOrderedOnDB = 10;
+      const stockTotalOnDB = 10;
+
+      ///insert data on db
+      var stock = StockMock.getOneStock(
+          total: stockTotalOnDB, totalOrdered: stockTotalOrderedOnDB);
+      final result = await stockCollection!.add(stock.toMap());
+      stock.id = result.id;
+
+      final now = DateTime.now();
+      final changedStockResult = await datasource.changeStockDate(
+          stockId: stock.id,
+          newDate: DateTime(now.year, now.month, now.day + 1));
+
+      expect(changedStockResult.id, stock.id);
+
+      final resultSnap = await stockCollection!.doc(stock.id).get();
+      expect(resultSnap.exists, true);
+
+      final changedStock = StockModel.fromDocumentSnapshot(resultSnap);
+
+      expect(changedStock.registrationDate,
+          DateTime(now.year, now.month, now.day + 1));
+      expect(changedStock.total, stockTotalOnDB);
+      expect(changedStock.totalOrdered, stockTotalOrderedOnDB);
+    });
+
+    test('have to update a stock with the same code into new selected date',
+        () async {
+      const stockTotalOrderedOnDB = 10;
+      const stockTotalOnDB = 10;
+
+      const toModifyStockTotalOrdered = 10;
+      const toModifyStockTotal = 10;
+
+      const summedTotal = stockTotalOnDB + toModifyStockTotal;
+      const summedTotalOrdered =
+          stockTotalOrderedOnDB + toModifyStockTotalOrdered;
+
+      final now = DateTime.now();
+      final newDate = DateTime(now.year, now.month, now.day + 1);
+
+      ///insert stock into new date
+      var stockOnDb = StockMock.getOneStock(
+          total: stockTotalOnDB,
+          totalOrdered: stockTotalOrderedOnDB,
+          registrationDate: newDate);
+
+      final value = await stockCollection!.add(stockOnDb.toMap());
+      stockOnDb.id = value.id;
+
+      ///insert to modify stock on db
+      var toModifyStock = StockMock.getOneStock(
+          total: toModifyStockTotalOrdered, totalOrdered: toModifyStockTotal);
+      final result = await stockCollection!.add(toModifyStock.toMap());
+      toModifyStock.id = result.id;
+
+      var stockSnap = await stockCollection!.get();
+
+      expect(stockSnap.docs.length, 2);
+
+      final changedStockResult = await datasource.changeStockDate(
+          stockId: toModifyStock.id, newDate: newDate);
+
+      expect(changedStockResult.id, stockOnDb.id);
+      expect(changedStockResult.total, summedTotal);
+      expect(changedStockResult.totalOrdered, summedTotalOrdered);
+
+      stockSnap = await stockCollection!.get();
+      expect(stockSnap.docs.length, 1);
     });
   });
 }
