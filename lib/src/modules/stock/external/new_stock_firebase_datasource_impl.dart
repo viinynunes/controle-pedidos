@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:get_storage/get_storage.dart';
@@ -111,5 +112,40 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
 
       return helper.updateStock(stockWithNewDateInDB);
     }
+  }
+
+  @override
+  Future<Set<ProviderModel>> getProviderListByStockBetweenDates(
+      {required DateTime iniDate, required DateTime endDate}) async {
+    Set<ProviderModel> providerList = {};
+
+    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
+    final snapStock = await stockCollection
+        .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
+        .where('registrationDate', isLessThanOrEqualTo: endDate)
+        .get();
+    for (var s in snapStock.docs) {
+      providerList.add(ProviderModel.fromMap(map: s.get('product.provider')));
+    }
+
+    return providerList;
+  }
+
+  @override
+  Future<List<StockModel>> getStockListBetweenDates(
+      {required DateTime iniDate, required DateTime endDate}) {
+    // TODO: implement getStockListBetweenDates
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<StockModel>> getStockListByProviderBetweenDates(
+      {required ProviderModel provider,
+      required DateTime iniDate,
+      required DateTime endDate}) {
+    // TODO: implement getStockListByProviderBetweenDates
+    throw UnimplementedError();
   }
 }
