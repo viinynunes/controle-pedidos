@@ -4,7 +4,7 @@ import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'provider_mock.dart';
 
 class ProductMock {
-  static getOneProduct(
+  static ProductModel getOneProduct(
       {String productID = 'product01',
       String name = 'product name 001',
       String category = 'vs',
