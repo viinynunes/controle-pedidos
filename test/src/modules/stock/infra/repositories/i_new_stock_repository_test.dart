@@ -356,4 +356,24 @@ main() {
           stockTotalOrdered + increaseQuantity);
     });
   });
+
+  group('tests to update stock in repository', () {
+    test('have to return a Left with an Exception when update stock fail',
+            () async {
+          when(datasource.updateStock(stock: defaultStock))
+              .thenThrow(() => throw Exception('Update Error'));
+
+          final result = await repository.updateStock(defaultStock);
+
+          expect(result, isA<Left>());
+          expect(result.fold(id, id), isA<Exception>());
+        });
+
+    test('have to return a Right with update stock', () async {
+      final result = await repository.updateStock(defaultStock);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+    });
+  });
 }
