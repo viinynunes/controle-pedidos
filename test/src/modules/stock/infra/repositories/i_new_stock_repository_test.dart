@@ -265,4 +265,56 @@ main() {
       expect(result.fold(id, id), isA<Stock>());
     });
   });
+
+  group('tests to increase Total From Stock in repository', () {
+    test(
+        'have to catch an exception when create stock fail in increase total from stock',
+        () async {
+      when(datasource.createStock(stock: defaultStock))
+          .thenThrow(() => throw StockError('Delete Stock Fail'));
+
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenAnswer((_) async => null);
+
+      final result = await repository.increaseTotalFromStock(
+          product: product, date: date, increaseQuantity: 2);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test('have to catch an exception when update stock fail', () async {
+      when(datasource.updateStock(stock: defaultStock))
+          .thenThrow(() => throw StockError('Update Stock Fail'));
+
+      final result = await repository.increaseTotalFromStock(
+          product: product, date: date, increaseQuantity: increaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test('have to catch an exception when getStockByCode fail', () async {
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenThrow(() => throw StockError('getStockByCode Fail'));
+
+      final result = await repository.increaseTotalFromStock(
+          product: product, date: date, increaseQuantity: increaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to increase stock total from DB and update stock got on getStockByCode',
+        () async {
+      final result = await repository.increaseTotalFromStock(
+          product: product, date: date, increaseQuantity: increaseQuantity);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total),
+          stockTotalFromCode + increaseQuantity);
+    });
+  });
 }
