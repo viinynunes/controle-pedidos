@@ -22,6 +22,8 @@ main() {
   const stockTotalOrdered = 1;
   const stockTotalFromCode = 2;
   const stockTotalOrderedFromCode = 3;
+  const increaseQuantity = 1;
+  const decreaseQuantity = 1;
   final defaultStock =
       StockMock.getOneStock(id: stockID, code: stockCode, total: stockTotal);
 
@@ -134,6 +136,77 @@ main() {
           stockTotal + stockTotalFromCode);
       expect(result.fold((l) => null, (r) => r.totalOrdered),
           stockTotal + stockTotalOrderedFromCode);
+    });
+  });
+
+  group('tests to decrease total from Stock in repository', () {
+    test(
+        'have to catch an exception when delete stock fail in decreaseTotalFromStock',
+        () async {
+      when(datasource.deleteStock(stock: defaultStock))
+          .thenThrow(() => throw StockError('Delete Stock Fail'));
+
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenAnswer((_) async => StockMock.getOneStock(totalOrdered: 0));
+
+      final result = await repository.decreaseTotalFromStock(
+          product: product, date: date, decreaseQuantity: 2);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to catch an exception when update stock fail in decreaseTotalFromStock',
+        () async {
+      when(datasource.updateStock(stock: defaultStock))
+          .thenThrow(() => throw StockError('Update Stock Fail'));
+
+      final result = await repository.decreaseTotalFromStock(
+          product: product, date: date, decreaseQuantity: decreaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to catch an exception when getStockByCode fail in decreaseTotalFromStock',
+        () async {
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenThrow(() => throw StockError('getStockByCode Fail'));
+
+      final result = await repository.decreaseTotalFromStock(
+          product: product, date: date, decreaseQuantity: decreaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to decrease stock total from DB and update stock got on getStockByCode',
+        () async {
+      final result = await repository.decreaseTotalFromStock(
+          product: product, date: date, decreaseQuantity: decreaseQuantity);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total),
+          stockTotalFromCode - decreaseQuantity);
+    });
+
+    test(
+        'have to decrease stock total from DB and delete stock got on getStockByCode when total and total ordered is 0',
+        () async {
+      when(datasource.getStockByCode(code: anyNamed('code'))).thenAnswer(
+          (_) async => StockMock.getOneStock(total: 2, totalOrdered: 0));
+
+      final result = await repository.decreaseTotalFromStock(
+          product: product, date: date, decreaseQuantity: 2);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total), 0);
+      expect(result.fold((l) => null, (r) => r.totalOrdered), 0);
     });
   });
 }
