@@ -317,4 +317,43 @@ main() {
           stockTotalFromCode + increaseQuantity);
     });
   });
+
+  group('tests to increase total ordered from Stock in repository', () {
+    test(
+        'have to return a Left with an Exception when Get Stock By ID fail in increase total ordered',
+        () async {
+      when(datasource.getStockById(id: anyNamed('id')))
+          .thenThrow(() => throw Exception('Get Stock By ID Error'));
+
+      final result = await repository.increaseTotalOrderedFromStock(
+          stockID: stockID, increaseQuantity: increaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to return a Left with an Exception when update fail in increase total ordered',
+        () async {
+      when(datasource.updateStock(stock: defaultStock))
+          .thenThrow(() => throw Exception('Update Stock Error'));
+
+      final result = await repository.increaseTotalOrderedFromStock(
+          stockID: stockID, increaseQuantity: increaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test('have to increase stock total ordered and update stock', () async {
+      final result = await repository.increaseTotalOrderedFromStock(
+          stockID: stockID, increaseQuantity: increaseQuantity);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total), stockTotal);
+      expect(result.fold((l) => null, (r) => r.totalOrdered),
+          stockTotalOrdered + increaseQuantity);
+    });
+  });
 }
