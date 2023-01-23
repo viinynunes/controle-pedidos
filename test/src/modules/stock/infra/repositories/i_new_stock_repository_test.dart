@@ -209,4 +209,60 @@ main() {
       expect(result.fold((l) => null, (r) => r.totalOrdered), 0);
     });
   });
+
+  group('tests to decrease total ordered from Stock in repository', () {
+    test('have to return a Left with an Exception when Get Stock By ID fail',
+        () async {
+      when(datasource.getStockById(id: anyNamed('id')))
+          .thenThrow(() => throw Exception('Get Stock By ID Error'));
+
+      final result = await repository.decreaseTotalOrderedFromStock(
+          stockID: stockID, decreaseQuantity: decreaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test('have to return a Left with an Exception when update fail', () async {
+      when(datasource.updateStock(stock: defaultStock))
+          .thenThrow(() => throw Exception('Update Stock Error'));
+
+      final result = await repository.decreaseTotalOrderedFromStock(
+          stockID: stockID, decreaseQuantity: decreaseQuantity);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test('have to decrease stock total ordered and update stock', () async {
+      final result = await repository.decreaseTotalOrderedFromStock(
+          stockID: stockID, decreaseQuantity: decreaseQuantity);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total), stockTotal);
+      expect(result.fold((l) => null, (r) => r.totalOrdered),
+          stockTotalOrdered - decreaseQuantity);
+    });
+  });
+
+  group('tests to delete stock ub repository', () {
+    test('have to return a Left with an Exception when delete stock fail',
+        () async {
+      when(datasource.deleteStock(stock: defaultStock))
+          .thenThrow(() => throw Exception('Delete Error'));
+
+      final result = await repository.deleteStock(defaultStock);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test('have to return a Right with deleted stock', () async {
+      final result = await repository.deleteStock(defaultStock);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+    });
+  });
 }
