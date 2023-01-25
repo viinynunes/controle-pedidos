@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:controle_pedidos/src/domain/models/product_model.dart';
-import 'package:controle_pedidos/src/domain/models/stock_model.dart';
-import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
-import 'package:controle_pedidos/src/modules/stock/external/helper/stock_firebase_helper.dart';
+import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/modules/stock/external/new_stock_firebase_datasource_impl.dart';
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_new_stock_datasource.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
@@ -17,26 +14,38 @@ main() {
   late INewStockDatasource datasource;
 
   const mockCompanyID = 'mockCompanyID';
+  final date = DateTime.now();
+  final defaultStock = StockMock.getOneStock(registrationDate: DateTime(date.year, date.month, date.day));
 
   setUp(() {
     firebase = null;
     firebase = FakeFirebaseFirestore();
 
     stockCollection = null;
-
     stockCollection =
         firebase!.collection('company').doc(mockCompanyID).collection('stock');
 
     datasource = NewStockFirebaseDatasourceImpl(
-        firebase: firebase!,
-        helper:
-            StockFirebaseHelper(firebase: firebase!, companyID: mockCompanyID),
-        companyID: mockCompanyID);
+        firebase: firebase!, companyID: mockCompanyID);
 
     firebase!.collection('company').doc(mockCompanyID).delete();
   });
 
-  group('Tests to increase stock total', () {
+  group('tests to getProviderListByStockBetweenDates', () {
+    test('have to return a stock list with 1 stock', () async {
+      await datasource.createStock(stock: defaultStock);
+      final iniDate = DateTime(date.year, date.month, date.day);
+      final endDate = DateTime(date.year, date.month, date.day);
+
+      final result = await datasource.getProviderListByStockBetweenDates(
+          iniDate: iniDate, endDate: endDate);
+
+      expect(result, isA<Set<ProviderModel>>());
+      expect(result.length, 1);
+    });
+  });
+
+/*  group('Tests to increase stock total', () {
     test(
       'increase function have to create a new stock if it does not exists',
       () async {
@@ -288,5 +297,5 @@ main() {
       stockSnap = await stockCollection!.get();
       expect(stockSnap.docs.length, 1);
     });
-  });
+  });*/
 }

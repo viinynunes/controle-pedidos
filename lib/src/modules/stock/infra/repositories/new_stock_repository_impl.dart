@@ -103,8 +103,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
   Future<Either<StockError, Set<Provider>>> getProviderListByStockBetweenDates(
       {required DateTime iniDate, required DateTime endDate}) async {
     try {
-      _removeHourFromDateTime(date: iniDate);
-      _removeHourFromDateTime(date: endDate);
+      iniDate = _removeHourFromDateTime(date: iniDate);
+      endDate = _removeHourFromDateTime(date: endDate);
 
       return Right(await _datasource.getProviderListByStockBetweenDates(
           iniDate: iniDate, endDate: endDate));
@@ -119,8 +119,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
   Future<Either<StockError, List<Stock>>> getStockListBetweenDates(
       {required DateTime iniDate, required DateTime endDate}) async {
     try {
-      _removeHourFromDateTime(date: iniDate);
-      _removeHourFromDateTime(date: endDate);
+      iniDate = _removeHourFromDateTime(date: iniDate);
+      endDate = _removeHourFromDateTime(date: endDate);
 
       final list = await _datasource.getStockListBetweenDates(
           iniDate: iniDate, endDate: endDate);
@@ -139,8 +139,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
       required DateTime iniDate,
       required DateTime endDate}) async {
     try {
-      _removeHourFromDateTime(date: iniDate);
-      _removeHourFromDateTime(date: endDate);
+      iniDate = _removeHourFromDateTime(date: iniDate);
+      endDate = _removeHourFromDateTime(date: endDate);
 
       final list = await _datasource.getStockListByProviderBetweenDates(
           provider: ProviderModel.fromProvider(provider),
@@ -162,9 +162,9 @@ class NewStockRepositoryImpl implements INewStockRepository {
       required int increaseQuantity}) async {
     try {
       final stock = _getNewStock(
-        product: ProductModel.fromProduct(product: product),
-        date: date,
-      );
+          product: ProductModel.fromProduct(product: product),
+          date: date,
+          total: increaseQuantity);
 
       final stockFromDB = await _datasource.getStockByCode(code: stock.code);
 
@@ -211,13 +211,17 @@ class NewStockRepositoryImpl implements INewStockRepository {
     }
   }
 
-  StockModel _getNewStock({required Product product, required DateTime date}) {
+  StockModel _getNewStock(
+      {required Product product,
+      required DateTime date,
+      int total = 0,
+      int totalOrdered = 0}) {
     return StockModel(
         id: '0',
         code: _getStockCode(product: product, date: date),
-        total: 0,
-        totalOrdered: 0,
-        registrationDate: date,
+        total: total,
+        totalOrdered: totalOrdered,
+        registrationDate: _removeHourFromDateTime(date: date),
         product: product);
   }
 
@@ -227,8 +231,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
         DateTime(date.year, date.month, date.day).toString();
   }
 
-  _removeHourFromDateTime({required DateTime date}) {
-    date = DateTime(date.year, date.month, date.day);
+  DateTime _removeHourFromDateTime({required DateTime date}) {
+    return DateTime(date.year, date.month, date.day);
   }
 
   _mergeStockList({required List<StockModel> stockListFromDB}) {
