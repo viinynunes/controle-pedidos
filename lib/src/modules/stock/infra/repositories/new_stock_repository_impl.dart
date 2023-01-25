@@ -46,6 +46,33 @@ class NewStockRepositoryImpl implements INewStockRepository {
   }
 
   @override
+  Future<Either<StockError, Stock>> changeStockProvider(
+      {required String stockID, required Provider newProvider}) async {
+    try {
+      var stock = await _datasource.getStockById(id: stockID);
+
+      stock.product.provider = newProvider;
+      stock.code =
+          _getStockCode(product: stock.product, date: stock.registrationDate);
+
+      var stockByCodeFromDB =
+          await _datasource.getStockByCode(code: stock.code);
+
+      if (stockByCodeFromDB != null) {
+        stockByCodeFromDB.total += stock.total;
+        stockByCodeFromDB.totalOrdered += stock.totalOrdered;
+        return Right(await _datasource.updateStock(stock: stockByCodeFromDB));
+      } else {
+        return Right(await _datasource.updateStock(stock: stock));
+      }
+    } on StockError catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(StockError(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<StockError, Stock>> decreaseTotalFromStock(
       {required Product product,
       required DateTime date,

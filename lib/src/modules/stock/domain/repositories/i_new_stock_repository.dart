@@ -19,6 +19,9 @@ abstract class INewStockRepository {
   Future<Either<StockError, Stock>> changeStockDate(
       {required String stockId, required DateTime newDate});
 
+  Future<Either<StockError, Stock>> changeStockProvider(
+      {required String stockID, required Provider newProvider});
+
   Future<Either<StockError, Stock>> increaseTotalOrderedFromStock(
       {required String stockID, required int increaseQuantity});
 

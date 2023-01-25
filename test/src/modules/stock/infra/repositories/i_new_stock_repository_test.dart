@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../domain/entities/product_mock.dart';
+import '../../../../domain/entities/provider_mock.dart';
 import '../../../../domain/entities/stock_mock.dart';
 import '../../external/mocks/mock_datasource.mocks.dart';
 
@@ -14,6 +15,7 @@ main() {
   final repository = NewStockRepositoryImpl(datasource);
   final product = ProductMock.getOneProduct();
   final date = DateTime.now();
+  final provider = ProviderMock.getOneProvider();
   const stockID = 'stockID01';
   String stockCode = product.id +
       product.provider.id +
@@ -136,6 +138,64 @@ main() {
           stockTotal + stockTotalFromCode);
       expect(result.fold((l) => null, (r) => r.totalOrdered),
           stockTotal + stockTotalOrderedFromCode);
+    });
+  });
+
+  group('tests to change stock provider in repository', () {
+    test(
+        'have to catch an exception when getStockById didn\'t find a stock on change stock provider',
+        () async {
+      when(datasource.getStockById(id: anyNamed('id')))
+          .thenThrow(() => throw StockError('Stock not found'));
+
+      final result = await repository.changeStockProvider(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to catch an exception when update stock fail on change stock provider',
+        () async {
+      when(datasource.updateStock(stock: defaultStock))
+          .thenThrow(() => throw StockError('Delete Stock Fail'));
+
+      final result = await repository.changeStockProvider(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to update stock from DB when get stock by code returns a stock on change stock provider',
+        () async {
+      final result = await repository.changeStockProvider(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total),
+          stockTotal + stockTotalFromCode);
+      expect(result.fold((l) => null, (r) => r.totalOrdered),
+          stockTotalOrdered + stockTotalOrderedFromCode);
+    });
+
+    test(
+        'have to update stock from id when get stock by code returns null on change stock provider',
+        () async {
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenAnswer((_) async => null);
+
+      final result = await repository.changeStockProvider(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total), stockTotal);
+      expect(
+          result.fold((l) => null, (r) => r.totalOrdered), stockTotalOrdered);
     });
   });
 
