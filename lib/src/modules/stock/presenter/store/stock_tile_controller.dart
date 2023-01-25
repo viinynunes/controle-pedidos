@@ -1,5 +1,3 @@
-import 'package:controle_pedidos/src/domain/models/stock_model.dart';
-import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -81,9 +79,15 @@ abstract class _StockTileControllerBase with Store {
     updateStockLeft();
   }
 
+  @action
+  updateTotalOrderedByKeyboard(String newStock) {
+    stock.totalOrdered = int.parse(newStock);
 
+    updateStockUsecase(stock);
 
-
+    updateTotalOrderedController();
+    updateStockLeft();
+  }
 
   @action
   updateStockLeftByButton(bool increase) {
@@ -101,14 +105,6 @@ abstract class _StockTileControllerBase with Store {
 
     updateTotalOrderedController();
     updateStock(increase);
-  }
-
-  @action
-  updateTotalOrderedByKeyboard(String newStock) {
-    stockTotalOrderedController.text = newStock;
-    stock.totalOrdered = int.parse(newStock);
-    updateStockLeft();
-    updateStock(true);
   }
 
   @action
