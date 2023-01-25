@@ -122,7 +122,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
       iniDate = _removeHourFromDateTime(date: iniDate);
       endDate = _removeHourFromDateTime(date: endDate);
 
-      final list = await _datasource.getStockListBetweenDates(
+      var list = await _datasource.getStockListBetweenDates(
           iniDate: iniDate, endDate: endDate);
 
       return Right(_mergeStockList(stockListFromDB: list));
@@ -142,7 +142,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
       iniDate = _removeHourFromDateTime(date: iniDate);
       endDate = _removeHourFromDateTime(date: endDate);
 
-      final list = await _datasource.getStockListByProviderBetweenDates(
+      var list = await _datasource.getStockListByProviderBetweenDates(
           provider: ProviderModel.fromProvider(provider),
           iniDate: iniDate,
           endDate: endDate);
@@ -246,7 +246,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
         stockFromList.total += stock.total;
         stockFromList.totalOrdered += stock.totalOrdered;
       } else {
-        stockListFromDB.add(stock);
+        stockList.add(stock);
       }
     }
 
