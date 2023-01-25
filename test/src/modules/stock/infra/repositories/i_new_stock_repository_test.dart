@@ -246,7 +246,7 @@ main() {
     });
   });
 
-  group('tests to delete stock ub repository', () {
+  group('tests to delete stock in repository', () {
     test('have to return a Left with an Exception when delete stock fail',
         () async {
       when(datasource.deleteStock(stock: defaultStock))
@@ -305,6 +305,18 @@ main() {
       expect(result.fold(id, id), isA<Exception>());
     });
 
+    test('have to create a new stock if getStockByCode return null', () async {
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenAnswer((_) async => null);
+
+      final result = await repository.increaseTotalFromStock(
+          product: product, date: date, increaseQuantity: increaseQuantity);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total), increaseQuantity);
+    });
+
     test(
         'have to increase stock total from DB and update stock got on getStockByCode',
         () async {
@@ -359,15 +371,15 @@ main() {
 
   group('tests to update stock in repository', () {
     test('have to return a Left with an Exception when update stock fail',
-            () async {
-          when(datasource.updateStock(stock: defaultStock))
-              .thenThrow(() => throw Exception('Update Error'));
+        () async {
+      when(datasource.updateStock(stock: defaultStock))
+          .thenThrow(() => throw Exception('Update Error'));
 
-          final result = await repository.updateStock(defaultStock);
+      final result = await repository.updateStock(defaultStock);
 
-          expect(result, isA<Left>());
-          expect(result.fold(id, id), isA<Exception>());
-        });
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
 
     test('have to return a Right with update stock', () async {
       final result = await repository.updateStock(defaultStock);
