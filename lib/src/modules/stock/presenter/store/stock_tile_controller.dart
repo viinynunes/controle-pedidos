@@ -6,15 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/stock.dart';
+import '../../domain/usecases/decrease_stock_total_ordered_usecase.dart';
+import '../../domain/usecases/increase_stock_total_ordered_usecase.dart';
+import '../../domain/usecases/update_stock_usecase.dart';
 
 part 'stock_tile_controller.g.dart';
 
 class StockTileController = _StockTileControllerBase with _$StockTileController;
 
 abstract class _StockTileControllerBase with Store {
-  final IStockUsecase stockUsecase;
+  final UpdateStockUsecase updateStockUsecase;
+  final IncreaseStockTotalOrderedUsecase increaseStockTotalOrderedUsecase;
+  final DecreaseStockTotalOrderedUsecase decreaseStockTotalOrderedUsecase;
 
-  _StockTileControllerBase(this.stockUsecase);
+  _StockTileControllerBase(
+      this.updateStockUsecase,
+      this.increaseStockTotalOrderedUsecase,
+      this.decreaseStockTotalOrderedUsecase);
 
   @observable
   int stockLeft = 0;
@@ -56,17 +64,26 @@ abstract class _StockTileControllerBase with Store {
   }
 
   @action
-  updateTotalOrderedByButton(bool increase) {
-    if (increase) {
-      stock.totalOrdered++;
-    } else {
-      stock.totalOrdered--;
-    }
+  increaseStockTotalOrderedByButton() {
+    stock.totalOrdered++;
 
+    increaseStockTotalOrderedUsecase(increaseQuantity: 1, stockID: stock.id);
     updateTotalOrderedController();
     updateStockLeft();
-    updateStockUsecase(increase);
   }
+
+  @action
+  decreaseStockTotalOrderedByButton() {
+    stock.totalOrdered--;
+
+    decreaseStockTotalOrderedUsecase(decreaseQuantity: 1, stockID: stock.id);
+    updateTotalOrderedController();
+    updateStockLeft();
+  }
+
+
+
+
 
   @action
   updateStockLeftByButton(bool increase) {
@@ -83,7 +100,7 @@ abstract class _StockTileControllerBase with Store {
     }
 
     updateTotalOrderedController();
-    updateStockUsecase(increase);
+    updateStock(increase);
   }
 
   @action
@@ -91,7 +108,7 @@ abstract class _StockTileControllerBase with Store {
     stockTotalOrderedController.text = newStock;
     stock.totalOrdered = int.parse(newStock);
     updateStockLeft();
-    updateStockUsecase(true);
+    updateStock(true);
   }
 
   @action
@@ -102,21 +119,21 @@ abstract class _StockTileControllerBase with Store {
 
   @action
   updateStockDate(DateTime date) async {
-    final toDeleteStock = StockModel.fromStock(stock);
+/*    final toDeleteStock = StockModel.fromStock(stock);
 
     stock.registrationDate = date;
 
     final result = await stockUsecase.updateStockDate(toDeleteStock, stock);
 
-    result.fold((l) => error = optionOf(l), (r) => {});
+    result.fold((l) => error = optionOf(l), (r) => {});*/
   }
 
-  updateStockUsecase(bool increase) async {
-    final result = searchDatesAreEqual
-        ? await stockUsecase.updateStock(stock)
+  updateStock(bool increase) async {
+/*    final result = searchDatesAreEqual
+        ? await updateStockUsecase(stock)
         : await stockUsecase.updateStockByEndDate(stock, endDate, increase);
 
-    result.fold((l) => error = optionOf(l), (r) => {});
+    result.fold((l) => error = optionOf(l), (r) => {});*/
   }
 
   stockTextFieldTap() {

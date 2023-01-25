@@ -124,11 +124,22 @@ mixin _$StockTileController on _StockTileControllerBase, Store {
   }
 
   @override
-  dynamic updateTotalOrderedByButton(bool increase) {
+  dynamic increaseStockTotalOrderedByButton() {
     final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
-        name: '_StockTileControllerBase.updateTotalOrderedByButton');
+        name: '_StockTileControllerBase.increaseStockTotalOrderedByButton');
     try {
-      return super.updateTotalOrderedByButton(increase);
+      return super.increaseStockTotalOrderedByButton();
+    } finally {
+      _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic decreaseStockTotalOrderedByButton() {
+    final _$actionInfo = _$_StockTileControllerBaseActionController.startAction(
+        name: '_StockTileControllerBase.decreaseStockTotalOrderedByButton');
+    try {
+      return super.decreaseStockTotalOrderedByButton();
     } finally {
       _$_StockTileControllerBaseActionController.endAction(_$actionInfo);
     }
