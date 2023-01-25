@@ -61,8 +61,8 @@ void setUpStockLocator() {
       stockLocator(),
       stockLocator(),
       stockLocator()));
-  stockLocator.registerFactory<StockTileController>(
-      () => StockTileController(stockLocator()));
+  stockLocator.registerFactory<StockTileController>(() =>
+      StockTileController(stockLocator(), stockLocator(), stockLocator(), stockLocator()));
   stockLocator.registerFactory<DivideStockDialogController>(
       () => DivideStockDialogController(stockLocator()));
   stockLocator.registerFactory<ShowOrdersByStockDialogController>(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/stock.dart';
+import '../../domain/usecases/change_stock_date_usecase.dart';
 import '../../domain/usecases/decrease_stock_total_ordered_usecase.dart';
 import '../../domain/usecases/increase_stock_total_ordered_usecase.dart';
 import '../../domain/usecases/update_stock_usecase.dart';
@@ -16,11 +17,13 @@ abstract class _StockTileControllerBase with Store {
   final UpdateStockUsecase updateStockUsecase;
   final IncreaseStockTotalOrderedUsecase increaseStockTotalOrderedUsecase;
   final DecreaseStockTotalOrderedUsecase decreaseStockTotalOrderedUsecase;
+  final ChangeStockDateUsecase changeStockDateUsecase;
 
   _StockTileControllerBase(
       this.updateStockUsecase,
       this.increaseStockTotalOrderedUsecase,
-      this.decreaseStockTotalOrderedUsecase);
+      this.decreaseStockTotalOrderedUsecase,
+      this.changeStockDateUsecase);
 
   @observable
   int stockLeft = 0;
@@ -121,22 +124,10 @@ abstract class _StockTileControllerBase with Store {
   }
 
   @action
-  updateStockDate(DateTime date) async {
-/*    final toDeleteStock = StockModel.fromStock(stock);
+  changeStockDate(DateTime date) async {
+    final result = await changeStockDateUsecase(stockId: stock.id, newDate: date);
 
-    stock.registrationDate = date;
-
-    final result = await stockUsecase.updateStockDate(toDeleteStock, stock);
-
-    result.fold((l) => error = optionOf(l), (r) => {});*/
-  }
-
-  updateStock(bool increase) async {
-/*    final result = searchDatesAreEqual
-        ? await updateStockUsecase(stock)
-        : await stockUsecase.updateStockByEndDate(stock, endDate, increase);
-
-    result.fold((l) => error = optionOf(l), (r) => {});*/
+    result.fold((l) => error = optionOf(l), (r) => {});
   }
 
   stockTextFieldTap() {

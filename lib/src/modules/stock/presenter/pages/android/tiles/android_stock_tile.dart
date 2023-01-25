@@ -91,7 +91,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                     equalDates: Helpers.compareOnlyDateFromDateTime(
                         stockController.iniDate, stockController.endDate),
                     onChangeDate: (date) async {
-                      await tileController.updateStockDate(date);
+                      await tileController.changeStockDate(date);
                       await stockController
                           .getStockListByProviderBetweenDates();
                     },
