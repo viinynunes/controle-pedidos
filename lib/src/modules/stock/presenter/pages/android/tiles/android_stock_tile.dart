@@ -134,14 +134,14 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       children: [
                         AddRemoveQuantityWidget(
                           onTap: () =>
-                              tileController.updateTotalOrderedByButton(true),
+                              tileController.increaseStockTotalOrderedByButton(),
                           icon: Icons.add_circle_sharp,
                           color: Colors.green,
                         ),
                         const SizedBox(height: 10),
                         AddRemoveQuantityWidget(
                           onTap: () =>
-                              tileController.updateTotalOrderedByButton(false),
+                              tileController.decreaseStockTotalOrderedByButton(),
                           icon: Icons.remove_circle_sharp,
                           color: Colors.red,
                         ),
@@ -161,14 +161,14 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       children: [
                         AddRemoveQuantityWidget(
                           onTap: () =>
-                              tileController.updateStockLeftByButton(true),
+                              tileController.increaseStockTotalOrderedFromStockLeft(),
                           icon: Icons.add_circle_sharp,
                           color: Colors.green,
                         ),
                         const SizedBox(height: 10),
                         AddRemoveQuantityWidget(
                           onTap: () =>
-                              tileController.updateStockLeftByButton(false),
+                              tileController.decreaseStockTotalOrderedFromStockLeft(),
                           icon: Icons.remove_circle_sharp,
                           color: Colors.red,
                         ),

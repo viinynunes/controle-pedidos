@@ -90,21 +90,28 @@ abstract class _StockTileControllerBase with Store {
   }
 
   @action
-  updateStockLeftByButton(bool increase) {
-    if (increase) {
-      if (stockLeft.isNegative) {
-        stockLeft = 0;
-        stock.totalOrdered = stock.total;
-      }
-      stockLeft++;
-      stock.totalOrdered++;
-    } else {
-      stockLeft--;
-      stock.totalOrdered--;
+  increaseStockTotalOrderedFromStockLeft() {
+    if (stockLeft.isNegative) {
+      stockLeft = 0;
+      stock.totalOrdered = stock.total;
     }
 
+    stockLeft++;
+    stock.totalOrdered++;
+
+    updateStockUsecase(stock);
+
     updateTotalOrderedController();
-    updateStock(increase);
+  }
+
+  @action
+  decreaseStockTotalOrderedFromStockLeft() {
+    stockLeft--;
+    stock.totalOrdered--;
+
+    updateTotalOrderedController();
+    updateStockUsecase(stock);
+    updateTotalOrderedController();
   }
 
   @action
