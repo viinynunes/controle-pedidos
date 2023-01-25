@@ -1,17 +1,14 @@
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
-import 'package:controle_pedidos/src/modules/stock/domain/repositories/i_new_stock_repository.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/impl/increase_stock_total_usecase_impl.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../domain/entities/product_mock.dart';
 import '../../../../domain/entities/stock_mock.dart';
-import '../i_new_stock_usecase_test.mocks.dart';
+import '../repositories/mock_repository.mocks.dart';
 
-@GenerateMocks([INewStockRepository])
 main() {
   final repository = MockINewStockRepository();
   final increaseTotal = IncreaseStockTotalUsecaseImpl(repository);

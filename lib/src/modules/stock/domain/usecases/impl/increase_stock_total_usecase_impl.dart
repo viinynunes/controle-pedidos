@@ -20,7 +20,7 @@ class IncreaseStockTotalUsecaseImpl implements IncreaseStockTotalUsecase {
       return Left(StockError('Product ID cannot be empty'));
     }
 
-    if (increaseQuantity <= 0) {
+    if (increaseQuantity < 0) {
       return Left(
           StockError('Increase quantity cannot be a non positive number'));
     }
