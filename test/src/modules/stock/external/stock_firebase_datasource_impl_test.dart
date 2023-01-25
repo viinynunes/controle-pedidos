@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/provider_model.dart';
+import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/stock/external/new_stock_firebase_datasource_impl.dart';
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_new_stock_datasource.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
@@ -15,7 +16,8 @@ main() {
 
   const mockCompanyID = 'mockCompanyID';
   final date = DateTime.now();
-  final defaultStock = StockMock.getOneStock(registrationDate: DateTime(date.year, date.month, date.day));
+  final defaultStock = StockMock.getOneStock(
+      registrationDate: DateTime(date.year, date.month, date.day));
 
   setUp(() {
     firebase = null;
@@ -41,6 +43,22 @@ main() {
           iniDate: iniDate, endDate: endDate);
 
       expect(result, isA<Set<ProviderModel>>());
+      expect(result.length, 1);
+    });
+  });
+
+  group('tests to getStockListByProviderBetweenDates', () {
+    test('have to return a stock list with 1 stock from getStockListByProviderBetweenDates', () async {
+      await datasource.createStock(stock: defaultStock);
+      final iniDate = DateTime(date.year, date.month, date.day);
+      final endDate = DateTime(date.year, date.month, date.day);
+
+      final result = await datasource.getStockListByProviderBetweenDates(
+          provider: ProviderModel.fromProvider(defaultStock.product.provider),
+          iniDate: iniDate,
+          endDate: endDate);
+
+      expect(result, isA<List<StockModel>>());
       expect(result.length, 1);
     });
   });
