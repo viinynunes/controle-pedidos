@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../../../core/helpers.dart';
+import '../../../../../../core/date_time_helper.dart';
 import '../../../store/stock_controller.dart';
 
 class StockLeftTextFieldWidget extends StatefulWidget {

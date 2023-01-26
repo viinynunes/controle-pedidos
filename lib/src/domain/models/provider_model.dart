@@ -1,6 +1,6 @@
 import 'package:controle_pedidos/src/domain/entities/provider.dart';
 
-import '../../core/helpers.dart';
+import '../../core/date_time_helper.dart';
 import 'establish_model.dart';
 
 class ProviderModel extends Provider {

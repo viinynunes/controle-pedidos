@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:controle_pedidos/src/core/helpers.dart';
+import 'package:controle_pedidos/src/core/date_time_helper.dart';
 
 import '../entities/company.dart';
 

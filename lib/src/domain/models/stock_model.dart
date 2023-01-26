@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../core/helpers.dart';
+import '../../core/date_time_helper.dart';
 import '../entities/stock.dart';
 import 'product_model.dart';
 
