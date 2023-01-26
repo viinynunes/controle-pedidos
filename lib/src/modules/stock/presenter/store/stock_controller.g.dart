@@ -177,17 +177,6 @@ mixin _$StockController on _StockControllerBase, Store {
         .run(() => super.getStockListByProviderBetweenDates());
   }
 
-  late final _$createDuplicatedStockAsyncAction = AsyncAction(
-      '_StockControllerBase.createDuplicatedStock',
-      context: context);
-
-  @override
-  Future createDuplicatedStock(
-      Stock stock, Provider provider, bool movePropertiesAndDelete) {
-    return _$createDuplicatedStockAsyncAction.run(() =>
-        super.createDuplicatedStock(stock, provider, movePropertiesAndDelete));
-  }
-
   late final _$loadStockDefaultAsyncAction =
       AsyncAction('_StockControllerBase.loadStockDefault', context: context);
 

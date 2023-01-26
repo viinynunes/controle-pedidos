@@ -7,10 +7,12 @@ import '../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/entities/stock.dart';
-import '../../../../domain/models/stock_model.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../../provider/services/i_provider_service.dart';
-import '../../domain/usecases/i_stock_usecase.dart';
+import '../../domain/usecases/delete_stock_usecase.dart';
+import '../../domain/usecases/get_stock_lists_usecase.dart';
+import '../../domain/usecases/increase_stock_total_usecase.dart';
+import '../../domain/usecases/update_stock_usecase.dart';
 import '../../errors/stock_error.dart';
 import '../../services/i_stock_service.dart';
 
@@ -20,12 +22,21 @@ class StockController = _StockControllerBase with _$StockController;
 
 abstract class _StockControllerBase with Store {
   final IStockService stockService;
-  final IStockUsecase stockUsecase;
   final IProductUsecase productUsecase;
   final IProviderService providerService;
+  final GetStockListsUsecase getStockListsUsecase;
+  final UpdateStockUsecase updateStockUsecase;
+  final DeleteStockUsecase deleteStockUsecase;
+  final IncreaseStockTotalUsecase increaseStockTotalUsecase;
 
-  _StockControllerBase(this.stockUsecase, this.stockService,
-      this.productUsecase, this.providerService);
+  _StockControllerBase(
+      this.stockService,
+      this.productUsecase,
+      this.providerService,
+      this.getStockListsUsecase,
+      this.updateStockUsecase,
+      this.deleteStockUsecase,
+      this.increaseStockTotalUsecase);
 
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -113,8 +124,8 @@ abstract class _StockControllerBase with Store {
 
     resetStockLeft();
 
-    final providerResult =
-        await stockUsecase.getProviderListByStockBetweenDates(iniDate, endDate);
+    final providerResult = await getStockListsUsecase
+        .getProviderListByStockBetweenDates(iniDate: iniDate, endDate: endDate);
 
     providerResult.fold((l) => error = optionOf(l), (r) {
       providerList = ObservableList.of(r);
@@ -150,7 +161,7 @@ abstract class _StockControllerBase with Store {
       stockList.clear();
 
       final providerResult =
-          await stockUsecase.getStockListByProviderBetweenDates(
+          await getStockListsUsecase.getStockListByProviderBetweenDates(
               provider: selectedProvider!, iniDate: iniDate, endDate: endDate);
 
       providerResult.fold((l) => error = optionOf(l), (r) {
@@ -190,7 +201,7 @@ abstract class _StockControllerBase with Store {
 
     for (var s in stockList) {
       s.totalOrdered = s.total + stockLeft;
-      stockUsecase.updateStock(s);
+      updateStockUsecase(s);
     }
 
     ///modifying stockList to mobx reaction get the state
@@ -202,40 +213,6 @@ abstract class _StockControllerBase with Store {
     final List<Stock> updatedList = stockList;
     stockList = ObservableList.of([]);
     stockList = ObservableList.of(updatedList);
-  }
-
-  @action
-  createDuplicatedStock(
-      Stock stock, Provider provider, bool movePropertiesAndDelete) async {
-    if (stock.product.provider == provider) {
-      return;
-    }
-
-    var newStock = StockModel.fromStock(stock);
-
-    newStock.product.provider = provider;
-    newStock.product.provider.name = provider.name;
-    newStock.product.provider.id = provider.id;
-
-    if (!movePropertiesAndDelete) {
-      newStock.total = 0;
-      newStock.totalOrdered = 0;
-    }
-
-    final createResult = await stockUsecase.createStock(newStock);
-
-    createResult.fold(
-      (l) => error = optionOf(l),
-      (newStock) async {
-        if (movePropertiesAndDelete) {
-          final deleteResult = await stockUsecase.deleteStock(stock);
-
-          deleteResult.fold((l) => error = optionOf(l), (r) => {});
-        }
-
-        reloadProviderListAndStockList(newStock.product.provider);
-      },
-    );
   }
 
   @action
@@ -260,15 +237,8 @@ abstract class _StockControllerBase with Store {
 
   @action
   createEmptyStock(Product product, bool reloadAfterCreate) async {
-    final stock = StockModel(
-        id: '0',
-        code: '0',
-        registrationDate: DateTime.now(),
-        total: 0,
-        totalOrdered: 0,
-        product: product);
-
-    final createResult = await stockUsecase.createStock(stock);
+    final createResult = await increaseStockTotalUsecase(
+        increaseQuantity: 0, product: product, date: DateTime.now());
 
     createResult.fold((l) => error = optionOf(l), (r) async {
       if (reloadAfterCreate) {
@@ -292,7 +262,7 @@ abstract class _StockControllerBase with Store {
   @action
   removeStock(Stock stock) async {
     loading = true;
-    final result = await stockUsecase.deleteStock(stock);
+    final result = await deleteStockUsecase(stock);
 
     result.fold((l) => error = optionOf(l), (r) {
       stockList.remove(stock);
