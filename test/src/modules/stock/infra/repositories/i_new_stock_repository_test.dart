@@ -148,7 +148,20 @@ main() {
       when(datasource.getStockById(id: anyNamed('id')))
           .thenThrow(() => throw StockError('Stock not found'));
 
-      final result = await repository.changeStockProvider(
+      final result = await repository.moveStockWithProperties(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to catch an exception when getStockByCode didn\'t fails on change stock provider',
+        () async {
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenThrow(() => throw StockError('Stock not found'));
+
+      final result = await repository.moveStockWithProperties(
           stockID: stockID, newProvider: provider);
 
       expect(result, isA<Left>());
@@ -161,7 +174,7 @@ main() {
       when(datasource.updateStock(stock: defaultStock))
           .thenThrow(() => throw StockError('Delete Stock Fail'));
 
-      final result = await repository.changeStockProvider(
+      final result = await repository.moveStockWithProperties(
           stockID: stockID, newProvider: provider);
 
       expect(result, isA<Left>());
@@ -171,7 +184,7 @@ main() {
     test(
         'have to update stock from DB when get stock by code returns a stock on change stock provider',
         () async {
-      final result = await repository.changeStockProvider(
+      final result = await repository.moveStockWithProperties(
           stockID: stockID, newProvider: provider);
 
       expect(result, isA<Right>());
@@ -188,7 +201,7 @@ main() {
       when(datasource.getStockByCode(code: anyNamed('code')))
           .thenAnswer((_) async => null);
 
-      final result = await repository.changeStockProvider(
+      final result = await repository.moveStockWithProperties(
           stockID: stockID, newProvider: provider);
 
       expect(result, isA<Right>());
@@ -196,6 +209,62 @@ main() {
       expect(result.fold((l) => null, (r) => r.total), stockTotal);
       expect(
           result.fold((l) => null, (r) => r.totalOrdered), stockTotalOrdered);
+    });
+  });
+
+  group('tests to duplicate stock without properties on repository', () {
+    test(
+        'have to catch an exception when getStockById didn\'t find a stock on duplicate stock without properties provider',
+        () async {
+      when(datasource.getStockById(id: anyNamed('id')))
+          .thenThrow(() => throw StockError('Stock not found'));
+
+      final result = await repository.duplicateStockWithoutProperties(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to catch an exception when getStockByCode didn\'t fails on duplicate stock without properties',
+        () async {
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenThrow(() => throw StockError('Stock not found'));
+
+      final result = await repository.duplicateStockWithoutProperties(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Left>());
+      expect(result.fold(id, id), isA<Exception>());
+    });
+
+    test(
+        'have to return the stock found on get stock by code on duplicate stock without properties',
+        () async {
+      final result = await repository.duplicateStockWithoutProperties(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total), stockTotalFromCode);
+      expect(result.fold((l) => null, (r) => r.totalOrdered),
+          stockTotalOrderedFromCode);
+    });
+
+    test(
+        'have to create a stock with total and total ordered equals 0 when get stock by code returns null on duplicate stock without properties',
+        () async {
+      when(datasource.getStockByCode(code: anyNamed('code')))
+          .thenAnswer((_) async => null);
+
+      final result = await repository.duplicateStockWithoutProperties(
+          stockID: stockID, newProvider: provider);
+
+      expect(result, isA<Right>());
+      expect(result.fold(id, id), isA<Stock>());
+      expect(result.fold((l) => null, (r) => r.total), 0);
+      expect(result.fold((l) => null, (r) => r.totalOrdered), 0);
     });
   });
 

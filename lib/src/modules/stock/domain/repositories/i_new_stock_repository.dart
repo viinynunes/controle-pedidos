@@ -19,7 +19,10 @@ abstract class INewStockRepository {
   Future<Either<StockError, Stock>> changeStockDate(
       {required String stockId, required DateTime newDate});
 
-  Future<Either<StockError, Stock>> changeStockProvider(
+  Future<Either<StockError, Stock>> duplicateStockWithoutProperties(
+      {required String stockID, required Provider newProvider});
+
+  Future<Either<StockError, Stock>> moveStockWithProperties(
       {required String stockID, required Provider newProvider});
 
   Future<Either<StockError, Stock>> increaseTotalOrderedFromStock(
