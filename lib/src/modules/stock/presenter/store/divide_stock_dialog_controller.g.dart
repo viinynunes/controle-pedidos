@@ -58,24 +58,6 @@ mixin _$DivideStockDialogController on _DivideStockDialogControllerBase, Store {
     });
   }
 
-  late final _$movePropertiesAndDeleteAtom = Atom(
-      name: '_DivideStockDialogControllerBase.movePropertiesAndDelete',
-      context: context);
-
-  @override
-  bool get movePropertiesAndDelete {
-    _$movePropertiesAndDeleteAtom.reportRead();
-    return super.movePropertiesAndDelete;
-  }
-
-  @override
-  set movePropertiesAndDelete(bool value) {
-    _$movePropertiesAndDeleteAtom
-        .reportWrite(value, super.movePropertiesAndDelete, () {
-      super.movePropertiesAndDelete = value;
-    });
-  }
-
   late final _$providerListAtom = Atom(
       name: '_DivideStockDialogControllerBase.providerList', context: context);
 
@@ -111,6 +93,17 @@ mixin _$DivideStockDialogController on _DivideStockDialogControllerBase, Store {
         .run(() => super.getProviderListByEnabled());
   }
 
+  late final _$createDuplicatedStockAsyncAction = AsyncAction(
+      '_DivideStockDialogControllerBase.createDuplicatedStock',
+      context: context);
+
+  @override
+  Future createDuplicatedStock(
+      Stock stock, Provider provider, bool movePropertiesAndDelete) {
+    return _$createDuplicatedStockAsyncAction.run(() =>
+        super.createDuplicatedStock(stock, provider, movePropertiesAndDelete));
+  }
+
   late final _$_DivideStockDialogControllerBaseActionController =
       ActionController(
           name: '_DivideStockDialogControllerBase', context: context);
@@ -129,26 +122,11 @@ mixin _$DivideStockDialogController on _DivideStockDialogControllerBase, Store {
   }
 
   @override
-  dynamic toggleMovePropertiesAndDelete() {
-    final _$actionInfo =
-        _$_DivideStockDialogControllerBaseActionController.startAction(
-            name:
-                '_DivideStockDialogControllerBase.toggleMovePropertiesAndDelete');
-    try {
-      return super.toggleMovePropertiesAndDelete();
-    } finally {
-      _$_DivideStockDialogControllerBaseActionController
-          .endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 stock: ${stock},
 selectedProvider: ${selectedProvider},
 loading: ${loading},
-movePropertiesAndDelete: ${movePropertiesAndDelete},
 providerList: ${providerList}
     ''';
   }

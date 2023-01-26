@@ -1,5 +1,6 @@
 import 'package:controle_pedidos/src/modules/stock/domain/repositories/i_new_stock_repository.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/change_stock_date_usecase.dart';
+import 'package:controle_pedidos/src/modules/stock/domain/usecases/change_stock_provider_usecase.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/decrease_stock_total_usecase.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/delete_stock_usecase.dart';
 import 'package:controle_pedidos/src/modules/stock/domain/usecases/get_stock_lists_usecase.dart';
@@ -20,6 +21,7 @@ import 'package:controle_pedidos/src/modules/stock/services/i_stock_service.dart
 import 'package:get_it/get_it.dart';
 
 import 'domain/usecases/decrease_stock_total_ordered_usecase.dart';
+import 'domain/usecases/impl/change_stock_provider_usecase_impl.dart';
 import 'domain/usecases/impl/decrease_stock_total_usecase_impl.dart';
 import 'domain/usecases/increase_stock_total_usecase.dart';
 import 'infra/repositories/new_stock_repository_impl.dart';
@@ -53,6 +55,8 @@ void setUpStockLocator() {
       () => IncreaseStockTotalUsecaseImpl(stockLocator()));
   stockLocator.registerLazySingleton<UpdateStockUsecase>(
       () => UpdateStockUsecaseImpl(stockLocator()));
+  stockLocator.registerLazySingleton<ChangeStockProviderUsecase>(
+          () => ChangeStockProviderUsecaseImpl(stockLocator()));
   stockLocator.registerSingleton<StockController>(StockController(
       stockLocator(),
       stockLocator(),
@@ -61,10 +65,10 @@ void setUpStockLocator() {
       stockLocator(),
       stockLocator(),
       stockLocator()));
-  stockLocator.registerFactory<StockTileController>(() =>
-      StockTileController(stockLocator(), stockLocator(), stockLocator(), stockLocator()));
+  stockLocator.registerFactory<StockTileController>(() => StockTileController(
+      stockLocator(), stockLocator(), stockLocator(), stockLocator()));
   stockLocator.registerFactory<DivideStockDialogController>(
-      () => DivideStockDialogController(stockLocator()));
+      () => DivideStockDialogController(stockLocator(), stockLocator()));
   stockLocator.registerFactory<ShowOrdersByStockDialogController>(
       () => ShowOrdersByStockDialogController(stockLocator()));
   stockLocator.registerFactory<ReportStockByProviderController>(

@@ -61,6 +61,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
       if (stockByCodeFromDB != null) {
         stockByCodeFromDB.total += stock.total;
         stockByCodeFromDB.totalOrdered += stock.totalOrdered;
+        await _datasource.deleteStock(stock: stock);
         return Right(await _datasource.updateStock(stock: stockByCodeFromDB));
       } else {
         return Right(await _datasource.updateStock(stock: stock));

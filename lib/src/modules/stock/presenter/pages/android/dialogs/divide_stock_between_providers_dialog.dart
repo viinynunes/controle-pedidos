@@ -39,9 +39,8 @@ class _DivideStockBetweenProvidersDialogState
         widget.stock.product.name,
         textAlign: TextAlign.center,
       ),
-      content: Container(
-        height: MediaQuery.of(context).size.height * 0.4,
-        padding: const EdgeInsets.all(8),
+      content: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,8 +63,11 @@ class _DivideStockBetweenProvidersDialogState
               ),
               const Divider(),
               Text(
-                'Selecione o Fornecedor',
+                'Selecione o Novo Fornecedor',
                 style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(
+                height: 10,
               ),
               Observer(
                 builder: (_) => divideController.loading
@@ -91,27 +93,21 @@ class _DivideStockBetweenProvidersDialogState
               const Divider(),
               Text(
                 'Copiar',
+                selectionColor: Colors.blue,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              Observer(
-                builder: (context) {
-                  return Switch(
-                      value: !divideController.movePropertiesAndDelete,
-                      onChanged: (e) =>
-                          divideController.toggleMovePropertiesAndDelete());
-                },
+              Text(
+                'Copia o estoque para outro fornecedor sem levar seus atributos(pedido, total e sobra)',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
+              const Divider(),
               Text(
                 'Mover',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              Observer(
-                builder: (context) {
-                  return Switch(
-                      value: divideController.movePropertiesAndDelete,
-                      onChanged: (e) =>
-                          divideController.toggleMovePropertiesAndDelete());
-                },
+              Text(
+                'Move o estoque para outro fornecedor levando seus atributos(pedido, total e sobra)',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               const Divider(),
             ],
@@ -123,24 +119,41 @@ class _DivideStockBetweenProvidersDialogState
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: Navigator.of(context).pop,
               child: const Text(
                 'Cancelar',
                 style: TextStyle(color: Colors.red),
               ),
             ),
             TextButton(
-              onPressed: () {
-                stockController.createDuplicatedStock(
-                    widget.stock,
-                    divideController.selectedProvider!,
-                    divideController.movePropertiesAndDelete);
+              onPressed: () async {
+                final newProvider = divideController.selectedProvider!;
+
+                await divideController.changeStockProvider(
+                    stockID: widget.stock.id, newProvider: newProvider);
+
+                await stockController.reloadProviderListAndStockList(newProvider);
 
                 Navigator.of(context).pop();
               },
               child: const Text(
-                'Salvar',
-                style: TextStyle(color: Colors.green),
+                'Mover',
+                style:
+                    TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                divideController.changeStockProvider(
+                    stockID: widget.stock.id,
+                    newProvider: divideController.selectedProvider!);
+
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Copiar',
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),
             ),
           ],

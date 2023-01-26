@@ -133,6 +133,33 @@ class MockINewStockRepository extends _i1.Mock
         )),
       ) as _i4.Future<_i2.Either<_i5.StockError, _i6.Stock>>);
   @override
+  _i4.Future<_i2.Either<_i5.StockError, _i6.Stock>> changeStockProvider({
+    required String? stockID,
+    required _i8.Provider? newProvider,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #changeStockProvider,
+          [],
+          {
+            #stockID: stockID,
+            #newProvider: newProvider,
+          },
+        ),
+        returnValue: _i4.Future<_i2.Either<_i5.StockError, _i6.Stock>>.value(
+            _FakeEither_0<_i5.StockError, _i6.Stock>(
+          this,
+          Invocation.method(
+            #changeStockProvider,
+            [],
+            {
+              #stockID: stockID,
+              #newProvider: newProvider,
+            },
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.StockError, _i6.Stock>>);
+  @override
   _i4.Future<_i2.Either<_i5.StockError, _i6.Stock>>
       increaseTotalOrderedFromStock({
     required String? stockID,

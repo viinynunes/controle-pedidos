@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/entities/stock.dart';
+import '../../domain/usecases/change_stock_provider_usecase.dart';
 
 part 'divide_stock_dialog_controller.g.dart';
 
@@ -11,8 +12,10 @@ class DivideStockDialogController = _DivideStockDialogControllerBase
 
 abstract class _DivideStockDialogControllerBase with Store {
   final IProviderUsecase providerUsecase;
+  final ChangeStockProviderUsecase changeStockProviderUsecase;
 
-  _DivideStockDialogControllerBase(this.providerUsecase);
+  _DivideStockDialogControllerBase(
+      this.providerUsecase, this.changeStockProviderUsecase);
 
   @observable
   Stock? stock;
@@ -20,8 +23,6 @@ abstract class _DivideStockDialogControllerBase with Store {
   Provider? selectedProvider;
   @observable
   bool loading = false;
-  @observable
-  bool movePropertiesAndDelete = false;
   @observable
   var providerList = ObservableList<Provider>.of([]);
 
@@ -38,11 +39,6 @@ abstract class _DivideStockDialogControllerBase with Store {
   }
 
   @action
-  toggleMovePropertiesAndDelete() {
-    movePropertiesAndDelete = !movePropertiesAndDelete;
-  }
-
-  @action
   getProviderListByEnabled() async {
     loading = true;
 
@@ -51,5 +47,43 @@ abstract class _DivideStockDialogControllerBase with Store {
     result.fold((l) {}, (r) => providerList = ObservableList.of(r));
 
     loading = false;
+  }
+
+  changeStockProvider(
+      {required String stockID, required Provider newProvider}) async {
+    await changeStockProviderUsecase(
+        stockID: stockID, newProvider: newProvider);
+  }
+
+  @action
+  createDuplicatedStock(
+      Stock stock, Provider provider, bool movePropertiesAndDelete) async {
+/*    if (stock.product.provider == provider) {
+      return;
+    }
+
+    var newStock = StockModel.fromStock(stock);
+
+    newStock.product.provider = provider;
+
+    if (!movePropertiesAndDelete) {
+      newStock.total = 0;
+      newStock.totalOrdered = 0;
+    }
+
+    final createResult = await createStockUsecase(newStock);
+
+    createResult.fold(
+          (l) => error = optionOf(l),
+          (newStock) async {
+        if (movePropertiesAndDelete) {
+          final deleteResult = await deleteStockUsecase(stock);
+
+          deleteResult.fold((l) => error = optionOf(l), (r) => {});
+        }
+
+        reloadProviderListAndStockList(newStock.product.provider);
+      },
+    );*/
   }
 }
