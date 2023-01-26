@@ -21,7 +21,7 @@ class EstablishmentModel extends Establishment {
       : super(
           id: map['id'],
           registrationDate: map['registrationDate'] is Timestamp
-              ? Helpers.convertTimestampToDateTime(map['registrationDate'])
+              ? DateTimeHelper.convertTimestampToDateTime(map['registrationDate'])
               : map['registrationDate'],
           name: map['name'],
           enabled: map['enabled'],

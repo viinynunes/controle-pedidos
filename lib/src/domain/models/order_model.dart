@@ -27,9 +27,9 @@ class OrderModel extends Order {
       : super(
             id: doc.id,
             registrationDate:
-                Helpers.convertTimestampToDateTime(doc.get('registrationDate')),
+                DateTimeHelper.convertTimestampToDateTime(doc.get('registrationDate')),
             registrationHour:
-                Helpers.convertTimestampToDateTime(doc.get('registrationHour')),
+                DateTimeHelper.convertTimestampToDateTime(doc.get('registrationHour')),
             enabled: doc.get('enabled'),
             client: ClientModel.fromMap(doc.get('client')),
             orderItemList: doc
@@ -42,9 +42,9 @@ class OrderModel extends Order {
       : super(
             id: map['id'],
             registrationDate:
-                Helpers.convertTimestampToDateTime(map['registrationDate']),
+                DateTimeHelper.convertTimestampToDateTime(map['registrationDate']),
             registrationHour:
-                Helpers.convertTimestampToDateTime(map['registrationHour']),
+                DateTimeHelper.convertTimestampToDateTime(map['registrationHour']),
             enabled: map['enabled'],
             client: ClientModel.fromMap(map['client']),
             orderItemList: map['orderItemList']

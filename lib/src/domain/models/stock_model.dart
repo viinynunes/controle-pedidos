@@ -30,7 +30,7 @@ class StockModel extends Stock {
             total: doc.get('total'),
             totalOrdered: doc.get('totalOrdered'),
             registrationDate:
-                Helpers.convertTimestampToDateTime(doc.get('registrationDate')),
+                DateTimeHelper.convertTimestampToDateTime(doc.get('registrationDate')),
             product: ProductModel.fromMap(map: doc.get('product')));
 
   StockModel.fromMap(Map<String, dynamic> map)
@@ -40,7 +40,7 @@ class StockModel extends Stock {
           total: map['total'],
           totalOrdered: map['totalOrdered'],
           registrationDate:
-              Helpers.convertTimestampToDateTime(map['registrationDate']),
+              DateTimeHelper.convertTimestampToDateTime(map['registrationDate']),
           product: ProductModel.fromMap(map: map['product']),
         );
 

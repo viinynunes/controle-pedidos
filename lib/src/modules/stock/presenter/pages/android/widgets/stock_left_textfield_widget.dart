@@ -18,7 +18,7 @@ class _StockLeftTextFieldWidgetState extends State<StockLeftTextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      enabled: Helpers.compareOnlyDateFromDateTime(
+      enabled: DateTimeHelper.compareOnlyDateFromDateTime(
           controller.iniDate, controller.endDate),
       controller: controller.stockDefaultLeftController,
       decoration: const InputDecoration(

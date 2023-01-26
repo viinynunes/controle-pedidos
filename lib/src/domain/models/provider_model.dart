@@ -27,7 +27,7 @@ class ProviderModel extends Provider {
             name: map['name'],
             location: map['location'],
             registrationDate:
-                Helpers.convertTimestampToDateTime(map['registrationDate']),
+                DateTimeHelper.convertTimestampToDateTime(map['registrationDate']),
             enabled: map['enabled'],
             establishment:
                 EstablishmentModel.fromMap(map: map['establishment']));

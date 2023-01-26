@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Helpers {
+class DateTimeHelper {
   static DateTime convertTimestampToDateTime(Timestamp timestamp) {
     return DateTime.parse(timestamp.toDate().toString());
   }
@@ -11,5 +11,9 @@ class Helpers {
     lastLate = DateTime(lastLate.year, lastLate.month, lastLate.day);
 
     return firstDate == lastLate;
+  }
+
+  static DateTime removeHourFromDateTime({required DateTime date}) {
+    return DateTime(date.year, date.month, date.day);
   }
 }

@@ -15,7 +15,7 @@ class CompanyModel extends Company {
         id: map['id'],
         name: map['name'],
         registrationDate:
-            Helpers.convertTimestampToDateTime(map['registrationDate']));
+            DateTimeHelper.convertTimestampToDateTime(map['registrationDate']));
   }
 
   static CompanyModel fromResumedMap({required Map<String, dynamic> map}) {

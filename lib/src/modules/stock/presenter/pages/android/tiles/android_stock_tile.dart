@@ -33,14 +33,14 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
     reaction((p0) => stockController.stockList, (p0) {
       tileController.initState(
           stock: widget.stock,
-          searchDatesAreEqual: Helpers.compareOnlyDateFromDateTime(
+          searchDatesAreEqual: DateTimeHelper.compareOnlyDateFromDateTime(
               stockController.iniDate, stockController.endDate),
           endDate: stockController.endDate);
     });
 
     tileController.initState(
         stock: widget.stock,
-        searchDatesAreEqual: Helpers.compareOnlyDateFromDateTime(
+        searchDatesAreEqual: DateTimeHelper.compareOnlyDateFromDateTime(
             stockController.iniDate, stockController.endDate),
         endDate: stockController.endDate);
   }
@@ -88,7 +88,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       });
                     },
                     onDelete: () => stockController.removeStock(widget.stock),
-                    equalDates: Helpers.compareOnlyDateFromDateTime(
+                    equalDates: DateTimeHelper.compareOnlyDateFromDateTime(
                         stockController.iniDate, stockController.endDate),
                     onChangeDate: (date) async {
                       await tileController.changeStockDate(date);
@@ -111,7 +111,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                     flex: 2,
                     fit: FlexFit.tight,
                     child: TextField(
-                      enabled: Helpers.compareOnlyDateFromDateTime(
+                      enabled: DateTimeHelper.compareOnlyDateFromDateTime(
                           stockController.iniDate, stockController.endDate),
                       controller: tileController.stockTotalOrderedController,
                       focusNode: tileController.stockTotalOrderedFocus,
