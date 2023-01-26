@@ -49,9 +49,17 @@ abstract class _DivideStockDialogControllerBase with Store {
     loading = false;
   }
 
-  changeStockProvider(
+  @action
+  moveStockWithProperties(
       {required String stockID, required Provider newProvider}) async {
-    await changeStockProviderUsecase(
+    await changeStockProviderUsecase.moveStockWithProperties(
+        stockID: stockID, newProvider: newProvider);
+  }
+
+  @action
+  duplicateStockWithoutProperties(
+      {required String stockID, required Provider newProvider}) async {
+    await changeStockProviderUsecase.duplicateStockWithoutProperties(
         stockID: stockID, newProvider: newProvider);
   }
 

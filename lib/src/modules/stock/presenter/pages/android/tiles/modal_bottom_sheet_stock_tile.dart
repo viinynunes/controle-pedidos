@@ -91,8 +91,8 @@ class ModalBottomSheetStockTile extends StatelessWidget {
               },
               enabled: equalDates,
               icon: Icons.safety_divider,
-              titleText: 'Dividir Entre Fornecedores',
-              subtitleText: 'Divide o item entre 2 ou mais fornecedores'),
+              titleText: 'Alterar Fornecedor',
+              subtitleText: 'Move ou divide para um novo fornecedor'),
           _getListItem(
               enabled: equalDates,
               onTap: () async {

@@ -92,12 +92,12 @@ class _DivideStockBetweenProvidersDialogState
               ),
               const Divider(),
               Text(
-                'Copiar',
+                'Duplicar',
                 selectionColor: Colors.blue,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
-                'Copia o estoque para outro fornecedor sem levar seus atributos(pedido, total e sobra)',
+                'Duplica o estoque para outro fornecedor sem levar seus atributos(pedido, total e sobra)',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const Divider(),
@@ -129,7 +129,7 @@ class _DivideStockBetweenProvidersDialogState
               onPressed: () async {
                 final newProvider = divideController.selectedProvider!;
 
-                await divideController.changeStockProvider(
+                await divideController.moveStockWithProperties(
                     stockID: widget.stock.id, newProvider: newProvider);
 
                 await stockController.reloadProviderListAndStockList(newProvider);
@@ -143,15 +143,19 @@ class _DivideStockBetweenProvidersDialogState
               ),
             ),
             TextButton(
-              onPressed: () {
-                divideController.changeStockProvider(
+              onPressed: () async {
+                final newProvider = divideController.selectedProvider!;
+
+                await divideController.duplicateStockWithoutProperties(
                     stockID: widget.stock.id,
-                    newProvider: divideController.selectedProvider!);
+                    newProvider: newProvider);
+
+                await stockController.reloadProviderListAndStockList(newProvider);
 
                 Navigator.of(context).pop();
               },
               child: const Text(
-                'Copiar',
+                'Duplicar',
                 style:
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),

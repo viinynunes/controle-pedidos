@@ -93,6 +93,29 @@ mixin _$DivideStockDialogController on _DivideStockDialogControllerBase, Store {
         .run(() => super.getProviderListByEnabled());
   }
 
+  late final _$moveStockWithPropertiesAsyncAction = AsyncAction(
+      '_DivideStockDialogControllerBase.moveStockWithProperties',
+      context: context);
+
+  @override
+  Future moveStockWithProperties(
+      {required String stockID, required Provider newProvider}) {
+    return _$moveStockWithPropertiesAsyncAction.run(() => super
+        .moveStockWithProperties(stockID: stockID, newProvider: newProvider));
+  }
+
+  late final _$duplicateStockWithoutPropertiesAsyncAction = AsyncAction(
+      '_DivideStockDialogControllerBase.duplicateStockWithoutProperties',
+      context: context);
+
+  @override
+  Future duplicateStockWithoutProperties(
+      {required String stockID, required Provider newProvider}) {
+    return _$duplicateStockWithoutPropertiesAsyncAction.run(() => super
+        .duplicateStockWithoutProperties(
+            stockID: stockID, newProvider: newProvider));
+  }
+
   late final _$createDuplicatedStockAsyncAction = AsyncAction(
       '_DivideStockDialogControllerBase.createDuplicatedStock',
       context: context);

@@ -10,22 +10,37 @@ import 'package:dartz/dartz.dart';
 import '../change_stock_provider_usecase.dart';
 
 class ChangeStockProviderUsecaseImpl implements ChangeStockProviderUsecase {
-
   final INewStockRepository _repository;
 
   ChangeStockProviderUsecaseImpl(this._repository);
 
   @override
-  Future<Either<StockError, Stock>> call({required String stockID, required Provider newProvider}) async {
-    if(stockID.isEmpty){
+  Future<Either<StockError, Stock>> duplicateStockWithoutProperties(
+      {required String stockID, required Provider newProvider}) async {
+    if (stockID.isEmpty) {
       return Left(StockError('Stock ID cannot be empty'));
     }
 
-    if (newProvider.id.isEmpty){
+    if (newProvider.id.isEmpty) {
       return Left(StockError('Provider ID cannot be empty'));
     }
 
-    return _repository.changeStockProvider(stockID: stockID, newProvider: newProvider);
+    return _repository.duplicateStockWithoutProperties(
+        stockID: stockID, newProvider: newProvider);
   }
 
+  @override
+  Future<Either<StockError, Stock>> moveStockWithProperties(
+      {required String stockID, required Provider newProvider}) async {
+    if (stockID.isEmpty) {
+      return Left(StockError('Stock ID cannot be empty'));
+    }
+
+    if (newProvider.id.isEmpty) {
+      return Left(StockError('Provider ID cannot be empty'));
+    }
+
+    return _repository.moveStockWithProperties(
+        stockID: stockID, newProvider: newProvider);
+  }
 }

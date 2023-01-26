@@ -5,6 +5,9 @@ import '../../../../domain/entities/stock.dart';
 import '../../errors/stock_error.dart';
 
 abstract class ChangeStockProviderUsecase {
-  Future<Either<StockError, Stock>> call(
+  Future<Either<StockError, Stock>> moveStockWithProperties(
+      {required String stockID, required Provider newProvider});
+
+  Future<Either<StockError, Stock>> duplicateStockWithoutProperties(
       {required String stockID, required Provider newProvider});
 }
