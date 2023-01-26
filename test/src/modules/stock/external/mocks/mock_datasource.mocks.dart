@@ -44,7 +44,7 @@ class MockINewStockDatasource extends _i1.Mock
   @override
   _i4.Future<_i2.StockModel> createStock({
     required _i2.StockModel? stock,
-    String? stockID,
+    String? stockID = r'',
   }) =>
       (super.noSuchMethod(
         Invocation.method(

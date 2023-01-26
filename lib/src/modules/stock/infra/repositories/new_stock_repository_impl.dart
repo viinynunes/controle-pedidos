@@ -6,6 +6,7 @@ import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_new_stock_datasource.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../core/helpers.dart';
 import '../../../../domain/models/product_model.dart';
 import '../../../../domain/models/provider_model.dart';
 import '../../../../domain/models/stock_model.dart';
@@ -103,8 +104,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
   Future<Either<StockError, Set<Provider>>> getProviderListByStockBetweenDates(
       {required DateTime iniDate, required DateTime endDate}) async {
     try {
-      iniDate = _removeHourFromDateTime(date: iniDate);
-      endDate = _removeHourFromDateTime(date: endDate);
+      iniDate = DateTimeHelper.removeHourFromDateTime(date: iniDate);
+      endDate = DateTimeHelper.removeHourFromDateTime(date: endDate);
 
       return Right(await _datasource.getProviderListByStockBetweenDates(
           iniDate: iniDate, endDate: endDate));
@@ -119,8 +120,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
   Future<Either<StockError, List<Stock>>> getStockListBetweenDates(
       {required DateTime iniDate, required DateTime endDate}) async {
     try {
-      iniDate = _removeHourFromDateTime(date: iniDate);
-      endDate = _removeHourFromDateTime(date: endDate);
+      iniDate = DateTimeHelper.removeHourFromDateTime(date: iniDate);
+      endDate = DateTimeHelper.removeHourFromDateTime(date: endDate);
 
       var list = await _datasource.getStockListBetweenDates(
           iniDate: iniDate, endDate: endDate);
@@ -139,8 +140,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
       required DateTime iniDate,
       required DateTime endDate}) async {
     try {
-      iniDate = _removeHourFromDateTime(date: iniDate);
-      endDate = _removeHourFromDateTime(date: endDate);
+      iniDate = DateTimeHelper.removeHourFromDateTime(date: iniDate);
+      endDate = DateTimeHelper.removeHourFromDateTime(date: endDate);
 
       var list = await _datasource.getStockListByProviderBetweenDates(
           provider: ProviderModel.fromProvider(provider),
@@ -221,7 +222,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
         code: _getStockCode(product: product, date: date),
         total: total,
         totalOrdered: totalOrdered,
-        registrationDate: _removeHourFromDateTime(date: date),
+        registrationDate: DateTimeHelper.removeHourFromDateTime(date: date),
         product: product);
   }
 
@@ -231,9 +232,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
         DateTime(date.year, date.month, date.day).toString();
   }
 
-  DateTime _removeHourFromDateTime({required DateTime date}) {
-    return DateTime(date.year, date.month, date.day);
-  }
+
 
   _mergeStockList({required List<StockModel> stockListFromDB}) {
     List<StockModel> stockList = [];
