@@ -116,17 +116,6 @@ mixin _$DivideStockDialogController on _DivideStockDialogControllerBase, Store {
             stockID: stockID, newProvider: newProvider));
   }
 
-  late final _$createDuplicatedStockAsyncAction = AsyncAction(
-      '_DivideStockDialogControllerBase.createDuplicatedStock',
-      context: context);
-
-  @override
-  Future createDuplicatedStock(
-      Stock stock, Provider provider, bool movePropertiesAndDelete) {
-    return _$createDuplicatedStockAsyncAction.run(() =>
-        super.createDuplicatedStock(stock, provider, movePropertiesAndDelete));
-  }
-
   late final _$_DivideStockDialogControllerBaseActionController =
       ActionController(
           name: '_DivideStockDialogControllerBase', context: context);
