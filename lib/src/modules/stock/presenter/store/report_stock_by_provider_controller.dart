@@ -1,4 +1,3 @@
-import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
 import 'package:controle_pedidos/src/modules/stock/services/i_stock_service.dart';
 import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,7 @@ import 'package:mobx/mobx.dart';
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/entities/stock.dart';
 import '../../../../domain/models/report_provider_model.dart';
+import '../../domain/usecases/get_stock_lists_usecase.dart';
 import '../../errors/stock_error.dart';
 
 part 'report_stock_by_provider_controller.g.dart';
@@ -15,7 +15,7 @@ class ReportStockByProviderController = _ReportStockByProviderControllerBase
     with _$ReportStockByProviderController;
 
 abstract class _ReportStockByProviderControllerBase with Store {
-  final IStockUsecase stockUsecase;
+  final GetStockListsUsecase stockUsecase;
   final IStockService stockService;
 
   _ReportStockByProviderControllerBase(this.stockUsecase, this.stockService);

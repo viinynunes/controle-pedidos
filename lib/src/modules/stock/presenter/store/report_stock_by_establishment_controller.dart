@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/stock/domain/usecases/i_stock_usecase.dart';
+import 'package:controle_pedidos/src/modules/stock/domain/usecases/get_stock_lists_usecase.dart';
 import 'package:controle_pedidos/src/modules/stock/services/i_stock_service.dart';
 import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +16,7 @@ class ReportStockByEstablishmentController = _ReportStockByEstablishmentControll
     with _$ReportStockByEstablishmentController;
 
 abstract class _ReportStockByEstablishmentControllerBase with Store {
-  final IStockUsecase usecase;
+  final GetStockListsUsecase usecase;
   final IStockService service;
 
   _ReportStockByEstablishmentControllerBase(this.usecase, this.service);
