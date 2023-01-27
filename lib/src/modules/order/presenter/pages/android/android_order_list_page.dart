@@ -77,19 +77,21 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                   productList: widget.productList,
                   clientList: widget.clientList),
               icon: const Icon(Icons.refresh)),
-          controller.sortByDate
-              ? IconButton(
-                  onPressed: controller.changeSortMethod,
-                  icon: const Icon(
-                    Icons.sort_by_alpha,
-                  ),
-                )
-              : IconButton(
-                  onPressed: controller.changeSortMethod,
-                  icon: const Icon(
-                    Icons.calendar_month,
-                  ),
-                ),
+          Observer(builder: (_) {
+            return controller.sortByDate
+                ? IconButton(
+                    onPressed: controller.changeSortMethod,
+                    icon: const Icon(
+                      Icons.sort_by_alpha,
+                    ),
+                  )
+                : IconButton(
+                    onPressed: controller.changeSortMethod,
+                    icon: const Icon(
+                      Icons.calendar_month,
+                    ),
+                  );
+          }),
         ],
       ),
       floatingActionButton: FloatingActionButton(
