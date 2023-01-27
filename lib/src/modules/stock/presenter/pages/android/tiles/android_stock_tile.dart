@@ -133,17 +133,21 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         AddRemoveQuantityWidget(
-                          onTap: () =>
-                              tileController.increaseStockTotalOrderedByButton(),
+                          onTap: () => tileController
+                              .increaseStockTotalOrderedByButton(),
                           icon: Icons.add_circle_sharp,
                           color: Colors.green,
+                          enabled: DateTimeHelper.compareOnlyDateFromDateTime(
+                              stockController.iniDate, stockController.endDate),
                         ),
                         const SizedBox(height: 10),
                         AddRemoveQuantityWidget(
-                          onTap: () =>
-                              tileController.decreaseStockTotalOrderedByButton(),
+                          onTap: () => tileController
+                              .decreaseStockTotalOrderedByButton(),
                           icon: Icons.remove_circle_sharp,
                           color: Colors.red,
+                          enabled: DateTimeHelper.compareOnlyDateFromDateTime(
+                              stockController.iniDate, stockController.endDate),
                         ),
                       ],
                     ),
@@ -160,17 +164,21 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         AddRemoveQuantityWidget(
-                          onTap: () =>
-                              tileController.increaseStockTotalOrderedFromStockLeft(),
+                          onTap: () => tileController
+                              .increaseStockTotalOrderedFromStockLeft(),
                           icon: Icons.add_circle_sharp,
                           color: Colors.green,
+                          enabled: DateTimeHelper.compareOnlyDateFromDateTime(
+                              stockController.iniDate, stockController.endDate),
                         ),
                         const SizedBox(height: 10),
                         AddRemoveQuantityWidget(
-                          onTap: () =>
-                              tileController.decreaseStockTotalOrderedFromStockLeft(),
+                          onTap: () => tileController
+                              .decreaseStockTotalOrderedFromStockLeft(),
                           icon: Icons.remove_circle_sharp,
                           color: Colors.red,
+                          enabled: DateTimeHelper.compareOnlyDateFromDateTime(
+                              stockController.iniDate, stockController.endDate),
                         ),
                       ],
                     ),
