@@ -13,7 +13,7 @@ class AddRemoveQuantityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => enabled ? onTap : null,
+      onTap: () => enabled ? onTap() : null,
       child: Icon(
         icon,
         size: 18,
