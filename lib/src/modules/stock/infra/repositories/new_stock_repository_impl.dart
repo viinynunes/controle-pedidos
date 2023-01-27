@@ -239,7 +239,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
 
     for (var stock in stockListFromDB) {
       if (stockList.contains(stock)) {
-        var stockFromList = stockListFromDB.singleWhere(
+        var stockFromList = stockList.singleWhere(
             (stockFromList) => stockFromList.product == stock.product);
 
         stockFromList.total += stock.total;
