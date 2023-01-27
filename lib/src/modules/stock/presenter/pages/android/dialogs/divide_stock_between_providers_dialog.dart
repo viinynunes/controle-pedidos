@@ -132,7 +132,16 @@ class _DivideStockBetweenProvidersDialogState
                 await divideController.moveStockWithProperties(
                     stockID: widget.stock.id, newProvider: newProvider);
 
-                await stockController.reloadProviderListAndStockList(newProvider);
+                await stockController.getProviderListByStockBetweenDates();
+
+                if (stockController.providerList.contains(
+                    divideController.stock?.product.provider ?? newProvider)) {
+                  await stockController.reloadProviderListAndStockList(
+                      divideController.stock?.product.provider ?? newProvider);
+                } else {
+                  await stockController
+                      .reloadProviderListAndStockList(newProvider);
+                }
 
                 Navigator.of(context).pop();
               },
@@ -147,10 +156,10 @@ class _DivideStockBetweenProvidersDialogState
                 final newProvider = divideController.selectedProvider!;
 
                 await divideController.duplicateStockWithoutProperties(
-                    stockID: widget.stock.id,
-                    newProvider: newProvider);
+                    stockID: widget.stock.id, newProvider: newProvider);
 
-                await stockController.reloadProviderListAndStockList(newProvider);
+                await stockController
+                    .reloadProviderListAndStockList(newProvider);
 
                 Navigator.of(context).pop();
               },
