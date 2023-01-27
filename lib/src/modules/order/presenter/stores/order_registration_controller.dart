@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/modules/stock/domain/usecases/increase_stock_total_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
@@ -11,6 +12,7 @@ import '../../../../domain/entities/product.dart';
 import '../../../../domain/models/order_item_model.dart';
 import '../../../../domain/models/order_model.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
+import '../../../stock/domain/usecases/decrease_stock_total_usecase.dart';
 import '../../domain/usecase/i_order_usecase.dart';
 import '../../errors/order_error.dart';
 
@@ -22,13 +24,18 @@ class OrderRegistrationController = _OrderRegistrationControllerBase
 abstract class _OrderRegistrationControllerBase with Store {
   final IOrderUsecase orderUsecase;
   final IProductUsecase productUsecase;
+  final IncreaseStockTotalUsecase createStockUsecase;
+  final DecreaseStockTotalUsecase decreaseStockTotalUsecase;
 
-  _OrderRegistrationControllerBase(this.orderUsecase, this.productUsecase);
+  _OrderRegistrationControllerBase(this.orderUsecase, this.productUsecase,
+      this.createStockUsecase, this.decreaseStockTotalUsecase);
 
   @observable
   bool newOrder = true;
   @observable
   bool loading = false;
+  @observable
+  String loadingMessage = '';
   @observable
   Client? selectedClient;
   @observable
@@ -39,6 +46,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   OrderItem? selectedOrderItem;
   @observable
   var orderItemList = ObservableList<OrderItem>.of([]);
+  late final List<OrderItem> oldOrderItemList;
   @observable
   var productList = ObservableList<Product>.of([]);
   @observable
@@ -74,6 +82,10 @@ abstract class _OrderRegistrationControllerBase with Store {
       newOrderData = OrderModel.fromOrder(order: order);
       selectedClient = newOrderData?.client;
       orderItemList = ObservableList.of(newOrderData?.orderItemList ?? []);
+      oldOrderItemList = newOrderData?.orderItemList
+              .map((item) => OrderItemModel.fromOrderItem(item: item))
+              .toList() ??
+          [];
       listIndex = order.orderItemList.length;
       sortOrderItemList();
     }
@@ -266,23 +278,46 @@ abstract class _OrderRegistrationControllerBase with Store {
 
     initNewOrderData();
 
-    if (newOrder) {
-      final createResult = await orderUsecase.createOrder(newOrderData!);
+    if (newOrder && newOrderData != null) {
+      loadingMessage = 'Salvando o Pedido...\n Aguarde';
+      final createOrderResult = await orderUsecase.createOrder(newOrderData!);
 
-      createResult.fold((l) => error = optionOf(l), (r) {
-        success = optionOf(r);
-        Navigator.of(context).pop(r);
-      });
+      if (createOrderResult.isRight()) {
+        for (var orderItem in newOrderData!.orderItemList) {
+          createStockUsecase(
+            product: orderItem.product,
+            date: newOrderData!.registrationDate,
+            increaseQuantity: orderItem.quantity,
+          );
+        }
+      }
     } else {
-      final updateResult = await orderUsecase.updateOrder(newOrderData!);
+      loadingMessage = 'Atualizando o Pedido...\n Aguarde';
+      final updateOrderResult = await orderUsecase.updateOrder(newOrderData!);
 
-      updateResult.fold((l) => error = optionOf(l), (r) {
-        success = optionOf(r);
-        Navigator.of(context).pop(r);
-      });
+      if (updateOrderResult.isRight()) {
+        for (var orderItem in newOrderData!.orderItemList) {
+          await createStockUsecase(
+            product: orderItem.product,
+            date: newOrderData!.registrationDate,
+            increaseQuantity: orderItem.quantity,
+          );
+        }
+
+        for (var orderItem in oldOrderItemList) {
+          await decreaseStockTotalUsecase(
+            product: orderItem.product,
+            date: newOrderData!.registrationDate,
+            decreaseQuantity: orderItem.quantity,
+          );
+        }
+      }
+
+      loadingMessage = '';
+      loading = false;
     }
 
-    loading = false;
+    Navigator.of(context).pop();
   }
 
   sortOrderItemList() {
