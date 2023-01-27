@@ -7,21 +7,16 @@ import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../domain/entities/order_item.dart';
-import '../../stock/infra/datasources/i_new_stock_datasource.dart';
 
 const cacheDocument = '00_cacheUpdated';
 
 class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   final FirebaseFirestore firebase;
 
-  final INewStockDatasource stockDatasource;
   late CollectionReference<Map<String, dynamic>> orderCollection;
   late CollectionReference<Map<String, dynamic>> productOnOrderCollection;
 
-  OrderFirebaseDatasourceImpl(
-      {required this.stockDatasource,
-      required this.firebase,
-      String? companyID}) {
+  OrderFirebaseDatasourceImpl({required this.firebase, String? companyID}) {
     orderCollection = firebase
         .collection('company')
         .doc(companyID ?? GetStorage().read('companyID'))
@@ -35,9 +30,6 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
   @override
   Future<OrderModel> createOrder(OrderModel order) async {
-    order.registrationDate = DateTime(order.registrationDate.year,
-        order.registrationDate.month, order.registrationDate.day);
-
     final snap = await orderCollection.add(order.toMap()).catchError((e) =>
         throw FirebaseException(
             plugin: 'CREATE ORDER ERROR', message: e.toString()));
@@ -45,34 +37,10 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     order.id = snap.id;
 
     for (var item in order.orderItemList) {
-      _increaseTotalFromStock(
-          item: item, registrationHour: order.registrationHour);
-
       _createProductReferenceToOrder(item: item, orderID: order.id);
     }
 
-    await orderCollection.doc(order.id).update(order.toMap());
-    await _updateCacheDoc(DateTime.now());
-
-    final createdOrder = await orderCollection.doc(order.id).get();
-    return OrderModel.fromDocumentSnapshot(doc: createdOrder);
-  }
-
-  _increaseTotalFromStock(
-      {required OrderItem item, required DateTime registrationHour}) {
-    stockDatasource.increaseTotalFromStock(
-        product: ProductModel.fromProduct(product: item.product),
-        date: registrationHour,
-        increaseQuantity: item.quantity);
-  }
-
-  _decreaseTotalFromStock(
-      {required OrderItem item, required DateTime registrationHour}) async {
-    await stockDatasource.decreaseTotalFromStock(
-        product: ProductModel.fromProduct(product: item.product),
-        date: registrationHour,
-        decreaseQuantity: item.quantity,
-        deleteIfEmpty: true);
+    return order;
   }
 
   _createProductReferenceToOrder(
@@ -86,6 +54,22 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
     }
 
     orderList.add(orderID);
+
+    await productOnOrderCollection
+        .doc(item.product.id)
+        .set({'orderList': orderList}).catchError((e) =>
+            throw FirebaseException(
+                plugin: 'CREATE PRODUCT REFERENCE TO ORDER ERROR',
+                message: e.toString()));
+  }
+
+  _removeProductReferenceFromOrder(
+      {required OrderItem item, required String orderID}) async {
+    final pRef = await productOnOrderCollection.doc(item.product.id).get();
+
+    var orderList = pRef.get('orderList');
+
+    orderList.remove(orderID);
 
     await productOnOrderCollection
         .doc(item.product.id)
@@ -111,14 +95,12 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
         throw FirebaseException(
             plugin: 'UPDATE ORDER ERROR', message: e.toString()));
 
-    for (var item in order.orderItemList) {
-      await _increaseTotalFromStock(
-          item: item, registrationHour: order.registrationHour);
+    for (var item in beforeUpdateOrderItemsList) {
+      await _removeProductReferenceFromOrder(item: item, orderID: order.id);
     }
 
-    for (var item in beforeUpdateOrderItemsList) {
-      await _decreaseTotalFromStock(
-          item: item, registrationHour: order.registrationHour);
+    for (var item in order.orderItemList) {
+      await _createProductReferenceToOrder(item: item, orderID: order.id);
     }
 
     await _updateCacheDoc(DateTime.now());
@@ -137,8 +119,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             plugin: 'DISABLE ORDER ERROR', message: e.toString()));
 
     for (var item in order.orderItemList) {
-      await _decreaseTotalFromStock(
-          item: item, registrationHour: order.registrationHour);
+      await _removeProductReferenceFromOrder(item: item, orderID: order.id);
     }
 
     await _updateCacheDoc(DateTime.now());
@@ -176,8 +157,6 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   Future<List<OrderModel>> getOrderListByEnabledAndDate(DateTime date) async {
     List<OrderModel> orderList = [];
 
-    date = DateTime(date.year, date.month, date.day);
-
     const cacheField = 'updatedAt';
     final cacheDocRef = orderCollection.doc(cacheDocument);
 
@@ -205,9 +184,6 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
       DateTime iniDate, DateTime endDate) async {
     List<OrderModel> orderList = [];
 
-    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
-    endDate = DateTime(endDate.year, endDate.month, endDate.day);
-
     final snap = await orderCollection
         .where('enabled', isEqualTo: true)
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
@@ -227,9 +203,6 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   Future<List<OrderModel>> getOrderListByEnabledAndProductAndDate(
       ProductModel product, DateTime iniDate, DateTime endDate) async {
     List<OrderModel> orderList = [];
-
-    iniDate = DateTime(iniDate.year, iniDate.month, iniDate.day);
-    endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
     final snap = await orderCollection
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)

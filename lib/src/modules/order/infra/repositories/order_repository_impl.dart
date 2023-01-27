@@ -1,3 +1,4 @@
+import 'package:controle_pedidos/src/core/date_time_helper.dart';
 import 'package:controle_pedidos/src/domain/entities/order.dart' as o;
 import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/domain/models/product_model.dart';
@@ -16,6 +17,9 @@ class OrderRepositoryImpl implements IOrderRepository {
   @override
   Future<Either<OrderError, o.Order>> createOrder(o.Order order) async {
     try {
+      order.registrationDate =
+          DateTimeHelper.removeHourFromDateTime(date: order.registrationDate);
+
       final result =
           await _datasource.createOrder(OrderModel.fromOrder(order: order));
 
@@ -64,6 +68,8 @@ class OrderRepositoryImpl implements IOrderRepository {
   Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledAndDate(
       DateTime date) async {
     try {
+      date = DateTimeHelper.removeHourFromDateTime(date: date);
+
       final result = await _datasource.getOrderListByEnabledAndDate(date);
 
       return Right(result);
@@ -76,6 +82,9 @@ class OrderRepositoryImpl implements IOrderRepository {
   Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledBetweenDates(
       DateTime iniDate, DateTime endDate) async {
     try {
+      iniDate = DateTimeHelper.removeHourFromDateTime(date: iniDate);
+      endDate = DateTimeHelper.removeHourFromDateTime(date: endDate);
+
       final result =
           await _datasource.getOrderListByEnabledBetweenDates(iniDate, endDate);
 
@@ -86,9 +95,14 @@ class OrderRepositoryImpl implements IOrderRepository {
   }
 
   @override
-  Future<Either<OrderError, List<o.Order>>> getOrderListByEnabledAndProductAndDate(
-      Product product, DateTime iniDate, DateTime endDate) async {
+  Future<Either<OrderError, List<o.Order>>>
+      getOrderListByEnabledAndProductAndDate(
+          Product product, DateTime iniDate, DateTime endDate) async {
     try {
+
+      iniDate = DateTimeHelper.removeHourFromDateTime(date: iniDate);
+      endDate = DateTimeHelper.removeHourFromDateTime(date: endDate);
+
       final result = await _datasource.getOrderListByEnabledAndProductAndDate(
           ProductModel.fromProduct(product: product), iniDate, endDate);
 

@@ -1,23 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/order_model.dart';
-import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/order/external/order_firebase_datasource_impl.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
-import 'package:controle_pedidos/src/modules/stock/external/helper/stock_firebase_helper.dart';
-import 'package:controle_pedidos/src/modules/stock/external/new_stock_firebase_datasource_impl.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../domain/entities/client_mock.dart';
 import '../../../domain/entities/order_item_mock.dart';
 import '../../../domain/entities/order_mock.dart';
-import '../../../domain/entities/stock_mock.dart';
 
 main() {
   late FirebaseFirestore? firebase;
   late IOrderDatasource datasource;
   late CollectionReference? orderCollection;
-  late CollectionReference? stockCollection;
 
   const mockCompanyID = 'mockCompanyID';
 
@@ -25,20 +20,11 @@ main() {
     firebase = null;
     firebase = FakeFirebaseFirestore();
     orderCollection = null;
-    stockCollection = null;
 
     orderCollection =
         firebase!.collection('company').doc(mockCompanyID).collection('order');
 
-    stockCollection =
-        firebase!.collection('company').doc(mockCompanyID).collection('stock');
-
     datasource = OrderFirebaseDatasourceImpl(
-        stockDatasource: NewStockFirebaseDatasourceImpl(
-            firebase: firebase!,
-            companyID: mockCompanyID,
-            helper: StockFirebaseHelper(
-                firebase: firebase!, companyID: mockCompanyID)),
         firebase: firebase!,
         companyID: mockCompanyID);
   });
@@ -54,6 +40,7 @@ main() {
       expect(result.orderItemList.length, equals(2));
       expect(docRef.id, equals(result.id));
     });
+/*
 
     test('verify if stock was created after the new order', () async {
       final createdOrder = await datasource.createOrder(OrderMock.getOneOrder(
@@ -76,7 +63,8 @@ main() {
         expect(stock.total, i.quantity);
       }
     });
-
+*/
+/*
     test('verify if stock the sum stock total when create more orders',
         () async {
       const loopTimes = 45;
@@ -98,7 +86,7 @@ main() {
 
         expect(i.quantity * loopTimes, stock.total);
       }
-    });
+    });*/
   });
 
   group('update order tests', () {
@@ -139,6 +127,7 @@ main() {
       expect(updatedOrder.registrationHour, equals(orderOnDB.registrationHour));
       expect(updatedOrder.orderItemList.length, orderItemListLength);
     });
+/*
 
     test(
         'have to modify order item list and keep stock collection equals data from order item list data',
@@ -177,7 +166,8 @@ main() {
 
       expect(stockRef.docs.length, orderItemListLength);
     });
-
+*/
+/*
     test('have to increase order item list keeping stock collection', () async {
       var toModifyOrder = OrderMock.getOneOrder();
 
@@ -209,7 +199,8 @@ main() {
       final stockRef = await stockCollection!.get();
 
       expect(stockRef.docs.length, updatedOrder.orderItemList.length);
-    });
+    });*/
+/*
 
     test(
         'have to remove an order item from order and modify stock collection as order item list',
@@ -245,6 +236,8 @@ main() {
       final stockRef = await stockCollection!.get();
       expect(stockRef.docs.length, updatedOrder.orderItemList.length);
     });
+*/
+/*
 
     test(
         'have to add new order item and remove order item and keep stock as order item list',
@@ -293,7 +286,8 @@ main() {
       final stockRef = await stockCollection!.get();
       expect(stockRef.docs.length, updatedOrder.orderItemList.length);
     });
-
+*/
+/*
     test(
         'have to update order but when stock total is not zero, keep stock data',
         () async {
@@ -347,11 +341,11 @@ main() {
 
         expect(stock.total, total);
       }
-    });
+    });*/
   });
 
   group('Disable order tests', () {
-    test('have to disable an order and delete his stock', () async {
+    /*test('have to disable an order and delete his stock', () async {
       final order = await datasource.createOrder(OrderMock.getOneOrder());
 
       final disableResult = await datasource.disableOrder(order);
@@ -417,6 +411,6 @@ main() {
 
         expect(stock.total, (item.quantity * totalOrders) - item.quantity);
       }
-    });
+    });*/
   });
 }
