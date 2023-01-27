@@ -232,8 +232,6 @@ class NewStockRepositoryImpl implements INewStockRepository {
         DateTime(date.year, date.month, date.day).toString();
   }
 
-
-
   _mergeStockList({required List<StockModel> stockListFromDB}) {
     List<StockModel> stockList = [];
 
@@ -284,6 +282,13 @@ class NewStockRepositoryImpl implements INewStockRepository {
       {required String stockID, required Provider newProvider}) async {
     try {
       var stock = await _datasource.getStockById(id: stockID);
+
+      final actualProvider = ProviderModel.fromProvider(stock.product.provider);
+
+      if (newProvider == actualProvider) {
+        return Left(
+            StockError('Selected provider are equal then the actual provider'));
+      }
 
       stock.product.provider = newProvider;
       stock.code =
