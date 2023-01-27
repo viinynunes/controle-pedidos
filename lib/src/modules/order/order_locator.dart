@@ -16,21 +16,17 @@ final orderLocator = GetIt.instance;
 
 Future<void> setUpOrderLocator() async {
   orderLocator.registerLazySingleton<IOrderService>(() => OrderServiceImpl());
-  orderLocator.registerLazySingleton<IOrderDatasource>(() =>
-      OrderFirebaseDatasourceImpl(
-          stockDatasource: orderLocator(), firebase: orderLocator()));
+  orderLocator.registerLazySingleton<IOrderDatasource>(
+      () => OrderFirebaseDatasourceImpl(firebase: orderLocator()));
   orderLocator.registerLazySingleton<IOrderRepository>(
       () => OrderRepositoryImpl(orderLocator()));
   orderLocator.registerLazySingleton<IOrderUsecase>(
       () => OrderUsecaseImpl(orderLocator()));
   orderLocator.registerSingleton<OrderController>(
-      OrderController(orderLocator(), orderLocator()));
-  orderLocator.registerFactory<OrderRegistrationController>(
-      () => OrderRegistrationController(orderLocator(), orderLocator()));
+      OrderController(orderLocator(), orderLocator(), orderLocator()));
+  orderLocator.registerFactory<OrderRegistrationController>(() =>
+      OrderRegistrationController(
+          orderLocator(), orderLocator(), orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderReportController>(
       () => OrderReportController(orderLocator(), orderLocator()));
-}
-
-void unregisterHomeLocator() {
-  orderLocator.unregister(instance: IOrderService);
 }

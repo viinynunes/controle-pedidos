@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/order.dart' as o;
+import '../../../stock/domain/usecases/decrease_stock_total_usecase.dart';
 import '../../errors/order_error.dart';
 import '../../services/i_order_service.dart';
 
@@ -18,8 +19,10 @@ class OrderController = _OrderControllerBase with _$OrderController;
 abstract class _OrderControllerBase with Store {
   final IOrderService orderService;
   final IOrderUsecase orderUsecase;
+  final DecreaseStockTotalUsecase decreaseStockTotalUsecase;
 
-  _OrderControllerBase(this.orderUsecase, this.orderService);
+  _OrderControllerBase(
+      this.orderUsecase, this.orderService, this.decreaseStockTotalUsecase);
 
   @observable
   String searchText = '';
@@ -70,7 +73,8 @@ abstract class _OrderControllerBase with Store {
 
   @action
   _setDateRangeString() {
-    dateRangeSelected = '${dateFormat.format(iniDate)} | ${dateFormat.format(endDate)}';
+    dateRangeSelected =
+        '${dateFormat.format(iniDate)} | ${dateFormat.format(endDate)}';
   }
 
   @action
@@ -150,6 +154,13 @@ abstract class _OrderControllerBase with Store {
     loading = true;
 
     final disableResult = await orderUsecase.disableOrder(order);
+
+    for (var item in order.orderItemList) {
+      await decreaseStockTotalUsecase(
+          product: item.product,
+          decreaseQuantity: item.quantity,
+          date: order.registrationDate);
+    }
 
     disableResult.fold((l) => error = optionOf(l), (r) async {
       await getOrderListBetweenDates();
