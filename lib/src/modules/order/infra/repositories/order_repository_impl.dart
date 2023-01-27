@@ -99,7 +99,6 @@ class OrderRepositoryImpl implements IOrderRepository {
       getOrderListByEnabledAndProductAndDate(
           Product product, DateTime iniDate, DateTime endDate) async {
     try {
-
       iniDate = DateTimeHelper.removeHourFromDateTime(date: iniDate);
       endDate = DateTimeHelper.removeHourFromDateTime(date: endDate);
 
