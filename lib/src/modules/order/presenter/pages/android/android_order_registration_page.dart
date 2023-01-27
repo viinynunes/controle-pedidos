@@ -40,7 +40,11 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: SizedBox(
               height: MediaQuery.of(context).size.height * 0.1,
-              child: Center(child: Text(error.message))),
+              child: Center(
+                  child: Text(
+                error.message,
+                style: const TextStyle(color: Colors.white),
+              ))),
           backgroundColor: Theme.of(context).errorColor,
         ));
       });
@@ -131,181 +135,198 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
         },
         child: const Icon(Icons.add),
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: size.height,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: controller.formKey,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: Card(
-                          child: TextFormField(
-                            controller: controller.quantityController,
-                            focusNode: controller.quantityFocus,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            decoration: const InputDecoration(
-                              labelText: 'QTD',
-                              border: OutlineInputBorder(),
+      body: Observer(builder: (context) {
+        if (controller.loading) {
+          return Overlay(
+            initialEntries: [
+              OverlayEntry(
+                builder: (_) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            const Center(
+                              child: CircularProgressIndicator(),
                             ),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            validator: controller.quantityValidator,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            onFieldSubmitted: (_) =>
-                                controller.callEntitySelectionDialog(
-                                    context: context,
-                                    entityList: controller.productList),
-                            onTap: controller.quantityControllerTextSelection,
-                          ),
+                            const SizedBox(height: 20),
+                            Text(controller.loadingMessage)
+                          ],
                         ),
                       ),
-                      SizedBox(width: size.width * 0.03),
-                      Flexible(
-                        flex: 4,
-                        fit: FlexFit.tight,
-                        child: GestureDetector(
-                          onTap: () => controller.callEntitySelectionDialog(
-                              context: context,
-                              entityList: controller.productList),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+
+        return SafeArea(
+          child: SizedBox(
+            height: size.height,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          fit: FlexFit.tight,
                           child: Card(
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Observer(
-                                    builder: (_) => Flexible(
-                                      flex: 4,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          controller.selectedProduct
-                                                  ?.toString() ??
-                                              'Selecione um produto',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
-                                          textAlign: TextAlign.center,
+                            child: TextFormField(
+                              controller: controller.quantityController,
+                              focusNode: controller.quantityFocus,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                labelText: 'QTD',
+                                border: OutlineInputBorder(),
+                              ),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              validator: controller.quantityValidator,
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) =>
+                                  controller.callEntitySelectionDialog(
+                                      context: context,
+                                      entityList: controller.productList),
+                              onTap: controller.quantityControllerTextSelection,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: size.width * 0.03),
+                        Flexible(
+                          flex: 4,
+                          fit: FlexFit.tight,
+                          child: GestureDetector(
+                            onTap: () => controller.callEntitySelectionDialog(
+                                context: context,
+                                entityList: controller.productList),
+                            child: Card(
+                              child: Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Observer(
+                                      builder: (_) => Flexible(
+                                        flex: 4,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            controller.selectedProduct
+                                                    ?.toString() ??
+                                                'Selecione um produto',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Flexible(
-                                      flex: 1,
-                                      child: RectGetter(
-                                        key: controller.rectKey,
-                                        child: IconButton(
-                                          onPressed: () => controller
-                                              .callAddNoteDialog(context),
-                                          icon: const Icon(Icons.note),
-                                        ),
-                                      )),
-                                ],
+                                    Flexible(
+                                        flex: 1,
+                                        child: RectGetter(
+                                          key: controller.rectKey,
+                                          child: IconButton(
+                                            onPressed: () => controller
+                                                .callAddNoteDialog(context),
+                                            icon: const Icon(Icons.note),
+                                          ),
+                                        )),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: Observer(
-                      builder: (_) {
-                        var orderItemList = controller.orderItemList;
-
-                        if (controller.loading) {
-                          return Overlay(
-                            initialEntries: [
-                              OverlayEntry(
-                                builder: (_) => Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black12,
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-
-                        return orderItemList.isNotEmpty
-                            ? ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                controller:
-                                    controller.orderItemListScrollController,
-                                itemCount: orderItemList.length,
-                                itemBuilder: (_, index) {
-                                  final item = orderItemList[index];
-
-                                  return AndroidOrderItemRegistrationTile(
-                                    item: item,
-                                    onLongPress: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (_) => OrderRegistrationMenu(
-                                          onEditProduct: () async {
-                                            Navigator.of(context).pop();
-                                            final result = await Navigator.of(
-                                                    context)
-                                                .push(CustomPageRoute(
-                                                    child:
-                                                        AndroidProductRegistrationPage(
-                                                      product: item.product,
-                                                    ),
-                                                    direction:
-                                                        AxisDirection.left));
-
-                                            if (result != null &&
-                                                result is Product) {
-                                              controller
-                                                  .editProductFromOrderItemList(
-                                                      result);
-                                            }
-                                          },
-                                          onRemoveProduct: () {
-                                            Navigator.of(context).pop();
-                                            controller
-                                                .removeItemFromOrderItemList(
-                                                    item);
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    increaseQuantity: () =>
-                                        controller.updateOrderItemQuantity(
-                                            item: item, increase: true),
-                                    decreaseQuantity: () =>
-                                        controller.updateOrderItemQuantity(
-                                            item: item, increase: false),
-                                  );
-                                },
-                              )
-                            : const Center(
-                                child: Text('Nenhum produto selecionado'),
-                              );
-                      },
+                        )
+                      ],
                     ),
-                  )
-                ],
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Observer(
+                        builder: (_) {
+                          var orderItemList = controller.orderItemList;
+
+                          return orderItemList.isNotEmpty
+                              ? ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  controller:
+                                      controller.orderItemListScrollController,
+                                  itemCount: orderItemList.length,
+                                  itemBuilder: (_, index) {
+                                    final item = orderItemList[index];
+
+                                    return AndroidOrderItemRegistrationTile(
+                                      item: item,
+                                      onLongPress: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (_) => OrderRegistrationMenu(
+                                            onEditProduct: () async {
+                                              Navigator.of(context).pop();
+                                              final result = await Navigator.of(
+                                                      context)
+                                                  .push(CustomPageRoute(
+                                                      child:
+                                                          AndroidProductRegistrationPage(
+                                                        product: item.product,
+                                                      ),
+                                                      direction:
+                                                          AxisDirection.left));
+
+                                              if (result != null &&
+                                                  result is Product) {
+                                                controller
+                                                    .editProductFromOrderItemList(
+                                                        result);
+                                              }
+                                            },
+                                            onRemoveProduct: () {
+                                              Navigator.of(context).pop();
+                                              controller
+                                                  .removeItemFromOrderItemList(
+                                                      item);
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      increaseQuantity: () =>
+                                          controller.updateOrderItemQuantity(
+                                              item: item, increase: true),
+                                      decreaseQuantity: () =>
+                                          controller.updateOrderItemQuantity(
+                                              item: item, increase: false),
+                                    );
+                                  },
+                                )
+                              : const Center(
+                                  child: Text('Nenhum produto selecionado'),
+                                );
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
