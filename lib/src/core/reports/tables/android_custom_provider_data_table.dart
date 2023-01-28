@@ -37,8 +37,13 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
               child: providerModel.merge
                   ? TextField(
                       decoration: InputDecoration(
-                          hintText: 'Nomeie a tabela',
-                          hintStyle: Theme.of(context).textTheme.bodySmall),
+                        hintText: 'Nomeie a tabela',
+                        hintStyle: TextStyle(
+                            color:
+                                blackFontColor ? Colors.black : Colors.white),
+                      ),
+                      style: TextStyle(
+                          color: blackFontColor ? Colors.black : Colors.white),
                     )
                   : withMergeOptions
                       ? Column(
