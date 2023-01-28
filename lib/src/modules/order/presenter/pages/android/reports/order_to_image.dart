@@ -137,7 +137,7 @@ class _OrderToImageState extends State<OrderToImage> {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (_) => ModelBottomMenuExportOptions(
+                  builder: (_) => ModalBottomMenuExportOptions(
                     onGenerateImage: () {
                       TransformWidgetToImage.transformAndLaunch(
                         repaintKey,

@@ -150,7 +150,7 @@ class _AndroidReportStockByEstablishmentPageState
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (_) => ModelBottomMenuExportOptions(
+                  builder: (_) => ModalBottomMenuExportOptions(
                     onGenerateXLSX: () {
                       StockByEstablishmentToXLSX().exportReportByEstablishment(
                           establishmentList: controller.establishmentList);

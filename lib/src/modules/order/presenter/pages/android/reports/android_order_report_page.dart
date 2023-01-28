@@ -38,7 +38,7 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
           controller.mergeOrderList();
           showModalBottomSheet(
             context: context,
-            builder: (_) => ModelBottomMenuExportOptions(
+            builder: (_) => ModalBottomMenuExportOptions(
               onGenerateXLSX: () {
                 OrderToXLSX().exportOrder(controller.mergedOrderList);
               },

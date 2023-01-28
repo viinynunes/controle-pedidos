@@ -107,7 +107,7 @@ class _AndroidCustomMergedStockByProviderPageState
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (_) => ModelBottomMenuExportOptions(
+                  builder: (_) => ModalBottomMenuExportOptions(
                     onGenerateImage: () {
                       TransformWidgetToImage.transformAndLaunch(
                         repaintKey,

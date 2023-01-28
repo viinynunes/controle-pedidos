@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ModelBottomMenuExportOptions extends StatelessWidget {
-  const ModelBottomMenuExportOptions(
+class ModalBottomMenuExportOptions extends StatelessWidget {
+  const ModalBottomMenuExportOptions(
       {Key? key, this.onGenerateImage, this.onGeneratePDF, this.onGenerateXLSX})
       : super(key: key);
 
