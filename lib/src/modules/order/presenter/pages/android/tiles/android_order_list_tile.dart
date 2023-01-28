@@ -52,59 +52,57 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
           )
         ],
       ),
-      child: Ink(
+      child: Card(
         child: InkWell(
           onTap: widget.onTap,
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 4,
-                    fit: FlexFit.tight,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.order.client.name,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        Text(
-                          widget.order.orderItemList.length > 1
-                              ? '${widget.order.orderItemList.length.toString()} Itens'
-                              : '${widget.order.orderItemList.length.toString()} Item',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        Text(
-                          dateFormat.format(widget.order.registrationDate),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    fit: FlexFit.tight,
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.057,
-                      child: ListView(
-                        controller: scrollController,
-                        reverse: true,
-                        children: widget.order.orderItemList
-                            .map((e) => Text(
-                                  e.toString(),
-                                  textAlign: TextAlign.start,
-                                  maxLines: 1,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ))
-                            .toList(),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                Flexible(
+                  flex: 4,
+                  fit: FlexFit.tight,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.order.client.name,
+                        maxLines: 1,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
+                      Text(
+                        widget.order.orderItemList.length > 1
+                            ? '${widget.order.orderItemList.length.toString()} Itens'
+                            : '${widget.order.orderItemList.length.toString()} Item',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        dateFormat.format(widget.order.registrationDate),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.057,
+                    child: ListView(
+                      controller: scrollController,
+                      reverse: true,
+                      children: widget.order.orderItemList
+                          .map((e) => Text(
+                                e.toString(),
+                                textAlign: TextAlign.start,
+                                maxLines: 1,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ))
+                          .toList(),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
