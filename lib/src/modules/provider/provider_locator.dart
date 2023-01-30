@@ -15,7 +15,7 @@ final providerLocator = GetIt.instance;
 
 void setUpProviderLocator() {
   providerLocator.registerLazySingleton<IProviderDatasource>(
-      () => ProviderFirebaseDatasourceImpl());
+      () => ProviderFirebaseDatasourceImpl(firebase: providerLocator()));
   providerLocator.registerLazySingleton<IProviderRepository>(
       () => ProviderRepositoryImpl(providerLocator()));
   providerLocator.registerLazySingleton<IProviderUsecase>(

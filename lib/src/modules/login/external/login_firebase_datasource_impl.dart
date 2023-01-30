@@ -5,18 +5,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../domain/models/company_model.dart';
 import '../../../domain/models/user_model.dart';
-import '../../firebase_helper_impl.dart';
 import '../infra/datasources/i_login_datasource.dart';
 import '../presenter/models/user_credential.dart' as credential;
 
 class LoginFirebaseDatasourceImpl implements ILoginDatasource {
-  final firebaseAuth = FirebaseHelperImpl.firebaseAuth;
-  final userCollection = FirebaseHelperImpl.userCollection;
-  final companyCollection = FirebaseHelperImpl.companyCollection;
+  final FirebaseFirestore firebase;
+
+  final firebaseAuth = FirebaseAuth.instance;
+  late CollectionReference<Map<String, dynamic>> userCollection;
+  late CollectionReference<Map<String, dynamic>> companyCollection;
 
   final ICompanyDatasource companyDatasource;
 
-  LoginFirebaseDatasourceImpl(this.companyDatasource);
+  LoginFirebaseDatasourceImpl(this.firebase, this.companyDatasource) {
+    userCollection = firebase.collection('user');
+
+    companyCollection = firebase.collection('company');
+  }
 
   @override
   Future<UserModel> getLoggedUser() async {

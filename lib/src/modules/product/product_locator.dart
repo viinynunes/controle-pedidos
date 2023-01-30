@@ -14,7 +14,7 @@ final productLocator = GetIt.instance;
 
 void setUpProductLocator() {
   productLocator.registerLazySingleton<IProductDatasource>(
-      () => ProductFirebaseDatasourceImpl());
+      () => ProductFirebaseDatasourceImpl(firebase: productLocator()));
   productLocator.registerLazySingleton<IProductRepository>(
       () => ProductRepositoryImpl(productLocator()));
   productLocator.registerLazySingleton<IProductUsecase>(

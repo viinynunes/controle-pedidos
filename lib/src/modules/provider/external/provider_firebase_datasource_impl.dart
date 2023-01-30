@@ -4,22 +4,33 @@ import 'package:controle_pedidos/src/modules/product/infra/datasources/i_product
 import 'package:controle_pedidos/src/modules/provider/infra/datasources/i_provider_datasource.dart';
 import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_it/get_it.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../domain/models/product_model.dart';
-import '../../firebase_helper_impl.dart';
 
 const cacheDocument = '00_cacheUpdated';
 
 class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
-  final firebase = FirebaseHelperImpl();
+  final FirebaseFirestore firebase;
+  late CollectionReference<Map<String, dynamic>> providerCollection;
+  late CollectionReference<Map<String, dynamic>> productCollection;
+
+  ProviderFirebaseDatasourceImpl({required this.firebase, String? companyID}) {
+    providerCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('provider');
+
+    productCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('product');
+  }
 
   @override
   Future<ProviderModel> createProvider(ProviderModel provider) async {
-    final result = await firebase
-        .getProviderCollection()
-        .add(provider.toMap())
-        .catchError(
-            (e) => throw FirebaseException(plugin: 'CREATE PROVIDER ERROR'));
+    final result = await providerCollection.add(provider.toMap()).catchError(
+        (e) => throw FirebaseException(plugin: 'CREATE PROVIDER ERROR'));
 
     provider.id = result.id;
     await updateProvider(provider);
@@ -29,17 +40,16 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
 
   @override
   Future<ProviderModel> updateProvider(ProviderModel provider) async {
-    FirebaseHelperImpl.firebaseDb.runTransaction((transaction) async {
-      final providerRef = firebase.getProviderCollection().doc(provider.id);
+    firebase.runTransaction((transaction) async {
+      final providerRef = providerCollection.doc(provider.id);
 
-      final cacheRef = firebase.getProviderCollection().doc(cacheDocument);
+      final cacheRef = providerCollection.doc(cacheDocument);
 
       transaction.update(providerRef, provider.toMap());
 
       transaction.update(cacheRef, {'updatedAt': DateTime.now()});
 
-      final productSnap = await firebase
-          .getProductCollection()
+      final productSnap = await productCollection
           .where('provider.id', isEqualTo: provider.id)
           .get();
 
@@ -55,20 +65,15 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   }
 
   _updateCacheDoc(DateTime updatedAt) async {
-    await firebase
-        .getProviderCollection()
+    await providerCollection
         .doc(cacheDocument)
         .update({'updatedAt': updatedAt});
   }
 
   @override
   Future<ProviderModel> getProviderById(String id) async {
-    final snap = await firebase
-        .getProviderCollection()
-        .doc(id)
-        .get()
-        .catchError(
-            (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
+    final snap = await providerCollection.doc(id).get().catchError(
+        (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
 
     if (snap.data() == null) {
       throw FirebaseException(plugin: 'PROVIDER NOT FOUND');
@@ -82,10 +87,9 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
     List<ProviderModel> providerList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getProviderCollection().doc(cacheDocument);
+    final cacheDocRef = providerCollection.doc(cacheDocument);
 
-    final query = firebase
-        .getProviderCollection()
+    final query = providerCollection
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false);
 
@@ -108,10 +112,9 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
     List<ProviderModel> providerList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getProviderCollection().doc(cacheDocument);
+    final cacheDocRef = providerCollection.doc(cacheDocument);
 
-    final query =
-        firebase.getProviderCollection().orderBy('name', descending: false);
+    final query = providerCollection.orderBy('name', descending: false);
 
     final snap = await FirestoreCache.getDocuments(
             query: query,
@@ -131,8 +134,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
     final snap = await FirebaseFirestore.instance.collection('providers').get();
 
     for (var p in snap.docs) {
-      firebase
-          .getProviderCollection()
+      providerCollection
           .doc(p.id)
           .set(ProviderModel.fromMap(map: p.data()).toMap());
     }

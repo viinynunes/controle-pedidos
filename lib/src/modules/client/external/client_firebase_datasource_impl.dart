@@ -2,20 +2,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/client_model.dart';
 import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_datasource.dart';
 import 'package:firestore_cache/firestore_cache.dart';
-
-import '../../firebase_helper_impl.dart';
+import 'package:get_storage/get_storage.dart';
 
 const cacheDocument = '00_cacheUpdated';
 
 class ClientFirebaseDatasourceImpl implements IClientDatasource {
-  final firebase = FirebaseHelperImpl();
+  final FirebaseFirestore firebase;
+
+  late CollectionReference<Map<String, dynamic>> clientCollection;
+  late CollectionReference<Map<String, dynamic>> orderCollection;
+
+  ClientFirebaseDatasourceImpl({required this.firebase, String? companyID}) {
+    clientCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('client');
+
+    orderCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('order');
+  }
 
   @override
   Future<ClientModel> createClient(ClientModel client) async {
-    final result = await firebase
-        .getClientCollection()
-        .add(client.toMap())
-        .catchError((e) => throw FirebaseException(
+    final result = await clientCollection.add(client.toMap()).catchError((e) =>
+        throw FirebaseException(
             plugin: 'CREATE CLIENT ERROR', message: e.toString()));
 
     client.id = result.id;
@@ -27,12 +39,10 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
   @override
   Future<ClientModel> updateClient(ClientModel client) async {
-    final clientRef = firebase.getClientCollection().doc(client.id);
-    FirebaseHelperImpl.firebaseDb.runTransaction((transaction) async {
-      final orderSnap = await firebase
-          .getOrderCollection()
-          .where('client.id', isEqualTo: client.id)
-          .get();
+    final clientRef = clientCollection.doc(client.id);
+    firebase.runTransaction((transaction) async {
+      final orderSnap =
+          await orderCollection.where('client.id', isEqualTo: client.id).get();
 
       for (var o in orderSnap.docs) {
         transaction.update(o.reference, {'client': client.toMap()});
@@ -47,20 +57,14 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   }
 
   _updateCacheDoc(DateTime updatedAt) async {
-    await firebase
-        .getClientCollection()
-        .doc(cacheDocument)
-        .update({'updatedAt': updatedAt});
+    await clientCollection.doc(cacheDocument).update({'updatedAt': updatedAt});
   }
 
   @override
   Future<bool> disableClient(ClientModel client) async {
     client.enabled = false;
-    firebase
-        .getClientCollection()
-        .doc(client.id)
-        .update(client.toMap())
-        .catchError((e) => throw FirebaseException(
+    clientCollection.doc(client.id).update(client.toMap()).catchError((e) =>
+        throw FirebaseException(
             plugin: 'DISABLE CLIENT ERROR', message: e.toString()));
 
     await _updateCacheDoc(DateTime.now());
@@ -69,8 +73,8 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
   @override
   Future<ClientModel> getClientByID(String id) async {
-    final snap = await firebase.getClientCollection().doc(id).get().catchError(
-        (e) => throw FirebaseException(
+    final snap = await clientCollection.doc(id).get().catchError((e) =>
+        throw FirebaseException(
             plugin: 'GET CLIENT BY ID ERROR', message: e.toString()));
 
     return ClientModel.fromMap(snap.data()!);
@@ -81,9 +85,8 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
     List<ClientModel> clientList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getClientCollection().doc(cacheDocument);
-    final query = firebase
-        .getClientCollection()
+    final cacheDocRef = clientCollection.doc(cacheDocument);
+    final query = clientCollection
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false);
     final snapCached = await FirestoreCache.getDocuments(
@@ -105,9 +108,8 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
     List<ClientModel> clientList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getClientCollection().doc(cacheDocument);
-    final query =
-        firebase.getClientCollection().orderBy('name', descending: false);
+    final cacheDocRef = clientCollection.doc(cacheDocument);
+    final query = clientCollection.orderBy('name', descending: false);
     final snapCached = await FirestoreCache.getDocuments(
             query: query,
             cacheDocRef: cacheDocRef,
@@ -126,10 +128,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
     final snap = await FirebaseFirestore.instance.collection('clients').get();
 
     for (var p in snap.docs) {
-      firebase
-          .getClientCollection()
-          .doc(p.id)
-          .set(ClientModel.fromMap(p.data()).toMap());
+      clientCollection.doc(p.id).set(ClientModel.fromMap(p.data()).toMap());
     }
   }
 }

@@ -13,7 +13,7 @@ final clientLocator = GetIt.instance;
 
 void setUpClientLocator() {
   clientLocator.registerLazySingleton<IClientDatasource>(
-      () => ClientFirebaseDatasourceImpl());
+      () => ClientFirebaseDatasourceImpl(firebase: clientLocator()));
   clientLocator.registerLazySingleton<IClientRepository>(
       () => ClientRepositoryImpl(clientLocator()));
   clientLocator.registerLazySingleton<IClientUsecase>(

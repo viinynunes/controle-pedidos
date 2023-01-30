@@ -15,7 +15,7 @@ final estabLocator = GetIt.instance;
 
 void setUpEstablishmentLocator() {
   estabLocator.registerLazySingleton<IEstablishmentDatasource>(
-      () => EstablishmentFirebaseDatasourceImpl());
+      () => EstablishmentFirebaseDatasourceImpl(firebase: estabLocator()));
   estabLocator.registerLazySingleton<IEstablishmentRepository>(
       () => EstablishmentRepositoryImpl(estabLocator()));
   estabLocator.registerLazySingleton<IEstablishmentUsecase>(

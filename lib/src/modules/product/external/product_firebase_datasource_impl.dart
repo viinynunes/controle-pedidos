@@ -3,23 +3,41 @@ import 'package:controle_pedidos/src/domain/models/product_model.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
 import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_it/get_it.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../domain/models/order_model.dart';
-import '../../firebase_helper_impl.dart';
 import '../infra/datasources/i_product_datasource.dart';
 
 const cacheDocument = '00_cacheUpdated';
 
 class ProductFirebaseDatasourceImpl implements IProductDatasource {
-  final firebase = FirebaseHelperImpl();
+  final FirebaseFirestore firebase;
+
+  late CollectionReference<Map<String, dynamic>> productCollection;
+  late CollectionReference<Map<String, dynamic>> orderCollection;
+  late CollectionReference<Map<String, dynamic>> productOnOrderCollection;
+
+  ProductFirebaseDatasourceImpl({required this.firebase, String? companyID}) {
+    productCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('product');
+
+    orderCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('order');
+
+    productOnOrderCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('productOnOrder');
+  }
 
   @override
   Future<ProductModel> createProduct(ProductModel product) async {
-    final result = await firebase
-        .getProductCollection()
-        .add(product.toMap())
-        .catchError(
-            (e) => throw FirebaseException(plugin: 'CREATE PRODUCT ERROR'));
+    final result = await productCollection.add(product.toMap()).catchError(
+        (e) => throw FirebaseException(plugin: 'CREATE PRODUCT ERROR'));
 
     product.id = result.id;
 
@@ -29,10 +47,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
-    await firebase
-        .getProductCollection()
-        .doc(product.id)
-        .update(product.toMap());
+    await productCollection.doc(product.id).update(product.toMap());
     await _updateStock(product);
     await _updateOrder(product);
     await _updateCacheDoc(DateTime.now());
@@ -41,35 +56,28 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   }
 
   _updateCacheDoc(DateTime updatedAt) async {
-    await firebase
-        .getProductCollection()
-        .doc(cacheDocument)
-        .update({'updatedAt': updatedAt});
+    await productCollection.doc(cacheDocument).update({'updatedAt': updatedAt});
   }
 
   _updateStock(ProductModel product) async {
-    final stockSnap = await firebase
-        .getStockCollection()
+    final stockSnap = await productCollection
         .where('product.id', isEqualTo: product.id)
         .get();
 
     for (var s in stockSnap.docs) {
-      firebase
-          .getStockCollection()
-          .doc(s.id)
-          .update({'product': product.toMap()});
+      productCollection.doc(s.id).update({'product': product.toMap()});
     }
   }
 
   _updateOrder(ProductModel product) async {
     final productOnOrderDoc =
-        await firebase.getProductOnOrderCollection().doc(product.id).get();
+        await productOnOrderCollection.doc(product.id).get();
 
     if (productOnOrderDoc.exists) {
       List orderList = productOnOrderDoc.get('orderList');
 
       for (var o in orderList) {
-        final orderSnap = await firebase.getOrderCollection().doc(o).get();
+        final orderSnap = await orderCollection.doc(o).get();
 
         var order =
             OrderModel.fromMap(map: orderSnap.data() as Map<String, dynamic>);
@@ -90,10 +98,9 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     List<ProductModel> productList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
+    final cacheDocRef = productCollection.doc(cacheDocument);
 
-    final query = firebase
-        .getProductCollection()
+    final query = productCollection
         .where('enabled', isEqualTo: true)
         .where('provider.id', isEqualTo: providerId)
         .orderBy('name', descending: false);
@@ -117,10 +124,9 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     List<ProductModel> productList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
+    final cacheDocRef = productCollection.doc(cacheDocument);
 
-    final query =
-        firebase.getProductCollection().orderBy('name', descending: false);
+    final query = productCollection.orderBy('name', descending: false);
 
     final snapCached = await FirestoreCache.getDocuments(
             query: query,
@@ -141,10 +147,9 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     List<ProductModel> productList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
+    final cacheDocRef = productCollection.doc(cacheDocument);
 
-    final query = firebase
-        .getProductCollection()
+    final query = productCollection
         .where('enabled', isEqualTo: true)
         .orderBy('name', descending: false);
 
@@ -168,10 +173,9 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     List<ProductModel> productList = [];
 
     const cacheField = 'updatedAt';
-    final cacheDocRef = firebase.getProductCollection().doc(cacheDocument);
+    final cacheDocRef = productCollection.doc(cacheDocument);
 
-    final query = firebase
-        .getProductCollection()
+    final query = productCollection
         .where('enabled', isEqualTo: true)
         .where('stockDefault', isEqualTo: true);
 
@@ -193,8 +197,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     final snap = await FirebaseFirestore.instance.collection('products').get();
 
     for (var p in snap.docs) {
-      firebase
-          .getProductCollection()
+      productCollection
           .doc(p.id)
           .set(ProductModel.fromMap(map: p.data()).toMap());
     }
