@@ -27,3 +27,12 @@ void setUpEstablishmentLocator() {
   estabLocator.registerFactory<EstablishmentRegistrationController>(
       () => EstablishmentRegistrationController(estabLocator()));
 }
+
+void unregisterEstablishmentLocator(){
+  estabLocator.unregister(instance: IEstablishmentDatasource);
+  estabLocator.unregister(instance: IEstablishmentRepository);
+  estabLocator.unregister(instance: IEstablishmentUsecase);
+  estabLocator.unregister(instance: IEstablishmentService);
+  estabLocator.unregister(instance: EstablishmentController);
+  estabLocator.unregister(instance: EstablishmentRegistrationController);
+}

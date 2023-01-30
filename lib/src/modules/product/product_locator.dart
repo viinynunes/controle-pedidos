@@ -27,3 +27,13 @@ void setUpProductLocator() {
   productLocator.registerFactory<ProductStockDefaultController>(
       () => ProductStockDefaultController(productLocator(), productLocator()));
 }
+
+
+void unregisterProductLocator(){
+  productLocator.unregister(instance: IProductDatasource);
+  productLocator.unregister(instance: IProductRepository);
+  productLocator.unregister(instance: IProductUsecase);
+  productLocator.unregister(instance: ProductController);
+  productLocator.unregister(instance: ProductRegistrationController);
+  productLocator.unregister(instance: ProductStockDefaultController);
+}

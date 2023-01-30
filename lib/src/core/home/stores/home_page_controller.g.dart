@@ -42,64 +42,12 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
     });
   }
 
-  late final _$productErrorAtom =
-      Atom(name: '_HomePageControllerBase.productError', context: context);
-
-  @override
-  Option<ProductError> get productError {
-    _$productErrorAtom.reportRead();
-    return super.productError;
-  }
-
-  @override
-  set productError(Option<ProductError> value) {
-    _$productErrorAtom.reportWrite(value, super.productError, () {
-      super.productError = value;
-    });
-  }
-
-  late final _$clientErrorAtom =
-      Atom(name: '_HomePageControllerBase.clientError', context: context);
-
-  @override
-  Option<ClientError> get clientError {
-    _$clientErrorAtom.reportRead();
-    return super.clientError;
-  }
-
-  @override
-  set clientError(Option<ClientError> value) {
-    _$clientErrorAtom.reportWrite(value, super.clientError, () {
-      super.clientError = value;
-    });
-  }
-
   late final _$initStateAsyncAction =
       AsyncAction('_HomePageControllerBase.initState', context: context);
 
   @override
   Future initState() {
     return _$initStateAsyncAction.run(() => super.initState());
-  }
-
-  late final _$getProductListByEnabledAsyncAction = AsyncAction(
-      '_HomePageControllerBase.getProductListByEnabled',
-      context: context);
-
-  @override
-  Future getProductListByEnabled() {
-    return _$getProductListByEnabledAsyncAction
-        .run(() => super.getProductListByEnabled());
-  }
-
-  late final _$getClientListByEnabledAsyncAction = AsyncAction(
-      '_HomePageControllerBase.getClientListByEnabled',
-      context: context);
-
-  @override
-  Future getClientListByEnabled() {
-    return _$getClientListByEnabledAsyncAction
-        .run(() => super.getClientListByEnabled());
   }
 
   late final _$_HomePageControllerBaseActionController =
@@ -120,9 +68,7 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
   String toString() {
     return '''
 loading: ${loading},
-bottomNavigationIndex: ${bottomNavigationIndex},
-productError: ${productError},
-clientError: ${clientError}
+bottomNavigationIndex: ${bottomNavigationIndex}
     ''';
   }
 }

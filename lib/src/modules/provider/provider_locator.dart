@@ -28,3 +28,12 @@ void setUpProviderLocator() {
       ProviderRegistrationController(
           providerLocator(), providerLocator(), providerLocator()));
 }
+
+void unregisterProviderLocator(){
+  providerLocator.unregister(instance: IProviderDatasource);
+  providerLocator.unregister(instance: IProviderRepository);
+  providerLocator.unregister(instance: IProviderUsecase);
+  providerLocator.unregister(instance: IProviderService);
+  providerLocator.unregister(instance: ProviderController);
+  providerLocator.unregister(instance: ProviderRegistrationController);
+}

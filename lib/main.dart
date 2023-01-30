@@ -37,7 +37,7 @@ void main() async {
     debugPrint(e.toString());
   }
 
-  await initGlobalServiceLocator();
+  await initGlobalServiceLocator(initModules: false);
 
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('google_fonts/OFL.txt');

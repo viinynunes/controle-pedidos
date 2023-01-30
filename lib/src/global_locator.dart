@@ -12,19 +12,26 @@ import 'modules/order/order_locator.dart';
 import 'modules/product/product_locator.dart';
 import 'modules/provider/provider_locator.dart';
 import 'modules/stock/stock_locator.dart';
+import 'modules_locator.dart';
 
-Future initGlobalServiceLocator() async {
-  GetIt.instance.registerLazySingleton<FirebaseFirestore>(
-      () => FirebaseFirestore.instance);
+Future initGlobalServiceLocator({bool initModules = true}) async {
+  GetIt.instance.allowReassignment = true;
+  GetIt.instance
+      .registerFactory<FirebaseFirestore>(() => FirebaseFirestore.instance);
   setUpCompanyLocator();
   setUpLoginLocator();
   setUpWidgetsLocator();
   setUpDrawerLocator();
-  setUpClientLocator();
-  setUpEstablishmentLocator();
-  setUpProviderLocator();
-  setUpProductLocator();
-  setUpStockLocator();
-  setUpOrderLocator();
   setUpHomeLocator();
+
+  initModules ? initModulesLocator() : null;
+}
+
+Future unregisterGlobalServiceLocator() async {
+  unregisterClientLocator();
+  unregisterEstablishmentLocator();
+  unregisterProviderLocator();
+  unregisterProductLocator();
+  unregisterStockLocator();
+  unregisterOrderLocator();
 }

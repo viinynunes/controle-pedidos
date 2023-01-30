@@ -30,3 +30,13 @@ Future<void> setUpOrderLocator() async {
   orderLocator.registerFactory<OrderReportController>(
       () => OrderReportController(orderLocator(), orderLocator()));
 }
+
+unregisterOrderLocator() async {
+  orderLocator.unregister(instance: IOrderService);
+  orderLocator.unregister(instance: IOrderDatasource);
+  orderLocator.unregister(instance: IOrderRepository);
+  orderLocator.unregister(instance: IOrderUsecase);
+  orderLocator.unregister(instance: OrderController);
+  orderLocator.unregister(instance: OrderRegistrationController);
+  orderLocator.unregister(instance: OrderReportController);
+}

@@ -12,14 +12,22 @@ import 'presenter/stores/client_controller.dart';
 final clientLocator = GetIt.instance;
 
 void setUpClientLocator() {
-  clientLocator.registerLazySingleton<IClientDatasource>(
-      () => ClientFirebaseDatasourceImpl(firebase: clientLocator()));
-  clientLocator.registerLazySingleton<IClientRepository>(
-      () => ClientRepositoryImpl(clientLocator()));
-  clientLocator.registerLazySingleton<IClientUsecase>(
-      () => ClientUsecaseImpl(clientLocator()));
-  clientLocator.registerLazySingleton<ClientController>(
-      () => ClientController(clientLocator()));
+  clientLocator.registerSingleton<IClientDatasource>(
+      ClientFirebaseDatasourceImpl(firebase: clientLocator()));
+  clientLocator.registerSingleton<IClientRepository>(
+      ClientRepositoryImpl(clientLocator()));
+  clientLocator
+      .registerSingleton<IClientUsecase>(ClientUsecaseImpl(clientLocator()));
+  clientLocator
+      .registerSingleton<ClientController>(ClientController(clientLocator()));
   clientLocator.registerFactory<ClientRegistrationController>(
       () => ClientRegistrationController(clientLocator()));
+}
+
+void unregisterClientLocator() {
+  clientLocator.unregister(instance: IClientDatasource);
+  clientLocator.unregister(instance: IClientRepository);
+  clientLocator.unregister(instance: IClientUsecase);
+  clientLocator.unregister(instance: ClientController);
+  clientLocator.unregister(instance: ClientRegistrationController);
 }

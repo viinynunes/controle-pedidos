@@ -56,7 +56,7 @@ void setUpStockLocator() {
   stockLocator.registerLazySingleton<UpdateStockUsecase>(
       () => UpdateStockUsecaseImpl(stockLocator()));
   stockLocator.registerLazySingleton<ChangeStockProviderUsecase>(
-          () => ChangeStockProviderUsecaseImpl(stockLocator()));
+      () => ChangeStockProviderUsecaseImpl(stockLocator()));
   stockLocator.registerSingleton<StockController>(StockController(
       stockLocator(),
       stockLocator(),
@@ -75,4 +75,25 @@ void setUpStockLocator() {
       () => ReportStockByProviderController(stockLocator(), stockLocator()));
   stockLocator.registerFactory<ReportStockByEstablishmentController>(() =>
       ReportStockByEstablishmentController(stockLocator(), stockLocator()));
+}
+
+void unregisterStockLocator() {
+  stockLocator.unregister(instance: IStockService);
+  stockLocator.unregister(instance: INewStockDatasource);
+  stockLocator.unregister(instance: INewStockRepository);
+  stockLocator.unregister(instance: ChangeStockDateUsecase);
+  stockLocator.unregister(instance: DecreaseStockTotalUsecase);
+  stockLocator.unregister(instance: DecreaseStockTotalOrderedUsecase);
+  stockLocator.unregister(instance: DeleteStockUsecase);
+  stockLocator.unregister(instance: GetStockListsUsecase);
+  stockLocator.unregister(instance: IncreaseStockTotalOrderedUsecase);
+  stockLocator.unregister(instance: IncreaseStockTotalUsecase);
+  stockLocator.unregister(instance: UpdateStockUsecase);
+  stockLocator.unregister(instance: ChangeStockProviderUsecase);
+  stockLocator.unregister(instance: StockController);
+  stockLocator.unregister(instance: StockTileController);
+  stockLocator.unregister(instance: DivideStockDialogController);
+  stockLocator.unregister(instance: ShowOrdersByStockDialogController);
+  stockLocator.unregister(instance: ReportStockByProviderController);
+  stockLocator.unregister(instance: ReportStockByEstablishmentController);
 }
