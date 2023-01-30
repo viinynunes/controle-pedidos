@@ -78,5 +78,7 @@ abstract class _ProviderControllerBase with Store {
       await Future.delayed(const Duration(seconds: 1));
       await getProviderList();
     }
+
+    loading = false;
   }
 }
