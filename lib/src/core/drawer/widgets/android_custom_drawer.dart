@@ -78,10 +78,7 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
                 text: 'PEDIDOS',
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const AndroidOrderListPage(
-                            productList: [],
-                            clientList: [],
-                          )));
+                      builder: (_) => const AndroidOrderListPage()));
                 },
               ),
               AndroidDrawerTile(
@@ -89,9 +86,7 @@ class _AndroidCustomDrawerState extends State<AndroidCustomDrawer> {
                 text: 'CONTROLE',
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const AndroidStockPage(
-                            productList: [],
-                          )));
+                      builder: (_) => const AndroidStockPage()));
                 },
               ),
               AndroidDrawerTile(

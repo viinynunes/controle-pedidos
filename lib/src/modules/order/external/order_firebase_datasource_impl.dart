@@ -188,7 +188,7 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
         .where('enabled', isEqualTo: true)
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .get()
+        .get(const GetOptions(source: Source.cache))
         .catchError((e) => throw FirebaseException(
             plugin: 'GET ORDER ERROR', message: e.toString()));
 

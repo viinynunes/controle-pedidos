@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/order.dart' as o;
+import '../../../client/domain/usecases/i_client_usecase.dart';
+import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../../stock/domain/usecases/decrease_stock_total_usecase.dart';
 import '../../errors/order_error.dart';
 import '../../services/i_order_service.dart';
@@ -20,9 +22,11 @@ abstract class _OrderControllerBase with Store {
   final IOrderService orderService;
   final IOrderUsecase orderUsecase;
   final DecreaseStockTotalUsecase decreaseStockTotalUsecase;
+  final IProductUsecase productUsecase;
+  final IClientUsecase clientUsecase;
 
-  _OrderControllerBase(
-      this.orderUsecase, this.orderService, this.decreaseStockTotalUsecase);
+  _OrderControllerBase(this.orderUsecase, this.orderService,
+      this.decreaseStockTotalUsecase, this.productUsecase, this.clientUsecase);
 
   @observable
   String searchText = '';
@@ -52,13 +56,35 @@ abstract class _OrderControllerBase with Store {
   final searchFocus = FocusNode();
 
   @action
-  initState(
-      {required List<Product> productList,
-      required List<Client> clientList}) async {
-    resetDateRange();
+  initState() async {
+    await resetDateRange();
 
-    this.productList = ObservableList.of(productList);
-    this.clientList = ObservableList.of(clientList);
+    await getProductList();
+    await getClientList();
+  }
+
+  @action
+  getProductList() async {
+    loading = true;
+
+    final result = await productUsecase.getProductListByEnabled();
+
+    result.fold((l) => error = optionOf(OrderError(l.message)),
+        (r) => productList = ObservableList.of(r));
+
+    loading = false;
+  }
+
+  @action
+  getClientList() async {
+    loading = true;
+
+    final result = await clientUsecase.getClientEnabled();
+
+    result.fold((l) => error = optionOf(OrderError(l.message)),
+        (r) => clientList = ObservableList.of(r));
+
+    loading = false;
   }
 
   @action

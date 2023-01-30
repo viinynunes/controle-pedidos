@@ -5,18 +5,13 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
-import '../../../../../domain/entities/client.dart';
-import '../../../../../domain/entities/product.dart';
 import '../../../../../domain/models/order_model.dart';
 import 'tiles/android_order_list_tile.dart';
 
 class AndroidOrderListPage extends StatefulWidget {
-  const AndroidOrderListPage(
-      {Key? key, required this.clientList, required this.productList})
-      : super(key: key);
-
-  final List<Client> clientList;
-  final List<Product> productList;
+  const AndroidOrderListPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AndroidOrderListPage> createState() => _AndroidOrderListPageState();
@@ -29,8 +24,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
   void initState() {
     super.initState();
 
-    controller.initState(
-        productList: widget.productList, clientList: widget.clientList);
+    controller.initState();
   }
 
   @override
@@ -73,9 +67,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                   ),
           ),
           IconButton(
-              onPressed: () => controller.initState(
-                  productList: widget.productList,
-                  clientList: widget.clientList),
+              onPressed: () => controller.initState(),
               icon: const Icon(Icons.refresh)),
           Observer(builder: (_) {
             return controller.sortByDate

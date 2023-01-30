@@ -65,14 +65,27 @@ abstract class _StockControllerBase with Store {
   final stockDefaultLeftController = TextEditingController();
 
   @action
-  initState({required List<Product> productList}) {
-    this.productList = productList;
+  initState() async {
+
+    await getProductList();
 
     resetDateToToday();
 
     setSelectedDateString();
 
     resetStockLeft();
+  }
+
+  @action
+  getProductList() async {
+    loading = true;
+
+    final result = await productUsecase.getProductListByEnabled();
+
+    result.fold((l) => error = optionOf(StockError(l.message)),
+            (r) => productList = ObservableList.of(r));
+
+    loading = false;
   }
 
   @action

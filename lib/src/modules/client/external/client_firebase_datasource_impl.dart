@@ -33,6 +33,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
     client.id = result.id;
 
     await updateClient(client);
+    await _updateCacheDoc();
 
     return client;
   }
@@ -52,12 +53,14 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
     }).onError((error, stackTrace) => throw FirebaseException(
         plugin: 'UPDATE CLIENT ERROR', message: error.toString()));
 
-    await _updateCacheDoc(DateTime.now());
+    await _updateCacheDoc();
     return client;
   }
 
-  _updateCacheDoc(DateTime updatedAt) async {
-    await clientCollection.doc(cacheDocument).update({'updatedAt': updatedAt});
+  _updateCacheDoc({DateTime? updatedAt}) async {
+    await clientCollection
+        .doc(cacheDocument)
+        .update({'updatedAt': updatedAt ?? DateTime.now()});
   }
 
   @override
@@ -67,7 +70,7 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
         throw FirebaseException(
             plugin: 'DISABLE CLIENT ERROR', message: e.toString()));
 
-    await _updateCacheDoc(DateTime.now());
+    await _updateCacheDoc();
     return true;
   }
 

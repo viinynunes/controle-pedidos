@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 
-import '../widgets/custom_material_banner_error.dart';
 import 'stores/home_page_controller.dart';
 
 class AndroidHomePage extends StatefulWidget {
@@ -20,7 +18,7 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
   void initState() {
     super.initState();
 
-    reaction((p0) => controller.productError, (p0) {
+/*    reaction((p0) => controller.productError, (p0) {
       controller.productError.map((error) =>
           CustomMaterialBannerError.showMaterialBannerError(
               context: context,
@@ -34,7 +32,7 @@ class _AndroidHomePageState extends State<AndroidHomePage> {
               context: context,
               message: error.message,
               onClose: () => controller.getProductListByEnabled()));
-    });
+    });*/
 
     controller.initState();
   }

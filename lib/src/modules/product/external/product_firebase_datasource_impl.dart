@@ -42,6 +42,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     product.id = result.id;
 
     await updateProduct(product);
+    await _updateCacheDoc();
     return product;
   }
 
@@ -50,13 +51,15 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     await productCollection.doc(product.id).update(product.toMap());
     await _updateStock(product);
     await _updateOrder(product);
-    await _updateCacheDoc(DateTime.now());
+    await _updateCacheDoc();
 
     return product;
   }
 
-  _updateCacheDoc(DateTime updatedAt) async {
-    await productCollection.doc(cacheDocument).update({'updatedAt': updatedAt});
+  _updateCacheDoc({DateTime? updatedAt}) async {
+    await productCollection
+        .doc(cacheDocument)
+        .update({'updatedAt': updatedAt ?? DateTime.now()});
   }
 
   _updateStock(ProductModel product) async {

@@ -173,10 +173,24 @@ mixin _$OrderController on _OrderControllerBase, Store {
       AsyncAction('_OrderControllerBase.initState', context: context);
 
   @override
-  Future initState(
-      {required List<Product> productList, required List<Client> clientList}) {
-    return _$initStateAsyncAction.run(() =>
-        super.initState(productList: productList, clientList: clientList));
+  Future initState() {
+    return _$initStateAsyncAction.run(() => super.initState());
+  }
+
+  late final _$getProductListAsyncAction =
+      AsyncAction('_OrderControllerBase.getProductList', context: context);
+
+  @override
+  Future getProductList() {
+    return _$getProductListAsyncAction.run(() => super.getProductList());
+  }
+
+  late final _$getClientListAsyncAction =
+      AsyncAction('_OrderControllerBase.getClientList', context: context);
+
+  @override
+  Future getClientList() {
+    return _$getClientListAsyncAction.run(() => super.getClientList());
   }
 
   late final _$changeDateRangeSelectedAsyncAction = AsyncAction(

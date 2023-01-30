@@ -137,6 +137,22 @@ mixin _$StockController on _StockControllerBase, Store {
     });
   }
 
+  late final _$initStateAsyncAction =
+      AsyncAction('_StockControllerBase.initState', context: context);
+
+  @override
+  Future initState() {
+    return _$initStateAsyncAction.run(() => super.initState());
+  }
+
+  late final _$getProductListAsyncAction =
+      AsyncAction('_StockControllerBase.getProductList', context: context);
+
+  @override
+  Future getProductList() {
+    return _$getProductListAsyncAction.run(() => super.getProductList());
+  }
+
   late final _$showDateTimeRangeSelectorAsyncAction = AsyncAction(
       '_StockControllerBase.showDateTimeRangeSelector',
       context: context);
@@ -214,17 +230,6 @@ mixin _$StockController on _StockControllerBase, Store {
 
   late final _$_StockControllerBaseActionController =
       ActionController(name: '_StockControllerBase', context: context);
-
-  @override
-  dynamic initState({required List<Product> productList}) {
-    final _$actionInfo = _$_StockControllerBaseActionController.startAction(
-        name: '_StockControllerBase.initState');
-    try {
-      return super.initState(productList: productList);
-    } finally {
-      _$_StockControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   dynamic setSelectedDateString() {

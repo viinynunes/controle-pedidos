@@ -15,7 +15,7 @@ import 'widgets/stock_list_builder_widget.dart';
 import 'widgets/stock_table_header_widget.dart';
 
 class AndroidStockPage extends IStockPage {
-  const AndroidStockPage({super.key, required super.productList});
+  const AndroidStockPage({super.key});
 
   @override
   _AndroidStockPageState createState() => _AndroidStockPageState();
@@ -35,7 +35,7 @@ class _AndroidStockPageState extends IStockPageState {
       });
     });
 
-    controller.initState(productList: widget.productList);
+    controller.initState();
   }
 
   @override
