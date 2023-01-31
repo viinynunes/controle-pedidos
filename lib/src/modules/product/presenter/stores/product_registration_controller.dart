@@ -129,6 +129,11 @@ abstract class _ProductRegistrationControllerBase with Store {
   @action
   saveOrUpdate(BuildContext context) async {
     if (formKey.currentState!.validate()) {
+      if (selectedProvider == null) {
+        error = optionOf(ProductError('O Fornecedor deve ser selecionado'));
+        return;
+      }
+
       loading = true;
       initNewProduct();
       if (newProduct) {

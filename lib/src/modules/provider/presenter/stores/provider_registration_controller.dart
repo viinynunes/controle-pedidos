@@ -129,6 +129,11 @@ abstract class _ProviderRegistrationControllerBase with Store {
   @action
   saveOrUpdate(BuildContext context) async {
     if (formKey.currentState!.validate()) {
+      if (selectedEstablishment == null) {
+        error = optionOf(ProviderError('O Estabelecimento deve ser selecionado'));
+        return;
+      }
+
       loading = true;
       initNewProvider();
       if (newProvider) {
@@ -152,7 +157,7 @@ abstract class _ProviderRegistrationControllerBase with Store {
 
   initNewProvider() {
     if (selectedEstablishment != null) {
-      newProviderData = ProviderModel(
+      return newProviderData = ProviderModel(
           id: newProvider ? '0' : newProviderData.id,
           name: nameController.text,
           location: locationController.text,
