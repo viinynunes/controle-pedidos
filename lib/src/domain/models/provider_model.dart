@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/entities/provider.dart';
 
 import '../../core/date_time_helper.dart';
@@ -26,11 +27,22 @@ class ProviderModel extends Provider {
             id: map['id'],
             name: map['name'],
             location: map['location'],
-            registrationDate:
-                DateTimeHelper.convertTimestampToDateTime(map['registrationDate']),
+            registrationDate: DateTimeHelper.convertTimestampToDateTime(
+                map['registrationDate']),
             enabled: map['enabled'],
             establishment:
                 EstablishmentModel.fromMap(map: map['establishment']));
+
+  ProviderModel.fromDocumentSnapshot({required DocumentSnapshot doc})
+      : super(
+            id: doc.id,
+            name: doc.get('name'),
+            location: doc.get('location'),
+            registrationDate: DateTimeHelper.convertTimestampToDateTime(
+                doc.get('registrationDate')),
+            enabled: doc.get('enabled'),
+            establishment:
+                EstablishmentModel.fromMap(map: doc.get('establishment')));
 
   Map<String, dynamic> toMap() {
     return {

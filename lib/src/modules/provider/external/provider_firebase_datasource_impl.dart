@@ -79,7 +79,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
       throw FirebaseException(plugin: 'PROVIDER NOT FOUND');
     }
 
-    return ProviderModel.fromMap(map: snap.data()!);
+    return ProviderModel.fromDocumentSnapshot(doc: snap);
   }
 
   @override
@@ -101,7 +101,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
             plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
 
     for (var i in snap.docs) {
-      providerList.add(ProviderModel.fromMap(map: i.data()));
+      providerList.add(ProviderModel.fromDocumentSnapshot(doc: i));
     }
 
     return providerList;
@@ -124,7 +124,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
             plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
 
     for (var i in snap.docs) {
-      providerList.add(ProviderModel.fromMap(map: i.data()));
+      providerList.add(ProviderModel.fromDocumentSnapshot(doc: i));
     }
 
     return providerList;
@@ -136,7 +136,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
     for (var p in snap.docs) {
       providerCollection
           .doc(p.id)
-          .set(ProviderModel.fromMap(map: p.data()).toMap());
+          .set(ProviderModel.fromDocumentSnapshot(doc: p).toMap());
     }
   }
 }
