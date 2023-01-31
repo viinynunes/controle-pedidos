@@ -95,8 +95,11 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   Future<UserModel> createUserWithEmailAndPassword(
       UserModel user, String password) async {
     try {
+
       final createdUser = await firebaseAuth.createUserWithEmailAndPassword(
           email: user.email, password: password);
+
+      await createdUser.user?.sendEmailVerification();
 
       final companyID =
           await _createCompany(CompanyModel.fromCompany(company: user.company));
