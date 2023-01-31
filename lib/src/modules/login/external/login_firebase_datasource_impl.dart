@@ -95,7 +95,6 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   Future<UserModel> createUserWithEmailAndPassword(
       UserModel user, String password) async {
     try {
-
       final createdUser = await firebaseAuth.createUserWithEmailAndPassword(
           email: user.email, password: password);
 
@@ -103,6 +102,8 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
 
       final companyID =
           await _createCompany(CompanyModel.fromCompany(company: user.company));
+
+      await _createCacheDocuments(companyID: companyID);
 
       return await _createUser(companyID, createdUser.user!.uid, user);
     } on FirebaseAuthException catch (e) {
@@ -155,5 +156,49 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
         await FirebaseFirestore.instance.collection('user').doc(userID).get();
 
     return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
+  }
+
+  _createCacheDocuments({required String companyID}) async {
+    firebase
+        .collection('company')
+        .doc(companyID)
+        .collection('client')
+        .doc('00_cacheUpdated')
+        .set({'updatedAt': DateTime.now()});
+
+    firebase
+        .collection('company')
+        .doc(companyID)
+        .collection('establishment')
+        .doc('00_cacheUpdated')
+        .set({'updatedAt': DateTime.now()});
+
+    firebase
+        .collection('company')
+        .doc(companyID)
+        .collection('order')
+        .doc('00_cacheUpdated')
+        .set({'updatedAt': DateTime.now()});
+
+    firebase
+        .collection('company')
+        .doc(companyID)
+        .collection('product')
+        .doc('00_cacheUpdated')
+        .set({'updatedAt': DateTime.now()});
+
+    firebase
+        .collection('company')
+        .doc(companyID)
+        .collection('provider')
+        .doc('00_cacheUpdated')
+        .set({'updatedAt': DateTime.now()});
+
+    firebase
+        .collection('company')
+        .doc(companyID)
+        .collection('stock')
+        .doc('00_cacheUpdated')
+        .set({'updatedAt': DateTime.now()});
   }
 }
