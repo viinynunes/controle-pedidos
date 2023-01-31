@@ -100,20 +100,11 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       String providerId) async {
     List<ProductModel> productList = [];
 
-    const cacheField = 'updatedAt';
-    final cacheDocRef = productCollection.doc(cacheDocument);
-
-    final query = productCollection
+    final snap = await productCollection
         .where('enabled', isEqualTo: true)
         .where('provider.id', isEqualTo: providerId)
-        .orderBy('name', descending: false);
-
-    final snap = await FirestoreCache.getDocuments(
-            query: query,
-            cacheDocRef: cacheDocRef,
-            firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET PRODUCT ERROR', message: e.toString()));
+        .orderBy('name', descending: false)
+        .get();
 
     for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
