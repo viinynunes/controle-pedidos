@@ -82,6 +82,7 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                       )
                           .then((result) async {
                         if (result != null && result is Product) {
+                          await stockController.getProductList();
                           await stockController
                               .reloadProviderListAndStockList(result.provider);
                         }

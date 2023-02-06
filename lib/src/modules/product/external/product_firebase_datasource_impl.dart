@@ -15,6 +15,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
   late CollectionReference<Map<String, dynamic>> productCollection;
   late CollectionReference<Map<String, dynamic>> orderCollection;
+  late CollectionReference<Map<String, dynamic>> stockCollection;
   late CollectionReference<Map<String, dynamic>> productOnOrderCollection;
 
   ProductFirebaseDatasourceImpl({required this.firebase, String? companyID}) {
@@ -27,6 +28,11 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
         .collection('company')
         .doc(companyID ?? GetStorage().read('companyID'))
         .collection('order');
+
+    stockCollection = firebase
+        .collection('company')
+        .doc(companyID ?? GetStorage().read('companyID'))
+        .collection('stock');
 
     productOnOrderCollection = firebase
         .collection('company')
@@ -49,8 +55,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
     await productCollection.doc(product.id).update(product.toMap());
-    await _updateStock(product);
-    await _updateOrder(product);
+    _updateStock(product);
+    _updateOrder(product);
     await _updateCacheDoc();
 
     return product;
@@ -63,12 +69,12 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   }
 
   _updateStock(ProductModel product) async {
-    final stockSnap = await productCollection
+    final stockSnap = await stockCollection
         .where('product.id', isEqualTo: product.id)
         .get();
 
     for (var s in stockSnap.docs) {
-      productCollection.doc(s.id).update({'product': product.toMap()});
+      stockCollection.doc(s.id).update({'product': product.toMap()});
     }
   }
 
