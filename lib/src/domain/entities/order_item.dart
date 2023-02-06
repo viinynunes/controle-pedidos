@@ -18,7 +18,7 @@ class OrderItem {
       identical(this, other) ||
       other is OrderItem &&
           runtimeType == other.runtimeType &&
-          product == other.product;
+          product.id == other.product.id;
 
   @override
   int get hashCode => product.hashCode;
