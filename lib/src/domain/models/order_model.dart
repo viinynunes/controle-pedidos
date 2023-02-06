@@ -26,10 +26,10 @@ class OrderModel extends Order {
   OrderModel.fromDocumentSnapshot({required DocumentSnapshot doc})
       : super(
             id: doc.id,
-            registrationDate:
-                DateTimeHelper.convertTimestampToDateTime(doc.get('registrationDate')),
-            registrationHour:
-                DateTimeHelper.convertTimestampToDateTime(doc.get('registrationHour')),
+            registrationDate: DateTimeHelper.convertTimestampToDateTime(
+                doc.get('registrationDate')),
+            registrationHour: DateTimeHelper.convertTimestampToDateTime(
+                doc.get('registrationHour')),
             enabled: doc.get('enabled'),
             client: ClientModel.fromMap(doc.get('client')),
             orderItemList: doc
@@ -41,10 +41,10 @@ class OrderModel extends Order {
   OrderModel.fromMap({required Map<String, dynamic> map})
       : super(
             id: map['id'],
-            registrationDate:
-                DateTimeHelper.convertTimestampToDateTime(map['registrationDate']),
-            registrationHour:
-                DateTimeHelper.convertTimestampToDateTime(map['registrationHour']),
+            registrationDate: DateTimeHelper.convertTimestampToDateTime(
+                map['registrationDate']),
+            registrationHour: DateTimeHelper.convertTimestampToDateTime(
+                map['registrationHour']),
             enabled: map['enabled'],
             client: ClientModel.fromMap(map['client']),
             orderItemList: map['orderItemList']
@@ -63,5 +63,10 @@ class OrderModel extends Order {
           .map((item) => OrderItemModel.fromOrderItem(item: item).toMap())
           .toList()
     };
+  }
+
+  @override
+  String toString() {
+    return '${client.name} - $registrationDate';
   }
 }
