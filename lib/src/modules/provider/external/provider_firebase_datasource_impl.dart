@@ -34,40 +34,38 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
 
     provider.id = result.id;
     await updateProvider(provider);
-    await _updateCacheDoc(DateTime.now());
+    await _updateCacheDoc();
     return provider;
   }
 
   @override
   Future<ProviderModel> updateProvider(ProviderModel provider) async {
-    firebase.runTransaction((transaction) async {
-      final providerRef = providerCollection.doc(provider.id);
+    await providerCollection.doc(provider.id).update(provider.toMap());
 
-      final cacheRef = providerCollection.doc(cacheDocument);
+    _updateProduct(provider);
 
-      transaction.update(providerRef, provider.toMap());
-
-      transaction.update(cacheRef, {'updatedAt': DateTime.now()});
-
-      final productSnap = await productCollection
-          .where('provider.id', isEqualTo: provider.id)
-          .get();
-
-      for (var p in productSnap.docs) {
-        var product = ProductModel.fromMap(map: p.data());
-        product.provider = provider;
-
-        GetIt.I.get<IProductDatasource>().updateProduct(product);
-      }
-    });
+    await _updateCacheDoc();
 
     return provider;
   }
 
-  _updateCacheDoc(DateTime updatedAt) async {
+  _updateProduct(ProviderModel provider) async {
+    final productSnap = await productCollection
+        .where('provider.id', isEqualTo: provider.id)
+        .get();
+
+    for (var p in productSnap.docs) {
+      var product = ProductModel.fromMap(map: p.data());
+      product.provider = provider;
+
+      GetIt.I.get<IProductDatasource>().updateProduct(product);
+    }
+  }
+
+  _updateCacheDoc({DateTime? updatedAt}) async {
     await providerCollection
         .doc(cacheDocument)
-        .update({'updatedAt': updatedAt});
+        .update({'updatedAt': updatedAt ?? DateTime.now()});
   }
 
   @override
