@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:controle_pedidos/src/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -7,6 +8,7 @@ import 'package:mobx/mobx.dart';
 import '../../stores/login_controller.dart';
 import 'android_signup_page.dart';
 import 'dialogs/android_forget_password_dialog.dart';
+import 'widgets/informative_navigation_widget.dart';
 
 class AndroidLoginPage extends StatefulWidget {
   const AndroidLoginPage({Key? key}) : super(key: key);
@@ -66,18 +68,29 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                         padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'Bem Vindo !',
-                              style: TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.9,
+                              child: const AutoSizeText(
+                                'Bem Vindo!',
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
                             ),
-                            Text(
-                              'Realize o login para ter acesso ao Controle de Pedidos',
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.white),
+                            SizedBox(
+                              width: size.width * 0.9,
+                              child: const AutoSizeText(
+                                'Realize o login para ter acesso ao Controle de Pedidos',
+                                minFontSize: 10,
+                                maxFontSize: 20,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
                             ),
                           ],
                         ),
@@ -124,20 +137,24 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                                   autocorrect: false,
                                   validator: controller.passwordValidator,
                                 ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              const ForgetPasswordDialog());
-                                    },
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Esqueceu sua senha?',
-                                        style: TextStyle(color: Colors.orange),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                const ForgetPasswordDialog());
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'Esqueceu sua senha?',
+                                          style:
+                                              TextStyle(color: Colors.orange),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -159,37 +176,18 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        'Não tem uma conta?',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pushReplacement(
-                                              CustomPageRoute(
-                                                  child:
-                                                      const AndroidSignupPage()));
-                                        },
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Cadastre-se!',
-                                            style: TextStyle(
-                                              color: Colors.orange,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                InformativeNavigationWidget(
+                                  informativeText: 'Não tem uma conta?',
+                                  actionText: 'Cadastre-se!',
+                                  onTap: () {
+                                    Navigator.of(context).pushReplacement(
+                                        CustomPageRoute(
+                                            child: const AndroidSignupPage()));
+                                  },
+                                ),
                               ],
                             ),
                           ],
