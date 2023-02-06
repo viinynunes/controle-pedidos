@@ -69,9 +69,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   }
 
   _updateStock(ProductModel product) async {
-    final stockSnap = await stockCollection
-        .where('product.id', isEqualTo: product.id)
-        .get();
+    final stockSnap =
+        await stockCollection.where('product.id', isEqualTo: product.id).get();
 
     for (var s in stockSnap.docs) {
       stockCollection.doc(s.id).update({'product': product.toMap()});
@@ -88,8 +87,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
       for (var o in orderList) {
         final orderSnap = await orderCollection.doc(o).get();
 
-        var order =
-            OrderModel.fromMap(map: orderSnap.data() as Map<String, dynamic>);
+        var order = OrderModel.fromDocumentSnapshot(doc: orderSnap);
 
         var orderItemFromProduct = order.orderItemList
             .singleWhere((element) => element.product.id == product.id);
