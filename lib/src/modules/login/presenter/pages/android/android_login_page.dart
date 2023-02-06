@@ -167,14 +167,14 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                                 SizedBox(
                                   height: size.height * 0.06,
                                   width: size.width * 0.7,
-                                  child: ElevatedButton(
-                                    onPressed: controller.login,
-                                    child: Observer(
-                                      builder: (_) => controller.loading
-                                          ? const CircularProgressIndicator()
-                                          : const Text('Login'),
-                                    ),
-                                  ),
+                                  child: Observer(builder: (context) {
+                                    return controller.loading
+                                        ? const CircularProgressIndicator()
+                                        : ElevatedButton(
+                                            onPressed: controller.login,
+                                            child: const Text('Login'),
+                                          );
+                                  }),
                                 ),
                                 const SizedBox(
                                   height: 20,
