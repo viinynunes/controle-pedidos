@@ -40,7 +40,7 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
 
     establishment.id = rec.id;
 
-    await _updateCacheDoc(DateTime.now());
+    await _updateCacheDoc();
 
     return await updateEstablishment(establishment);
   }
@@ -48,34 +48,34 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   @override
   Future<EstablishmentModel> updateEstablishment(
       EstablishmentModel establishment) async {
-    firebase.runTransaction((transaction) async {
-      final establishmentRef = establishmentCollection.doc(establishment.id);
+    await establishmentCollection
+        .doc(establishment.id)
+        .update(establishment.toMap());
 
-      final cacheRef = establishmentCollection.doc(cacheDocument);
-      transaction.update(establishmentRef, establishment.toMap());
-      transaction.update(cacheRef, {'updatedAt': DateTime.now()});
+    _updateProvider(establishment);
 
-      final providerSnap = await providerCollection
-          .where('establishment.id', isEqualTo: establishment.id)
-          .get();
-
-      for (var p in providerSnap.docs) {
-        var provider = ProviderModel.fromMap(map: p.data());
-        provider.establishment = establishment;
-
-        GetIt.I.get<IProviderDatasource>().updateProvider(provider);
-      }
-    }).catchError(
-      (e) => throw FirebaseException(plugin: 'UPDATE ESTABLISHMENT ERROR'),
-    );
+    _updateCacheDoc();
 
     return establishment;
   }
 
-  _updateCacheDoc(DateTime updatedAt) async {
+  _updateProvider(EstablishmentModel establishment) async {
+    final providerSnap = await providerCollection
+        .where('establishment.id', isEqualTo: establishment.id)
+        .get();
+
+    for (var p in providerSnap.docs) {
+      var provider = ProviderModel.fromDocumentSnapshot(doc: p);
+      provider.establishment = establishment;
+
+      GetIt.I.get<IProviderDatasource>().updateProvider(provider);
+    }
+  }
+
+  _updateCacheDoc({DateTime? updatedAt}) async {
     await establishmentCollection
         .doc(cacheDocument)
-        .update({'updatedAt': updatedAt});
+        .update({'updatedAt': updatedAt ?? DateTime.now()});
   }
 
   @override
