@@ -1,7 +1,7 @@
 import 'package:controle_pedidos/src/core/date_time_helper.dart';
 import 'package:controle_pedidos/src/domain/entities/order.dart' as o;
 import 'package:controle_pedidos/src/domain/entities/product.dart';
-import 'package:controle_pedidos/src/domain/models/product_model.dart';
+import 'package:controle_pedidos/src/domain/models/order_item_model.dart';
 import 'package:controle_pedidos/src/modules/order/domain/repositories/i_order_repository.dart';
 import 'package:controle_pedidos/src/modules/order/errors/order_error.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
@@ -102,10 +102,25 @@ class OrderRepositoryImpl implements IOrderRepository {
       iniDate = DateTimeHelper.removeHourFromDateTime(date: iniDate);
       endDate = DateTimeHelper.removeHourFromDateTime(date: endDate);
 
-      final result = await _datasource.getOrderListByEnabledAndProductAndDate(
-          ProductModel.fromProduct(product: product), iniDate, endDate);
+      List<OrderModel> orderList =
+          await _datasource.getOrderListByEnabledBetweenDates(iniDate, endDate);
 
-      return Right(result);
+      final orderItem =
+          OrderItemModel(listIndex: 0, quantity: 0, product: product, note: '');
+
+      List<OrderModel> filteredOrderList = orderList
+          .where((element) => element.orderItemList.contains(orderItem))
+          .toList();
+
+      for (var o in filteredOrderList) {
+        o.orderItemList.removeWhere((element) => element != orderItem);
+
+        if (o.orderItemList.length != 1) {
+          throw Exception('Erro ao remover order items from list');
+        }
+      }
+
+      return Right(filteredOrderList);
     } catch (e) {
       return Left(OrderError(e.toString()));
     }

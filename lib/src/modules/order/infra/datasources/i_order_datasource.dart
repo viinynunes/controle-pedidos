@@ -1,5 +1,4 @@
 import '../../../../domain/models/order_model.dart';
-import '../../../../domain/models/product_model.dart';
 
 abstract class IOrderDatasource {
   Future<OrderModel> createOrder(OrderModel order);
@@ -14,7 +13,4 @@ abstract class IOrderDatasource {
 
   Future<List<OrderModel>> getOrderListByEnabledBetweenDates(
       DateTime iniDate, DateTime endDate);
-
-  Future<List<OrderModel>> getOrderListByEnabledAndProductAndDate(
-      ProductModel product, DateTime iniDate, DateTime endDate);
 }

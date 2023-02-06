@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_pedidos/src/domain/models/order_item_model.dart';
 import 'package:controle_pedidos/src/domain/models/order_model.dart';
-import 'package:controle_pedidos/src/domain/models/product_model.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
 import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_storage/get_storage.dart';
@@ -194,38 +193,6 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
     for (var o in snap.docs) {
       orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
-    }
-
-    return orderList;
-  }
-
-  @override
-  Future<List<OrderModel>> getOrderListByEnabledAndProductAndDate(
-      ProductModel product, DateTime iniDate, DateTime endDate) async {
-    List<OrderModel> orderList = [];
-
-    final snap = await orderCollection
-        .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
-        .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .where('enabled', isEqualTo: true)
-        .get()
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ORDER ERROR', message: e.toString()));
-
-    for (var o in snap.docs) {
-      orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
-    }
-    final oi =
-        OrderItemModel(listIndex: 0, quantity: 0, product: product, note: '');
-
-    orderList.removeWhere((order) => !order.orderItemList.contains(oi));
-
-    for (var o in orderList) {
-      o.orderItemList.removeWhere((element) => element != oi);
-
-      if (o.orderItemList.length != 1) {
-        throw Exception('Erro ao remover order items from list');
-      }
     }
 
     return orderList;
