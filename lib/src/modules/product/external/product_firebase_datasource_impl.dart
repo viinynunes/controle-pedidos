@@ -57,7 +57,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
     await productCollection.doc(product.id).update(product.toMap());
     _updateStock(product);
     _updateOrder(product);
-    await _updateCacheDoc();
+    _updateCacheDoc();
 
     return product;
   }

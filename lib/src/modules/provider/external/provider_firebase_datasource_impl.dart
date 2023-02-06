@@ -44,7 +44,7 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
 
     _updateProduct(provider);
 
-    await _updateCacheDoc();
+    _updateCacheDoc();
 
     return provider;
   }
