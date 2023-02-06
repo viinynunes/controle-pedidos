@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -103,7 +104,11 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
                 children: [
                   const SizedBox(width: 0.8),
                   _getFlexible(
-                      flex: 5, text: tileController.stock.product.name),
+                      flex: 5,
+                      text: tileController.stock.product.name,
+                      textAlign: TextAlign.left,
+                      paddingLeft: true,
+                      maxLines: 2),
                   _getFlexible(
                       flex: 2, text: tileController.stock.product.category),
                   _getFlexible(
@@ -193,16 +198,26 @@ class _AndroidStockTileState extends State<AndroidStockTile> {
     );
   }
 
-  _getFlexible({required int flex, required String text}) {
+  _getFlexible(
+      {required int flex,
+      required String text,
+      TextAlign textAlign = TextAlign.center,
+      bool paddingLeft = false,
+      int maxLines = 1}) {
     return Flexible(
       flex: flex,
       fit: FlexFit.tight,
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: tileController.selected
-            ? const TextStyle(color: Colors.black)
-            : Theme.of(context).textTheme.bodyMedium,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: AutoSizeText(
+          text,
+          minFontSize: 2,
+          maxLines: maxLines,
+          textAlign: textAlign,
+          style: tileController.selected
+              ? const TextStyle(color: Colors.black)
+              : Theme.of(context).textTheme.bodyMedium,
+        ),
       ),
     );
   }

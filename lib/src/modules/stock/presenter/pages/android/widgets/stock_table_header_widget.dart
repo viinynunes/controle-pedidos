@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:controle_pedidos/src/modules/stock/presenter/store/stock_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -14,8 +15,10 @@ class StockTableHeaderWidget extends StatelessWidget {
       return Flexible(
           flex: flex,
           fit: FlexFit.tight,
-          child: Text(
+          child: AutoSizeText(
             text,
+            maxLines: 1,
+            minFontSize: 2,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall,
           ));
