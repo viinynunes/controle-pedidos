@@ -31,6 +31,11 @@ abstract class _SignupControllerBase with Store {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final phoneController = TextEditingController();
+  final fullNameFocus = FocusNode();
+
+  initState(){
+    fullNameFocus.requestFocus();
+  }
 
   @action
   toggleShowCompanyFields() {

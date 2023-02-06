@@ -31,6 +31,8 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
         ),
       );
     });
+
+    controller.initState();
   }
 
   @override
@@ -68,14 +70,17 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                             const Text(
                               'Cadastre-se',
                               style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                             Observer(
                               builder: (context) => Text(
                                 controller.showCompanyFields
                                     ? 'Primeiro, digite as informações de sua empresa'
                                     : 'Agora, digite as suas informações',
-                                style: const TextStyle(fontSize: 14),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.white),
                               ),
                             ),
                           ],
@@ -99,8 +104,17 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           controller:
                                               controller.companyNameController,
                                           decoration: const InputDecoration(
-                                              label: Text('Nome da Empresa'),
-                                              hintText: 'Jeferson Caminhões'),
+                                            label: Text(
+                                              'Nome da Empresa',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            hintText: 'Jeferson Caminhões',
+                                            hintStyle:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textInputAction: TextInputAction.next,
@@ -121,9 +135,19 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                         TextFormField(
                                           controller:
                                               controller.fullNameController,
+                                          focusNode: controller.fullNameFocus,
                                           decoration: const InputDecoration(
-                                              label: Text('Nome Completo'),
-                                              hintText: 'Jose da Silva'),
+                                            label: Text(
+                                              'Nome Completo',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            hintText: 'Jose da Silva',
+                                            hintStyle:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textInputAction: TextInputAction.next,
@@ -134,8 +158,17 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           controller:
                                               controller.emailController,
                                           decoration: const InputDecoration(
-                                              label: Text('Email'),
-                                              hintText: 'jose@hotmail.com'),
+                                            label: Text(
+                                              'Email',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            hintText: 'jose@hotmail.com',
+                                            hintStyle:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textInputAction: TextInputAction.next,
@@ -145,8 +178,17 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           controller:
                                               controller.phoneController,
                                           decoration: const InputDecoration(
-                                              label: Text('Telefone'),
-                                              hintText: '()_____-____'),
+                                            label: Text(
+                                              'Telefone',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            hintText: '()_____-____',
+                                            hintStyle:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           keyboardType: TextInputType.phone,
                                           textInputAction: TextInputAction.next,
                                         ),
@@ -154,8 +196,17 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           controller:
                                               controller.passwordController,
                                           decoration: const InputDecoration(
-                                              label: Text('Senha'),
-                                              hintText: '************'),
+                                            label: Text(
+                                              'Senha',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            hintText: '************',
+                                            hintStyle:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textInputAction: TextInputAction.next,
@@ -170,8 +221,17 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           controller: controller
                                               .confirmPasswordController,
                                           decoration: const InputDecoration(
-                                              label: Text('Confirme sua Senha'),
-                                              hintText: '************'),
+                                            label: Text(
+                                              'Confirme sua Senha',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            hintText: '************',
+                                            hintStyle:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textInputAction: TextInputAction.next,

@@ -70,11 +70,14 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                             Text(
                               'Bem Vindo !',
                               style: TextStyle(
-                                  fontSize: 50, fontWeight: FontWeight.bold),
+                                  fontSize: 50,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                             Text(
                               'Realize o login para ter acesso ao Controle de Pedidos',
-                              style: TextStyle(fontSize: 14),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
                             ),
                           ],
                         ),
@@ -92,8 +95,14 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                                 TextFormField(
                                   controller: controller.emailController,
                                   decoration: const InputDecoration(
-                                      label: Text('Email'),
-                                      hintText: 'jose@hotmail.com'),
+                                    label: Text(
+                                      'Email',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    hintText: 'jose@hotmail.com',
+                                    hintStyle: TextStyle(color: Colors.white),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
                                   validator: controller.emailValidator,
@@ -101,8 +110,14 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                                 TextFormField(
                                   controller: controller.passwordController,
                                   decoration: const InputDecoration(
-                                      label: Text('Senha'),
-                                      hintText: '*****************'),
+                                    label: Text(
+                                      'Senha',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    hintText: '*****************',
+                                    hintStyle: TextStyle(color: Colors.white),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
                                   obscureText: true,
                                   obscuringCharacter: '*',
                                   enableSuggestions: false,
