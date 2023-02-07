@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'src/domain/entities/enums/company_subscription.dart';
 import 'src/modules/login/presenter/pages/android/android_login_page.dart';
 import 'styles/color_schemes.g.dart';
 import 'styles/themes.dart';
@@ -21,7 +22,11 @@ void main() async {
   if (GetStorage().read('company') == null) {
     GetStorage().write(
         'company',
-        CompanyModel(id: 'aaa', name: 'aaa', registrationDate: DateTime.now())
+        CompanyModel(
+                id: 'aaa',
+                name: 'aaa',
+                registrationDate: DateTime.now(),
+                subscription: CompanySubscription.free)
             .toJson());
   }
 

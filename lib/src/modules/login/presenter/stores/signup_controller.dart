@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:string_validator/string_validator.dart';
 
+import '../../../../domain/entities/enums/company_subscription.dart';
 import '../../domain/usecases/i_login_usecase.dart';
 import '../../errors/login_error.dart';
 
@@ -33,7 +34,7 @@ abstract class _SignupControllerBase with Store {
   final phoneController = TextEditingController();
   final fullNameFocus = FocusNode();
 
-  initState(){
+  initState() {
     fullNameFocus.requestFocus();
   }
 
@@ -65,7 +66,8 @@ abstract class _SignupControllerBase with Store {
         company: CompanyModel(
             id: '0',
             name: companyNameController.text.trim(),
-            registrationDate: DateTime.now()));
+            registrationDate: DateTime.now(),
+            subscription: CompanySubscription.free));
     return user;
   }
 
