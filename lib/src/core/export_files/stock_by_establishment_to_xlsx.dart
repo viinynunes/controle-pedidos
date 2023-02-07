@@ -12,8 +12,6 @@ class StockByEstablishmentToXLSX {
       {required List<ReportEstablishmentModel> establishmentList}) {
     final workbook = Workbook(establishmentList.length);
 
-
-
     Style stockStyle = workbook.styles.add('stockStyle');
     stockStyle.borders.all.lineStyle = LineStyle.thin;
 
@@ -111,7 +109,8 @@ class StockByEstablishmentToXLSX {
 
           _buildSheet(
               sheet: sheet,
-              text: '${stock.totalOrdered - stock.total}',
+              text: '',
+              numberText: stock.totalOrdered - stock.total,
               rowIndex: rowIndex,
               columnIndex: columnIndex,
               style: stockStyle);
@@ -151,8 +150,16 @@ class StockByEstablishmentToXLSX {
       required String text,
       required int rowIndex,
       required columnIndex,
-      required Style style}) {
-    sheet.getRangeByIndex(rowIndex, columnIndex).setText(text);
+      required Style style,
+      int? numberText}) {
+    if (numberText != null) {
+      sheet
+          .getRangeByIndex(rowIndex, columnIndex)
+          .setNumber(numberText.toDouble());
+    } else {
+      sheet.getRangeByIndex(rowIndex, columnIndex).setText(text);
+    }
+
     sheet.getRangeByIndex(rowIndex, columnIndex).cellStyle = style;
     sheet.autoFitColumn(columnIndex);
   }
