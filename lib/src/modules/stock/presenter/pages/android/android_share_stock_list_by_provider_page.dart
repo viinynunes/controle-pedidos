@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
@@ -19,7 +20,11 @@ class AndroidShareStockListByProviderPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Exportar Fornecedor'),
+        title: const AutoSizeText(
+          'Exportar Fornecedor',
+          maxLines: 1,
+          minFontSize: 5,
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -48,7 +53,9 @@ class AndroidShareStockListByProviderPage extends StatelessWidget {
                   Text(
                     providerName,
                     style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                   ),
                   const SizedBox(
                     height: 10,
