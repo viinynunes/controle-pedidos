@@ -164,18 +164,20 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(
-                                  height: size.height * 0.06,
-                                  width: size.width * 0.7,
-                                  child: Observer(builder: (context) {
-                                    return controller.loading
-                                        ? const CircularProgressIndicator()
-                                        : ElevatedButton(
-                                            onPressed: controller.login,
-                                            child: const Text('Login'),
-                                          );
-                                  }),
-                                ),
+                                Observer(builder: (context) {
+                                  return Visibility(
+                                    visible: !controller.loading,
+                                    replacement: const CircularProgressIndicator(),
+                                    child: SizedBox(
+                                      height: size.height * 0.06,
+                                      width: size.width * 0.7,
+                                      child: ElevatedButton(
+                                        onPressed: controller.login,
+                                        child: const Text('Login'),
+                                      ),
+                                    ),
+                                  );
+                                }),
                                 const SizedBox(
                                   height: 20,
                                 ),
