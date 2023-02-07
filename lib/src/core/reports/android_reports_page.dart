@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../modules/order/presenter/pages/android/reports/android_order_report_page.dart';
@@ -29,12 +30,15 @@ class AndroidReportsPage extends StatelessWidget {
               child: Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 24.0),
+                    padding: const EdgeInsets.only(right: 8.0),
                     child: Icon(icon),
                   ),
-                  Text(
-                    text,
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Expanded(
+                    child: AutoSizeText(
+                      text,
+                      maxLines: 1,
+                      minFontSize: 5,
+                    ),
                   ),
                 ],
               ),
@@ -59,7 +63,7 @@ class AndroidReportsPage extends StatelessWidget {
               children: [
                 Container(
                   margin: const EdgeInsets.only(bottom: 10),
-                  child: Text(
+                  child: AutoSizeText(
                     'Relatório de Produtos',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),

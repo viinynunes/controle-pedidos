@@ -83,6 +83,8 @@ class _AndroidCustomMergedStockByProviderPageState
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: AndroidCustomProviderDataTable(
+                            columnSpacing:
+                                MediaQuery.of(context).size.width * .01,
                             providerModel: provider,
                             withMergeOptions: true,
                             blackFontColor: true,

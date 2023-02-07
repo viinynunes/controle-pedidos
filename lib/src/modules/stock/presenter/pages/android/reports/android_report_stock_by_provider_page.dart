@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -33,7 +34,11 @@ class _AndroidReportStockByProviderPageState
         title: Observer(
           builder: (_) => controller.selecting
               ? Container()
-              : const Text('Customize o Relatório'),
+              : const AutoSizeText(
+                  'Customize o Relatório',
+                  minFontSize: 5,
+                  maxLines: 1,
+                ),
         ),
         centerTitle: true,
         actions: [
@@ -159,30 +164,39 @@ class _AndroidReportStockByProviderPageState
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                '${providerModel.provider.name} - ${providerModel.provider.location}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium,
+                                            Flexible(
+                                              flex: 3,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: AutoSizeText(
+                                                  '${providerModel.provider.name} - ${providerModel.provider.location}',
+                                                  maxLines: 1,
+                                                  minFontSize: 5,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium,
+                                                ),
                                               ),
                                             ),
-                                            controller.selectedProviderModelList
-                                                    .contains(providerModel)
-                                                ? Switch(
+                                            Flexible(
+                                              flex: 1,
+                                              child: Visibility(
+                                                visible: controller
+                                                    .selectedProviderModelList
+                                                    .contains(providerModel),
+                                                child: Switch(
                                                     value: providerModel.merge,
-                                                    activeColor: Theme.of(
-                                                            context)
+                                                    activeColor: Theme.of(context)
                                                         .scaffoldBackgroundColor,
                                                     onChanged: (_) {
                                                       setState(() {
                                                         controller.toggleMerge(
                                                             providerModel);
                                                       });
-                                                    })
-                                                : Container(),
+                                                    }),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -191,7 +205,8 @@ class _AndroidReportStockByProviderPageState
                                 },
                                 body: AndroidCustomProviderDataTable(
                                   providerModel: providerModel,
-                                  columnSpacing: 20,
+                                  columnSpacing:
+                                      MediaQuery.of(context).size.width * .02,
                                   withMergeOptions: false,
                                   blackFontColor:
                                       Theme.of(context).brightness ==

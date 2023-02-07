@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -30,7 +31,11 @@ class _AndroidReportStockByEstablishmentPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Relatório por Estabelecimento'),
+        title: const AutoSizeText(
+          'Relatório por Estabelecimento',
+          minFontSize: 5,
+          maxLines: 1,
+        ),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -114,7 +119,7 @@ class _AndroidReportStockByEstablishmentPageState
                                                 ),
                                                 AndroidCustomProviderDataTable(
                                                   providerModel: e,
-                                                  columnSpacing: 20,
+                                                  columnSpacing: MediaQuery.of(context).size.width * .02,
                                                   withMergeOptions: false,
                                                   blackFontColor:
                                                       Theme.of(context)

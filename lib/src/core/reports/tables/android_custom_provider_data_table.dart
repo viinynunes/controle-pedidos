@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/models/report_provider_model.dart';
@@ -37,32 +38,43 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
               child: providerModel.merge
                   ? TextField(
                       decoration: InputDecoration(
-                        hintText: 'Nomeie a tabela',
-                        hintStyle: TextStyle(
-                            color:
-                                blackFontColor ? Colors.black : Colors.white),
+                        label: AutoSizeText(
+                          'Nomeie a tabela',
+                          maxLines: 1,
+                          minFontSize: 5,
+                          style: TextStyle(
+                              color:
+                                  blackFontColor ? Colors.black : Colors.white),
+                        ),
                       ),
                       style: TextStyle(
                           color: blackFontColor ? Colors.black : Colors.white),
                     )
                   : withMergeOptions
-                      ? Column(
-                          children: [
-                            Text(
-                              providerModel.provider.name,
-                              style: TextStyle(
-                                  color: blackFontColor
-                                      ? Colors.black
-                                      : Colors.white),
-                            ),
-                            Text(
-                              providerModel.provider.location,
-                              style: TextStyle(
-                                  color: blackFontColor
-                                      ? Colors.black
-                                      : Colors.white),
-                            ),
-                          ],
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 2.0),
+                          child: Column(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  providerModel.provider.name,
+                                  style: TextStyle(
+                                      color: blackFontColor
+                                          ? Colors.black
+                                          : Colors.white),
+                                ),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  providerModel.provider.location,
+                                  style: TextStyle(
+                                      color: blackFontColor
+                                          ? Colors.black
+                                          : Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
                         )
                       : Center(
                           child: Text(
@@ -82,7 +94,8 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
                         style: TextStyle(
                             color:
                                 blackFontColor ? Colors.black : Colors.white),
-                      ))
+                      ),
+                    )
                   : Container()),
           DataColumn(
               label: Text(
@@ -109,25 +122,33 @@ class AndroidCustomProviderDataTable extends StatelessWidget {
             .map(
               (stock) => DataRow(
                 cells: [
-                  DataCell(Container(
-                    width: size.width * 0.4,
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(
-                      stock.product.name,
-                      style: TextStyle(
-                          color: blackFontColor ? Colors.black : Colors.white),
-                      maxLines: 1,
+                  DataCell(
+                    Container(
+                      width: size.width * 0.4,
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        stock.product.name,
+                        style: TextStyle(
+                            color:
+                                blackFontColor ? Colors.black : Colors.white, fontSize: 13),
+                        maxLines: 1,
+                      ),
                     ),
-                  )),
-                  DataCell(providerModel.merge
-                      ? Text(
-                          stock.product.provider.location,
-                          style: TextStyle(
-                              color:
-                                  blackFontColor ? Colors.black : Colors.white),
-                          textAlign: TextAlign.left,
-                        )
-                      : Container()),
+                  ),
+                  DataCell(
+                    Visibility(
+                      visible: providerModel.merge,
+                      child: Text(
+                        stock.product.provider.location,
+                        maxLines: 1,
+                        style: TextStyle(
+                            color: blackFontColor ? Colors.black : Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
                   DataCell(Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Text(
