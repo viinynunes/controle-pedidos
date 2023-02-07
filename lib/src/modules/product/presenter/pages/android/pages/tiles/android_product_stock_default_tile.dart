@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../domain/entities/product.dart';
@@ -14,9 +15,10 @@ class AndroidProductStockDefaultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ///product list is empty when selecting provider
-    return ListView(children: [
-      DataTable(
+    final width = MediaQuery.of(context).size.width;
+    return SingleChildScrollView(
+      child: DataTable(
+        columnSpacing: width * 0.1,
         columns: const [
           DataColumn(
             label: Text('Produto'),
@@ -32,23 +34,40 @@ class AndroidProductStockDefaultTile extends StatelessWidget {
             .map((product) => DataRow(
                   cells: [
                     DataCell(
-                      Text(
-                        product.name,
-                        textAlign: TextAlign.left,
+                      SizedBox(
+                        width: width * 0.3,
+                        child: AutoSizeText(
+                          product.name,
+                          maxLines: 2,
+                          minFontSize: 5,
+                          textAlign: TextAlign.left,
+                        ),
                       ),
                     ),
                     DataCell(
-                        Text(product.category, textAlign: TextAlign.center)),
+                      SizedBox(
+                        width: width * .1,
+                        child: AutoSizeText(
+                          product.category,
+                          minFontSize: 5,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                     DataCell(
-                      Checkbox(
-                        value: product.stockDefault,
-                        onChanged: (_) => onChanged(product),
+                      SizedBox(
+                        width: width * .1,
+                        child: Checkbox(
+                          value: product.stockDefault,
+                          onChanged: (_) => onChanged(product),
+                        ),
                       ),
                     ),
                   ],
                 ))
             .toList(),
       ),
-    ]);
+    );
   }
 }

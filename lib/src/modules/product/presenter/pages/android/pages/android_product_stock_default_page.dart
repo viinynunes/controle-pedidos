@@ -33,60 +33,58 @@ class _AndroidProductStockDefaultPageState
       appBar: AppBar(
         title: const Text('Produtos Fixos'),
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Observer(
-                  builder: (_) => controller.loading
-                      ? ShimmerWidget.rectangular(
-                          height: 30,
-                          width: MediaQuery.of(context).size.width * 0.5,
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  final entity = await showDialog(
-                                      context: context,
-                                      builder: (_) => ShowEntitySelectionDialog(
-                                          entityList: controller.providerList));
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Observer(
+                builder: (_) => controller.loading
+                    ? ShimmerWidget.rectangular(
+                        height: 30,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final entity = await showDialog(
+                                    context: context,
+                                    builder: (_) => ShowEntitySelectionDialog(
+                                        entityList: controller.providerList));
 
-                                  if (entity != null && entity is Provider) {
-                                    controller.setSelectedProvider(entity);
-                                    controller.getProductListByProvider();
-                                  }
-                                },
-                                child: Text(controller.selectedProvider?.name ??
-                                    'Selecione um fornecedor'),
-                              ),
+                                if (entity != null && entity is Provider) {
+                                  controller.setSelectedProvider(entity);
+                                  controller.getProductListByProvider();
+                                }
+                              },
+                              child: Text(controller.selectedProvider?.name ??
+                                  'Selecione um fornecedor'),
                             ),
                           ),
                         ),
-                ),
-                Expanded(
-                  child: Observer(builder: (_) {
-                    return controller.productList.isNotEmpty
-                        ? AndroidProductStockDefaultTile(
-                            productList: controller.productList,
-                            onChanged: (product) {
-                              controller.toggleCheckbox(product);
-                              controller.updateProduct(product);
-                            },
-                          )
-                        : const Center(
-                            child: Text('Nenhum produto encontrado'),
-                          );
-                  }),
-                ),
-              ],
-            ),
+                      ),
+              ),
+              Expanded(
+                child: Observer(builder: (_) {
+                  return controller.productList.isNotEmpty
+                      ? AndroidProductStockDefaultTile(
+                          productList: controller.productList,
+                          onChanged: (product) {
+                            controller.toggleCheckbox(product);
+                            controller.updateProduct(product);
+                          },
+                        )
+                      : const Center(
+                          child: Text('Nenhum produto encontrado'),
+                        );
+                }),
+              ),
+            ],
           ),
         ),
       ),
