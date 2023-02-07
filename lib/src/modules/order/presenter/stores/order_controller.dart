@@ -57,10 +57,21 @@ abstract class _OrderControllerBase with Store {
 
   @action
   initState() async {
+    resetActionsVars();
     await resetDateRange();
 
     await getProductList();
     await getClientList();
+  }
+
+  @action
+  resetActionsVars() {
+    loading = false;
+    searching = false;
+    searchText = '';
+    orderList = ObservableList<o.Order>.of([]);
+    filteredOrderList = ObservableList<o.Order>.of([]);
+    error = none();
   }
 
   @action
@@ -170,6 +181,7 @@ abstract class _OrderControllerBase with Store {
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => registrationPage));
 
+    resetActionsVars();
     await getOrderListBetweenDates();
 
     orderService.sortOrderListByRegistrationHour(orderList);

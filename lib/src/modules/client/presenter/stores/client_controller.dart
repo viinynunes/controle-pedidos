@@ -33,7 +33,18 @@ abstract class _ClientListBase with Store {
 
   @action
   initState() async {
+    resetActionsVars();
     await getClientList();
+  }
+
+  @action
+  resetActionsVars() {
+    loading = false;
+    searching = false;
+    searchText = '';
+    clientList = ObservableList<Client>.of([]);
+    filteredClientList = ObservableList<Client>.of([]);
+    error = none();
   }
 
   @action

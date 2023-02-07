@@ -33,7 +33,18 @@ abstract class _ProductControllerBase with Store {
 
   @action
   initState() async {
+    resetActionsVars();
     await getProductList();
+  }
+
+  @action
+  resetActionsVars() {
+    loading = false;
+    searching = false;
+    searchText = '';
+    productList = ObservableList<Product>.of([]);
+    filteredProductList = ObservableList<Product>.of([]);
+    error = none();
   }
 
   @action

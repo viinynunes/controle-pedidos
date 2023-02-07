@@ -33,7 +33,18 @@ abstract class _EstablishmentControllerBase with Store {
 
   @action
   initState() {
+    resetActionsVars();
     getEstablishmentList();
+  }
+
+  @action
+  resetActionsVars() {
+    loading = false;
+    searching = false;
+    searchText = '';
+    estabList = ObservableList<Establishment>.of([]);
+    filteredEstabList = ObservableList<Establishment>.of([]);
+    error = none();
   }
 
   @action

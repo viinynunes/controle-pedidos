@@ -33,7 +33,18 @@ abstract class _ProviderControllerBase with Store {
 
   @action
   initState() async {
+    resetActionsVars();
     await getProviderList();
+  }
+
+  @action
+  resetActionsVars() {
+    loading = false;
+    searching = false;
+    searchText = '';
+    providerList = ObservableList<Provider>.of([]);
+    filteredProviderList = ObservableList<Provider>.of([]);
+    error = none();
   }
 
   @action
