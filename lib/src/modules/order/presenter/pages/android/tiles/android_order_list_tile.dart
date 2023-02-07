@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:controle_pedidos/src/domain/entities/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -65,8 +66,9 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      AutoSizeText(
                         widget.order.client.name,
+                        minFontSize: 5,
                         maxLines: 1,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
@@ -83,6 +85,7 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
                     ],
                   ),
                 ),
+                const SizedBox(width: 5,),
                 Flexible(
                   flex: 3,
                   fit: FlexFit.tight,
@@ -92,9 +95,11 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
                       controller: scrollController,
                       reverse: true,
                       children: widget.order.orderItemList
-                          .map((e) => Text(
+                          .map((e) => AutoSizeText(
                                 e.toString(),
                                 textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                minFontSize: 10,
                                 maxLines: 1,
                                 style: Theme.of(context).textTheme.bodySmall,
                               ))
