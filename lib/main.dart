@@ -1,20 +1,35 @@
-import 'package:controle_pedidos/model/client_model.dart';
-import 'package:controle_pedidos/model/establishment_model.dart';
-import 'package:controle_pedidos/model/order_item_model.dart';
-import 'package:controle_pedidos/model/order_model.dart';
-import 'package:controle_pedidos/model/product_model.dart';
-import 'package:controle_pedidos/model/provider_model.dart';
-import 'package:controle_pedidos/model/stock_model.dart';
-import 'package:controle_pedidos/model/user_model.dart';
-import 'package:controle_pedidos/pages/home_page.dart';
-import 'package:controle_pedidos/pages/login_page.dart';
+import 'package:controle_pedidos/src/core/home/android_home_page.dart';
+import 'package:controle_pedidos/src/domain/models/company_model.dart';
+import 'package:controle_pedidos/src/global_locator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:get_storage/get_storage.dart';
+
+import 'src/domain/entities/enums/company_subscription.dart';
+import 'src/modules/login/presenter/pages/android/android_login_page.dart';
+import 'styles/color_schemes.g.dart';
+import 'styles/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await GetStorage.init();
+
+  if (GetStorage().read('company') == null) {
+    GetStorage().write(
+        'company',
+        CompanyModel(
+                id: 'aaa',
+                name: 'aaa',
+                registrationDate: DateTime.now(),
+                subscription: CompanySubscription.free)
+            .toJson());
+  }
+
   try {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -24,62 +39,57 @@ void main() async {
           projectId: "controle-de-pedidos-ca8b2"),
     );
   } catch (e) {
-    print(e);
+    debugPrint(e.toString());
   }
 
+  await initGlobalServiceLocator(initModules: false);
+
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+
+    final imgLicense = await rootBundle
+        .loadString('<a href="https://www.freepik.com/free-vector/'
+            'neon-purple-lights-background-arrow-style_8152351'
+            '.htm#page=4&query=background&position=31&from_view=search&track='
+            'sph">Image by starline</a> on Freepik');
+
+    yield LicenseEntryWithLineBreaks(['freepick'], imgLicense);
+  });
+
   runApp(
-    ScopedModel<UserModel>(
-      model: UserModel(),
-      child: ScopedModelDescendant<UserModel>(
-        builder: (context, child, model) {
-          return ScopedModel<StockModel>(
-            model: StockModel(),
-            child: ScopedModel<ClientModel>(
-              model: ClientModel(),
-              child: ScopedModel<OrderModel>(
-                model: OrderModel(),
-                child: ScopedModel<OrderItemModel>(
-                  model: OrderItemModel(),
-                  child: ScopedModel<ProductModel>(
-                    model: ProductModel(),
-                    child: ScopedModel<ProviderModel>(
-                      model: ProviderModel(),
-                      child: ScopedModel<EstablishmentModel>(
-                        model: EstablishmentModel(),
-                        child: MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                          home: model.isLoggedIn()
-                              ? const HomePage()
-                              : const LoginPage(),
-                          theme: ThemeData(
-                            primarySwatch: Colors.deepPurple,
-                            primaryColor: Colors.deepPurple,
-                            inputDecorationTheme: const InputDecorationTheme(
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16))),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16)))),
-                          ),
-                          localizationsDelegates: const [
-                            GlobalMaterialLocalizations.delegate,
-                            GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate
-                          ],
-                          supportedLocales: const [Locale('pt')],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
+    MaterialApp(
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (_, snap) {
+          if (snap.hasData) {
+            return const AndroidHomePage();
+          } else {
+            return const AndroidLoginPage();
+          }
         },
       ),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: lightColorScheme,
+        elevatedButtonTheme: elevatedButtonTheme,
+        fontFamily: fontFamily,
+        textTheme: textTheme,
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        elevatedButtonTheme: elevatedButtonTheme,
+        fontFamily: fontFamily,
+        textTheme: textTheme,
+      ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales: const [Locale('pt')],
     ),
   );
 }
