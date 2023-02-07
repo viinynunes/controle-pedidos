@@ -22,33 +22,63 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Observer(
-          builder: (context) {
-            return Text(controller.user?.company.name ?? 'COMPANY');
-          }
-        ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await controller.logout();
-            },
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: size.width,
+              height: size.height * .2,
+              padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).secondaryHeaderColor),
+              child: Observer(builder: (context) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          controller.user?.company.name ?? '',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              controller.logout();
+                            },
+                            icon: Icon(
+                              Icons.logout,
+                              color: Theme.of(context).indicatorColor,
+                            ))
+                      ],
+                    ),
+                    Expanded(
+                      child: Column(
+                        verticalDirection: VerticalDirection.up,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(controller.user?.email ?? ''),
+                          Text(controller.user?.fullName ?? ''),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              }),
             ),
-          ),
+            ListTile(
+              onTap: () {},
+              leading: const Icon(Icons.monetization_on),
+              title: const Text('Assinatura'),
+              trailing: Observer(builder: (context) {
+                return Text(
+                    controller.user?.company.subscription.name ?? '');
+              }),
+            ),
+          ],
         ),
       ),
     );
