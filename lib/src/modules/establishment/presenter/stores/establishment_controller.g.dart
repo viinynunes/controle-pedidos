@@ -143,6 +143,17 @@ mixin _$EstablishmentController on _EstablishmentControllerBase, Store {
   }
 
   @override
+  dynamic resetActionsVars() {
+    final _$actionInfo = _$_EstablishmentControllerBaseActionController
+        .startAction(name: '_EstablishmentControllerBase.resetActionsVars');
+    try {
+      return super.resetActionsVars();
+    } finally {
+      _$_EstablishmentControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic filterEstablishmentListByText() {
     final _$actionInfo =
         _$_EstablishmentControllerBaseActionController.startAction(

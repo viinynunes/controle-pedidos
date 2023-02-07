@@ -138,6 +138,17 @@ mixin _$ProductController on _ProductControllerBase, Store {
       ActionController(name: '_ProductControllerBase', context: context);
 
   @override
+  dynamic resetActionsVars() {
+    final _$actionInfo = _$_ProductControllerBaseActionController.startAction(
+        name: '_ProductControllerBase.resetActionsVars');
+    try {
+      return super.resetActionsVars();
+    } finally {
+      _$_ProductControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic filterProductListByText() {
     final _$actionInfo = _$_ProductControllerBaseActionController.startAction(
         name: '_ProductControllerBase.filterProductListByText');

@@ -246,6 +246,17 @@ mixin _$OrderController on _OrderControllerBase, Store {
       ActionController(name: '_OrderControllerBase', context: context);
 
   @override
+  dynamic resetActionsVars() {
+    final _$actionInfo = _$_OrderControllerBaseActionController.startAction(
+        name: '_OrderControllerBase.resetActionsVars');
+    try {
+      return super.resetActionsVars();
+    } finally {
+      _$_OrderControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic _setDateRangeString() {
     final _$actionInfo = _$_OrderControllerBaseActionController.startAction(
         name: '_OrderControllerBase._setDateRangeString');

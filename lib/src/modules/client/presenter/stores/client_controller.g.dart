@@ -137,6 +137,17 @@ mixin _$ClientController on _ClientListBase, Store {
       ActionController(name: '_ClientListBase', context: context);
 
   @override
+  dynamic resetActionsVars() {
+    final _$actionInfo = _$_ClientListBaseActionController.startAction(
+        name: '_ClientListBase.resetActionsVars');
+    try {
+      return super.resetActionsVars();
+    } finally {
+      _$_ClientListBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic filterClientByText() {
     final _$actionInfo = _$_ClientListBaseActionController.startAction(
         name: '_ClientListBase.filterClientByText');

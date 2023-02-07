@@ -139,6 +139,17 @@ mixin _$ProviderController on _ProviderControllerBase, Store {
       ActionController(name: '_ProviderControllerBase', context: context);
 
   @override
+  dynamic resetActionsVars() {
+    final _$actionInfo = _$_ProviderControllerBaseActionController.startAction(
+        name: '_ProviderControllerBase.resetActionsVars');
+    try {
+      return super.resetActionsVars();
+    } finally {
+      _$_ProviderControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic filterProviderListByText() {
     final _$actionInfo = _$_ProviderControllerBaseActionController.startAction(
         name: '_ProviderControllerBase.filterProviderListByText');
