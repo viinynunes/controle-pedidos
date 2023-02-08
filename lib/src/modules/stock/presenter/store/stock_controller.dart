@@ -66,7 +66,6 @@ abstract class _StockControllerBase with Store {
 
   @action
   initState() async {
-
     await getProductList();
 
     resetDateToToday();
@@ -83,29 +82,9 @@ abstract class _StockControllerBase with Store {
     final result = await productUsecase.getProductListByEnabled();
 
     result.fold((l) => error = optionOf(StockError(l.message)),
-            (r) => productList = ObservableList.of(r));
+        (r) => productList = ObservableList.of(r));
 
     loading = false;
-  }
-
-  @action
-  showDateTimeRangeSelector(BuildContext context) async {
-    await showDateRangePicker(
-      context: context,
-      initialDateRange: DateTimeRange(
-        start: iniDate,
-        end: endDate,
-      ),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2050),
-    ).then((result) {
-      if (result != null) {
-        iniDate = result.start;
-        endDate = result.end;
-
-        setSelectedDateString();
-      }
-    });
   }
 
   @action
