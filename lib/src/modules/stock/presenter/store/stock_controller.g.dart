@@ -153,16 +153,6 @@ mixin _$StockController on _StockControllerBase, Store {
     return _$getProductListAsyncAction.run(() => super.getProductList());
   }
 
-  late final _$showDateTimeRangeSelectorAsyncAction = AsyncAction(
-      '_StockControllerBase.showDateTimeRangeSelector',
-      context: context);
-
-  @override
-  Future showDateTimeRangeSelector(BuildContext context) {
-    return _$showDateTimeRangeSelectorAsyncAction
-        .run(() => super.showDateTimeRangeSelector(context));
-  }
-
   late final _$getProviderListByStockBetweenDatesAsyncAction = AsyncAction(
       '_StockControllerBase.getProviderListByStockBetweenDates',
       context: context);
