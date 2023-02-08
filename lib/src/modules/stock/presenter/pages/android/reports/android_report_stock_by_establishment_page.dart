@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import '../../../../../../core/export_files/stock_by_establishment_to_xlsx.dart';
 import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
+import '../../../../../../core/widgets/custom_date_range_picker_widget.dart';
 import '../../../store/report_stock_by_establishment_controller.dart';
 
 class AndroidReportStockByEstablishmentPage extends StatefulWidget {
@@ -47,26 +48,16 @@ class _AndroidReportStockByEstablishmentPageState
               child: Column(
                 children: [
                   Center(
-                    child: ElevatedButton(
-                      onLongPress: controller.setDateRange,
-                      onPressed: () async {
-                        final result = await showDateRangePicker(
-                            context: context,
-                            initialDateRange: DateTimeRange(
-                                start: controller.iniDate,
-                                end: controller.endDate),
-                            firstDate: DateTime(2020),
-                            lastDate: DateTime(2200));
-
-                        if (result != null) {
+                    child: Observer(
+                      builder: (context) => CustomDateRangePickerWidget(
+                        iniDate: controller.iniDate,
+                        endDate: controller.endDate,
+                        afterSelect: (DateTime iniDate, DateTime endDate) {
                           controller.setDateRange(
-                              iniDate: result.start, endDate: result.end);
-                        }
-                      },
-                      child: Observer(
-                        builder: (context) {
-                          return Text(controller.dateRange);
+                              iniDate: iniDate, endDate: endDate);
                         },
+                        onLongPress: controller.setDateRange,
+                        text: controller.dateRange,
                       ),
                     ),
                   ),
@@ -119,7 +110,11 @@ class _AndroidReportStockByEstablishmentPageState
                                                 ),
                                                 AndroidCustomProviderDataTable(
                                                   providerModel: e,
-                                                  columnSpacing: MediaQuery.of(context).size.width * .02,
+                                                  columnSpacing:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          .02,
                                                   withMergeOptions: false,
                                                   blackFontColor:
                                                       Theme.of(context)

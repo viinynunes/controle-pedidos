@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../../../../../core/helpers/custom_page_route.dart';
 import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
+import '../../../../../../core/widgets/custom_date_range_picker_widget.dart';
 import '../../../store/report_stock_by_provider_controller.dart';
 import 'android_custom_merged_stock_by_provider_page.dart';
 
@@ -99,25 +100,15 @@ class _AndroidReportStockByProviderPageState
               child: Column(
                 children: [
                   Center(
-                    child: ElevatedButton(
-                      onLongPress: controller.resetDateRange,
-                      onPressed: () async {
-                        final result = await showDateRangePicker(
-                            context: context,
-                            initialDateRange: DateTimeRange(
-                                start: controller.iniDate,
-                                end: controller.endDate),
-                            firstDate: DateTime(2020),
-                            lastDate: DateTime(2200));
-
-                        if (result != null) {
-                          controller.setDateRange(result.start, result.end);
-                        }
-                      },
-                      child: Observer(
-                        builder: (context) {
-                          return Text(controller.dateRange);
+                    child: Observer(
+                      builder: (context) => CustomDateRangePickerWidget(
+                        iniDate: controller.iniDate,
+                        endDate: controller.endDate,
+                        afterSelect: (DateTime iniDate, DateTime endDate) {
+                          controller.setDateRange(iniDate, endDate);
                         },
+                        onLongPress: controller.resetDateRange,
+                        text: controller.dateRange,
                       ),
                     ),
                   ),
@@ -187,7 +178,8 @@ class _AndroidReportStockByProviderPageState
                                                     .contains(providerModel),
                                                 child: Switch(
                                                     value: providerModel.merge,
-                                                    activeColor: Theme.of(context)
+                                                    activeColor: Theme.of(
+                                                            context)
                                                         .scaffoldBackgroundColor,
                                                     onChanged: (_) {
                                                       setState(() {
