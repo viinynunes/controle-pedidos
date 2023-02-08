@@ -26,6 +26,7 @@ class InformativeNavigationWidget extends StatelessWidget {
             style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
         ),
+        const SizedBox(width: 15,),
         Flexible(
           child: GestureDetector(
             onTap: onTap,
