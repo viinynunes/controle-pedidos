@@ -38,7 +38,7 @@ class CustomDateRangePickerWidget extends StatelessWidget {
                     onSurface: Colors.white,
                   ),
                   textTheme: const TextTheme(overline: TextStyle(fontSize: 16)),
-                  dialogBackgroundColor: Colors.amber,
+                  dialogBackgroundColor: Colors.black54,
                 ),
                 child: child!,
               );
@@ -51,7 +51,10 @@ class CustomDateRangePickerWidget extends StatelessWidget {
         );
       },
       onLongPress: onLongPress,
-      child: Text(text),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
