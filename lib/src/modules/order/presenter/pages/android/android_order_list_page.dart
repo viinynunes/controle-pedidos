@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../core/widgets/custom_date_range_picker_widget.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../domain/models/order_model.dart';
 import 'tiles/android_order_list_tile.dart';
@@ -108,28 +109,15 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                   builder: (_) => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          await showDateRangePicker(
-                            context: context,
-                            initialDateRange: DateTimeRange(
-                              start: controller.iniDate,
-                              end: controller.endDate,
-                            ),
-                            firstDate: DateTime(2020),
-                            lastDate: DateTime(2050),
-                          ).then(
-                            (result) {
-                              if (result != null) {
-                                controller.changeDateRangeSelected(
-                                    result.start, result.end);
-                              }
-                            },
-                          );
+                      CustomDateRangePickerWidget(
+                        iniDate: controller.iniDate,
+                        endDate: controller.endDate,
+                        afterSelect: (DateTime iniDate, DateTime endDate) {
+                          controller.changeDateRangeSelected(iniDate, endDate);
                         },
                         onLongPress: controller.resetDateRange,
-                        child: Text(controller.dateRangeSelected),
-                      ),
+                        text: controller.dateRangeSelected,
+                      )
                     ],
                   ),
                 ),
