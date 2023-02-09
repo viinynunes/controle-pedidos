@@ -3,7 +3,9 @@ import 'package:controle_pedidos/src/modules/order/presenter/stores/order_contro
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../../../core/admob/admob_helper.dart';
 import '../../../../../core/widgets/custom_date_range_picker_widget.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../domain/models/order_model.dart';
@@ -168,6 +170,16 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                           );
                   }),
                 ),
+                Visibility(
+                  visible: true,
+                  child: SizedBox(
+                    height: size.height * 0.1,
+                    width: size.width,
+                    child: AdWidget(
+                      ad: AdMobHelper.getBannerAd()..load(),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobHelper {
@@ -15,7 +17,17 @@ class AdMobHelper {
       adUnitId: bannerUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
-      listener: const BannerAdListener(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          log('Banner loaded');
+        },
+        onAdFailedToLoad: (ad, error) {
+          log('Banner Failed to Load', error: error);
+          ad.dispose();
+        },
+        onAdOpened: (ad) => log('Ad Opened'),
+        onAdClosed: (ad) => log('Ad Closed'),
+      ),
     );
   }
 
@@ -25,12 +37,12 @@ class AdMobHelper {
         request: const AdRequest(),
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
           onAdLoaded: (RewardedInterstitialAd rewarded) {
-            print('$ad loaded.');
+            log('$ad loaded.');
             // Keep a reference to the ad so you can show it later.
             ad = rewarded;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            print('RewardedInterstitialAd failed to load: $error');
+            log('RewardedInterstitialAd failed to load: $error');
           },
         ));
   }
