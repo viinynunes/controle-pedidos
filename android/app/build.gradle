@@ -54,7 +54,7 @@ android {
         applicationId "br.com.nunesv.controle_pedidos"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 2
+        versionCode 3
         versionName flutterVersionName
         multiDexEnabled true
     }
