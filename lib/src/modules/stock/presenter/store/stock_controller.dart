@@ -66,11 +66,9 @@ abstract class _StockControllerBase with Store {
 
   @action
   initState() async {
-    await getProductList();
-
     resetDateToToday();
 
-    setSelectedDateString();
+    await getProductList();
 
     resetStockLeft();
   }

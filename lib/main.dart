@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'src/domain/entities/enums/company_subscription.dart';
 import 'src/modules/login/presenter/pages/android/android_login_page.dart';
@@ -18,6 +19,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await GetStorage.init();
+
+  await MobileAds.instance.initialize();
 
   if (GetStorage().read('company') == null) {
     GetStorage().write(
