@@ -171,7 +171,7 @@ class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
                   }),
                 ),
                 Visibility(
-                  visible: true,
+                  visible: false,
                   child: SizedBox(
                     height: size.height * 0.1,
                     width: size.width,
