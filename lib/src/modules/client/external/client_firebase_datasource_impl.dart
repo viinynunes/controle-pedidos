@@ -40,21 +40,23 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
   @override
   Future<ClientModel> updateClient(ClientModel client) async {
-    final clientRef = clientCollection.doc(client.id);
-    firebase.runTransaction((transaction) async {
-      final orderSnap =
-          await orderCollection.where('client.id', isEqualTo: client.id).get();
+    await clientCollection.doc(client.id).update(client.toMap()).onError(
+        (error, stackTrace) => throw FirebaseException(
+            plugin: 'UPDATE CLIENT ERROR', message: error.toString()));
 
-      for (var o in orderSnap.docs) {
-        transaction.update(o.reference, {'client': client.toMap()});
-      }
+    _updateOrder(client);
 
-      transaction.update(clientRef, client.toMap());
-    }).onError((error, stackTrace) => throw FirebaseException(
-        plugin: 'UPDATE CLIENT ERROR', message: error.toString()));
-
-    await _updateCacheDoc();
+    _updateCacheDoc();
     return client;
+  }
+
+  _updateOrder(ClientModel client) async {
+    final orderSnap =
+        await orderCollection.where('client.id', isEqualTo: client.id).get();
+
+    for (var o in orderSnap.docs) {
+      orderCollection.doc(o.id).update({'client': client.toMap()});
+    }
   }
 
   _updateCacheDoc({DateTime? updatedAt}) async {
