@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/order.dart' as o;
-import '../../errors/order_error.dart';
+import '../../errors/order_info_exception.dart';
 import '../../services/i_order_service.dart';
 
 part 'order_report_controller.g.dart';
@@ -25,7 +25,7 @@ abstract class _OrderReportControllerBase with Store {
   @observable
   var orderList = ObservableList<o.Order>.of([]);
   @observable
-  Option<OrderError> error = none();
+  Option<OrderInfoException> error = none();
 
   List<o.Order> mergedOrderList = [];
   late DateTime iniDate, endDate;

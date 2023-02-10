@@ -61,13 +61,13 @@ mixin _$OrderReportController on _OrderReportControllerBase, Store {
       Atom(name: '_OrderReportControllerBase.error', context: context);
 
   @override
-  Option<OrderError> get error {
+  Option<OrderInfoException> get error {
     _$errorAtom.reportRead();
     return super.error;
   }
 
   @override
-  set error(Option<OrderError> value) {
+  set error(Option<OrderInfoException> value) {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });

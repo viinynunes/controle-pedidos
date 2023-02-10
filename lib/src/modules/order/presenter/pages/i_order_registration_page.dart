@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/ui/states/base_state.dart';
 import '../../../../domain/entities/client.dart';
 import '../../../../domain/entities/order.dart';
 import '../../../../domain/entities/product.dart';
@@ -16,5 +17,5 @@ abstract class IOrderRegistrationPage extends StatefulWidget {
   final List<Client> clientList;
 }
 
-abstract class IOrderRegistrationPageState<Page extends IOrderRegistrationPage>
-    extends State<Page> {}
+abstract class IOrderRegistrationPageState<Page extends IOrderRegistrationPage, C extends Object>
+    extends BaseState<Page, C> {}
