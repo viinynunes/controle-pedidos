@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../errors/product_error.dart';
+import '../../errors/product_info_exception.dart';
 
 part 'product_controller.g.dart';
 
@@ -23,7 +23,7 @@ abstract class _ProductControllerBase with Store {
   @observable
   bool loading = false;
   @observable
-  Option<ProductError> error = none();
+  Option<ProductInfoException> error = none();
   @observable
   var productList = ObservableList<Product>.of([]);
   @observable

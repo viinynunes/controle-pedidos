@@ -112,13 +112,13 @@ mixin _$ProductStockDefaultController
       Atom(name: '_ProductStockDefaultControllerBase.error', context: context);
 
   @override
-  Option<ProductError> get error {
+  Option<ProductInfoException> get error {
     _$errorAtom.reportRead();
     return super.error;
   }
 
   @override
-  set error(Option<ProductError> value) {
+  set error(Option<ProductInfoException> value) {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });

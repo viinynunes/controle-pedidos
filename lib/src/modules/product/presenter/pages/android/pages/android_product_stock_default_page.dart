@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
+import '../../../../../../core/ui/states/base_state.dart';
 import '../../../../../../core/widgets/shimmer/shimer_widget.dart';
 import '../../../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../../../domain/entities/provider.dart';
@@ -16,13 +17,15 @@ class AndroidProductStockDefaultPage extends StatefulWidget {
       _AndroidProductStockDefaultPageState();
 }
 
-class _AndroidProductStockDefaultPageState
-    extends State<AndroidProductStockDefaultPage> {
-  final controller = GetIt.I.get<ProductStockDefaultController>();
-
+class _AndroidProductStockDefaultPageState extends BaseState<
+    AndroidProductStockDefaultPage, ProductStockDefaultController> {
   @override
   void initState() {
     super.initState();
+
+    reaction((_) => controller.error, (_) {
+      controller.error.map((error) => showError(message: error.message));
+    });
 
     controller.initState();
   }

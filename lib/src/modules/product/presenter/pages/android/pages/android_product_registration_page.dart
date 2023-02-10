@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../../core/widgets/custom_material_banner_error.dart';
 import '../../../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../../../domain/entities/provider.dart';
@@ -18,21 +16,18 @@ class AndroidProductRegistrationPage extends IProductRegistrationPage {
 }
 
 class _AndroidProductRegistrationPageState
-    extends IProductRegistrationPageState<AndroidProductRegistrationPage> {
-  final controller = GetIt.I.get<ProductRegistrationController>();
-
+    extends IProductRegistrationPageState<AndroidProductRegistrationPage,
+        ProductRegistrationController> {
   @override
   void initState() {
     super.initState();
 
     reaction((_) => controller.error, (_) {
-      controller.error
-          .map((error) => CustomMaterialBannerError.showMaterialBannerError(
-              context: context,
-              message: error.message,
-              onClose: () {
-                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-              }));
+      controller.error.map((error) => showError(message: error.message));
+    });
+
+    reaction((_) => controller.success, (_) {
+      controller.success.map((_) => showSuccess(message: 'Produto salvo com sucesso'));
     });
 
     controller.initState(widget.product);
