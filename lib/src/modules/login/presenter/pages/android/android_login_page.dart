@@ -59,43 +59,41 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                       padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.9,
-                            child: const AutoSizeText(
-                              'Bem Vindo!',
-                              maxLines: 1,
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
+                        children: const [
+                          AutoSizeText(
+                            'Bem Vindo!',
+                            maxLines: 1,
+                            minFontSize: 40,
+                            maxFontSize: 50,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                          SizedBox(
-                            width: size.width * 0.9,
-                            child: const AutoSizeText(
-                              'Realize o login para ter acesso ao Controle de Pedidos',
-                              minFontSize: 10,
-                              maxFontSize: 20,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
+                          AutoSizeText(
+                            'Realize o login para ter acesso ao Controle de Pedidos',
+                            minFontSize: 10,
+                            maxFontSize: 20,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                         ],
                       ),
                     ),
                     Container(
                       width: size.width * 0.9,
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.25),
                           borderRadius: BorderRadius.circular(20)),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextFormField(
                                 controller: controller.emailController,
