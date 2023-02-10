@@ -13,7 +13,7 @@ class EstablishmentUsecaseImpl implements IEstablishmentUsecase {
   Future<Either<EstablishmentError, Establishment>> createEstablishment(
       Establishment establishment) async {
     if (establishment.name.isEmpty || establishment.name.length < 2) {
-      return Left(EstablishmentError('Invalid name'));
+      return Left(EstablishmentError('Nome inválido'));
     }
 
     return _repository.createEstablishment(establishment);
@@ -23,11 +23,11 @@ class EstablishmentUsecaseImpl implements IEstablishmentUsecase {
   Future<Either<EstablishmentError, Establishment>> updateEstablishment(
       Establishment establishment) async {
     if (establishment.id.isEmpty) {
-      return Left(EstablishmentError('Invalid id'));
+      return Left(EstablishmentError('ID inválido'));
     }
 
     if (establishment.name.isEmpty || establishment.name.length < 2) {
-      return Left(EstablishmentError('Invalid name'));
+      return Left(EstablishmentError('Nome inválido'));
     }
 
     return _repository.updateEstablishment(establishment);
@@ -37,7 +37,7 @@ class EstablishmentUsecaseImpl implements IEstablishmentUsecase {
   Future<Either<EstablishmentError, Establishment>> getEstablishmentById(
       String id) async {
     if (id.isEmpty) {
-      return Left(EstablishmentError('Invalid id'));
+      return Left(EstablishmentError('ID inválido'));
     }
 
     return _repository.getEstablishmentById(id);

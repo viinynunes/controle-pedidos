@@ -1,8 +1,11 @@
+import 'dart:developer';
+
+import 'package:controle_pedidos/src/core/exceptions/external_exception.dart';
 import 'package:controle_pedidos/src/domain/entities/establishment.dart';
+import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/repositories/i_establishment_repository.dart';
 import 'package:controle_pedidos/src/modules/establishment/errors/establishment_errors.dart';
 import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
-import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:dartz/dartz.dart';
 
 class EstablishmentRepositoryImpl implements IEstablishmentRepository {
@@ -18,8 +21,11 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
           EstablishmentModel.fromEstablishment(establishment: establishment));
 
       return Right(result);
-    } catch (e) {
-      return Left(EstablishmentError(e.toString()));
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(EstablishmentError('Erro interno'));
+    } on EstablishmentError catch (e) {
+      return Left(e);
     }
   }
 
@@ -31,8 +37,11 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
           EstablishmentModel.fromEstablishment(establishment: establishment));
 
       return Right(result);
-    } catch (e) {
-      return Left(EstablishmentError(e.toString()));
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(EstablishmentError('Erro interno'));
+    } on EstablishmentError catch (e) {
+      return Left(e);
     }
   }
 
@@ -43,8 +52,11 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
       final result = await _datasource.getEstablishmentById(id);
 
       return Right(result);
-    } catch (e) {
-      return Left(EstablishmentError(e.toString()));
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(EstablishmentError('Erro interno'));
+    } on EstablishmentError catch (e) {
+      return Left(e);
     }
   }
 
@@ -55,8 +67,11 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
       final result = await _datasource.getEstablishmentList();
 
       return Right(result);
-    } catch (e) {
-      return Left(EstablishmentError(e.toString()));
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(EstablishmentError('Erro interno'));
+    } on EstablishmentError catch (e) {
+      return Left(e);
     }
   }
 
@@ -67,8 +82,11 @@ class EstablishmentRepositoryImpl implements IEstablishmentRepository {
       final result = await _datasource.getEstablishmentListByEnabled();
 
       return Right(result);
-    } catch (e) {
-      return Left(EstablishmentError(e.toString()));
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(EstablishmentError('Erro interno'));
+    } on EstablishmentError catch (e) {
+      return Left(e);
     }
   }
 }
