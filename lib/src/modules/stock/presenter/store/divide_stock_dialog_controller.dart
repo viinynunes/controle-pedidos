@@ -1,9 +1,11 @@
 import 'package:controle_pedidos/src/modules/provider/domain/usecases/i_provider_usecase.dart';
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/entities/stock.dart';
 import '../../domain/usecases/change_stock_provider_usecase.dart';
+import '../../errors/stock_error.dart';
 
 part 'divide_stock_dialog_controller.g.dart';
 
@@ -25,6 +27,8 @@ abstract class _DivideStockDialogControllerBase with Store {
   bool loading = false;
   @observable
   var providerList = ObservableList<Provider>.of([]);
+  @observable
+  Option<StockError> error = none();
 
   @action
   initState(Stock stock) async {
@@ -44,7 +48,9 @@ abstract class _DivideStockDialogControllerBase with Store {
 
     final result = await providerUsecase.getProviderListByEnabled();
 
-    result.fold((l) {}, (r) => providerList = ObservableList.of(r));
+    result.fold((l) {
+      error = optionOf(StockError(l.message));
+    }, (r) => providerList = ObservableList.of(r));
 
     loading = false;
   }

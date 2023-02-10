@@ -11,7 +11,7 @@ import '../../../../domain/entities/order.dart' as o;
 import '../../../client/domain/usecases/i_client_usecase.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../../stock/domain/usecases/decrease_stock_total_usecase.dart';
-import '../../errors/order_error.dart';
+import '../../errors/order_info_exception.dart';
 import '../../services/i_order_service.dart';
 
 part 'order_controller.g.dart';
@@ -37,7 +37,7 @@ abstract class _OrderControllerBase with Store {
   @observable
   bool sortByDate = true;
   @observable
-  Option<OrderError> error = none();
+  Option<OrderInfoException> error = none();
   @observable
   var productList = ObservableList<Product>.of([]);
   @observable
@@ -80,7 +80,7 @@ abstract class _OrderControllerBase with Store {
 
     final result = await productUsecase.getProductListByEnabled();
 
-    result.fold((l) => error = optionOf(OrderError(l.message)),
+    result.fold((l) => error = optionOf(OrderInfoException(l.message)),
         (r) => productList = ObservableList.of(r));
 
     loading = false;
@@ -92,7 +92,7 @@ abstract class _OrderControllerBase with Store {
 
     final result = await clientUsecase.getClientEnabled();
 
-    result.fold((l) => error = optionOf(OrderError(l.message)),
+    result.fold((l) => error = optionOf(OrderInfoException(l.message)),
         (r) => clientList = ObservableList.of(r));
 
     loading = false;

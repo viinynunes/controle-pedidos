@@ -14,7 +14,7 @@ import '../../../../domain/models/order_model.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
 import '../../../stock/domain/usecases/decrease_stock_total_usecase.dart';
 import '../../domain/usecase/i_order_usecase.dart';
-import '../../errors/order_error.dart';
+import '../../errors/order_info_exception.dart';
 
 part 'order_registration_controller.g.dart';
 
@@ -52,7 +52,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   @observable
   var clientList = ObservableList<Client>.of([]);
   @observable
-  Option<OrderError> error = none();
+  Option<OrderInfoException> error = none();
   @observable
   Option<o.Order> success = none();
 
@@ -199,12 +199,12 @@ abstract class _OrderRegistrationControllerBase with Store {
 
     if (!formKey.currentState!.validate() || selectedOrderItem == null) {
       error = optionOf(
-          OrderError('Nenhum produto selecionado ou quantidade invalida'));
+          OrderInfoException('Nenhum produto selecionado ou quantidade invalida'));
       return;
     }
 
     if (orderItemList.contains(selectedOrderItem)) {
-      error = optionOf(OrderError('Produto já adicionado'));
+      error = optionOf(OrderInfoException('Produto já adicionado'));
       return;
     }
 
@@ -217,7 +217,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   initOrderItem() {
     if (selectedProduct == null) {
-      error = optionOf(OrderError('Nenhum produto selecionado'));
+      error = optionOf(OrderInfoException('Nenhum produto selecionado'));
       return;
     }
 
@@ -270,7 +270,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   saveOrder(BuildContext context) async {
     if (orderItemList.isEmpty || selectedClient == null) {
-      error = optionOf(OrderError('Verifique os dados do pedido'));
+      error = optionOf(OrderInfoException('Verifique os dados do pedido'));
       return;
     }
 
@@ -339,7 +339,9 @@ abstract class _OrderRegistrationControllerBase with Store {
     if (increase) {
       item.quantity++;
     } else {
-      item.quantity--;
+      if(item.quantity > 1) {
+        item.quantity--;
+      }
     }
 
     orderItemList.remove(item);

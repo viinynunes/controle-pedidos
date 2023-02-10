@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../core/widgets/custom_material_banner_error.dart';
+import '../../../../../core/ui/states/base_state.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../domain/entities/provider.dart';
 import '../../stores/provider_controller.dart';
@@ -18,22 +17,14 @@ class AndroidProviderListPage extends StatefulWidget {
       _AndroidProviderListPageState();
 }
 
-class _AndroidProviderListPageState extends State<AndroidProviderListPage> {
-  final controller = GetIt.I.get<ProviderController>();
-
+class _AndroidProviderListPageState
+    extends BaseState<AndroidProviderListPage, ProviderController> {
   @override
   void initState() {
     super.initState();
 
     reaction((_) => controller.error, (_) {
-      controller.error
-          .map((error) => CustomMaterialBannerError.showMaterialBannerError(
-              context: context,
-              message: 'Fornecedor Erro - ${error.message}',
-              onClose: () {
-                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                controller.getProviderList();
-              }));
+      controller.error.map((error) => showError(message: error.message));
     });
 
     controller.initState();

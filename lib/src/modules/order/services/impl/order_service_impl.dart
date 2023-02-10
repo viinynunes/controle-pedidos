@@ -1,6 +1,6 @@
 import 'package:controle_pedidos/src/domain/entities/order.dart' as o;
 import 'package:controle_pedidos/src/domain/entities/order_item.dart';
-import 'package:controle_pedidos/src/modules/order/errors/order_error.dart';
+import 'package:controle_pedidos/src/modules/order/errors/order_info_exception.dart';
 import 'package:dartz/dartz.dart';
 
 import '../i_order_service.dart';
@@ -33,7 +33,7 @@ class OrderServiceImpl implements IOrderService {
   }
 
   @override
-  Either<OrderError, List<o.Order>> mergeOrderListByClient(
+  Either<OrderInfoException, List<o.Order>> mergeOrderListByClient(
       List<o.Order> orderList) {
     List<o.Order> mergedList = [];
     o.Order? previousOrder;
@@ -69,9 +69,9 @@ class OrderServiceImpl implements IOrderService {
                 previousItem.note = actualItem.note;
               }
             } on StateError {
-              return Left(OrderError('Mais de um item encontrado'));
+              return Left(OrderInfoException('Mais de um item encontrado'));
             } catch (e) {
-              return Left(OrderError(e.toString()));
+              return Left(OrderInfoException(e.toString()));
             }
           }
         }

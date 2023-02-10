@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../core/widgets/custom_material_banner_error.dart';
 import '../../../../../core/widgets/custom_text_form_field.dart';
 import '../../stores/client_registration_controller.dart';
 import '../i_client_registration_page.dart';
@@ -16,28 +14,19 @@ class AndroidClientRegistrationPage extends IClientRegistrationPage {
       _AndroidClientRegistrationPageState();
 }
 
-class _AndroidClientRegistrationPageState
-    extends IClientRegistrationPageState<AndroidClientRegistrationPage> {
-  final controller = GetIt.I.get<ClientRegistrationController>();
-
+class _AndroidClientRegistrationPageState extends IClientRegistrationPageState<
+    AndroidClientRegistrationPage, ClientRegistrationController> {
   @override
   void initState() {
     super.initState();
 
     reaction((p0) => controller.error, (p0) {
-      controller.error
-          .map((error) => CustomMaterialBannerError.showMaterialBannerError(
-              context: context,
-              message: error.message,
-              onClose: () {
-                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-              }));
+      controller.error.map((error) => showError(message: error.message));
     });
 
     reaction((_) => controller.success, (_) {
-      controller.success.map((error) => ScaffoldMessenger.of(context)
-          .showSnackBar(
-              const SnackBar(content: Text('Cliente salvo com sucesso'))));
+      controller.success
+          .map((error) => showSuccess(message: 'Cliente salvo com sucesso'));
     });
 
     controller.initState(client: widget.client);

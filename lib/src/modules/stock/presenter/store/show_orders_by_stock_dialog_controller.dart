@@ -1,8 +1,10 @@
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
 import 'package:controle_pedidos/src/modules/order/domain/usecase/i_order_usecase.dart';
+import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../domain/entities/order.dart';
+import '../../../../domain/entities/order.dart' as o;
+import '../../errors/stock_error.dart';
 
 part 'show_orders_by_stock_dialog_controller.g.dart';
 
@@ -19,11 +21,13 @@ abstract class _ShowOrdersByStockDialogControllerBase with Store {
   @observable
   bool loading = false;
   @observable
-  var orderListByStock = ObservableList<Order>.of([]);
+  var orderListByStock = ObservableList<o.Order>.of([]);
   @observable
   DateTime iniDate = DateTime.now();
   @observable
   DateTime endDate = DateTime.now();
+  @observable
+  Option<StockError> error = none();
 
   @action
   initState(
@@ -66,7 +70,9 @@ abstract class _ShowOrdersByStockDialogControllerBase with Store {
     final result = await orderUsecase.getOrderListByEnabledAndProductAndDate(
         stock!.product, iniDate, endDate);
 
-    result.fold((l) {}, (r) => orderListByStock = ObservableList.of(r));
+    result.fold((l) {
+      error = optionOf(StockError(l.message));
+    }, (r) => orderListByStock = ObservableList.of(r));
 
     loading = false;
   }

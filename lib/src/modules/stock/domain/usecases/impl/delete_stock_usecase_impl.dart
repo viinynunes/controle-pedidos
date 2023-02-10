@@ -15,7 +15,7 @@ class DeleteStockUsecaseImpl implements DeleteStockUsecase {
   @override
   Future<Either<StockError, Stock>> call(Stock stock) async {
     if (stock.id.isEmpty) {
-      return Left(StockError('Stock ID cannot be empty'));
+      return Left(StockError('O ID do estoque não pode estar vazio'));
     }
 
     return await _repository.deleteStock(stock);

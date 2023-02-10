@@ -3,9 +3,9 @@ import 'package:controle_pedidos/src/core/helpers/custom_page_route.dart';
 import 'package:controle_pedidos/src/core/home/android_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/ui/states/base_state.dart';
 import '../../stores/signup_controller.dart';
 import 'android_login_page.dart';
 import 'widgets/informative_navigation_widget.dart';
@@ -18,20 +18,15 @@ class AndroidSignupPage extends StatefulWidget {
   State<AndroidSignupPage> createState() => _AndroidSignupPageState();
 }
 
-class _AndroidSignupPageState extends State<AndroidSignupPage> {
-  final controller = GetIt.I.get<SignupController>();
-
+class _AndroidSignupPageState
+    extends BaseState<AndroidSignupPage, SignupController> {
   @override
   void initState() {
     super.initState();
 
     reaction((_) => controller.error, (_) {
       controller.error.map(
-        (error) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.message),
-          ),
-        ),
+        (error) => showError(message: error.message),
       );
     });
 

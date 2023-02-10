@@ -47,13 +47,13 @@ mixin _$LoginController on _LoginControllerBase, Store {
       Atom(name: '_LoginControllerBase.error', context: context);
 
   @override
-  Option<LoginError> get error {
+  Option<LoginInfoException> get error {
     _$errorAtom.reportRead();
     return super.error;
   }
 
   @override
-  set error(Option<LoginError> value) {
+  set error(Option<LoginInfoException> value) {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });

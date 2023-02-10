@@ -17,12 +17,12 @@ class IncreaseStockTotalUsecaseImpl implements IncreaseStockTotalUsecase {
       required DateTime date,
       required int increaseQuantity}) async {
     if (product.id.isEmpty) {
-      return Left(StockError('Product ID cannot be empty'));
+      return Left(StockError('O ID do produto não pode estar vazio'));
     }
 
     if (increaseQuantity < 0) {
       return Left(
-          StockError('Increase quantity cannot be a non positive number'));
+          StockError('A quantidade não pode ser menor que 1'));
     }
 
     return await _repository.increaseTotalFromStock(

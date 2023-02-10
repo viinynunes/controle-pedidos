@@ -2,9 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:controle_pedidos/src/core/helpers/custom_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/ui/states/base_state.dart';
 import '../../stores/login_controller.dart';
 import 'android_signup_page.dart';
 import 'dialogs/android_forget_password_dialog.dart';
@@ -18,22 +18,22 @@ class AndroidLoginPage extends StatefulWidget {
   State<AndroidLoginPage> createState() => _AndroidLoginPageState();
 }
 
-class _AndroidLoginPageState extends State<AndroidLoginPage> {
-  final controller = GetIt.I.get<LoginController>();
+class _AndroidLoginPageState
+    extends BaseState<AndroidLoginPage, LoginController> {
+  @override
+  void onReady() {
+    super.onReady();
+
+    reaction((_) => controller.error, (_) {
+      controller.error.map(
+        (error) => showError(message: error.message),
+      );
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-
-    reaction((_) => controller.error, (_) {
-      controller.error.map(
-        (error) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.message),
-          ),
-        ),
-      );
-    });
 
     controller.initState();
   }
@@ -59,43 +59,41 @@ class _AndroidLoginPageState extends State<AndroidLoginPage> {
                       padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.9,
-                            child: const AutoSizeText(
-                              'Bem Vindo!',
-                              maxLines: 1,
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
+                        children: const [
+                          AutoSizeText(
+                            'Bem Vindo!',
+                            maxLines: 1,
+                            minFontSize: 40,
+                            maxFontSize: 50,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                          SizedBox(
-                            width: size.width * 0.9,
-                            child: const AutoSizeText(
-                              'Realize o login para ter acesso ao Controle de Pedidos',
-                              minFontSize: 10,
-                              maxFontSize: 20,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
+                          AutoSizeText(
+                            'Realize o login para ter acesso ao Controle de Pedidos',
+                            minFontSize: 10,
+                            maxFontSize: 20,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                         ],
                       ),
                     ),
                     Container(
                       width: size.width * 0.9,
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.25),
                           borderRadius: BorderRadius.circular(20)),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextFormField(
                                 controller: controller.emailController,

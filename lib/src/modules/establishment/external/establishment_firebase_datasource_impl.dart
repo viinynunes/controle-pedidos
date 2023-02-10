@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/core/exceptions/external_exception.dart';
 import 'package:controle_pedidos/src/domain/models/establish_model.dart';
 import 'package:controle_pedidos/src/modules/establishment/infra/datasources/i_establishment_datasource.dart';
 import 'package:firestore_cache/firestore_cache.dart';
@@ -6,7 +7,6 @@ import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../domain/models/provider_model.dart';
-
 import '../../provider/infra/datasources/i_provider_datasource.dart';
 
 const cacheDocument = '00_cacheUpdated';
@@ -35,8 +35,8 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
       EstablishmentModel establishment) async {
     final rec = await establishmentCollection
         .add(establishment.toMap())
-        .catchError((e) =>
-            throw FirebaseException(plugin: 'CREATE ESTABLISHMENT ERROR'));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     establishment.id = rec.id;
 
@@ -50,7 +50,9 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
       EstablishmentModel establishment) async {
     await establishmentCollection
         .doc(establishment.id)
-        .update(establishment.toMap());
+        .update(establishment.toMap())
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     _updateProvider(establishment);
 
@@ -62,7 +64,9 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   _updateProvider(EstablishmentModel establishment) async {
     final providerSnap = await providerCollection
         .where('establishment.id', isEqualTo: establishment.id)
-        .get();
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var p in providerSnap.docs) {
       var provider = ProviderModel.fromDocumentSnapshot(doc: p);
@@ -75,16 +79,19 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
   _updateCacheDoc({DateTime? updatedAt}) async {
     await establishmentCollection
         .doc(cacheDocument)
-        .update({'updatedAt': updatedAt ?? DateTime.now()});
+        .update({'updatedAt': updatedAt ?? DateTime.now()}).onError(
+            (error, stackTrace) => throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 
   @override
   Future<EstablishmentModel> getEstablishmentById(String id) async {
-    final snap = await establishmentCollection.doc(id).get().catchError((e) =>
-        throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR'));
+    final snap = await establishmentCollection.doc(id).get().onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     if (snap.data() == null) {
-      throw FirebaseException(plugin: 'GET ESTABLISHMENT BY ID ERROR');
+      throw ExternalException(error: 'GET Establishment by ID error');
     }
 
     return EstablishmentModel.fromMap(map: snap.data()!);
@@ -103,8 +110,8 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var i in snap.docs) {
       estabList.add(EstablishmentModel.fromMap(map: i.data()));
@@ -128,24 +135,13 @@ class EstablishmentFirebaseDatasourceImpl implements IEstablishmentDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var i in snap.docs) {
       estabList.add(EstablishmentModel.fromMap(map: i.data()));
     }
 
     return estabList;
-  }
-
-  void moveToV2() async {
-    final snap =
-        await FirebaseFirestore.instance.collection('establishments').get();
-
-    for (var p in snap.docs) {
-      establishmentCollection
-          .doc(p.id)
-          .set(EstablishmentModel.fromMap(map: p.data()).toMap());
-    }
   }
 }

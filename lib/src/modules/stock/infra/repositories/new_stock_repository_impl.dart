@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/domain/entities/provider.dart';
 import 'package:controle_pedidos/src/domain/entities/stock.dart';
@@ -7,6 +9,7 @@ import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_new_stock
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/date_time_helper.dart';
+import '../../../../core/exceptions/external_exception.dart';
 import '../../../../domain/models/product_model.dart';
 import '../../../../domain/models/provider_model.dart';
 import '../../../../domain/models/stock_model.dart';
@@ -39,10 +42,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
         return Right(
             await _datasource.updateStock(stock: stockWithNewDateInDB));
       }
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -65,10 +69,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
       return stockFromDB.total == 0 && stockFromDB.totalOrdered == 0
           ? Right(await _datasource.deleteStock(stock: stockFromDB))
           : Right(await _datasource.updateStock(stock: stockFromDB));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -81,10 +86,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
       stock.totalOrdered -= decreaseQuantity;
 
       return Right(await _datasource.updateStock(stock: stock));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -93,10 +99,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
     try {
       return Right(
           await _datasource.deleteStock(stock: StockModel.fromStock(stock)));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -109,10 +116,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
 
       return Right(await _datasource.getProviderListByStockBetweenDates(
           iniDate: iniDate, endDate: endDate));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -127,10 +135,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
           iniDate: iniDate, endDate: endDate);
 
       return Right(_mergeStockList(stockListFromDB: list));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -149,10 +158,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
           endDate: endDate);
 
       return Right(_mergeStockList(stockListFromDB: list));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -177,10 +187,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
         return Right(
             await _datasource.createStock(stock: StockModel.fromStock(stock)));
       }
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -193,10 +204,11 @@ class NewStockRepositoryImpl implements INewStockRepository {
       stock.totalOrdered += increaseQuantity;
 
       return Right(await _datasource.updateStock(stock: stock));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
     }
   }
 
@@ -205,10 +217,75 @@ class NewStockRepositoryImpl implements INewStockRepository {
     try {
       return Right(
           await _datasource.updateStock(stock: StockModel.fromStock(stock)));
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
     } on StockError catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<StockError, Stock>> duplicateStockWithoutProperties(
+      {required String stockID, required Provider newProvider}) async {
+    try {
+      var stock = await _datasource.getStockById(id: stockID);
+
+      stock.product.provider = newProvider;
+      stock.code =
+          _getStockCode(product: stock.product, date: stock.registrationDate);
+
+      var stockByCodeFromDB =
+          await _datasource.getStockByCode(code: stock.code);
+
+      if (stockByCodeFromDB != null) {
+        return Right(stockByCodeFromDB);
+      } else {
+        stock.total = 0;
+        stock.totalOrdered = 0;
+        return Right(await _datasource.createStock(stock: stock));
+      }
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
+    } on StockError catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<StockError, Stock>> moveStockWithProperties(
+      {required String stockID, required Provider newProvider}) async {
+    try {
+      var stock = await _datasource.getStockById(id: stockID);
+
+      final actualProvider = ProviderModel.fromProvider(stock.product.provider);
+
+      if (newProvider == actualProvider) {
+        return Left(
+            StockError('Selected provider are equal then the actual provider'));
+      }
+
+      stock.product.provider = newProvider;
+      stock.code =
+          _getStockCode(product: stock.product, date: stock.registrationDate);
+
+      var stockByCodeFromDB =
+          await _datasource.getStockByCode(code: stock.code);
+
+      if (stockByCodeFromDB != null) {
+        stockByCodeFromDB.total += stock.total;
+        stockByCodeFromDB.totalOrdered += stock.totalOrdered;
+        await _datasource.deleteStock(stock: stock);
+        return Right(await _datasource.updateStock(stock: stockByCodeFromDB));
+      } else {
+        return Right(await _datasource.updateStock(stock: stock));
+      }
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
+      return Left(StockError('Erro interno no servidor'));
+    } on StockError catch (e) {
+      return Left(e);
     }
   }
 
@@ -248,67 +325,5 @@ class NewStockRepositoryImpl implements INewStockRepository {
     }
 
     return stockList;
-  }
-
-  @override
-  Future<Either<StockError, Stock>> duplicateStockWithoutProperties(
-      {required String stockID, required Provider newProvider}) async {
-    try {
-      var stock = await _datasource.getStockById(id: stockID);
-
-      stock.product.provider = newProvider;
-      stock.code =
-          _getStockCode(product: stock.product, date: stock.registrationDate);
-
-      var stockByCodeFromDB =
-          await _datasource.getStockByCode(code: stock.code);
-
-      if (stockByCodeFromDB != null) {
-        return Right(stockByCodeFromDB);
-      } else {
-        stock.total = 0;
-        stock.totalOrdered = 0;
-        return Right(await _datasource.createStock(stock: stock));
-      }
-    } on StockError catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<StockError, Stock>> moveStockWithProperties(
-      {required String stockID, required Provider newProvider}) async {
-    try {
-      var stock = await _datasource.getStockById(id: stockID);
-
-      final actualProvider = ProviderModel.fromProvider(stock.product.provider);
-
-      if (newProvider == actualProvider) {
-        return Left(
-            StockError('Selected provider are equal then the actual provider'));
-      }
-
-      stock.product.provider = newProvider;
-      stock.code =
-          _getStockCode(product: stock.product, date: stock.registrationDate);
-
-      var stockByCodeFromDB =
-          await _datasource.getStockByCode(code: stock.code);
-
-      if (stockByCodeFromDB != null) {
-        stockByCodeFromDB.total += stock.total;
-        stockByCodeFromDB.totalOrdered += stock.totalOrdered;
-        await _datasource.deleteStock(stock: stock);
-        return Right(await _datasource.updateStock(stock: stockByCodeFromDB));
-      } else {
-        return Right(await _datasource.updateStock(stock: stock));
-      }
-    } on StockError catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(StockError(e.toString()));
-    }
   }
 }

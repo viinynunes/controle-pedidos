@@ -18,11 +18,11 @@ class ChangeStockProviderUsecaseImpl implements ChangeStockProviderUsecase {
   Future<Either<StockError, Stock>> duplicateStockWithoutProperties(
       {required String stockID, required Provider newProvider}) async {
     if (stockID.isEmpty) {
-      return Left(StockError('Stock ID cannot be empty'));
+      return Left(StockError('O ID do estoque não pode estar vazio'));
     }
 
     if (newProvider.id.isEmpty) {
-      return Left(StockError('Provider ID cannot be empty'));
+      return Left(StockError('O ID do fornecedor não pode estar vazio'));
     }
 
     return _repository.duplicateStockWithoutProperties(
@@ -33,11 +33,11 @@ class ChangeStockProviderUsecaseImpl implements ChangeStockProviderUsecase {
   Future<Either<StockError, Stock>> moveStockWithProperties(
       {required String stockID, required Provider newProvider}) async {
     if (stockID.isEmpty) {
-      return Left(StockError('Stock ID cannot be empty'));
+      return Left(StockError('O ID do estoque não pode estar vazio'));
     }
 
     if (newProvider.id.isEmpty) {
-      return Left(StockError('Provider ID cannot be empty'));
+      return Left(StockError('O ID do novo fornecedor não pode estar vazio'));
     }
 
     return _repository.moveStockWithProperties(

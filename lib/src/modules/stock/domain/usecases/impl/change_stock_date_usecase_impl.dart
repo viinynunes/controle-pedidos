@@ -16,7 +16,7 @@ class ChangeStockDateUsecaseImpl implements ChangeStockDateUsecase {
   Future<Either<StockError, Stock>> call(
       {required String stockId, required DateTime newDate}) async {
     if (stockId.isEmpty) {
-      return Left(StockError('Stock ID cannot be empty'));
+      return Left(StockError('ID do estoque não pode estar vazio'));
     }
 
     return _repository.changeStockDate(stockId: stockId, newDate: newDate);

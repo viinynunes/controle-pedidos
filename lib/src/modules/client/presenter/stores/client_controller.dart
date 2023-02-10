@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/client.dart';
-import '../../errors/client_errors.dart';
+import '../../errors/client_info_exception.dart';
 import '../pages/i_client_registration_page.dart';
 
 part 'client_controller.g.dart';
@@ -27,7 +27,7 @@ abstract class _ClientListBase with Store {
   @observable
   var filteredClientList = ObservableList<Client>.of([]);
   @observable
-  Option<ClientError> error = none();
+  Option<ClientInfoException> error = none();
 
   final searchFocus = FocusNode();
 

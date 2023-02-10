@@ -80,13 +80,13 @@ mixin _$ProviderRegistrationController
       Atom(name: '_ProviderRegistrationControllerBase.error', context: context);
 
   @override
-  Option<ProviderError> get error {
+  Option<ProviderInfoException> get error {
     _$errorAtom.reportRead();
     return super.error;
   }
 
   @override
-  set error(Option<ProviderError> value) {
+  set error(Option<ProviderInfoException> value) {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });
