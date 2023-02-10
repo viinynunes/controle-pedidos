@@ -9,6 +9,7 @@ import 'package:mobx/mobx.dart';
 import '../../stores/signup_controller.dart';
 import 'android_login_page.dart';
 import 'widgets/informative_navigation_widget.dart';
+import 'widgets/login_background_widget.dart';
 
 class AndroidSignupPage extends StatefulWidget {
   const AndroidSignupPage({Key? key}) : super(key: key);
@@ -45,19 +46,7 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/login_background.jpg'),
-                  colorFilter:
-                      ColorFilter.mode(Colors.black87, BlendMode.darken),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
+          const LoginBackgroundWidget(),
           SingleChildScrollView(
             child: Center(
               child: Form(
@@ -115,7 +104,7 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           ),
                                           hintText: 'Jeferson Caminhões',
                                           hintStyle:
-                                              TextStyle(color: Colors.white),
+                                              TextStyle(color: Colors.white24),
                                         ),
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -147,7 +136,7 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           ),
                                           hintText: 'Jose da Silva',
                                           hintStyle:
-                                              TextStyle(color: Colors.white),
+                                              TextStyle(color: Colors.white24),
                                         ),
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -167,7 +156,7 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           ),
                                           hintText: 'jose@hotmail.com',
                                           hintStyle:
-                                              TextStyle(color: Colors.white),
+                                              TextStyle(color: Colors.white24),
                                         ),
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -186,7 +175,7 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           ),
                                           hintText: '()_____-____',
                                           hintStyle:
-                                              TextStyle(color: Colors.white),
+                                              TextStyle(color: Colors.white24),
                                         ),
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -204,7 +193,7 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           ),
                                           hintText: '************',
                                           hintStyle:
-                                              TextStyle(color: Colors.white),
+                                              TextStyle(color: Colors.white24),
                                         ),
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -228,7 +217,7 @@ class _AndroidSignupPageState extends State<AndroidSignupPage> {
                                           ),
                                           hintText: '************',
                                           hintStyle:
-                                              TextStyle(color: Colors.white),
+                                              TextStyle(color: Colors.white24),
                                         ),
                                         style: const TextStyle(
                                             color: Colors.white),
