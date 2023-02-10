@@ -6,6 +6,7 @@ import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../core/exceptions/external_exception.dart';
 import '../../../domain/models/product_model.dart';
 
 const cacheDocument = '00_cacheUpdated';
@@ -29,8 +30,9 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
 
   @override
   Future<ProviderModel> createProvider(ProviderModel provider) async {
-    final result = await providerCollection.add(provider.toMap()).catchError(
-        (e) => throw FirebaseException(plugin: 'CREATE PROVIDER ERROR'));
+    final result = await providerCollection.add(provider.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     provider.id = result.id;
     await updateProvider(provider);
@@ -40,7 +42,9 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
 
   @override
   Future<ProviderModel> updateProvider(ProviderModel provider) async {
-    await providerCollection.doc(provider.id).update(provider.toMap());
+    await providerCollection.doc(provider.id).update(provider.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     _updateProduct(provider);
 
@@ -52,7 +56,9 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   _updateProduct(ProviderModel provider) async {
     final productSnap = await productCollection
         .where('provider.id', isEqualTo: provider.id)
-        .get();
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var p in productSnap.docs) {
       var product = ProductModel.fromMap(map: p.data());
@@ -65,16 +71,19 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   _updateCacheDoc({DateTime? updatedAt}) async {
     await providerCollection
         .doc(cacheDocument)
-        .update({'updatedAt': updatedAt ?? DateTime.now()});
+        .update({'updatedAt': updatedAt ?? DateTime.now()}).onError(
+            (error, stackTrace) => throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 
   @override
   Future<ProviderModel> getProviderById(String id) async {
-    final snap = await providerCollection.doc(id).get().catchError(
-        (e) => throw FirebaseException(plugin: 'GET PROVIDER ERROR'));
+    final snap = await providerCollection.doc(id).get().onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     if (snap.data() == null) {
-      throw FirebaseException(plugin: 'PROVIDER NOT FOUND');
+      throw ExternalException(error: 'PROVIDER NOT FOUND');
     }
 
     return ProviderModel.fromDocumentSnapshot(doc: snap);
@@ -95,8 +104,8 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var i in snap.docs) {
       providerList.add(ProviderModel.fromDocumentSnapshot(doc: i));
@@ -118,23 +127,13 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ESTABLISHMENT ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var i in snap.docs) {
       providerList.add(ProviderModel.fromDocumentSnapshot(doc: i));
     }
 
     return providerList;
-  }
-
-  void moveToV2() async {
-    final snap = await FirebaseFirestore.instance.collection('providers').get();
-
-    for (var p in snap.docs) {
-      providerCollection
-          .doc(p.id)
-          .set(ProviderModel.fromDocumentSnapshot(doc: p).toMap());
-    }
   }
 }

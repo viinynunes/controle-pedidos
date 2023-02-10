@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../core/widgets/custom_material_banner_error.dart';
 import '../../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../../domain/entities/establishment.dart';
@@ -19,24 +17,19 @@ class AndroidProviderRegistrationPage extends IProviderRegistrationPage {
 }
 
 class _AndroidProviderRegistrationPageState
-    extends IProviderRegistrationPageState {
-  final controller = GetIt.I.get<ProviderRegistrationController>();
-
+    extends IProviderRegistrationPageState<AndroidProviderRegistrationPage,
+        ProviderRegistrationController> {
   @override
   void initState() {
     super.initState();
 
     reaction((_) => controller.error, (_) {
-      controller.error.map((error) =>
-          CustomMaterialBannerError.showMaterialBannerError(
-              context: context,
-              message: error.message,
-              onClose: () => controller.initState(widget.provider)));
+      controller.error.map((error) => showError(message: error.message));
     });
 
     reaction((_) => controller.success, (_) {
-      controller.success.map((_) => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Fornecedor salvo com sucesso'))));
+      controller.success
+          .map((_) => showSuccess(message: 'Fornecedor salvo com sucesso'));
     });
 
     controller.initState(widget.provider);

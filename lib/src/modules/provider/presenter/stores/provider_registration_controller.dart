@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/modules/provider/errors/provider_error.dart';
+import 'package:controle_pedidos/src/modules/provider/errors/provider_info_exception.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
@@ -33,7 +33,7 @@ abstract class _ProviderRegistrationControllerBase with Store {
   @observable
   var establishmentList = ObservableList<Establishment>.of([]);
   @observable
-  Option<ProviderError> error = none();
+  Option<ProviderInfoException> error = none();
   @observable
   Option<bool> success = none();
 
@@ -69,7 +69,7 @@ abstract class _ProviderRegistrationControllerBase with Store {
     loading = true;
     final estabResult = await establishmentUsecase.getEstablishmentList();
 
-    estabResult.fold((l) => error = optionOf(ProviderError(l.message)), (r) {
+    estabResult.fold((l) => error = optionOf(ProviderInfoException(l.message)), (r) {
       establishmentList = ObservableList.of(r);
       establishmentService
           .sortEstablishmentListByRegistrationDate(establishmentList);
@@ -85,7 +85,7 @@ abstract class _ProviderRegistrationControllerBase with Store {
       final result = await establishmentUsecase
           .getEstablishmentById(newProviderData.establishment.id);
 
-      result.fold((l) => error = optionOf(ProviderError(l.message)),
+      result.fold((l) => error = optionOf(ProviderInfoException(l.message)),
           (r) => selectedEstablishment = r);
     } else {
       selectedEstablishment = establishmentList.first;
@@ -130,7 +130,7 @@ abstract class _ProviderRegistrationControllerBase with Store {
   saveOrUpdate(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       if (selectedEstablishment == null) {
-        error = optionOf(ProviderError('O Estabelecimento deve ser selecionado'));
+        error = optionOf(ProviderInfoException('O Estabelecimento deve ser selecionado'));
         return;
       }
 

@@ -1,5 +1,5 @@
 import 'package:controle_pedidos/src/modules/provider/domain/usecases/i_provider_usecase.dart';
-import 'package:controle_pedidos/src/modules/provider/errors/provider_error.dart';
+import 'package:controle_pedidos/src/modules/provider/errors/provider_info_exception.dart';
 import 'package:controle_pedidos/src/modules/provider/presenter/pages/i_provider_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ abstract class _ProviderControllerBase with Store {
   @observable
   var filteredProviderList = ObservableList<Provider>.of([]);
   @observable
-  Option<ProviderError> error = none();
+  Option<ProviderInfoException> error = none();
 
   final searchFocus = FocusNode();
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/ui/states/base_state.dart';
 import '../../../../domain/entities/provider.dart';
 
 abstract class IProviderRegistrationPage extends StatefulWidget {
@@ -9,4 +10,5 @@ abstract class IProviderRegistrationPage extends StatefulWidget {
 }
 
 abstract class IProviderRegistrationPageState<
-    Page extends IProviderRegistrationPage> extends State<Page> {}
+    Page extends IProviderRegistrationPage,
+    C extends Object> extends BaseState<Page, C> {}
