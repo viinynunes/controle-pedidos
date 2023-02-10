@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../errors/establishment_errors.dart';
+import '../../errors/establishment_info_exception.dart';
 
 part 'establishment_registration_controller.g.dart';
 
@@ -24,7 +24,7 @@ abstract class _EstablishmentRegistrationControllerBase with Store {
   @observable
   Option<bool> success = none();
   @observable
-  Option<EstablishmentError> error = none();
+  Option<EstablishmentInfoException> error = none();
 
   final nameController = TextEditingController();
   late EstablishmentModel newEstablishmentData;

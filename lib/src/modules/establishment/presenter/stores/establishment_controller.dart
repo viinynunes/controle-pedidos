@@ -1,6 +1,6 @@
 import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/usecases/i_establishment_usecase.dart';
-import 'package:controle_pedidos/src/modules/establishment/errors/establishment_errors.dart';
+import 'package:controle_pedidos/src/modules/establishment/errors/establishment_info_exception.dart';
 import 'package:controle_pedidos/src/modules/establishment/presenter/pages/i_establishment_registration_page.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ abstract class _EstablishmentControllerBase with Store {
   @observable
   bool loading = false;
   @observable
-  Option<EstablishmentError> error = none();
+  Option<EstablishmentInfoException> error = none();
   @observable
   var estabList = ObservableList<Establishment>.of([]);
   @observable

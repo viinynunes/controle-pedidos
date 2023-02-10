@@ -1,20 +1,20 @@
 import 'package:controle_pedidos/src/domain/entities/establishment.dart';
-import 'package:controle_pedidos/src/modules/establishment/errors/establishment_errors.dart';
+import 'package:controle_pedidos/src/modules/establishment/errors/establishment_info_exception.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class IEstablishmentRepository {
-  Future<Either<EstablishmentError, Establishment>> createEstablishment(
+  Future<Either<EstablishmentInfoException, Establishment>> createEstablishment(
       Establishment establishment);
 
-  Future<Either<EstablishmentError, Establishment>> updateEstablishment(
+  Future<Either<EstablishmentInfoException, Establishment>> updateEstablishment(
       Establishment establishment);
 
-  Future<Either<EstablishmentError, Establishment>> getEstablishmentById(
+  Future<Either<EstablishmentInfoException, Establishment>> getEstablishmentById(
       String id);
 
-  Future<Either<EstablishmentError, List<Establishment>>>
+  Future<Either<EstablishmentInfoException, List<Establishment>>>
       getEstablishmentList();
 
-  Future<Either<EstablishmentError, List<Establishment>>>
+  Future<Either<EstablishmentInfoException, List<Establishment>>>
       getEstablishmentListByEnabled();
 }

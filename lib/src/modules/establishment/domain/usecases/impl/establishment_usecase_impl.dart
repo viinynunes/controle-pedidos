@@ -1,7 +1,7 @@
 import 'package:controle_pedidos/src/domain/entities/establishment.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/repositories/i_establishment_repository.dart';
 import 'package:controle_pedidos/src/modules/establishment/domain/usecases/i_establishment_usecase.dart';
-import 'package:controle_pedidos/src/modules/establishment/errors/establishment_errors.dart';
+import 'package:controle_pedidos/src/modules/establishment/errors/establishment_info_exception.dart';
 import 'package:dartz/dartz.dart';
 
 class EstablishmentUsecaseImpl implements IEstablishmentUsecase {
@@ -10,47 +10,47 @@ class EstablishmentUsecaseImpl implements IEstablishmentUsecase {
   EstablishmentUsecaseImpl(this._repository);
 
   @override
-  Future<Either<EstablishmentError, Establishment>> createEstablishment(
+  Future<Either<EstablishmentInfoException, Establishment>> createEstablishment(
       Establishment establishment) async {
     if (establishment.name.isEmpty || establishment.name.length < 2) {
-      return Left(EstablishmentError('Nome inválido'));
+      return Left(EstablishmentInfoException('Nome inválido'));
     }
 
     return _repository.createEstablishment(establishment);
   }
 
   @override
-  Future<Either<EstablishmentError, Establishment>> updateEstablishment(
+  Future<Either<EstablishmentInfoException, Establishment>> updateEstablishment(
       Establishment establishment) async {
     if (establishment.id.isEmpty) {
-      return Left(EstablishmentError('ID inválido'));
+      return Left(EstablishmentInfoException('ID inválido'));
     }
 
     if (establishment.name.isEmpty || establishment.name.length < 2) {
-      return Left(EstablishmentError('Nome inválido'));
+      return Left(EstablishmentInfoException('Nome inválido'));
     }
 
     return _repository.updateEstablishment(establishment);
   }
 
   @override
-  Future<Either<EstablishmentError, Establishment>> getEstablishmentById(
+  Future<Either<EstablishmentInfoException, Establishment>> getEstablishmentById(
       String id) async {
     if (id.isEmpty) {
-      return Left(EstablishmentError('ID inválido'));
+      return Left(EstablishmentInfoException('ID inválido'));
     }
 
     return _repository.getEstablishmentById(id);
   }
 
   @override
-  Future<Either<EstablishmentError, List<Establishment>>>
+  Future<Either<EstablishmentInfoException, List<Establishment>>>
       getEstablishmentList() {
     return _repository.getEstablishmentList();
   }
 
   @override
-  Future<Either<EstablishmentError, List<Establishment>>>
+  Future<Either<EstablishmentInfoException, List<Establishment>>>
       getEstablishmentListByEnabled() {
     return _repository.getEstablishmentListByEnabled();
   }
