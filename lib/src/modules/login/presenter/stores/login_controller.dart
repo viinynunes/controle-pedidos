@@ -45,6 +45,10 @@ abstract class _LoginControllerBase with Store {
       return 'Senha inválida';
     }
 
+    if (text.length < 6){
+      return 'Senha muito curta';
+    }
+
     return null;
   }
 
