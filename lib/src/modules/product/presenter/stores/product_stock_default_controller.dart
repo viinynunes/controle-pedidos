@@ -5,7 +5,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/provider.dart';
 import '../../../provider/domain/usecases/i_provider_usecase.dart';
-import '../../errors/product_error.dart';
+import '../../errors/product_info_exception.dart';
 
 part 'product_stock_default_controller.g.dart';
 
@@ -31,7 +31,7 @@ abstract class _ProductStockDefaultControllerBase with Store {
   @observable
   var providerList = ObservableList<Provider>.of([]);
   @observable
-  Option<ProductError> error = none();
+  Option<ProductInfoException> error = none();
   @observable
   Provider? selectedProvider;
 
@@ -46,7 +46,7 @@ abstract class _ProductStockDefaultControllerBase with Store {
   getProviderList() async {
     final result = await providerUsecase.getProviderListByEnabled();
 
-    result.fold((l) => error = optionOf(ProductError(l.message)), (r) {
+    result.fold((l) => error = optionOf(ProductInfoException(l.message)), (r) {
       providerList = ObservableList.of(r);
     });
   }

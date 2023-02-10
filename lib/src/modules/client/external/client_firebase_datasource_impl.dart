@@ -4,6 +4,8 @@ import 'package:controle_pedidos/src/modules/client/infra/datasources/i_client_d
 import 'package:firestore_cache/firestore_cache.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../core/exceptions/external_exception.dart';
+
 const cacheDocument = '00_cacheUpdated';
 
 class ClientFirebaseDatasourceImpl implements IClientDatasource {
@@ -26,9 +28,8 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
   @override
   Future<ClientModel> createClient(ClientModel client) async {
-    final result = await clientCollection.add(client.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'CREATE CLIENT ERROR', message: e.toString()));
+    final result = await clientCollection.add(client.toMap()).onError(
+        (e, s) => throw ExternalException(error: e.toString(), stackTrace: s));
 
     client.id = result.id;
 
@@ -41,8 +42,8 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   @override
   Future<ClientModel> updateClient(ClientModel client) async {
     await clientCollection.doc(client.id).update(client.toMap()).onError(
-        (error, stackTrace) => throw FirebaseException(
-            plugin: 'UPDATE CLIENT ERROR', message: error.toString()));
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     _updateOrder(client);
 
@@ -51,26 +52,32 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
   }
 
   _updateOrder(ClientModel client) async {
-    final orderSnap =
-        await orderCollection.where('client.id', isEqualTo: client.id).get();
+    final orderSnap = await orderCollection
+        .where('client.id', isEqualTo: client.id)
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var o in orderSnap.docs) {
-      orderCollection.doc(o.id).update({'client': client.toMap()});
+      orderCollection.doc(o.id).update({'client': client.toMap()}).onError(
+          (error, stackTrace) => throw ExternalException(
+              error: error.toString(), stackTrace: stackTrace));
     }
   }
 
   _updateCacheDoc({DateTime? updatedAt}) async {
     await clientCollection
         .doc(cacheDocument)
-        .update({'updatedAt': updatedAt ?? DateTime.now()});
+        .update({'updatedAt': updatedAt ?? DateTime.now()}).onError(
+            (error, stackTrace) => throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 
   @override
   Future<bool> disableClient(ClientModel client) async {
-    client.enabled = false;
-    clientCollection.doc(client.id).update(client.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'DISABLE CLIENT ERROR', message: e.toString()));
+    clientCollection.doc(client.id).update(client.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     await _updateCacheDoc();
     return true;
@@ -78,9 +85,9 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
 
   @override
   Future<ClientModel> getClientByID(String id) async {
-    final snap = await clientCollection.doc(id).get().catchError((e) =>
-        throw FirebaseException(
-            plugin: 'GET CLIENT BY ID ERROR', message: e.toString()));
+    final snap = await clientCollection.doc(id).get().onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     return ClientModel.fromMap(snap.data()!);
   }
@@ -98,8 +105,8 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET CLIENT BY ENABLED ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var index in snapCached.docs) {
       clientList.add(ClientModel.fromMap(index.data()));
@@ -119,21 +126,13 @@ class ClientFirebaseDatasourceImpl implements IClientDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET CLIENT BY ENABLED ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var index in snapCached.docs) {
       clientList.add(ClientModel.fromMap(index.data()));
     }
 
     return clientList;
-  }
-
-  void moveToV2() async {
-    final snap = await FirebaseFirestore.instance.collection('clients').get();
-
-    for (var p in snap.docs) {
-      clientCollection.doc(p.id).set(ClientModel.fromMap(p.data()).toMap());
-    }
   }
 }

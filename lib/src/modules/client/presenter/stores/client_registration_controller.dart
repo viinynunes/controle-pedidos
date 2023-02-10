@@ -5,7 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:string_validator/string_validator.dart';
 
 import '../../../../domain/entities/client.dart';
-import '../../errors/client_errors.dart';
+import '../../errors/client_info_exception.dart';
 import '../../../../domain/models/client_model.dart';
 
 part 'client_registration_controller.g.dart';
@@ -21,7 +21,7 @@ abstract class _ClientRegistrationBase with Store {
   @observable
   bool enabled = true;
   @observable
-  Option<ClientError> error = none();
+  Option<ClientInfoException> error = none();
   @observable
   Option<Client> success = none();
 

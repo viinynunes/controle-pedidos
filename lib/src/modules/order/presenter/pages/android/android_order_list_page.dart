@@ -1,11 +1,13 @@
 import 'package:controle_pedidos/src/modules/order/presenter/pages/android/android_order_registration_page.dart';
 import 'package:controle_pedidos/src/modules/order/presenter/stores/order_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:mobx/mobx.dart';
 
 import '../../../../../core/admob/admob_helper.dart';
+import '../../../../../core/ui/states/base_state.dart';
 import '../../../../../core/widgets/custom_date_range_picker_widget.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../domain/models/order_model.dart';
@@ -20,12 +22,18 @@ class AndroidOrderListPage extends StatefulWidget {
   State<AndroidOrderListPage> createState() => _AndroidOrderListPageState();
 }
 
-class _AndroidOrderListPageState extends State<AndroidOrderListPage> {
-  final controller = GetIt.I.get<OrderController>();
+class _AndroidOrderListPageState extends BaseState<AndroidOrderListPage, OrderController> {
 
   @override
   void initState() {
     super.initState();
+
+    reaction((p0) => controller.error, (p0) {
+      controller.error.map((error) {
+        HapticFeedback.heavyImpact();
+        showError(message: error.message);
+      });
+    });
 
     controller.initState();
   }

@@ -93,13 +93,13 @@ mixin _$ClientController on _ClientListBase, Store {
       Atom(name: '_ClientListBase.error', context: context);
 
   @override
-  Option<ClientError> get error {
+  Option<ClientInfoException> get error {
     _$errorAtom.reportRead();
     return super.error;
   }
 
   @override
-  set error(Option<ClientError> value) {
+  set error(Option<ClientInfoException> value) {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });

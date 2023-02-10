@@ -34,7 +34,7 @@ class GetStockListsUsecaseImpl implements GetStockListsUsecase {
       required DateTime iniDate,
       required DateTime endDate}) async {
     if (provider.id.isEmpty) {
-      return Left(StockError('Provider ID cannot be empty'));
+      return Left(StockError('O ID do fornecedor não pode estar vazio'));
     }
 
     return _repository.getStockListByProviderBetweenDates(

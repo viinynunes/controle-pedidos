@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rect_getter/rect_getter.dart';
 
@@ -26,27 +25,16 @@ class AndroidOrderRegistrationPage extends IOrderRegistrationPage {
   State<StatefulWidget> createState() => AndroidOrderRegistrationPageState();
 }
 
-class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState {
-  final controller = GetIt.I.get<OrderRegistrationController>();
-
+class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState<
+    AndroidOrderRegistrationPage, OrderRegistrationController> {
   @override
   void initState() {
     super.initState();
 
     reaction((p0) => controller.error, (p0) {
       controller.error.map((error) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         HapticFeedback.heavyImpact();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
-              child: Center(
-                  child: Text(
-                error.message,
-                style: const TextStyle(color: Colors.white),
-              ))),
-          backgroundColor: Theme.of(context).errorColor,
-        ));
+        showError(message: error.message);
       });
     });
 

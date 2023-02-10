@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/core/exceptions/external_exception.dart';
 import 'package:controle_pedidos/src/domain/models/order_item_model.dart';
 import 'package:controle_pedidos/src/domain/models/order_model.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
@@ -29,9 +30,9 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
   @override
   Future<OrderModel> createOrder(OrderModel order) async {
-    final snap = await orderCollection.add(order.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'CREATE ORDER ERROR', message: e.toString()));
+    final snap = await orderCollection.add(order.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     order.id = snap.id;
 
@@ -44,7 +45,11 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
   _createProductReferenceToOrder(
       {required OrderItem item, required String orderID}) async {
-    final pRef = await productOnOrderCollection.doc(item.product.id).get();
+    final pRef = await productOnOrderCollection
+        .doc(item.product.id)
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     List orderList = [];
 
@@ -56,15 +61,18 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
     await productOnOrderCollection
         .doc(item.product.id)
-        .set({'orderList': orderList}).catchError((e) =>
-            throw FirebaseException(
-                plugin: 'CREATE PRODUCT REFERENCE TO ORDER ERROR',
-                message: e.toString()));
+        .set({'orderList': orderList}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 
   _removeProductReferenceFromOrder(
       {required OrderItem item, required String orderID}) async {
-    final pRef = await productOnOrderCollection.doc(item.product.id).get();
+    final pRef = await productOnOrderCollection
+        .doc(item.product.id)
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     var orderList = pRef.get('orderList');
 
@@ -72,27 +80,26 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
 
     await productOnOrderCollection
         .doc(item.product.id)
-        .set({'orderList': orderList}).catchError((e) =>
-            throw FirebaseException(
-                plugin: 'CREATE PRODUCT REFERENCE TO ORDER ERROR',
-                message: e.toString()));
+        .set({'orderList': orderList}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 
   @override
   Future<OrderModel> updateOrder(OrderModel order) async {
     List<OrderItemModel> beforeUpdateOrderItemsList = [];
 
-    final orderOnDBRef = await orderCollection.doc(order.id).get().catchError(
-        (e) => throw FirebaseException(
-            plugin: 'GET ORDER BY ID ERROR', message: e.toString()));
+    final orderOnDBRef = await orderCollection.doc(order.id).get().onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var item in orderOnDBRef.get('orderItemList')) {
       beforeUpdateOrderItemsList.add(OrderItemModel.fromMap(map: item));
     }
 
-    await orderCollection.doc(order.id).update(order.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'UPDATE ORDER ERROR', message: e.toString()));
+    await orderCollection.doc(order.id).update(order.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var item in beforeUpdateOrderItemsList) {
       await _removeProductReferenceFromOrder(item: item, orderID: order.id);
@@ -107,15 +114,18 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
   }
 
   _updateCacheDoc(DateTime updatedAt) async {
-    await orderCollection.doc(cacheDocument).set({'updatedAt': updatedAt});
+    await orderCollection
+        .doc(cacheDocument)
+        .set({'updatedAt': updatedAt}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 
   @override
   Future<bool> disableOrder(OrderModel order) async {
-    order.enabled = false;
-    await orderCollection.doc(order.id).update(order.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'DISABLE ORDER ERROR', message: e.toString()));
+    await orderCollection.doc(order.id).update(order.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var item in order.orderItemList) {
       await _removeProductReferenceFromOrder(item: item, orderID: order.id);
@@ -142,8 +152,8 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ORDER ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var o in snap.docs) {
       orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
@@ -168,8 +178,8 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ORDER ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var o in snap.docs) {
       orderList.add(OrderModel.fromDocumentSnapshot(doc: o));
@@ -188,8 +198,8 @@ class OrderFirebaseDatasourceImpl implements IOrderDatasource {
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
         .get()
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET ORDER ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var o in snap.docs) {
       orderList.add(OrderModel.fromDocumentSnapshot(doc: o));

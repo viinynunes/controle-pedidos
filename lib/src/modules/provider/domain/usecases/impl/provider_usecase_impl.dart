@@ -1,7 +1,7 @@
 import 'package:controle_pedidos/src/domain/entities/provider.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/repositories/i_provider_repository.dart';
 import 'package:controle_pedidos/src/modules/provider/domain/usecases/i_provider_usecase.dart';
-import 'package:controle_pedidos/src/modules/provider/errors/provider_error.dart';
+import 'package:controle_pedidos/src/modules/provider/errors/provider_info_exception.dart';
 import 'package:dartz/dartz.dart';
 
 class ProviderUsecaseImpl implements IProviderUsecase {
@@ -10,53 +10,53 @@ class ProviderUsecaseImpl implements IProviderUsecase {
   ProviderUsecaseImpl(this._repository);
 
   @override
-  Future<Either<ProviderError, Provider>> createProvider(
+  Future<Either<ProviderInfoException, Provider>> createProvider(
       Provider provider) async {
     if (provider.name.isEmpty || provider.name.length < 2) {
-      return Left(ProviderError('Invalid name'));
+      return Left(ProviderInfoException('Nome inválido'));
     }
 
     if (provider.location.isEmpty) {
-      return Left(ProviderError('Invalid location'));
+      return Left(ProviderInfoException('Localização inválida'));
     }
 
     return _repository.createProvider(provider);
   }
 
   @override
-  Future<Either<ProviderError, Provider>> updateProvider(
+  Future<Either<ProviderInfoException, Provider>> updateProvider(
       Provider provider) async {
     if (provider.id.isEmpty) {
-      return Left(ProviderError('Invalid id'));
+      return Left(ProviderInfoException('ID inválido'));
     }
 
     if (provider.name.isEmpty || provider.name.length < 2) {
-      return Left(ProviderError('Invalid name'));
+      return Left(ProviderInfoException('Nome inválido'));
     }
 
     if (provider.location.isEmpty) {
-      return Left(ProviderError('Invalid location'));
+      return Left(ProviderInfoException('Localização inválida'));
     }
 
     return _repository.updateProvider(provider);
   }
 
   @override
-  Future<Either<ProviderError, Provider>> getProviderById(String id) async {
+  Future<Either<ProviderInfoException, Provider>> getProviderById(String id) async {
     if (id.isEmpty) {
-      return Left(ProviderError('Invalid id'));
+      return Left(ProviderInfoException('ID inválido'));
     }
 
     return _repository.getProviderById(id);
   }
 
   @override
-  Future<Either<ProviderError, List<Provider>>> getProviderList() {
+  Future<Either<ProviderInfoException, List<Provider>>> getProviderList() {
     return _repository.getProviderList();
   }
 
   @override
-  Future<Either<ProviderError, List<Provider>>> getProviderListByEnabled() {
+  Future<Either<ProviderInfoException, List<Provider>>> getProviderListByEnabled() {
     return _repository.getProviderListByEnabled();
   }
 }

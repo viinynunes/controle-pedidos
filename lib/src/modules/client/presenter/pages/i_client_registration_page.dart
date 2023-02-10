@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/ui/states/base_state.dart';
 import '../../../../domain/entities/client.dart';
 
 abstract class IClientRegistrationPage extends StatefulWidget {
@@ -9,4 +10,5 @@ abstract class IClientRegistrationPage extends StatefulWidget {
 }
 
 abstract class IClientRegistrationPageState<
-    Page extends IClientRegistrationPage> extends State<Page> {}
+    Page extends IClientRegistrationPage,
+    C extends Object> extends BaseState<Page, C> {}

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
+import '../../../../../../core/ui/states/base_state.dart';
 import '../../../../../../core/widgets/shimmer/shimer_widget.dart';
 import '../../../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../../../domain/entities/provider.dart';
@@ -20,16 +22,19 @@ class DivideStockBetweenProvidersDialog extends StatefulWidget {
       _DivideStockBetweenProvidersDialogState();
 }
 
-class _DivideStockBetweenProvidersDialogState
-    extends State<DivideStockBetweenProvidersDialog> {
+class _DivideStockBetweenProvidersDialogState extends BaseState<
+    DivideStockBetweenProvidersDialog, DivideStockDialogController> {
   final stockController = GetIt.I.get<StockController>();
-  final divideController = GetIt.I.get<DivideStockDialogController>();
 
   @override
   void initState() {
     super.initState();
 
-    divideController.initState(widget.stock);
+    reaction((_) => controller.error, (_) {
+      controller.error.map((error) => showError(message: error.message));
+    });
+
+    controller.initState(widget.stock);
   }
 
   @override
@@ -70,7 +75,7 @@ class _DivideStockBetweenProvidersDialogState
                 height: 10,
               ),
               Observer(
-                builder: (_) => divideController.loading
+                builder: (_) => controller.loading
                     ? const ShimmerWidget.rectangular(height: 30)
                     : SizedBox(
                         width: double.maxFinite,
@@ -79,14 +84,14 @@ class _DivideStockBetweenProvidersDialogState
                             final entity = await showDialog(
                               context: context,
                               builder: (_) => ShowEntitySelectionDialog(
-                                  entityList: divideController.providerList),
+                                  entityList: controller.providerList),
                             );
 
                             if (entity != null && entity is Provider) {
-                              divideController.setSelectedProvider(entity);
+                              controller.setSelectedProvider(entity);
                             }
                           },
-                          child: Text(divideController.selectedProvider!.name),
+                          child: Text(controller.selectedProvider!.name),
                         ),
                       ),
               ),
@@ -127,17 +132,17 @@ class _DivideStockBetweenProvidersDialogState
             ),
             TextButton(
               onPressed: () async {
-                final newProvider = divideController.selectedProvider!;
+                final newProvider = controller.selectedProvider!;
 
-                await divideController.moveStockWithProperties(
+                await controller.moveStockWithProperties(
                     stockID: widget.stock.id, newProvider: newProvider);
 
                 await stockController.getProviderListByStockBetweenDates();
 
                 if (stockController.providerList.contains(
-                    divideController.stock?.product.provider ?? newProvider)) {
+                    controller.stock?.product.provider ?? newProvider)) {
                   await stockController.reloadProviderListAndStockList(
-                      divideController.stock?.product.provider ?? newProvider);
+                      controller.stock?.product.provider ?? newProvider);
                 } else {
                   await stockController
                       .reloadProviderListAndStockList(newProvider);
@@ -153,9 +158,9 @@ class _DivideStockBetweenProvidersDialogState
             ),
             TextButton(
               onPressed: () async {
-                final newProvider = divideController.selectedProvider!;
+                final newProvider = controller.selectedProvider!;
 
-                await divideController.duplicateStockWithoutProperties(
+                await controller.duplicateStockWithoutProperties(
                     stockID: widget.stock.id, newProvider: newProvider);
 
                 await stockController

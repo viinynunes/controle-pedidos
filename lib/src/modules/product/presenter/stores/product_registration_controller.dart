@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../provider/services/i_provider_service.dart';
-import '../../errors/product_error.dart';
+import '../../errors/product_info_exception.dart';
 import '../../../../domain/models/product_model.dart';
 
 part 'product_registration_controller.g.dart';
@@ -31,7 +31,7 @@ abstract class _ProductRegistrationControllerBase with Store {
   @observable
   bool enabled = true;
   @observable
-  Option<ProductError> error = none();
+  Option<ProductInfoException> error = none();
   @observable
   Option<Product> success = none();
   @observable
@@ -70,7 +70,7 @@ abstract class _ProductRegistrationControllerBase with Store {
 
     final result = await providerUsecase.getProviderListByEnabled();
 
-    result.fold((l) => error = optionOf(ProductError(l.message)), (r) {
+    result.fold((l) => error = optionOf(ProductInfoException(l.message)), (r) {
       providerService.sortProviderListByRegistrationDate(r);
       providerList = ObservableList.of(r);
     });
@@ -86,7 +86,7 @@ abstract class _ProductRegistrationControllerBase with Store {
       final result =
           await providerUsecase.getProviderById(newProductData.provider.id);
 
-      result.fold((l) => error = optionOf(ProductError(l.message)),
+      result.fold((l) => error = optionOf(ProductInfoException(l.message)),
           (r) => selectedProvider = r);
 
       loading = false;
@@ -130,7 +130,7 @@ abstract class _ProductRegistrationControllerBase with Store {
   saveOrUpdate(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       if (selectedProvider == null) {
-        error = optionOf(ProductError('O Fornecedor deve ser selecionado'));
+        error = optionOf(ProductInfoException('O Fornecedor deve ser selecionado'));
         return;
       }
 

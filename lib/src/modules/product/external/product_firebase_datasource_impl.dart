@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/core/exceptions/external_exception.dart';
 import 'package:controle_pedidos/src/domain/models/product_model.dart';
 import 'package:controle_pedidos/src/modules/order/infra/datasources/i_order_datasource.dart';
 import 'package:firestore_cache/firestore_cache.dart';
@@ -42,8 +43,9 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
   @override
   Future<ProductModel> createProduct(ProductModel product) async {
-    final result = await productCollection.add(product.toMap()).catchError(
-        (e) => throw FirebaseException(plugin: 'CREATE PRODUCT ERROR'));
+    final result = await productCollection.add(product.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     product.id = result.id;
 
@@ -54,7 +56,9 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
 
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
-    await productCollection.doc(product.id).update(product.toMap());
+    await productCollection.doc(product.id).update(product.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
     _updateStock(product);
     _updateOrder(product);
     _updateCacheDoc();
@@ -65,27 +69,39 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   _updateCacheDoc({DateTime? updatedAt}) async {
     await productCollection
         .doc(cacheDocument)
-        .update({'updatedAt': updatedAt ?? DateTime.now()});
+        .update({'updatedAt': updatedAt ?? DateTime.now()}).onError(
+            (error, stackTrace) => throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 
   _updateStock(ProductModel product) async {
-    final stockSnap =
-        await stockCollection.where('product.id', isEqualTo: product.id).get();
+    final stockSnap = await stockCollection
+        .where('product.id', isEqualTo: product.id)
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var s in stockSnap.docs) {
-      stockCollection.doc(s.id).update({'product': product.toMap()});
+      stockCollection.doc(s.id).update({'product': product.toMap()}).onError(
+          (error, stackTrace) => throw ExternalException(
+              error: error.toString(), stackTrace: stackTrace));
     }
   }
 
   _updateOrder(ProductModel product) async {
-    final productOnOrderDoc =
-        await productOnOrderCollection.doc(product.id).get();
+    final productOnOrderDoc = await productOnOrderCollection
+        .doc(product.id)
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     if (productOnOrderDoc.exists) {
       List orderList = productOnOrderDoc.get('orderList');
 
       for (var o in orderList) {
-        final orderSnap = await orderCollection.doc(o).get();
+        final orderSnap = await orderCollection.doc(o).get().onError(
+            (error, stackTrace) => throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
         var order = OrderModel.fromDocumentSnapshot(doc: orderSnap);
 
@@ -108,7 +124,9 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
         .where('enabled', isEqualTo: true)
         .where('provider.id', isEqualTo: providerId)
         .orderBy('name', descending: false)
-        .get();
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
@@ -130,8 +148,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET PRODUCT ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var p in snapCached.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
@@ -155,8 +173,8 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET PRODUCT ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
@@ -181,23 +199,13 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
             query: query,
             cacheDocRef: cacheDocRef,
             firestoreCacheField: cacheField)
-        .catchError((e) => throw FirebaseException(
-            plugin: 'GET PRODUCT ERROR', message: e.toString()));
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var p in snap.docs) {
       productList.add(ProductModel.fromMap(map: p.data()));
     }
 
     return productList;
-  }
-
-  void moveToV2() async {
-    final snap = await FirebaseFirestore.instance.collection('products').get();
-
-    for (var p in snap.docs) {
-      productCollection
-          .doc(p.id)
-          .set(ProductModel.fromMap(map: p.data()).toMap());
-    }
   }
 }

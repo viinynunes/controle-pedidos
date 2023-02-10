@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../../core/widgets/custom_material_banner_error.dart';
+import '../../../../../../core/ui/states/base_state.dart';
 import '../../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../stores/product_controller.dart';
 import 'android_product_registration_page.dart';
@@ -16,22 +15,14 @@ class AndroidProductListPage extends StatefulWidget {
   State<AndroidProductListPage> createState() => _AndroidProductListPageState();
 }
 
-class _AndroidProductListPageState extends State<AndroidProductListPage> {
-  final controller = GetIt.I.get<ProductController>();
-
+class _AndroidProductListPageState
+    extends BaseState<AndroidProductListPage, ProductController> {
   @override
   void initState() {
     super.initState();
 
     reaction((_) => controller.error, (_) {
-      controller.error
-          .map((error) => CustomMaterialBannerError.showMaterialBannerError(
-              context: context,
-              message: error.message,
-              onClose: () {
-                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                controller.getProductList();
-              }));
+      controller.error.map((error) => showError(message: error.message));
     });
 
     controller.initState();

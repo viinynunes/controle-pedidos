@@ -1,9 +1,12 @@
+import 'dart:developer';
+
+import 'package:controle_pedidos/src/core/exceptions/external_exception.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../domain/entities/user.dart';
 import '../../../../domain/models/user_model.dart';
 import '../../domain/repositories/i_login_repository.dart';
-import '../../errors/login_error.dart';
+import '../../errors/login_info_exception.dart';
 import '../../presenter/models/user_credential.dart';
 import '../datasources/i_login_datasource.dart';
 
@@ -13,57 +16,66 @@ class LoginRepositoryImpl implements ILoginRepository {
   LoginRepositoryImpl(this._datasource);
 
   @override
-  Future<Either<LoginError, User>> getLoggedUser() async {
+  Future<Either<LoginInfoException, User>> getLoggedUser() async {
     try {
       return Right(await _datasource.getLoggedUser());
-    } catch (e) {
-      return Left(LoginError(e.toString()));
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(LoginInfoException('Erro interno'));
+    } on LoginInfoException catch (e) {
+      return Left(e);
     }
   }
 
   @override
-  Future<Either<LoginError, User>> login(UserCredential user) async {
+  Future<Either<LoginInfoException, User>> login(UserCredential user) async {
     try {
       final result = await _datasource.login(user);
 
       return Right(result);
-    } on LoginError catch (e) {
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(LoginInfoException('Erro interno'));
+    } on LoginInfoException catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(LoginError(e.toString()));
     }
   }
 
   @override
-  Future<Either<LoginError, void>> logout() async {
+  Future<Either<LoginInfoException, void>> logout() async {
     try {
       return Right(_datasource.logout());
-    } catch (e) {
-      return Left(LoginError(e.toString()));
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(LoginInfoException('Erro interno'));
+    } on LoginInfoException catch (e) {
+      return Left(e);
     }
   }
 
   @override
-  Future<Either<LoginError, void>> sendPasswordResetEmail(String email) async {
+  Future<Either<LoginInfoException, void>> sendPasswordResetEmail(String email) async {
     try {
       return Right(await _datasource.sendPasswordResetEmail(email));
-    } on LoginError catch (e) {
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(LoginInfoException('Erro interno'));
+    } on LoginInfoException catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(LoginError(e.toString()));
     }
   }
 
   @override
-  Future<Either<LoginError, User>> createUserWithEmailAndPassword(
+  Future<Either<LoginInfoException, User>> createUserWithEmailAndPassword(
       User user, String password) async {
     try {
       return Right(await _datasource.createUserWithEmailAndPassword(
           UserModel.fromUser(user: user), password));
-    } on LoginError catch (e) {
+    } on ExternalException catch (e) {
+      log('External Error', error: e.error, stackTrace: e.stackTrace);
+      return Left(LoginInfoException('Erro interno'));
+    } on LoginInfoException catch (e) {
       return Left(e);
-    } catch (e) {
-      return Left(LoginError(e.toString()));
     }
   }
 }

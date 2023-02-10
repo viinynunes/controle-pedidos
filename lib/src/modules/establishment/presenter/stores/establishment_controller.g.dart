@@ -61,13 +61,13 @@ mixin _$EstablishmentController on _EstablishmentControllerBase, Store {
       Atom(name: '_EstablishmentControllerBase.error', context: context);
 
   @override
-  Option<EstablishmentError> get error {
+  Option<EstablishmentInfoException> get error {
     _$errorAtom.reportRead();
     return super.error;
   }
 
   @override
-  set error(Option<EstablishmentError> value) {
+  set error(Option<EstablishmentInfoException> value) {
     _$errorAtom.reportWrite(value, super.error, () {
       super.error = value;
     });
