@@ -7,7 +7,7 @@ import 'package:string_validator/string_validator.dart';
 
 import '../../../../domain/entities/enums/company_subscription.dart';
 import '../../domain/usecases/i_login_usecase.dart';
-import '../../errors/login_error.dart';
+import '../../errors/login_info_exception.dart';
 
 part 'signup_controller.g.dart';
 
@@ -23,7 +23,7 @@ abstract class _SignupControllerBase with Store {
   @observable
   bool showCompanyFields = true;
   @observable
-  Option<LoginError> error = none();
+  Option<LoginInfoException> error = none();
 
   final formKey = GlobalKey<FormState>();
   final companyNameController = TextEditingController();

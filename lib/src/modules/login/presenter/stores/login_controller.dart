@@ -4,7 +4,7 @@ import 'package:mobx/mobx.dart';
 import 'package:string_validator/string_validator.dart';
 
 import '../../domain/usecases/i_login_usecase.dart';
-import '../../errors/login_error.dart';
+import '../../errors/login_info_exception.dart';
 import '../models/user_credential.dart';
 
 part 'login_controller.g.dart';
@@ -21,7 +21,7 @@ abstract class _LoginControllerBase with Store {
   @observable
   bool passwordResetEmailSentSucceffuly = false;
   @observable
-  Option<LoginError> error = none();
+  Option<LoginInfoException> error = none();
 
   late GlobalKey<FormState> formKey;
   final emailController = TextEditingController();

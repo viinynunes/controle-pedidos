@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/core/exceptions/external_exception.dart';
 import 'package:controle_pedidos/src/modules/company/infra/datasources/i_company_datasource.dart';
-import 'package:controle_pedidos/src/modules/login/errors/login_error.dart';
+import 'package:controle_pedidos/src/modules/login/errors/login_info_exception.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../domain/models/company_model.dart';
@@ -31,7 +32,7 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       return await _getUserData(user.uid);
     }
 
-    throw FirebaseException(plugin: 'Get Logged User Error');
+    throw ExternalException(error: 'Get Logged User Error');
   }
 
   @override
@@ -45,17 +46,17 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       return loggedUser;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        throw LoginError('Email não encontrado');
+        throw LoginInfoException('Email não encontrado');
       }
 
       if (e.code == 'wrong-password') {
-        throw LoginError('Senha Incorreta');
+        throw LoginInfoException('Senha Incorreta');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw ExternalException(error: e.toString());
     }
 
-    throw FirebaseAuthException(code: '', message: 'Erro');
+    throw ExternalException(error: 'Loggin Error on External');
   }
 
   @override
@@ -65,15 +66,15 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   }
 
   Future<UserModel> _getUserData(String id) async {
-    final userSnap = await userCollection.doc(id).get().catchError((e) =>
-        throw FirebaseException(
-            plugin: 'GET USER ERROR', message: e.toString()));
+    final userSnap = await userCollection.doc(id).get().onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     if (userSnap.exists) {
       return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
     }
 
-    throw FirebaseException(plugin: 'GET USER ERROR', message: 'Error');
+    throw ExternalException(error: 'Logout Error on External');
   }
 
   @override
@@ -82,11 +83,11 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       await firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
-        throw LoginError('Email inválido');
+        throw LoginInfoException('Email inválido');
       }
 
       if (e.code == 'invalid-email') {
-        throw LoginError('Email não encontrado');
+        throw LoginInfoException('Email não encontrado');
       }
     }
   }
@@ -108,22 +109,22 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
       return await _createUser(companyID, createdUser.user!.uid, user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        throw LoginError('Email já utilizado');
+        throw LoginInfoException('Email já utilizado');
       }
 
       if (e.code == 'invalid-email') {
-        throw LoginError('Email Inválido');
+        throw LoginInfoException('Email Inválido');
       }
 
       if (e.code == 'operation-not-allowed') {
-        throw LoginError('Email desativado');
+        throw LoginInfoException('Email desativado');
       }
 
       if (e.code == 'week-password') {
-        throw LoginError('A senha escolhida é muito fraca');
+        throw LoginInfoException('A senha escolhida é muito fraca');
       }
 
-      throw LoginError('Unexpected error');
+      throw ExternalException(error: 'Logout Error on External');
     }
   }
 
@@ -132,7 +133,9 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
 
     await companyCollection
         .doc(company.id)
-        .update(CompanyModel.fromCompany(company: company).toMap());
+        .update(CompanyModel.fromCompany(company: company).toMap())
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     return company.id;
   }
@@ -144,16 +147,24 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
     await FirebaseFirestore.instance
         .collection('user')
         .doc(userID)
-        .set(user.toMap());
+        .set(user.toMap())
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     await companyCollection
         .doc(companyID)
         .collection('user')
         .doc(userID)
-        .set(user.toMap());
+        .set(user.toMap())
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
-    final userSnap =
-        await FirebaseFirestore.instance.collection('user').doc(userID).get();
+    final userSnap = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(userID)
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
   }
@@ -164,41 +175,53 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
         .doc(companyID)
         .collection('client')
         .doc('00_cacheUpdated')
-        .set({'updatedAt': DateTime.now()});
+        .set({'updatedAt': DateTime.now()}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
     firebase
         .collection('company')
         .doc(companyID)
         .collection('establishment')
         .doc('00_cacheUpdated')
-        .set({'updatedAt': DateTime.now()});
+        .set({'updatedAt': DateTime.now()}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
     firebase
         .collection('company')
         .doc(companyID)
         .collection('order')
         .doc('00_cacheUpdated')
-        .set({'updatedAt': DateTime.now()});
+        .set({'updatedAt': DateTime.now()}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
     firebase
         .collection('company')
         .doc(companyID)
         .collection('product')
         .doc('00_cacheUpdated')
-        .set({'updatedAt': DateTime.now()});
+        .set({'updatedAt': DateTime.now()}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
     firebase
         .collection('company')
         .doc(companyID)
         .collection('provider')
         .doc('00_cacheUpdated')
-        .set({'updatedAt': DateTime.now()});
+        .set({'updatedAt': DateTime.now()}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
     firebase
         .collection('company')
         .doc(companyID)
         .collection('stock')
         .doc('00_cacheUpdated')
-        .set({'updatedAt': DateTime.now()});
+        .set({'updatedAt': DateTime.now()}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
   }
 }
