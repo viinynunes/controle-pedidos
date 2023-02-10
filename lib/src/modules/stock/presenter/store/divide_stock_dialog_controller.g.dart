@@ -74,6 +74,22 @@ mixin _$DivideStockDialogController on _DivideStockDialogControllerBase, Store {
     });
   }
 
+  late final _$errorAtom =
+      Atom(name: '_DivideStockDialogControllerBase.error', context: context);
+
+  @override
+  Option<StockError> get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(Option<StockError> value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   late final _$initStateAsyncAction = AsyncAction(
       '_DivideStockDialogControllerBase.initState',
       context: context);
@@ -139,7 +155,8 @@ mixin _$DivideStockDialogController on _DivideStockDialogControllerBase, Store {
 stock: ${stock},
 selectedProvider: ${selectedProvider},
 loading: ${loading},
-providerList: ${providerList}
+providerList: ${providerList},
+error: ${error}
     ''';
   }
 }

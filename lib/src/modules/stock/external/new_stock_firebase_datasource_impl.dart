@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/core/exceptions/external_exception.dart';
 import 'package:controle_pedidos/src/domain/models/provider_model.dart';
 import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
@@ -22,14 +23,12 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
   Future<StockModel> createStock(
       {required StockModel stock, String stockID = ''}) async {
     stockID.isNotEmpty
-        ? await stockCollection.doc(stockID).set(stock.toMap()).catchError(
-            (e) => throw FirebaseException(
-                plugin: 'CREATE STOCK ERROR', message: e.toString()))
-        : await stockCollection
-            .add(stock.toMap())
-            .catchError((e) => throw FirebaseException(
-                plugin: 'CREATE STOCK ERROR', message: e.toString()))
-            .then((value) => stockID = value.id);
+        ? await stockCollection.doc(stockID).set(stock.toMap()).onError(
+            (error, stackTrace) => throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace))
+        : await stockCollection.add(stock.toMap()).onError(
+            (error, stackTrace) => throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
     StockModel? createdStock = await getStockByCode(code: stock.code);
 
@@ -48,18 +47,18 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
 
   @override
   Future<StockModel> deleteStock({required StockModel stock}) async {
-    await stockCollection.doc(stock.id).delete().catchError((e) =>
-        throw FirebaseException(
-            plugin: 'DELETE STOCK ERROR', message: e.toString()));
+    await stockCollection.doc(stock.id).delete().onError((error, stackTrace) =>
+        throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     return stock;
   }
 
   @override
   Future<StockModel> updateStock({required StockModel stock}) async {
-    await stockCollection.doc(stock.id).update(stock.toMap()).catchError((e) =>
-        throw FirebaseException(
-            plugin: 'UPDATE STOCK ERROR', message: e.toString()));
+    await stockCollection.doc(stock.id).update(stock.toMap()).onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     return stock;
   }
@@ -73,7 +72,9 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
 
   @override
   Future<StockModel> getStockById({required String id}) async {
-    var stockDoc = await stockCollection.doc(id).get();
+    var stockDoc = await stockCollection.doc(id).get().onError(
+        (error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     if (stockDoc.exists) {
       return StockModel.fromDocumentSnapshot(stockDoc);
@@ -90,7 +91,9 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
     final snapStock = await stockCollection
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .get();
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
     for (var s in snapStock.docs) {
       providerList.add(ProviderModel.fromMap(map: s.get('product.provider')));
     }
@@ -106,7 +109,9 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
     final snap = await stockCollection
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
-        .get();
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var doc in snap.docs) {
       stockList.add(StockModel.fromDocumentSnapshot(doc));
@@ -127,7 +132,9 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
         .where('registrationDate', isGreaterThanOrEqualTo: iniDate)
         .where('registrationDate', isLessThanOrEqualTo: endDate)
         .where('product.provider.id', isEqualTo: provider.id)
-        .get();
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
 
     for (var doc in snap.docs) {
       stockList.add(StockModel.fromDocumentSnapshot(doc));
@@ -145,9 +152,8 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
             plugin: 'GET STOCK BY CODE ERROR', message: e.toString()));
 
     if (result.docs.length > 1) {
-      throw FirebaseException(
-          plugin: 'GET STOCK BY CODE ERROR',
-          message: 'More then one document was found');
+      throw ExternalException(
+          error: 'GET STOCK BY CODE ERROR - More then one document was found');
     }
 
     if (result.docs.length == 1) {

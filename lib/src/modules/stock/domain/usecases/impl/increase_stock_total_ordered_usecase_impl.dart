@@ -15,12 +15,12 @@ class IncreaseStockTotalOrderedUsecaseImpl
   Future<Either<StockError, Stock>> call(
       {required String stockID, required int increaseQuantity}) async {
     if (stockID.isEmpty) {
-      return Left(StockError('Stock ID cannot be empty'));
+      return Left(StockError('O ID do estoque não pode estar vazio'));
     }
 
     if (increaseQuantity <= 0) {
       return Left(
-          StockError('increase quantity cannot be a non positive number'));
+          StockError('A quantidade não pode ser menor que 1'));
     }
 
     return _repository.increaseTotalOrderedFromStock(

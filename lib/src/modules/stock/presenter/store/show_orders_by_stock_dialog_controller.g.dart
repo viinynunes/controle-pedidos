@@ -47,13 +47,13 @@ mixin _$ShowOrdersByStockDialogController
       context: context);
 
   @override
-  ObservableList<Order> get orderListByStock {
+  ObservableList<o.Order> get orderListByStock {
     _$orderListByStockAtom.reportRead();
     return super.orderListByStock;
   }
 
   @override
-  set orderListByStock(ObservableList<Order> value) {
+  set orderListByStock(ObservableList<o.Order> value) {
     _$orderListByStockAtom.reportWrite(value, super.orderListByStock, () {
       super.orderListByStock = value;
     });
@@ -88,6 +88,22 @@ mixin _$ShowOrdersByStockDialogController
   set endDate(DateTime value) {
     _$endDateAtom.reportWrite(value, super.endDate, () {
       super.endDate = value;
+    });
+  }
+
+  late final _$errorAtom = Atom(
+      name: '_ShowOrdersByStockDialogControllerBase.error', context: context);
+
+  @override
+  Option<StockError> get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(Option<StockError> value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
     });
   }
 
@@ -177,7 +193,8 @@ stock: ${stock},
 loading: ${loading},
 orderListByStock: ${orderListByStock},
 iniDate: ${iniDate},
-endDate: ${endDate}
+endDate: ${endDate},
+error: ${error}
     ''';
   }
 }

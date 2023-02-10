@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../../core/helpers/custom_page_route.dart';
-import '../../../../../core/widgets/custom_material_banner_error.dart';
 import '../../../../product/presenter/pages/android/pages/android_product_stock_default_page.dart';
 import '../../store/stock_controller.dart';
 import '../i_stock_page.dart';
@@ -21,18 +19,18 @@ class AndroidStockPage extends IStockPage {
   _AndroidStockPageState createState() => _AndroidStockPageState();
 }
 
-class _AndroidStockPageState extends IStockPageState {
-  final controller = GetIt.I.get<StockController>();
-
+class _AndroidStockPageState
+    extends IStockPageState<AndroidStockPage, StockController> {
   @override
   void initState() {
     super.initState();
 
-    reaction((p0) => controller.error, (p0) {
-      controller.error.map((error) {
-        CustomMaterialBannerError.showMaterialBannerError(
-            context: context, message: error.message, onClose: () {});
-      });
+    reaction((_) => controller.error, (_) {
+      controller.error.map((error) => showError(message: error.message));
+    });
+
+    reaction((_) => controller.success, (_) {
+      controller.success.map((_) => showSuccess(message: 'Sucesso'));
     });
 
     controller.initState();

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:mobx/mobx.dart';
 
+import '../../../../../../core/ui/states/base_state.dart';
 import '../../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../../domain/entities/stock.dart';
 import '../../../store/show_orders_by_stock_dialog_controller.dart';
@@ -19,16 +21,19 @@ class ShowOrdersByStockDialog extends StatefulWidget {
       _ShowOrdersByStockDialogState();
 }
 
-class _ShowOrdersByStockDialogState extends State<ShowOrdersByStockDialog> {
+class _ShowOrdersByStockDialogState extends BaseState<ShowOrdersByStockDialog, ShowOrdersByStockDialogController> {
   final stockController = GetIt.I.get<StockController>();
-  final dialogController = GetIt.I.get<ShowOrdersByStockDialogController>();
   final dateFormat = DateFormat('dd-MM-yyyy');
 
   @override
   void initState() {
     super.initState();
 
-    dialogController.initState(
+    reaction((_) => controller.error, (_) {
+      controller.error.map((error) => showError(message: error.message));
+    });
+
+    controller.initState(
         stock: widget.stock,
         iniDate: stockController.iniDate,
         endDate: stockController.endDate);
@@ -55,22 +60,22 @@ class _ShowOrdersByStockDialogState extends State<ShowOrdersByStockDialog> {
                 child: Observer(
                   builder: (context) {
                     return ElevatedButton(
-                      onLongPress: dialogController.resetIniDate,
+                      onLongPress: controller.resetIniDate,
                       onPressed: () async {
                         await showDatePicker(
                                 context: context,
-                                initialDate: dialogController.iniDate,
+                                initialDate: controller.iniDate,
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime(2200))
                             .then((value) {
                           if (value != null) {
-                            dialogController.setIniDate(value);
-                            dialogController.getOrderListByStock();
+                            controller.setIniDate(value);
+                            controller.getOrderListByStock();
                           }
                         });
                       },
                       child: Text(
-                        dateFormat.format(dialogController.iniDate),
+                        dateFormat.format(controller.iniDate),
                       ),
                     );
                   },
@@ -82,22 +87,22 @@ class _ShowOrdersByStockDialogState extends State<ShowOrdersByStockDialog> {
                 fit: FlexFit.tight,
                 child: Observer(builder: (context) {
                   return ElevatedButton(
-                    onLongPress: dialogController.resetEndDate,
+                    onLongPress: controller.resetEndDate,
                     onPressed: () async {
                       await showDatePicker(
                               context: context,
-                              initialDate: dialogController.endDate,
+                              initialDate: controller.endDate,
                               firstDate: DateTime(2020),
                               lastDate: DateTime(2200))
                           .then((value) {
                         if (value != null) {
-                          dialogController.setEndDate(value);
-                          dialogController.getOrderListByStock();
+                          controller.setEndDate(value);
+                          controller.getOrderListByStock();
                         }
                       });
                     },
                     child: Text(
-                      dateFormat.format(dialogController.endDate),
+                      dateFormat.format(controller.endDate),
                     ),
                   );
                 }),
@@ -118,7 +123,7 @@ class _ShowOrdersByStockDialogState extends State<ShowOrdersByStockDialog> {
               width: double.maxFinite,
               child: Observer(
                 builder: (_) {
-                  if (dialogController.loading) {
+                  if (controller.loading) {
                     return const ShimmerListBuilder(
                       itemCount: 10,
                       height: 40,
@@ -126,9 +131,9 @@ class _ShowOrdersByStockDialogState extends State<ShowOrdersByStockDialog> {
                     );
                   }
 
-                  final orderList = dialogController.orderListByStock;
+                  final orderList = controller.orderListByStock;
 
-                  return dialogController.orderListByStock.isNotEmpty
+                  return controller.orderListByStock.isNotEmpty
                       ? ListView.builder(
                           itemCount: orderList.length,
                           itemBuilder: (_, index) {
