@@ -22,8 +22,8 @@ class ClientRepositoryImpl implements IClientRepository {
           await _datasource.createClient(ClientModel.fromClient(client));
 
       return Right(result);
-    } on ExternalException catch (e, s) {
-      log('External Exception', error: e, stackTrace: s);
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
       return Left(ClientInfoException('Erro interno no servidor'));
     } on ClientInfoException catch (e) {
       return Left(e);
@@ -38,8 +38,8 @@ class ClientRepositoryImpl implements IClientRepository {
           await _datasource.updateClient(ClientModel.fromClient(client));
 
       return Right(result);
-    } on ExternalException catch (e, s) {
-      log('External Exception', error: e, stackTrace: s);
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
       return Left(ClientInfoException('Erro interno no servidor'));
     } on ClientInfoException catch (e) {
       return Left(e);
@@ -55,8 +55,8 @@ class ClientRepositoryImpl implements IClientRepository {
           await _datasource.disableClient(ClientModel.fromClient(client));
 
       return Right(result);
-    } on ExternalException catch (e, s) {
-      log('External Exception', error: e, stackTrace: s);
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
       return Left(ClientInfoException('Erro interno no servidor'));
     } on ClientInfoException catch (e) {
       return Left(e);
@@ -69,8 +69,8 @@ class ClientRepositoryImpl implements IClientRepository {
       final result = await _datasource.getClientByID(id);
 
       return Right(result);
-    } on ExternalException catch (e, s) {
-      log('External Exception', error: e, stackTrace: s);
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
       return Left(ClientInfoException('Erro interno no servidor'));
     } on ClientInfoException catch (e) {
       return Left(e);
@@ -83,8 +83,8 @@ class ClientRepositoryImpl implements IClientRepository {
       final result = await _datasource.getClientList();
 
       return Right(result);
-    } on ExternalException catch (e, s) {
-      log('External Exception', error: e, stackTrace: s);
+    } on ExternalException catch (e) {
+      log('External Exception', error: e.error, stackTrace: e.stackTrace);
       return Left(ClientInfoException('Erro interno no servidor'));
     } on ClientInfoException catch (e) {
       return Left(e);
@@ -99,7 +99,7 @@ class ClientRepositoryImpl implements IClientRepository {
 
       return Right(result);
     } on ExternalException catch (e, s) {
-      log('External Exception', error: e, stackTrace: s);
+      log('External Exception', error: e.error, stackTrace: s);
       return Left(ClientInfoException('Erro interno no servidor'));
     } on ClientInfoException catch (e) {
       return Left(e);
