@@ -5,6 +5,8 @@ import 'package:controle_pedidos/src/domain/models/stock_model.dart';
 import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../core/data/stock/stock_helper.dart';
+import '../../../domain/models/product_model.dart';
 import '../infra/datasources/i_new_stock_datasource.dart';
 
 class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
@@ -61,6 +63,42 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
             error: error.toString(), stackTrace: stackTrace));
 
     return stock;
+  }
+
+  @override
+  Future<void> updateStockFromProduct({required ProductModel product}) async {
+    final stockSnap = await stockCollection
+        .where('product.id', isEqualTo: product.id)
+        .get()
+        .onError((error, stackTrace) => throw ExternalException(
+            error: error.toString(), stackTrace: stackTrace));
+
+    for (var s in stockSnap.docs) {
+      ///old stock
+      var stockFromDB = StockModel.fromDocumentSnapshot(s);
+
+      final oldCode = stockFromDB.code;
+
+      ///updating stock from db with updated product
+      stockFromDB.product = product;
+      stockFromDB.code = StockHelper.getStockCode(
+          product: product, date: stockFromDB.registrationDate);
+
+      if (oldCode != stockFromDB.code) {
+        var stockWithNewCodeFromDB =
+            await getStockByCode(code: stockFromDB.code);
+
+        if (stockWithNewCodeFromDB != null) {
+          stockWithNewCodeFromDB.total += stockFromDB.total;
+          stockWithNewCodeFromDB.totalOrdered += stockFromDB.totalOrdered;
+
+          await deleteStock(stock: stockFromDB);
+          await updateStock(stock: stockWithNewCodeFromDB);
+        } else {
+          await updateStock(stock: stockFromDB);
+        }
+      }
+    }
   }
 
   @override

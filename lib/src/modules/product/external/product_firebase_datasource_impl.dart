@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../domain/models/order_model.dart';
+import '../../stock/infra/datasources/i_new_stock_datasource.dart';
 import '../infra/datasources/i_product_datasource.dart';
 
 const cacheDocument = '00_cacheUpdated';
@@ -75,17 +76,7 @@ class ProductFirebaseDatasourceImpl implements IProductDatasource {
   }
 
   _updateStock(ProductModel product) async {
-    final stockSnap = await stockCollection
-        .where('product.id', isEqualTo: product.id)
-        .get()
-        .onError((error, stackTrace) => throw ExternalException(
-            error: error.toString(), stackTrace: stackTrace));
-
-    for (var s in stockSnap.docs) {
-      stockCollection.doc(s.id).update({'product': product.toMap()}).onError(
-          (error, stackTrace) => throw ExternalException(
-              error: error.toString(), stackTrace: stackTrace));
-    }
+    GetIt.I.get<INewStockDatasource>().updateStockFromProduct(product: product);
   }
 
   _updateOrder(ProductModel product) async {
