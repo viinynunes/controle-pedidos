@@ -1,3 +1,4 @@
+import '../../../../domain/models/product_model.dart';
 import '../../../../domain/models/provider_model.dart';
 import '../../../../domain/models/stock_model.dart';
 
@@ -5,6 +6,8 @@ abstract class INewStockDatasource {
   Future<StockModel> createStock({required StockModel stock, String stockID = ''});
 
   Future<StockModel> updateStock({required StockModel stock});
+
+  Future<void> updateStockFromProduct({required ProductModel product});
 
   Future<StockModel> deleteStock({required StockModel stock});
 
