@@ -8,6 +8,7 @@ import 'package:controle_pedidos/src/modules/stock/errors/stock_error.dart';
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_new_stock_datasource.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../core/data/stock/stock_helper.dart';
 import '../../../../core/date_time_helper.dart';
 import '../../../../core/exceptions/external_exception.dart';
 import '../../../../domain/models/product_model.dart';
@@ -25,8 +26,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
     try {
       var stock = await _datasource.getStockById(id: stockId);
       stock.registrationDate = newDate;
-      stock.code =
-          _getStockCode(product: stock.product, date: stock.registrationDate);
+      stock.code = StockHelper.getStockCode(
+          product: stock.product, date: stock.registrationDate);
 
       var stockWithNewDateInDB =
           await _datasource.getStockByCode(code: stock.code);
@@ -56,7 +57,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
       required DateTime date,
       required int decreaseQuantity}) async {
     try {
-      var stock = _getNewStock(product: product, date: date);
+      var stock = StockHelper.getNewStock(product: product, date: date);
 
       final stockFromDB = await _datasource.getStockByCode(code: stock.code);
 
@@ -134,7 +135,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
       var list = await _datasource.getStockListBetweenDates(
           iniDate: iniDate, endDate: endDate);
 
-      return Right(_mergeStockList(stockListFromDB: list));
+      return Right(StockHelper.mergeStockList(stockListFromDB: list));
     } on ExternalException catch (e) {
       log('External Exception', error: e.error, stackTrace: e.stackTrace);
       return Left(StockError('Erro interno no servidor'));
@@ -157,7 +158,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
           iniDate: iniDate,
           endDate: endDate);
 
-      return Right(_mergeStockList(stockListFromDB: list));
+      return Right(StockHelper.mergeStockList(stockListFromDB: list));
     } on ExternalException catch (e) {
       log('External Exception', error: e.error, stackTrace: e.stackTrace);
       return Left(StockError('Erro interno no servidor'));
@@ -172,7 +173,7 @@ class NewStockRepositoryImpl implements INewStockRepository {
       required DateTime date,
       required int increaseQuantity}) async {
     try {
-      final stock = _getNewStock(
+      final stock = StockHelper.getNewStock(
           product: ProductModel.fromProduct(product: product),
           date: date,
           total: increaseQuantity);
@@ -232,8 +233,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
       var stock = await _datasource.getStockById(id: stockID);
 
       stock.product.provider = newProvider;
-      stock.code =
-          _getStockCode(product: stock.product, date: stock.registrationDate);
+      stock.code = StockHelper.getStockCode(
+          product: stock.product, date: stock.registrationDate);
 
       var stockByCodeFromDB =
           await _datasource.getStockByCode(code: stock.code);
@@ -267,8 +268,8 @@ class NewStockRepositoryImpl implements INewStockRepository {
       }
 
       stock.product.provider = newProvider;
-      stock.code =
-          _getStockCode(product: stock.product, date: stock.registrationDate);
+      stock.code = StockHelper.getStockCode(
+          product: stock.product, date: stock.registrationDate);
 
       var stockByCodeFromDB =
           await _datasource.getStockByCode(code: stock.code);
@@ -287,43 +288,5 @@ class NewStockRepositoryImpl implements INewStockRepository {
     } on StockError catch (e) {
       return Left(e);
     }
-  }
-
-  StockModel _getNewStock(
-      {required Product product,
-      required DateTime date,
-      int total = 0,
-      int totalOrdered = 0}) {
-    return StockModel(
-        id: '0',
-        code: _getStockCode(product: product, date: date),
-        total: total,
-        totalOrdered: totalOrdered,
-        registrationDate: DateTimeHelper.removeHourFromDateTime(date: date),
-        product: product);
-  }
-
-  String _getStockCode({required Product product, required DateTime date}) {
-    return product.id +
-        product.provider.id +
-        DateTime(date.year, date.month, date.day).toString();
-  }
-
-  _mergeStockList({required List<StockModel> stockListFromDB}) {
-    List<StockModel> stockList = [];
-
-    for (var stock in stockListFromDB) {
-      if (stockList.contains(stock)) {
-        var stockFromList = stockList.singleWhere(
-            (stockFromList) => stockFromList.product == stock.product);
-
-        stockFromList.total += stock.total;
-        stockFromList.totalOrdered += stock.totalOrdered;
-      } else {
-        stockList.add(stock);
-      }
-    }
-
-    return stockList;
   }
 }

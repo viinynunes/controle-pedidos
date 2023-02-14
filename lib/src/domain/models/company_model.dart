@@ -45,7 +45,7 @@ class CompanyModel extends Company {
       'id': id,
       'name': name,
       'registrationDate': registrationDate,
-      'subscription': subscription,
+      'subscription': subscription.name,
     };
   }
 
