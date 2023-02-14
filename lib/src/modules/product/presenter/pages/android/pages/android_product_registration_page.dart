@@ -71,7 +71,7 @@ class _AndroidProductRegistrationPageState
                     const SizedBox(height: 20),
                     CustomTextFormField(
                       controller: controller.categoryController,
-                      label: 'Categoria',
+                      label: 'Embalagem',
                       maxLength: 3,
                       validator: controller.categoryValidator,
                     ),
