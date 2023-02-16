@@ -18,8 +18,10 @@ void setUpClientLocator() {
       ClientRepositoryImpl(clientLocator()));
   clientLocator
       .registerSingleton<IClientUsecase>(ClientUsecaseImpl(clientLocator()));
-  clientLocator
-      .registerSingleton<ClientController>(ClientController(clientLocator()));
+  clientLocator.registerSingleton<ClientController>(ClientController(
+    clientLocator(),
+    clientLocator(),
+  ));
   clientLocator.registerFactory<ClientRegistrationController>(
       () => ClientRegistrationController(clientLocator()));
 }

@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../../domain/entities/client.dart';
 import '../../errors/client_info_exception.dart';
 import '../pages/i_client_registration_page.dart';
@@ -13,8 +14,9 @@ class ClientController = _ClientListBase with _$ClientController;
 
 abstract class _ClientListBase with Store {
   final IClientUsecase clientUsecase;
+  final AdService adService;
 
-  _ClientListBase(this.clientUsecase);
+  _ClientListBase(this.clientUsecase, this.adService);
 
   @observable
   String searchText = '';
@@ -92,5 +94,9 @@ abstract class _ClientListBase with Store {
     if (result != null) {
       await initState();
     }
+  }
+
+  bool showAd(){
+    return adService.loadAd();
   }
 }
