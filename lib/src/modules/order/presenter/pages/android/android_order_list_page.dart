@@ -3,10 +3,10 @@ import 'package:controle_pedidos/src/modules/order/presenter/stores/order_contro
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../../core/admob/admob_helper.dart';
+import '../../../../../core/admob/widgest/banner_ad_widget.dart';
 import '../../../../../core/ui/states/base_state.dart';
 import '../../../../../core/widgets/custom_date_range_picker_widget.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
@@ -22,7 +22,9 @@ class AndroidOrderListPage extends StatefulWidget {
   State<AndroidOrderListPage> createState() => _AndroidOrderListPageState();
 }
 
-class _AndroidOrderListPageState extends BaseState<AndroidOrderListPage, OrderController> {
+class _AndroidOrderListPageState
+    extends BaseState<AndroidOrderListPage, OrderController> {
+  final adHelper = AdMobHelper();
 
   @override
   void initState() {
@@ -98,13 +100,21 @@ class _AndroidOrderListPageState extends BaseState<AndroidOrderListPage, OrderCo
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => controller.callOrderRegistrationPage(
-          context: context,
-          registrationPage: AndroidOrderRegistrationPage(
-            productList: controller.productList,
-            clientList: controller.clientList,
-          ),
-        ),
+        onPressed: () async {
+          if (controller.loadAd()) {
+            adHelper.createRewardedAd();
+            await Future.delayed(const Duration(seconds: 1));
+            adHelper.showRewardedAd();
+          }
+
+          controller.callOrderRegistrationPage(
+            context: context,
+            registrationPage: AndroidOrderRegistrationPage(
+              productList: controller.productList,
+              clientList: controller.clientList,
+            ),
+          );
+        },
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
@@ -178,16 +188,11 @@ class _AndroidOrderListPageState extends BaseState<AndroidOrderListPage, OrderCo
                           );
                   }),
                 ),
-                Visibility(
-                  visible: false,
-                  child: SizedBox(
-                    height: size.height * 0.1,
-                    width: size.width,
-                    child: AdWidget(
-                      ad: AdMobHelper.getBannerAd()..load(),
-                    ),
-                  ),
-                )
+                BannerAdWidget(
+                  showAd: controller.loadAd(),
+                  height: size.height * 0.1,
+                  width: size.width,
+                ),
               ],
             ),
           ),
