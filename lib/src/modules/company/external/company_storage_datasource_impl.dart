@@ -15,11 +15,13 @@ class CompanyStorageDatasourceImpl implements ICompanyDatasource {
   void saveLoggedCompany(CompanyModel company) {
     box.write('company', company.toJson());
     box.write('companyID', company.id);
+    box.write('subscription', company.subscription.name);
   }
 
   @override
   void logout() {
     box.remove('company');
     box.remove('companyID');
+    box.remove('subscription');
   }
 }
