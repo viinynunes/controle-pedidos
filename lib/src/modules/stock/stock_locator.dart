@@ -57,14 +57,17 @@ void setUpStockLocator() {
       () => UpdateStockUsecaseImpl(stockLocator()));
   stockLocator.registerLazySingleton<ChangeStockProviderUsecase>(
       () => ChangeStockProviderUsecaseImpl(stockLocator()));
-  stockLocator.registerSingleton<StockController>(StockController(
-      stockLocator(),
-      stockLocator(),
-      stockLocator(),
-      stockLocator(),
-      stockLocator(),
-      stockLocator(),
-      stockLocator()));
+  stockLocator.registerSingleton<StockController>(
+    StockController(
+        stockLocator(),
+        stockLocator(),
+        stockLocator(),
+        stockLocator(),
+        stockLocator(),
+        stockLocator(),
+        stockLocator(),
+        stockLocator()),
+  );
   stockLocator.registerFactory<StockTileController>(() => StockTileController(
       stockLocator(), stockLocator(), stockLocator(), stockLocator()));
   stockLocator.registerFactory<DivideStockDialogController>(
