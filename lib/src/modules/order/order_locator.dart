@@ -34,7 +34,7 @@ Future<void> setUpOrderLocator() async {
       OrderRegistrationController(
           orderLocator(), orderLocator(), orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderReportController>(
-      () => OrderReportController(orderLocator(), orderLocator()));
+      () => OrderReportController(orderLocator(), orderLocator(), orderLocator(),));
 }
 
 unregisterOrderLocator() async {

@@ -75,9 +75,14 @@ void setUpStockLocator() {
   stockLocator.registerFactory<ShowOrdersByStockDialogController>(
       () => ShowOrdersByStockDialogController(stockLocator()));
   stockLocator.registerFactory<ReportStockByProviderController>(
-      () => ReportStockByProviderController(stockLocator(), stockLocator()));
+      () => ReportStockByProviderController(
+            stockLocator(),
+            stockLocator(),
+            stockLocator(),
+          ));
   stockLocator.registerFactory<ReportStockByEstablishmentController>(() =>
-      ReportStockByEstablishmentController(stockLocator(), stockLocator()));
+      ReportStockByEstablishmentController(
+          stockLocator(), stockLocator(), stockLocator()));
 }
 
 void unregisterStockLocator() {
