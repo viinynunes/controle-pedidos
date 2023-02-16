@@ -6,6 +6,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
+
 part 'establishment_controller.g.dart';
 
 class EstablishmentController = _EstablishmentControllerBase
@@ -13,8 +15,9 @@ class EstablishmentController = _EstablishmentControllerBase
 
 abstract class _EstablishmentControllerBase with Store {
   final IEstablishmentUsecase usecase;
+  final AdService adService;
 
-  _EstablishmentControllerBase(this.usecase);
+  _EstablishmentControllerBase(this.usecase, this.adService);
 
   @observable
   String searchText = '';
@@ -93,5 +96,9 @@ abstract class _EstablishmentControllerBase with Store {
     }
 
     initState();
+  }
+
+  bool showAd(){
+    return adService.loadAd();
   }
 }

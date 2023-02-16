@@ -1,8 +1,10 @@
+import 'package:controle_pedidos/src/core/admob/admob_helper.dart';
 import 'package:controle_pedidos/src/modules/establishment/presenter/stores/establishment_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/admob/widgest/banner_ad_widget.dart';
 import '../../../../../core/ui/states/base_state.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import 'android_establishment_registration_page.dart';
@@ -18,6 +20,8 @@ class AndroidEstablishmentListPage extends StatefulWidget {
 
 class _AndroidEstablishmentListPageState
     extends BaseState<AndroidEstablishmentListPage, EstablishmentController> {
+  final adHelper = AdMobHelper();
+
   @override
   void initState() {
     super.initState();
@@ -26,11 +30,15 @@ class _AndroidEstablishmentListPageState
       controller.error.map((error) => showError(message: error.message));
     });
 
+    adHelper.createRewardedAd();
+
     controller.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Observer(
@@ -73,51 +81,72 @@ class _AndroidEstablishmentListPageState
             registrationPage: const AndroidEstablishmentRegistrationPage()),
         child: const Icon(Icons.add),
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Observer(
-              builder: (_) {
-                var estabList = [];
+      body: WillPopScope(
+        onWillPop: () async {
+          adHelper.showRewardedAd();
 
-                if (controller.loading) {
-                  return ShimmerListBuilder(
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      width: double.maxFinite,
-                      itemCount: 10);
-                }
+          return true;
+        },
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Observer(
+                      builder: (_) {
+                        var estabList = [];
 
-                if (controller.searching && controller.searchText.isNotEmpty) {
-                  estabList = controller.filteredEstabList;
-                } else {
-                  estabList = controller.estabList;
-                }
+                        if (controller.loading) {
+                          return ShimmerListBuilder(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: double.maxFinite,
+                              itemCount: 10);
+                        }
 
-                return estabList.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: estabList.length,
-                        itemBuilder: (_, index) {
-                          final establishment = estabList[index];
+                        if (controller.searching &&
+                            controller.searchText.isNotEmpty) {
+                          estabList = controller.filteredEstabList;
+                        } else {
+                          estabList = controller.estabList;
+                        }
 
-                          return AndroidEstablishmentListTile(
-                            establishment: establishment,
-                            onTap: () {
-                              controller.callEstablishmentRegistrationPage(
-                                  context: context,
-                                  registrationPage:
-                                      AndroidEstablishmentRegistrationPage(
+                        return estabList.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: estabList.length,
+                                itemBuilder: (_, index) {
+                                  final establishment = estabList[index];
+
+                                  return AndroidEstablishmentListTile(
                                     establishment: establishment,
-                                  ));
-                            },
-                          );
-                        },
-                      )
-                    : const Center(
-                        child: Text('Nenhum estabelecimento encontrado'),
-                      );
-              },
+                                    onTap: () {
+                                      controller
+                                          .callEstablishmentRegistrationPage(
+                                              context: context,
+                                              registrationPage:
+                                                  AndroidEstablishmentRegistrationPage(
+                                                establishment: establishment,
+                                              ));
+                                    },
+                                  );
+                                },
+                              )
+                            : const Center(
+                                child:
+                                    Text('Nenhum estabelecimento encontrado'),
+                              );
+                      },
+                    ),
+                  ),
+                  BannerAdWidget(
+                    showAd: controller.showAd(),
+                    height: size.height * 0.1,
+                    width: size.width,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
