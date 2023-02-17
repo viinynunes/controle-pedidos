@@ -53,6 +53,7 @@ class CompanyModel extends Company {
     return {
       'id': id,
       'name': name,
+      'subscription': subscription.name,
     };
   }
 

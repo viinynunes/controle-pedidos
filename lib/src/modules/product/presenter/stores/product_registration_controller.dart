@@ -7,6 +7,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../provider/services/i_provider_service.dart';
 import '../../errors/product_info_exception.dart';
 import '../../../../domain/models/product_model.dart';
@@ -20,9 +21,10 @@ abstract class _ProductRegistrationControllerBase with Store {
   final IProductUsecase productUsecase;
   final IProviderUsecase providerUsecase;
   final IProviderService providerService;
+  final AdService adService;
 
   _ProductRegistrationControllerBase(
-      this.productUsecase, this.providerUsecase, this.providerService);
+      this.productUsecase, this.providerUsecase, this.providerService, this.adService);
 
   @observable
   bool loading = false;
@@ -164,5 +166,9 @@ abstract class _ProductRegistrationControllerBase with Store {
           stockDefault: false,
           provider: selectedProvider!);
     }
+  }
+
+  bool showAds(){
+    return adService.loadAd();
   }
 }

@@ -23,13 +23,13 @@ void setUpProviderLocator() {
   providerLocator
       .registerLazySingleton<IProviderService>(() => ProviderServiceImpl());
   providerLocator.registerLazySingleton<ProviderController>(
-      () => ProviderController(providerLocator()));
+      () => ProviderController(providerLocator(), providerLocator()));
   providerLocator.registerFactory<ProviderRegistrationController>(() =>
       ProviderRegistrationController(
           providerLocator(), providerLocator(), providerLocator()));
 }
 
-void unregisterProviderLocator(){
+void unregisterProviderLocator() {
   providerLocator.unregister(instance: IProviderDatasource);
   providerLocator.unregister(instance: IProviderRepository);
   providerLocator.unregister(instance: IProviderUsecase);

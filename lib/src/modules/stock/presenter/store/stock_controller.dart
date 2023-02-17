@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../domain/entities/product.dart';
 import '../../../../domain/entities/provider.dart';
@@ -28,6 +29,7 @@ abstract class _StockControllerBase with Store {
   final UpdateStockUsecase updateStockUsecase;
   final DeleteStockUsecase deleteStockUsecase;
   final IncreaseStockTotalUsecase increaseStockTotalUsecase;
+  final AdService adService;
 
   _StockControllerBase(
       this.stockService,
@@ -36,7 +38,7 @@ abstract class _StockControllerBase with Store {
       this.getStockListsUsecase,
       this.updateStockUsecase,
       this.deleteStockUsecase,
-      this.increaseStockTotalUsecase);
+      this.increaseStockTotalUsecase, this.adService);
 
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -259,5 +261,9 @@ abstract class _StockControllerBase with Store {
     });
 
     loading = false;
+  }
+
+  bool loadAd(){
+    return adService.loadAd();
   }
 }

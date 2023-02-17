@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/admob/admob_helper.dart';
+import '../../../../../core/admob/widgest/banner_ad_widget.dart';
 import '../../../../../core/helpers/custom_page_route.dart';
 import '../../../../product/presenter/pages/android/pages/android_product_stock_default_page.dart';
 import '../../store/stock_controller.dart';
@@ -21,6 +23,8 @@ class AndroidStockPage extends IStockPage {
 
 class _AndroidStockPageState
     extends IStockPageState<AndroidStockPage, StockController> {
+  final adHelper = AdMobHelper();
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +42,8 @@ class _AndroidStockPageState
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Estoque'),
@@ -112,11 +118,16 @@ class _AndroidStockPageState
           height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.all(8),
           child: Column(
-            children: const [
-              GetProviderByDateWidget(),
-              ProviderSelectionAndStockLeftWidget(),
-              StockTableHeaderWidget(),
-              StockListBuilderWidget(),
+            children: [
+              const GetProviderByDateWidget(),
+              const ProviderSelectionAndStockLeftWidget(),
+              const StockTableHeaderWidget(),
+              const StockListBuilderWidget(),
+              BannerAdWidget(
+                showAd: controller.loadAd(),
+                height: size.height * 0.1,
+                width: size.width,
+              ),
             ],
           ),
         ),

@@ -1,7 +1,9 @@
+import 'package:controle_pedidos/src/core/admob/admob_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/admob/widgest/banner_ad_widget.dart';
 import '../../../../../core/ui/states/base_state.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../../../../domain/entities/provider.dart';
@@ -19,6 +21,8 @@ class AndroidProviderListPage extends StatefulWidget {
 
 class _AndroidProviderListPageState
     extends BaseState<AndroidProviderListPage, ProviderController> {
+  final adHelper = AdMobHelper();
+
   @override
   void initState() {
     super.initState();
@@ -27,11 +31,14 @@ class _AndroidProviderListPageState
       controller.error.map((error) => showError(message: error.message));
     });
 
+    adHelper.createRewardedAd();
     controller.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Observer(
@@ -76,45 +83,64 @@ class _AndroidProviderListPageState
             registrationPage: const AndroidProviderRegistrationPage()),
         child: const Icon(Icons.add),
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Observer(
-            builder: (_) {
-              List<Provider> providerList = [];
+      body: WillPopScope(
+        onWillPop: () async {
+          adHelper.showRewardedAd();
 
-              if (controller.loading) {
-                return ShimmerListBuilder(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    width: double.maxFinite,
-                    itemCount: 10);
-              }
+          return true;
+        },
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Observer(
+                    builder: (_) {
+                      List<Provider> providerList = [];
 
-              if (controller.searching && controller.searchText.isNotEmpty) {
-                providerList = controller.filteredProviderList;
-              } else {
-                providerList = controller.providerList;
-              }
-              return providerList.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: providerList.length,
-                      itemBuilder: (_, index) {
-                        final provider = providerList[index];
-                        return AndroidProviderListTile(
-                            provider: provider,
-                            onTap: () =>
-                                controller.callProviderRegistrationPage(
-                                    context: context,
-                                    registrationPage:
-                                        AndroidProviderRegistrationPage(
-                                      provider: provider,
-                                    )));
-                      },
-                    )
-                  : const Center(
-                      child: Text('Nenhum fornecedor encontrado'),
-                    );
-            },
+                      if (controller.loading) {
+                        return ShimmerListBuilder(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            width: double.maxFinite,
+                            itemCount: 10);
+                      }
+
+                      if (controller.searching &&
+                          controller.searchText.isNotEmpty) {
+                        providerList = controller.filteredProviderList;
+                      } else {
+                        providerList = controller.providerList;
+                      }
+                      return providerList.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: providerList.length,
+                              itemBuilder: (_, index) {
+                                final provider = providerList[index];
+                                return AndroidProviderListTile(
+                                    provider: provider,
+                                    onTap: () =>
+                                        controller.callProviderRegistrationPage(
+                                            context: context,
+                                            registrationPage:
+                                                AndroidProviderRegistrationPage(
+                                              provider: provider,
+                                            )));
+                              },
+                            )
+                          : const Center(
+                              child: Text('Nenhum fornecedor encontrado'),
+                            );
+                    },
+                  ),
+                ),
+                BannerAdWidget(
+                  showAd: controller.showAd(),
+                  width: size.width,
+                  height: size.height * 0.1,
+                ),
+              ],
+            ),
           ),
         ),
       ),

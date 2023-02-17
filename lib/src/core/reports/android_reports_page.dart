@@ -1,9 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:controle_pedidos/src/core/admob/services/ad_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../modules/order/presenter/pages/android/reports/android_order_report_page.dart';
 import '../../modules/stock/presenter/pages/android/reports/android_report_stock_by_establishment_page.dart';
 import '../../modules/stock/presenter/pages/android/reports/android_report_stock_by_provider_page.dart';
+import '../admob/widgest/banner_ad_widget.dart';
 import '../helpers/custom_page_route.dart';
 
 class AndroidReportsPage extends StatelessWidget {
@@ -11,6 +14,8 @@ class AndroidReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     _buildTile({
       required IconData icon,
       required String text,
@@ -97,6 +102,12 @@ class AndroidReportsPage extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(CustomPageRoute(
                         child: const AndroidOrderReportPage(),
                         direction: AxisDirection.left))),
+
+                BannerAdWidget(
+                  showAd: GetIt.I.get<AdService>().loadAd(),
+                  width: size.width,
+                  height: size.height * 0.1,
+                ),
               ],
             ),
           ),

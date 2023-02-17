@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../../core/admob/admob_helper.dart';
+import '../../../../../core/admob/widgest/banner_ad_widget.dart';
 import '../../../../../core/ui/states/base_state.dart';
 import '../../../../../core/widgets/shimmer/shimmer_list_builder.dart';
 import '../../stores/client_controller.dart';
@@ -17,6 +19,8 @@ class AndroidClientListPage extends StatefulWidget {
 
 class _AndroidClientListPageState
     extends BaseState<AndroidClientListPage, ClientController> {
+  final adHelper = AdMobHelper();
+
   @override
   void initState() {
     super.initState();
@@ -26,10 +30,13 @@ class _AndroidClientListPageState
     });
 
     controller.initState();
+    adHelper.createRewardedAd();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Observer(
@@ -79,48 +86,69 @@ class _AndroidClientListPageState
         },
         child: const Icon(Icons.add),
       ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Observer(
-              builder: (_) {
-                var clientList = [];
+      body: WillPopScope(
+        onWillPop: () async {
+          adHelper.showRewardedAd();
 
-                if (controller.loading) {
-                  return ShimmerListBuilder(
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      width: double.maxFinite,
-                      itemCount: 10);
-                }
+          return true;
+        },
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Observer(
+                      builder: (_) {
+                        var clientList = [];
 
-                if (controller.searching && controller.searchText.isNotEmpty) {
-                  clientList = controller.filteredClientList;
-                } else {
-                  clientList = controller.clientList;
-                }
+                        if (controller.loading) {
+                          return ShimmerListBuilder(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: double.maxFinite,
+                              itemCount: 10);
+                        }
 
-                return clientList.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: clientList.length,
-                        itemBuilder: (_, index) {
-                          final client = clientList[index];
+                        if (controller.searching &&
+                            controller.searchText.isNotEmpty) {
+                          clientList = controller.filteredClientList;
+                        } else {
+                          clientList = controller.clientList;
+                        }
 
-                          return AndroidClientListTile(
-                            client: client,
-                            onTap: () => controller.clientRegistrationPage(
-                                context: context,
-                                registrationPage: AndroidClientRegistrationPage(
-                                  client: client,
-                                )),
-                          );
-                        },
-                      )
-                    : const Center(
-                        child: Text('Nenhum cliente encontrado'),
-                      );
-              },
+                        return clientList.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: clientList.length,
+                                itemBuilder: (_, index) {
+                                  final client = clientList[index];
+
+                                  return AndroidClientListTile(
+                                    client: client,
+                                    onTap: () =>
+                                        controller.clientRegistrationPage(
+                                            context: context,
+                                            registrationPage:
+                                                AndroidClientRegistrationPage(
+                                              client: client,
+                                            )),
+                                  );
+                                },
+                              )
+                            : const Center(
+                                child: Text('Nenhum cliente encontrado'),
+                              );
+                      },
+                    ),
+                  ),
+                  BannerAdWidget(
+                    showAd: controller.showAd(),
+                    height: size.height * 0.1,
+                    width: size.width,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/entities/stock.dart';
 import '../../../../domain/models/report_provider_model.dart';
@@ -17,8 +18,9 @@ class ReportStockByProviderController = _ReportStockByProviderControllerBase
 abstract class _ReportStockByProviderControllerBase with Store {
   final GetStockListsUsecase stockUsecase;
   final IStockService stockService;
+  final AdService adService;
 
-  _ReportStockByProviderControllerBase(this.stockUsecase, this.stockService);
+  _ReportStockByProviderControllerBase(this.stockUsecase, this.stockService, this.adService);
 
   @observable
   String dateRange = '';
@@ -174,5 +176,9 @@ abstract class _ReportStockByProviderControllerBase with Store {
     } else {
       selecting = false;
     }
+  }
+
+  bool showAds(){
+    return adService.loadAd();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:controle_pedidos/src/core/admob/admob_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -20,11 +21,13 @@ class AndroidReportStockByEstablishmentPage extends StatefulWidget {
 class _AndroidReportStockByEstablishmentPageState
     extends State<AndroidReportStockByEstablishmentPage> {
   final controller = GetIt.I.get<ReportStockByEstablishmentController>();
+  final adHelper = AdMobHelper();
 
   @override
   void initState() {
     super.initState();
 
+    adHelper.createRewardedAd();
     controller.initState();
   }
 
@@ -148,6 +151,10 @@ class _AndroidReportStockByEstablishmentPageState
             padding: const EdgeInsets.all(8),
             child: ElevatedButton(
               onPressed: () {
+                if (controller.showAds()) {
+                  adHelper.showRewardedAd();
+                }
+
                 showModalBottomSheet(
                   context: context,
                   builder: (_) => ModalBottomMenuExportOptions(

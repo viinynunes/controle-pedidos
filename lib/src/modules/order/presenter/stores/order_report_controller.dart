@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../../domain/entities/order.dart' as o;
 import '../../errors/order_info_exception.dart';
 import '../../services/i_order_service.dart';
@@ -15,8 +16,10 @@ class OrderReportController = _OrderReportControllerBase
 abstract class _OrderReportControllerBase with Store {
   final IOrderUsecase orderUsecase;
   final IOrderService orderService;
+  final AdService adService;
 
-  _OrderReportControllerBase(this.orderUsecase, this.orderService);
+  _OrderReportControllerBase(
+      this.orderUsecase, this.orderService, this.adService);
 
   @observable
   String dateRange = '';
@@ -91,5 +94,9 @@ abstract class _OrderReportControllerBase with Store {
     await getOrderListByDate();
 
     loading = false;
+  }
+
+  bool showAds() {
+    return adService.loadAd();
   }
 }
