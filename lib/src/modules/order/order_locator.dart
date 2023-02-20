@@ -23,16 +23,18 @@ Future<void> setUpOrderLocator() async {
   orderLocator.registerLazySingleton<IOrderUsecase>(
       () => OrderUsecaseImpl(orderLocator()));
   orderLocator.registerSingleton<OrderController>(OrderController(
-      orderLocator(),
-      orderLocator(),
-      orderLocator(),
-      orderLocator(),
-      orderLocator()));
+    orderLocator(),
+    orderLocator(),
+    orderLocator(),
+    orderLocator(),
+    orderLocator(),
+    orderLocator(),
+  ));
   orderLocator.registerFactory<OrderRegistrationController>(() =>
       OrderRegistrationController(
           orderLocator(), orderLocator(), orderLocator(), orderLocator()));
   orderLocator.registerFactory<OrderReportController>(
-      () => OrderReportController(orderLocator(), orderLocator()));
+      () => OrderReportController(orderLocator(), orderLocator(), orderLocator(),));
 }
 
 unregisterOrderLocator() async {

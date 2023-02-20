@@ -20,10 +20,10 @@ void setUpProductLocator() {
   productLocator.registerLazySingleton<IProductUsecase>(
       () => ProductUsecaseImpl(productLocator()));
   productLocator.registerLazySingleton<ProductController>(
-      () => ProductController(productLocator()));
+      () => ProductController(productLocator(), productLocator()));
   productLocator.registerFactory<ProductRegistrationController>(() =>
       ProductRegistrationController(
-          productLocator(), productLocator(), productLocator()));
+          productLocator(), productLocator(), productLocator(), productLocator()));
   productLocator.registerFactory<ProductStockDefaultController>(
       () => ProductStockDefaultController(productLocator(), productLocator()));
 }

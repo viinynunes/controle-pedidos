@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../../domain/entities/order.dart' as o;
 import '../../../client/domain/usecases/i_client_usecase.dart';
 import '../../../product/domain/usecases/i_product_usecase.dart';
@@ -24,9 +25,10 @@ abstract class _OrderControllerBase with Store {
   final DecreaseStockTotalUsecase decreaseStockTotalUsecase;
   final IProductUsecase productUsecase;
   final IClientUsecase clientUsecase;
+  final AdService adService;
 
   _OrderControllerBase(this.orderUsecase, this.orderService,
-      this.decreaseStockTotalUsecase, this.productUsecase, this.clientUsecase);
+      this.decreaseStockTotalUsecase, this.productUsecase, this.clientUsecase, this.adService);
 
   @observable
   String searchText = '';
@@ -205,5 +207,9 @@ abstract class _OrderControllerBase with Store {
     });
 
     loading = false;
+  }
+
+  bool loadAd(){
+    return adService.loadAd();
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../../core/admob/admob_helper.dart';
 import '../../../../../../core/helpers/custom_page_route.dart';
 import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
 import '../../../../../../core/widgets/custom_date_range_picker_widget.dart';
@@ -20,11 +21,14 @@ class AndroidReportStockByProviderPage extends StatefulWidget {
 class _AndroidReportStockByProviderPageState
     extends State<AndroidReportStockByProviderPage> {
   final controller = GetIt.I.get<ReportStockByProviderController>();
+  final adHelper = AdMobHelper();
+
 
   @override
   void initState() {
     super.initState();
 
+    adHelper.createRewardedAd();
     controller.initState();
   }
 
@@ -78,6 +82,11 @@ class _AndroidReportStockByProviderPageState
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.arrow_right_alt),
         onPressed: () {
+
+          if(controller.showAds()){
+            adHelper.showRewardedAd();
+          }
+
           Navigator.of(context)
               .push(CustomPageRoute(
                   child: AndroidCustomMergedStockByProviderPage(

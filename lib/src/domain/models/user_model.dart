@@ -31,7 +31,7 @@ class UserModel extends User {
       'fullName': fullName,
       'email': email,
       'phone': phone,
-      'company': CompanyModel.fromCompany(company: company).toMap(),
+      'companyID': company.id,
     };
   }
 }

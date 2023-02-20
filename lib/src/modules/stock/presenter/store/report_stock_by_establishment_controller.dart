@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../../domain/entities/establishment.dart';
 import '../../../../domain/entities/provider.dart';
 import '../../../../domain/models/report_establishment_model.dart';
@@ -18,8 +19,9 @@ class ReportStockByEstablishmentController = _ReportStockByEstablishmentControll
 abstract class _ReportStockByEstablishmentControllerBase with Store {
   final GetStockListsUsecase usecase;
   final IStockService service;
+  final AdService adService;
 
-  _ReportStockByEstablishmentControllerBase(this.usecase, this.service);
+  _ReportStockByEstablishmentControllerBase(this.usecase, this.service, this.adService);
 
   @observable
   String dateRange = '';
@@ -100,5 +102,9 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
     });
 
     loading = false;
+  }
+
+  bool showAds(){
+    return adService.loadAd();
   }
 }

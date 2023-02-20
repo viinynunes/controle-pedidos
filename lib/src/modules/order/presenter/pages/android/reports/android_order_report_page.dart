@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../../../core/admob/admob_helper.dart';
 import '../../../../../../core/export_files/order_to_xlsx.dart';
 import '../../../../../../core/helpers/custom_page_route.dart';
 import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
@@ -19,11 +20,14 @@ class AndroidOrderReportPage extends StatefulWidget {
 
 class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
   final controller = GetIt.I.get<OrderReportController>();
+  final adHelper = AdMobHelper();
+
 
   @override
   void initState() {
     super.initState();
 
+    adHelper.createRewardedAd();
     controller.initState();
   }
 
@@ -34,8 +38,13 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
         title: const Text('Relatório de Pedidos'),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+
+          if(controller.showAds()){
+            adHelper.showRewardedAd();
+          }
+
           controller.mergeOrderList();
           showModalBottomSheet(
             context: context,
@@ -46,7 +55,8 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
             ),
           );
         },
-        child: const Icon(Icons.upload_file),
+        label: const Text('Gerar'),
+        icon: const Icon(Icons.upload_file),
       ),
       body: SafeArea(
         child: SizedBox(

@@ -66,15 +66,26 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   }
 
   Future<UserModel> _getUserData(String id) async {
-    final userSnap = await userCollection.doc(id).get().onError(
+    var userSnap = await userCollection.doc(id).get().onError(
         (error, stackTrace) => throw ExternalException(
             error: error.toString(), stackTrace: stackTrace));
 
-    if (userSnap.exists) {
-      return UserModel.fromMap(map: userSnap.data() as Map<String, dynamic>);
+    final companySnap =
+        await companyCollection.doc(userSnap.get('companyID')).get();
+
+    if (userSnap.data() == null || companySnap.data() == null) {
+      throw ExternalException(error: 'Get User Data Error on External');
     }
 
-    throw ExternalException(error: 'Logout Error on External');
+    var userMap = userSnap.data();
+
+    if (userMap != null) {
+      userMap['company'] = companySnap.data();
+
+      return UserModel.fromMap(map: userMap);
+    }
+
+    throw ExternalException(error: 'Get User Data Error on External');
   }
 
   @override
@@ -96,15 +107,15 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
   Future<UserModel> createUserWithEmailAndPassword(
       UserModel user, String password) async {
     try {
-      final createdUser = await firebaseAuth.createUserWithEmailAndPassword(
-          email: user.email, password: password);
-
-      await createdUser.user?.sendEmailVerification();
-
       final companyID =
           await _createCompany(CompanyModel.fromCompany(company: user.company));
 
       await _createCacheDocuments(companyID: companyID);
+
+      final createdUser = await firebaseAuth.createUserWithEmailAndPassword(
+          email: user.email, password: password);
+
+      await createdUser.user?.sendEmailVerification();
 
       return await _createUser(companyID, createdUser.user!.uid, user);
     } on FirebaseAuthException catch (e) {
@@ -155,9 +166,9 @@ class LoginFirebaseDatasourceImpl implements ILoginDatasource {
         .doc(companyID)
         .collection('user')
         .doc(userID)
-        .set(user.toMap())
-        .onError((error, stackTrace) => throw ExternalException(
-            error: error.toString(), stackTrace: stackTrace));
+        .set({'userID': userID}).onError((error, stackTrace) =>
+            throw ExternalException(
+                error: error.toString(), stackTrace: stackTrace));
 
     final userSnap = await FirebaseFirestore.instance
         .collection('user')

@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../../../domain/entities/provider.dart';
 
 part 'provider_controller.g.dart';
@@ -13,8 +14,9 @@ class ProviderController = _ProviderControllerBase with _$ProviderController;
 
 abstract class _ProviderControllerBase with Store {
   final IProviderUsecase usecase;
+  final AdService adService;
 
-  _ProviderControllerBase(this.usecase);
+  _ProviderControllerBase(this.usecase, this.adService);
 
   @observable
   String searchText = '';
@@ -91,5 +93,9 @@ abstract class _ProviderControllerBase with Store {
     }
 
     loading = false;
+  }
+
+  bool showAd(){
+    return adService.loadAd();
   }
 }

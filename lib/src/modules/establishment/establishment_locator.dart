@@ -23,12 +23,15 @@ void setUpEstablishmentLocator() {
   estabLocator.registerLazySingleton<IEstablishmentService>(
       () => EstablishmentServiceImpl());
   estabLocator.registerLazySingleton<EstablishmentController>(
-      () => EstablishmentController(estabLocator()));
+      () => EstablishmentController(
+            estabLocator(),
+            estabLocator(),
+          ));
   estabLocator.registerFactory<EstablishmentRegistrationController>(
       () => EstablishmentRegistrationController(estabLocator()));
 }
 
-void unregisterEstablishmentLocator(){
+void unregisterEstablishmentLocator() {
   estabLocator.unregister(instance: IEstablishmentDatasource);
   estabLocator.unregister(instance: IEstablishmentRepository);
   estabLocator.unregister(instance: IEstablishmentUsecase);

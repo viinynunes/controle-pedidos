@@ -60,25 +60,28 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
                     ],
                   ),
                   subtitle: const AutoSizeText(
-                    'Plano sem anuncios, é possivel utilizar o sistema, porém anuncios são exibidos com frequencia',
+                    'Plano sem anuncios, é possivel utilizar o sistema sem nenhuma interrupção por anuncios',
                     maxLines: 4,
                     minFontSize: 5,
                   ),
                 ),
                 const Divider(),
-                ListTile(
-                  onTap: () {},
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text('Premium'),
-                      Text(r'R$24,90')
-                    ],
-                  ),
-                  subtitle: const AutoSizeText(
-                    'Plano premium é possivel utilizar o sistema, porém anuncios são exibidos com frequencia',
-                    maxLines: 4,
-                    minFontSize: 5,
+                Visibility(
+                  visible: false,
+                  child: ListTile(
+                    onTap: () {},
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text('Premium'),
+                        Text(r'R$24,90')
+                      ],
+                    ),
+                    subtitle: const AutoSizeText(
+                      'Plano premium é possivel utilizar o sistema, porém anuncios são exibidos com frequencia',
+                      maxLines: 4,
+                      minFontSize: 5,
+                    ),
                   ),
                 ),
               ],
@@ -122,7 +125,7 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
                             },
                             icon: Icon(
                               Icons.logout,
-                              color: Theme.of(context).indicatorColor,
+                              color: Theme.of(context).colorScheme.secondary,
                             ))
                       ],
                     ),

@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/services/ad_service.dart';
 import '../../errors/product_info_exception.dart';
 
 part 'product_controller.g.dart';
@@ -13,8 +14,9 @@ class ProductController = _ProductControllerBase with _$ProductController;
 
 abstract class _ProductControllerBase with Store {
   final IProductUsecase productUsecase;
+  final AdService adService;
 
-  _ProductControllerBase(this.productUsecase);
+  _ProductControllerBase(this.productUsecase, this.adService);
 
   @observable
   String searchText = '';
@@ -86,5 +88,9 @@ abstract class _ProductControllerBase with Store {
     if (result != null) {
       initState();
     }
+  }
+
+  bool showAds(){
+    return adService.loadAd();
   }
 }
