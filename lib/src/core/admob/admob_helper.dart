@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobHelper {
-  static String get bannerUnitId => 'ca-app-pub-3940256099942544/6300978111';
+  static String get bannerUnitId => 'ca-app-pub-7284245723023607/4730913507';
 
   static String get interstitialUnitId =>
-      'ca-app-pub-3940256099942544/1033173712';
+      'ca-app-pub-7284245723023607/6788754108';
 
-  static String get rewardedUnitId => 'ca-app-pub-3940256099942544/5224354917';
+  static String get rewardedUnitId => 'ca-app-pub-7284245723023607/8557400845';
 
   InterstitialAd? _interstitialAd;
   RewardedAd? _rewardedAd;
