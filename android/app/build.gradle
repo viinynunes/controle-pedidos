@@ -28,7 +28,10 @@ apply plugin: 'com.google.gms.google-services'
 dependencies {
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:29.0.4')
-    implementation 'com.google.android.gms:play-services-ads:21.4.0'
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+    implementation('com.google.firebase:firebase-auth') {
+        exclude module: "play-services-safetynet"
+    }
 
 
     // Add the dependencies for the desired Firebase products
@@ -54,7 +57,7 @@ android {
         applicationId "br.com.nunesv.controle_pedidos"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 6
+        versionCode 8
         versionName flutterVersionName
         multiDexEnabled true
     }
