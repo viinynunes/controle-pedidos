@@ -97,6 +97,8 @@ class NewStockFirebaseDatasourceImpl implements INewStockDatasource {
         } else {
           await updateStock(stock: stockFromDB);
         }
+      } else {
+        await updateStock(stock: stockFromDB);
       }
     }
   }
