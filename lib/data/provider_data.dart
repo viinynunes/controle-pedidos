@@ -65,7 +65,6 @@ class ProviderData {
 
   @override
   String toString() {
-    // TODO: implement toString
     return '$name - $location';
   }
 }
