@@ -151,7 +151,7 @@ class _AndroidReportStockByEstablishmentPageState
             padding: const EdgeInsets.all(8),
             child: ElevatedButton(
               onPressed: () {
-                if (controller.showAds()) {
+                if (controller.showBannerAd()) {
                   adHelper.showRewardedAd();
                 }
 

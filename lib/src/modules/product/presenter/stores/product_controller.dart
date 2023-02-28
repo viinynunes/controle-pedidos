@@ -90,7 +90,5 @@ abstract class _ProductControllerBase with Store {
     }
   }
 
-  bool showAds(){
-    return adService.loadAd();
-  }
+  bool showBannerAd() => adService.showBannerAd();
 }

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:controle_pedidos/src/domain/entities/client.dart';
 import 'package:controle_pedidos/src/domain/entities/product.dart';
 import 'package:controle_pedidos/src/modules/order/domain/usecase/i_order_usecase.dart';
@@ -7,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/admob_helper.dart';
 import '../../../../core/admob/services/ad_service.dart';
 import '../../../../domain/entities/order.dart' as o;
 import '../../../client/domain/usecases/i_client_usecase.dart';
@@ -26,9 +30,15 @@ abstract class _OrderControllerBase with Store {
   final IProductUsecase productUsecase;
   final IClientUsecase clientUsecase;
   final AdService adService;
+  final adHelper = AdMobHelper();
 
-  _OrderControllerBase(this.orderUsecase, this.orderService,
-      this.decreaseStockTotalUsecase, this.productUsecase, this.clientUsecase, this.adService);
+  _OrderControllerBase(
+      this.orderUsecase,
+      this.orderService,
+      this.decreaseStockTotalUsecase,
+      this.productUsecase,
+      this.clientUsecase,
+      this.adService);
 
   @observable
   String searchText = '';
@@ -56,6 +66,9 @@ abstract class _OrderControllerBase with Store {
 
   final dateFormat = DateFormat('dd-MM-yyyy');
   final searchFocus = FocusNode();
+
+  final ordersToShowAds = 3;
+  int ordersToShowAdsLeft = 3;
 
   @action
   initState() async {
@@ -187,6 +200,8 @@ abstract class _OrderControllerBase with Store {
     await getOrderListBetweenDates();
 
     orderService.sortOrderListByRegistrationHour(orderList);
+
+    adsHandler();
   }
 
   @action
@@ -209,7 +224,24 @@ abstract class _OrderControllerBase with Store {
     loading = false;
   }
 
-  bool loadAd(){
-    return adService.loadAd();
+  bool showBannerAd() => adService.showBannerAd();
+
+  adsHandler() async {
+    ordersToShowAdsLeft--;
+    log('New orders left to show ads $ordersToShowAdsLeft');
+
+    if (ordersToShowAdsLeft == 0) { 
+      adHelper.createInterstitialAd();
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      adHelper.showInterstitialAd();
+      resetOrderToShowAds();
+    }
+  }
+
+  resetOrderToShowAds() {
+    ordersToShowAdsLeft = ordersToShowAds;
+    log('Reseting orders to show ads to $ordersToShowAds');
   }
 }

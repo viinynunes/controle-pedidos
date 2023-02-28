@@ -21,7 +21,8 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
   final IStockService service;
   final AdService adService;
 
-  _ReportStockByEstablishmentControllerBase(this.usecase, this.service, this.adService);
+  _ReportStockByEstablishmentControllerBase(
+      this.usecase, this.service, this.adService);
 
   @observable
   String dateRange = '';
@@ -104,7 +105,5 @@ abstract class _ReportStockByEstablishmentControllerBase with Store {
     loading = false;
   }
 
-  bool showAds(){
-    return adService.loadAd();
-  }
+  bool showBannerAd() => adService.showBannerAd();
 }

@@ -36,7 +36,7 @@ class _AndroidRegistrationsPageState extends State<AndroidRegistrationsPage> {
             child: Column(
               children: [
                 BannerAdWidget(
-                  showAd: GetIt.I.get<AdService>().loadAd(),
+                  showAd: GetIt.I.get<AdService>().showBannerAd(),
                   height: size.height * 0.1,
                   width: size.width,
                 ),
@@ -68,7 +68,7 @@ class _AndroidRegistrationsPageState extends State<AndroidRegistrationsPage> {
                         child: const AndroidEstablishmentListPage(),
                         direction: AxisDirection.left))),
                 BannerAdWidget(
-                  showAd: GetIt.I.get<AdService>().loadAd(),
+                  showAd: GetIt.I.get<AdService>().showBannerAd(),
                   height: size.height * 0.1,
                   width: size.width,
                 ),
