@@ -98,7 +98,5 @@ abstract class _EstablishmentControllerBase with Store {
     initState();
   }
 
-  bool showAd(){
-    return adService.loadAd();
-  }
+  bool showBannerAd() => adService.showBannerAd();
 }

@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../core/admob/admob_helper.dart';
 import '../../../../core/admob/services/ad_service.dart';
 import '../../../../core/widgets/show_entity_selection_dialog.dart';
 import '../../../../domain/entities/product.dart';
@@ -30,6 +34,7 @@ abstract class _StockControllerBase with Store {
   final DeleteStockUsecase deleteStockUsecase;
   final IncreaseStockTotalUsecase increaseStockTotalUsecase;
   final AdService adService;
+  final adHelper = AdMobHelper();
 
   _StockControllerBase(
       this.stockService,
@@ -38,7 +43,8 @@ abstract class _StockControllerBase with Store {
       this.getStockListsUsecase,
       this.updateStockUsecase,
       this.deleteStockUsecase,
-      this.increaseStockTotalUsecase, this.adService);
+      this.increaseStockTotalUsecase,
+      this.adService);
 
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -73,18 +79,30 @@ abstract class _StockControllerBase with Store {
     await getProductList();
 
     resetStockLeft();
+
+    if (showBannerAd()) {
+      adHelper.createInterstitialAd();
+
+      startAdTimer();
+    }
+  }
+
+  startAdTimer() {
+    log('ad timer started');
+
+    Timer.periodic(const Duration(seconds: 60), (timer) {
+      adHelper.createInterstitialAd();
+      log('showing ad on stock page');
+      adHelper.showInterstitialAd();
+    });
   }
 
   @action
   getProductList() async {
-    loading = true;
-
     final result = await productUsecase.getProductListByEnabled();
 
     result.fold((l) => error = optionOf(StockError(l.message)),
         (r) => productList = ObservableList.of(r));
-
-    loading = false;
   }
 
   @action
@@ -263,7 +281,5 @@ abstract class _StockControllerBase with Store {
     loading = false;
   }
 
-  bool loadAd(){
-    return adService.loadAd();
-  }
+  bool showBannerAd() => adService.showBannerAd();
 }

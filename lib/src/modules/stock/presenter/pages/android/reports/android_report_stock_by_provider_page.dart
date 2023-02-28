@@ -83,7 +83,7 @@ class _AndroidReportStockByProviderPageState
         icon: const Icon(Icons.arrow_right_alt),
         onPressed: () {
 
-          if(controller.showAds()){
+          if(controller.showBannerAd()){
             adHelper.showRewardedAd();
           }
 

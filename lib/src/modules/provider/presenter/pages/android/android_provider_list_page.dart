@@ -135,7 +135,7 @@ class _AndroidProviderListPageState
                   ),
                 ),
                 BannerAdWidget(
-                  showAd: controller.showAd(),
+                  showAd: controller.showBannerAd(),
                   width: size.width,
                   height: size.height * 0.1,
                 ),

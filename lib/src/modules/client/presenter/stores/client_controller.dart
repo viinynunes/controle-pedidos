@@ -96,7 +96,7 @@ abstract class _ClientListBase with Store {
     }
   }
 
-  bool showAd(){
-    return adService.loadAd();
-  }
+  bool showBannerAd() => adService.showBannerAd();
+
+  
 }

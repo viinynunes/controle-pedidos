@@ -24,8 +24,6 @@ class AndroidOrderListPage extends StatefulWidget {
 
 class _AndroidOrderListPageState
     extends BaseState<AndroidOrderListPage, OrderController> {
-  final adHelper = AdMobHelper();
-
   @override
   void initState() {
     super.initState();
@@ -101,12 +99,6 @@ class _AndroidOrderListPageState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          if (controller.loadAd()) {
-            adHelper.createRewardedAd();
-            await Future.delayed(const Duration(seconds: 1));
-            adHelper.showRewardedAd();
-          }
-
           controller.callOrderRegistrationPage(
             context: context,
             registrationPage: AndroidOrderRegistrationPage(
@@ -189,7 +181,7 @@ class _AndroidOrderListPageState
                   }),
                 ),
                 BannerAdWidget(
-                  showAd: controller.loadAd(),
+                  showAd: controller.showBannerAd(),
                   height: size.height * 0.1,
                   width: size.width,
                 ),

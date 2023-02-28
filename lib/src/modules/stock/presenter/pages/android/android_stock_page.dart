@@ -124,7 +124,7 @@ class _AndroidStockPageState
               const StockTableHeaderWidget(),
               const StockListBuilderWidget(),
               BannerAdWidget(
-                showAd: controller.loadAd(),
+                showAd: controller.showBannerAd(),
                 height: size.height * 0.1,
                 width: size.width,
               ),

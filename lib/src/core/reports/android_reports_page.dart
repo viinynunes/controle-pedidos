@@ -104,7 +104,7 @@ class AndroidReportsPage extends StatelessWidget {
                         direction: AxisDirection.left))),
 
                 BannerAdWidget(
-                  showAd: GetIt.I.get<AdService>().loadAd(),
+                  showAd: GetIt.I.get<AdService>().showBannerAd(),
                   width: size.width,
                   height: size.height * 0.1,
                 ),

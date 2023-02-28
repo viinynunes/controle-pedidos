@@ -41,7 +41,7 @@ class _AndroidOrderReportPageState extends State<AndroidOrderReportPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
 
-          if(controller.showAds()){
+          if(controller.showBannerAd()){
             adHelper.showRewardedAd();
           }
 
