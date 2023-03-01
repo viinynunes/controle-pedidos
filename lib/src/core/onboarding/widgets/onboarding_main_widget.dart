@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingMainWidget extends StatelessWidget {
@@ -25,13 +26,14 @@ class OnboardingMainWidget extends StatelessWidget {
       children: [
         Image.asset(
           darkMode ? darkImagePath : imagePath,
-          height: size.height * .4,
+          height: size.height * .3,
           width: size.width * .7,
           fit: BoxFit.cover,
         ),
-        Text(
+        AutoSizeText(
           title,
           style: textTheme.titleLarge?.copyWith(fontSize: 35),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(
           height: 40,
