@@ -10,7 +10,7 @@ import '../../../domain/entities/stock_mock.dart';
 
 main() {
   late FirebaseFirestore? firebase;
-  late CollectionReference? stockCollection;
+//  late CollectionReference? stockCollection;
 
   late INewStockDatasource datasource;
 
@@ -23,9 +23,9 @@ main() {
     firebase = null;
     firebase = FakeFirebaseFirestore();
 
-    stockCollection = null;
-    stockCollection =
-        firebase!.collection('company').doc(mockCompanyID).collection('stock');
+    // stockCollection = null;
+    // stockCollection =
+    //     firebase!.collection('company').doc(mockCompanyID).collection('stock');
 
     datasource = NewStockFirebaseDatasourceImpl(
         firebase: firebase!, companyID: mockCompanyID);
@@ -48,7 +48,9 @@ main() {
   });
 
   group('tests to getStockListByProviderBetweenDates', () {
-    test('have to return a stock list with 1 stock from getStockListByProviderBetweenDates', () async {
+    test(
+        'have to return a stock list with 1 stock from getStockListByProviderBetweenDates',
+        () async {
       await datasource.createStock(stock: defaultStock);
       final iniDate = DateTime(date.year, date.month, date.day);
       final endDate = DateTime(date.year, date.month, date.day);

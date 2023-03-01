@@ -37,7 +37,8 @@ class CustomDateRangePickerWidget extends StatelessWidget {
                     surface: Colors.blue,
                     onSurface: Colors.white,
                   ),
-                  textTheme: const TextTheme(overline: TextStyle(fontSize: 16)),
+                  textTheme:
+                      const TextTheme(labelSmall: TextStyle(fontSize: 16)),
                   dialogBackgroundColor: Colors.black54,
                 ),
                 child: child!,

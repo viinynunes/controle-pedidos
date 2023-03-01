@@ -138,8 +138,8 @@ class ModalBottomSheetStockTile extends StatelessWidget {
               icon: Icons.delete_forever_outlined,
               titleText: 'Apagar Item',
               subtitleText: 'Apaga o item da base de dados',
-              textColor: Theme.of(context).errorColor,
-              iconColor: Theme.of(context).errorColor),
+              textColor: Theme.of(context).colorScheme.error,
+              iconColor: Theme.of(context).colorScheme.error),
         ],
       ),
     );

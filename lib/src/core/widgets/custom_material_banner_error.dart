@@ -9,7 +9,7 @@ class CustomMaterialBannerError {
       MaterialBanner(
         content: Center(child: Text(message)),
         contentTextStyle: _textStyle(),
-        backgroundColor: Theme.of(context).errorColor,
+        backgroundColor: Theme.of(context).colorScheme.error,
         elevation: 10,
         padding: const EdgeInsets.all(8),
         forceActionsBelow: true,

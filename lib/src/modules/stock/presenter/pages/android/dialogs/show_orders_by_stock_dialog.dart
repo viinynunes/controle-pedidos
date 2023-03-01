@@ -21,7 +21,8 @@ class ShowOrdersByStockDialog extends StatefulWidget {
       _ShowOrdersByStockDialogState();
 }
 
-class _ShowOrdersByStockDialogState extends BaseState<ShowOrdersByStockDialog, ShowOrdersByStockDialogController> {
+class _ShowOrdersByStockDialogState extends BaseState<ShowOrdersByStockDialog,
+    ShowOrdersByStockDialogController> {
   final stockController = GetIt.I.get<StockController>();
   final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -144,7 +145,8 @@ class _ShowOrdersByStockDialogState extends BaseState<ShowOrdersByStockDialog, S
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Theme.of(context)
-                                        .backgroundColor
+                                        .colorScheme
+                                        .background
                                         .withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Padding(

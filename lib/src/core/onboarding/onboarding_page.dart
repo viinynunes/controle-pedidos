@@ -25,12 +25,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-    final darkMode = theme.brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
-
-    int currentPage = 0;
 
     return Scaffold(
       body: SafeArea(

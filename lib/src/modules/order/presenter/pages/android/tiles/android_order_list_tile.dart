@@ -46,7 +46,7 @@ class _AndroidOrderListTileState extends State<AndroidOrderListTile> {
           SlidableAction(
             onPressed: (_) => widget.onDisable(),
             icon: Icons.delete,
-            backgroundColor: Theme.of(context).errorColor,
+            backgroundColor: Theme.of(context).colorScheme.error,
             autoClose: false,
             borderRadius: BorderRadius.circular(50),
             spacing: 10,

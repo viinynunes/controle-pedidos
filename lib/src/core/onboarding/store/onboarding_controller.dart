@@ -42,7 +42,6 @@ abstract class _OnboardingControllerBase with Store {
   }
 
   bool showOnboardingPage() {
-    final result = onboardingService.showOnboarding();
     return onboardingService.showOnboarding();
   }
 }

@@ -54,20 +54,20 @@ class OrderRegistrationMenu extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.remove,
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             ),
                           ],
                         ),
                         title: Text(
                           'Remover Cliente',
                           style: TextStyle(
-                            color: Theme.of(context).errorColor,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                         subtitle: Text(
                           'Remove o cliente selecionado',
                           style: TextStyle(
-                            color: Theme.of(context).errorColor,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                       ),
@@ -104,16 +104,16 @@ class OrderRegistrationMenu extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.remove,
-                                color: Theme.of(context).errorColor),
+                                color: Theme.of(context).colorScheme.error),
                           ],
                         ),
                         title: Text('Remover Produto',
                             style: TextStyle(
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )),
                         subtitle: Text('Remove o produto selecionado',
                             style: TextStyle(
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )),
                       ),
                       const Divider(),

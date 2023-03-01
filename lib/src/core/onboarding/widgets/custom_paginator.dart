@@ -1,6 +1,4 @@
-import 'package:controle_pedidos/src/core/onboarding/store/onboarding_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 class CustomPaginator extends StatelessWidget {
   const CustomPaginator({super.key, required this.currentPage});
@@ -10,7 +8,6 @@ class CustomPaginator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final controller = GetIt.I.get<OnboardingController>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
