@@ -12,8 +12,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'src/core/configuration/license_configuration.dart';
 import 'src/modules/login/presenter/pages/android/android_login_page.dart';
-import 'styles/color_schemes.g.dart';
-import 'styles/themes.dart';
+import 'src/core/ui/styles/color_schemes.g.dart';
+import 'src/core/ui/styles/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
