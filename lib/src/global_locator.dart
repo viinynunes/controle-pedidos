@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:controle_pedidos/src/core/onboarding/store/onboarding_controller.dart';
+import 'package:controle_pedidos/src/core/onboarding/services/onboarding_service.dart';
+import 'package:controle_pedidos/src/core/onboarding/services/onboarding_service_impl.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/drawer/drawer_locator.dart';
@@ -18,6 +21,10 @@ Future initGlobalServiceLocator({bool initModules = true}) async {
   GetIt.instance.allowReassignment = true;
   GetIt.instance
       .registerFactory<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  GetIt.instance
+      .registerLazySingleton<OnboardingService>(() => OnboardingServiceImpl());
+  GetIt.instance.registerFactory<OnboardingController>(
+      () => OnboardingController(GetIt.instance()));
   setUpCompanyLocator();
   setUpLoginLocator();
   setUpWidgetsLocator();
