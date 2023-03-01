@@ -5,7 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:controle_pedidos/src/domain/models/provider_model.dart' as _i5;
+import 'package:controle_pedidos/src/domain/models/product_model.dart' as _i5;
+import 'package:controle_pedidos/src/domain/models/provider_model.dart' as _i6;
 import 'package:controle_pedidos/src/domain/models/stock_model.dart' as _i2;
 import 'package:controle_pedidos/src/modules/stock/infra/datasources/i_new_stock_datasource.dart'
     as _i3;
@@ -85,6 +86,18 @@ class MockINewStockDatasource extends _i1.Mock
         )),
       ) as _i4.Future<_i2.StockModel>);
   @override
+  _i4.Future<void> updateStockFromProduct(
+          {required _i5.ProductModel? product}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateStockFromProduct,
+          [],
+          {#product: product},
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+  @override
   _i4.Future<_i2.StockModel> deleteStock({required _i2.StockModel? stock}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -129,7 +142,7 @@ class MockINewStockDatasource extends _i1.Mock
         )),
       ) as _i4.Future<_i2.StockModel>);
   @override
-  _i4.Future<Set<_i5.ProviderModel>> getProviderListByStockBetweenDates({
+  _i4.Future<Set<_i6.ProviderModel>> getProviderListByStockBetweenDates({
     required DateTime? iniDate,
     required DateTime? endDate,
   }) =>
@@ -143,11 +156,11 @@ class MockINewStockDatasource extends _i1.Mock
           },
         ),
         returnValue:
-            _i4.Future<Set<_i5.ProviderModel>>.value(<_i5.ProviderModel>{}),
-      ) as _i4.Future<Set<_i5.ProviderModel>>);
+            _i4.Future<Set<_i6.ProviderModel>>.value(<_i6.ProviderModel>{}),
+      ) as _i4.Future<Set<_i6.ProviderModel>>);
   @override
   _i4.Future<List<_i2.StockModel>> getStockListByProviderBetweenDates({
-    required _i5.ProviderModel? provider,
+    required _i6.ProviderModel? provider,
     required DateTime? iniDate,
     required DateTime? endDate,
   }) =>
