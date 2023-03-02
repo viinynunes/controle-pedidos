@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:string_validator/string_validator.dart';
 
+import '../../../../core/helpers/custom_page_route.dart';
+import '../../../../core/home/android_home_page.dart';
 import '../../domain/usecases/i_login_usecase.dart';
 import '../../errors/login_info_exception.dart';
 import '../models/user_credential.dart';
@@ -45,20 +47,25 @@ abstract class _LoginControllerBase with Store {
       return 'Senha inválida';
     }
 
-    if (text.length < 6){
+    if (text.length < 6) {
       return 'Senha muito curta';
     }
 
     return null;
   }
 
-  login() async {
+  login(BuildContext context) async {
     loading = true;
 
     final result = await loginUsecase.login(UserCredential(
         email: emailController.text.trim(), password: passwordController.text));
 
-    result.fold((l) => error = optionOf(l), (r) => {});
+    result.fold(
+        (l) => error = optionOf(l),
+        (r) => {
+              Navigator.of(context)
+                  .pushReplacement(CustomPageRoute(child: const AndroidHomePage()))
+            });
 
     loading = false;
   }

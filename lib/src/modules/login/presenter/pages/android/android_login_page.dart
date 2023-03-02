@@ -123,7 +123,7 @@ class _AndroidLoginPageState
                                 onFieldSubmitted: (_) {
                                   if (controller.formKey.currentState!
                                       .validate()) {
-                                    controller.login();
+                                    controller.login(context);
                                   }
                                 },
                                 obscureText: true,
@@ -170,7 +170,7 @@ class _AndroidLoginPageState
                                       onPressed: () {
                                         if (controller.formKey.currentState!
                                             .validate()) {
-                                          controller.login();
+                                          controller.login(context);
                                         }
                                       },
                                       child: const Text('Login'),
