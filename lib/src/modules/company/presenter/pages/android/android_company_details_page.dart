@@ -126,7 +126,7 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
                         ),
                         IconButton(
                             onPressed: () {
-                              controller.logout();
+                              controller.logout(context);
                             },
                             icon: Icon(
                               Icons.logout,

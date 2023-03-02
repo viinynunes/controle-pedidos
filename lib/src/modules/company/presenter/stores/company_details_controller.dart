@@ -1,4 +1,7 @@
+import 'package:controle_pedidos/src/core/helpers/custom_page_route.dart';
 import 'package:controle_pedidos/src/modules/login/domain/usecases/i_login_usecase.dart';
+import 'package:controle_pedidos/src/modules/login/presenter/pages/android/android_login_page.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../domain/entities/user.dart';
@@ -26,7 +29,10 @@ abstract class _CompanyDetailsControllerBase with Store {
   }
 
   @action
-  logout() async {
+  logout(BuildContext context) async {
     await loginUsecase.logout();
+
+    Navigator.of(context)
+        .pushReplacement(CustomPageRoute(child: const AndroidLoginPage()));
   }
 }
