@@ -103,19 +103,16 @@ class StockUsecaseImpl implements IStockUsecase {
 
   @override
   Future<Either<StockError, Stock>> createDuplicatedStock(Stock stock) {
-    // TODO: implement createDuplicatedStock
     throw UnimplementedError();
   }
 
   @override
   Future<Either<StockError, Stock>> increaseStock(Stock stock) {
-    // TODO: implement increaseStock
     throw UnimplementedError();
   }
 
   @override
   Future<Either<StockError, Stock>> decreaseStock(Stock stock) {
-    // TODO: implement decreaseStock
     throw UnimplementedError();
   }
 

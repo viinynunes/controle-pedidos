@@ -95,7 +95,5 @@ abstract class _ProviderControllerBase with Store {
     loading = false;
   }
 
-  bool showAd(){
-    return adService.loadAd();
-  }
+  bool showBannerAd() => adService.showBannerAd();
 }

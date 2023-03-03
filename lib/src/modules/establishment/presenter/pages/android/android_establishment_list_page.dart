@@ -141,7 +141,7 @@ class _AndroidEstablishmentListPageState
                     ),
                   ),
                   BannerAdWidget(
-                    showAd: controller.showAd(),
+                    showAd: controller.showBannerAd(),
                     height: size.height * 0.1,
                     width: size.width,
                   ),

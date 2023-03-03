@@ -137,7 +137,7 @@ class _AndroidProductListPageState
                   }),
                 ),
                 BannerAdWidget(
-                  showAd: controller.showAds(),
+                  showAd: controller.showBannerAd(),
                   height: size.height * .1,
                   width: size.width,
                 )

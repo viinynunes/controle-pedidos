@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import '../../../../../../core/export_files/stock_by_provider_to_xlsx.dart';
 import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
+import '../../../../../../core/ui/states/base_state.dart';
+import '../../../../../../core/ui/user_tips/tipsController.dart';
+import '../../../../../../core/ui/user_tips/report_tutorial_dialog.dart';
 import '../../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
 import '../../../../../../core/widget_to_image/transform_widget_to_image.dart';
 import '../../../../../../domain/entities/establishment.dart';
@@ -24,7 +27,7 @@ class AndroidCustomMergedStockByProviderPage extends StatefulWidget {
 }
 
 class _AndroidCustomMergedStockByProviderPageState
-    extends State<AndroidCustomMergedStockByProviderPage> {
+    extends BaseState<AndroidCustomMergedStockByProviderPage, TipsController> {
   late GlobalKey repaintKey;
   List<StockModel> mergedList = [];
 
@@ -58,6 +61,24 @@ class _AndroidCustomMergedStockByProviderPageState
           stockList: mergedList,
           merge: true));
     }
+  }
+
+  @override
+  onReady() {
+    if (controller.showStockReportByProviderTip()) {
+      showTutorialDialog();
+    }
+  }
+
+  showTutorialDialog() async {
+    await showDialog(
+      context: context,
+      builder: (_) => TipsDialog(
+        message:
+            'Para visualizar o relatório em XLSX, é necessário ter instalado algum aplicativo visualizador de xlsx, como o Excel ou o Sheets',
+        onDontShowAgain: controller.disableStockReportByProviderTip,
+      ),
+    );
   }
 
   @override

@@ -54,8 +54,8 @@ mixin _$CompanyDetailsController on _CompanyDetailsControllerBase, Store {
       AsyncAction('_CompanyDetailsControllerBase.logout', context: context);
 
   @override
-  Future logout() {
-    return _$logoutAsyncAction.run(() => super.logout());
+  Future logout(BuildContext context) {
+    return _$logoutAsyncAction.run(() => super.logout(context));
   }
 
   @override

@@ -169,6 +169,6 @@ abstract class _ProductRegistrationControllerBase with Store {
   }
 
   bool showAds(){
-    return adService.loadAd();
+    return adService.showBannerAd();
   }
 }

@@ -1,64 +1,32 @@
+import 'package:controle_pedidos/src/core/configuration/firebase_configuration.dart';
+import 'package:controle_pedidos/src/core/configuration/get_storage_configuration.dart';
 import 'package:controle_pedidos/src/core/home/android_home_page.dart';
-import 'package:controle_pedidos/src/domain/models/company_model.dart';
+import 'package:controle_pedidos/src/core/onboarding/onboarding_page.dart';
+import 'package:controle_pedidos/src/core/onboarding/store/onboarding_controller.dart';
 import 'package:controle_pedidos/src/global_locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'src/domain/entities/enums/company_subscription.dart';
+import 'src/core/configuration/license_configuration.dart';
 import 'src/modules/login/presenter/pages/android/android_login_page.dart';
-import 'styles/color_schemes.g.dart';
-import 'styles/themes.dart';
+import 'src/core/ui/styles/color_schemes.g.dart';
+import 'src/core/ui/styles/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await GetStorage.init();
+  await GetStorageConfiguration.config();
 
   await MobileAds.instance.initialize();
 
-  if (GetStorage().read('company') == null) {
-    GetStorage().write(
-        'company',
-        CompanyModel(
-                id: 'aaa',
-                name: 'aaa',
-                registrationDate: DateTime.now(),
-                subscription: CompanySubscription.free)
-            .toJson());
-  }
-
-  try {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: "AIzaSyCFGTe4EV1NyD3q65xCggS9Wvs_wxYHJ2I",
-          appId: "1:242675882008:web:9aa50610ad1af3e8f18b6d",
-          messagingSenderId: "242675882008",
-          projectId: "controle-de-pedidos-ca8b2"),
-    );
-  } catch (e) {
-    debugPrint(e.toString());
-  }
+  await FirebaseConfiguration.config();
 
   await initGlobalServiceLocator(initModules: false);
 
-  LicenseRegistry.addLicense(() async* {
-    final license = await rootBundle.loadString('google_fonts/OFL.txt');
-    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
-
-    final imgLicense = await rootBundle
-        .loadString('<a href="https://www.freepik.com/free-vector/'
-            'neon-purple-lights-background-arrow-style_8152351'
-            '.htm#page=4&query=background&position=31&from_view=search&track='
-            'sph">Image by starline</a> on Freepik');
-
-    yield LicenseEntryWithLineBreaks(['freepick'], imgLicense);
-  });
+  LicenseConfiguration.config();
 
   runApp(
     MaterialApp(
@@ -68,7 +36,9 @@ void main() async {
           if (snap.hasData) {
             return const AndroidHomePage();
           } else {
-            return const AndroidLoginPage();
+            return GetIt.I.get<OnboardingController>().showOnboardingPage()
+                ? const OnboardingPage()
+                : const AndroidLoginPage();
           }
         },
       ),

@@ -1,3 +1,7 @@
 abstract class AdService {
-  bool loadAd();
+  Stream<bool> loadAd();
+
+  bool showBannerAd();
+
+  
 }

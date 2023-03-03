@@ -96,7 +96,5 @@ abstract class _OrderReportControllerBase with Store {
     loading = false;
   }
 
-  bool showAds() {
-    return adService.loadAd();
-  }
+  bool showBannerAd() => adService.showBannerAd();
 }

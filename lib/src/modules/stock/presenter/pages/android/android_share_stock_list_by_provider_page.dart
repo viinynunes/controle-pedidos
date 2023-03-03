@@ -127,7 +127,7 @@ class _AndroidShareStockListByProviderPageState
                       ),
                     ),
                     BannerAdWidget(
-                      showAd: GetIt.I.get<AdService>().loadAd(),
+                      showAd: GetIt.I.get<AdService>().showBannerAd(),
                       height: size.height * 0.1,
                       width: size.width,
                     )

@@ -7,6 +7,9 @@ import 'package:get_it/get_it.dart';
 import '../../../../../../core/export_files/stock_by_establishment_to_xlsx.dart';
 import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
+import '../../../../../../core/ui/states/base_state.dart';
+import '../../../../../../core/ui/user_tips/tipsController.dart';
+import '../../../../../../core/ui/user_tips/report_tutorial_dialog.dart';
 import '../../../../../../core/widgets/custom_date_range_picker_widget.dart';
 import '../../../store/report_stock_by_establishment_controller.dart';
 
@@ -18,9 +21,10 @@ class AndroidReportStockByEstablishmentPage extends StatefulWidget {
       _AndroidReportStockByEstablishmentPageState();
 }
 
-class _AndroidReportStockByEstablishmentPageState
-    extends State<AndroidReportStockByEstablishmentPage> {
-  final controller = GetIt.I.get<ReportStockByEstablishmentController>();
+class _AndroidReportStockByEstablishmentPageState extends BaseState<
+    AndroidReportStockByEstablishmentPage,
+    ReportStockByEstablishmentController> {
+  final tipController = GetIt.I.get<TipsController>();
   final adHelper = AdMobHelper();
 
   @override
@@ -29,6 +33,24 @@ class _AndroidReportStockByEstablishmentPageState
 
     adHelper.createRewardedAd();
     controller.initState();
+  }
+
+  @override
+  onReady() {
+    if (tipController.showStockReportByEstablishmentTip()) {
+      showTutorialDialog();
+    }
+  }
+
+  showTutorialDialog() async {
+    await showDialog(
+      context: context,
+      builder: (_) => TipsDialog(
+        message:
+            'Para visualizar o relatório, é necessário ter instalado algum aplicativo visualizador de xlsx, como o Excel ou o Sheets',
+        onDontShowAgain: tipController.disableStockReportByEstablishmentTip,
+      ),
+    );
   }
 
   @override
@@ -151,7 +173,7 @@ class _AndroidReportStockByEstablishmentPageState
             padding: const EdgeInsets.all(8),
             child: ElevatedButton(
               onPressed: () {
-                if (controller.showAds()) {
+                if (controller.showBannerAd()) {
                   adHelper.showRewardedAd();
                 }
 

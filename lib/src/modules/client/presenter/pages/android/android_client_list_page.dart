@@ -143,7 +143,7 @@ class _AndroidClientListPageState
                     ),
                   ),
                   BannerAdWidget(
-                    showAd: controller.showAd(),
+                    showAd: controller.showBannerAd(),
                     height: size.height * 0.1,
                     width: size.width,
                   ),

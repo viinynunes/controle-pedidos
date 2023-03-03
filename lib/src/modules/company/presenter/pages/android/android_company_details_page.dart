@@ -25,7 +25,6 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-
         title: const Center(
           child: Text('Planos'),
         ),
@@ -36,12 +35,12 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
               children: [
                 ListTile(
                   onTap: () {},
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text('Free'),
-                      Text('Gratis')
-                    ],
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [Text('Free'), Text('Gratis')],
+                    ),
                   ),
                   subtitle: const AutoSizeText(
                     'Plano gratuito onde é possivel utilizar o sistema, porém anuncios são exibidos com frequencia',
@@ -52,12 +51,17 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
                 const Divider(),
                 ListTile(
                   onTap: () {},
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text('Basic'),
-                      Text(r'R$14,90')
-                    ],
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text('Basic'),
+                        Text(
+                          'Em Breve',
+                        )
+                      ],
+                    ),
                   ),
                   subtitle: const AutoSizeText(
                     'Plano sem anuncios, é possivel utilizar o sistema sem nenhuma interrupção por anuncios',
@@ -65,23 +69,24 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
                     minFontSize: 5,
                   ),
                 ),
-                const Divider(),
                 Visibility(
                   visible: false,
-                  child: ListTile(
-                    onTap: () {},
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Premium'),
-                        Text(r'R$24,90')
-                      ],
-                    ),
-                    subtitle: const AutoSizeText(
-                      'Plano premium é possivel utilizar o sistema, porém anuncios são exibidos com frequencia',
-                      maxLines: 4,
-                      minFontSize: 5,
-                    ),
+                  child: Column(
+                    children: [
+                      const Divider(),
+                      ListTile(
+                        onTap: () {},
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [Text('Premium'), Text(r'R$24,90')],
+                        ),
+                        subtitle: const AutoSizeText(
+                          'Plano premium é possivel utilizar o sistema, porém anuncios são exibidos com frequencia',
+                          maxLines: 4,
+                          minFontSize: 5,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -121,7 +126,7 @@ class _AndroidCompanyDetailsPageState extends State<AndroidCompanyDetailsPage> {
                         ),
                         IconButton(
                             onPressed: () {
-                              controller.logout();
+                              controller.logout(context);
                             },
                             icon: Icon(
                               Icons.logout,

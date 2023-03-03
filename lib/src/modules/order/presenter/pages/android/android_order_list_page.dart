@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../../core/admob/admob_helper.dart';
 import '../../../../../core/admob/widgest/banner_ad_widget.dart';
 import '../../../../../core/ui/states/base_state.dart';
 import '../../../../../core/widgets/custom_date_range_picker_widget.dart';
@@ -24,8 +23,6 @@ class AndroidOrderListPage extends StatefulWidget {
 
 class _AndroidOrderListPageState
     extends BaseState<AndroidOrderListPage, OrderController> {
-  final adHelper = AdMobHelper();
-
   @override
   void initState() {
     super.initState();
@@ -101,12 +98,6 @@ class _AndroidOrderListPageState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          if (controller.loadAd()) {
-            adHelper.createRewardedAd();
-            await Future.delayed(const Duration(seconds: 1));
-            adHelper.showRewardedAd();
-          }
-
           controller.callOrderRegistrationPage(
             context: context,
             registrationPage: AndroidOrderRegistrationPage(
@@ -189,7 +180,7 @@ class _AndroidOrderListPageState
                   }),
                 ),
                 BannerAdWidget(
-                  showAd: controller.loadAd(),
+                  showAd: controller.showBannerAd(),
                   height: size.height * 0.1,
                   width: size.width,
                 ),
