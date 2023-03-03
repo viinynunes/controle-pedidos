@@ -7,8 +7,10 @@ class GetStorageConfiguration {
   static Future<void> config() async {
     await GetStorage.init();
 
-    if (GetStorage().read('company') == null) {
-      GetStorage().write(
+    final box = GetStorage();
+
+    if (box.read('company') == null) {
+      box.write(
           'company',
           CompanyModel(
                   id: 'aaa',
@@ -18,8 +20,20 @@ class GetStorageConfiguration {
               .toJson());
     }
 
-    if (GetStorage().read('showOnboarding') == null) {
-      GetStorage().write('showOnboarding', true);
+    if (box.read('showOnboarding') == null) {
+      box.write('showOnboarding', true);
+    }
+
+    if (box.read('showOrderReportTip') == null) {
+      box.write('showOrderReportTip', true);
+    }
+
+    if (box.read('showStockReportByEstablishmentTip') == null) {
+      box.write('showStockReportByEstablishmentTip', true);
+    }
+
+    if (box.read('showStockReportByProviderTip') == null) {
+      box.write('showStockReportByProviderTip', true);
     }
   }
 }
