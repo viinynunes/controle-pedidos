@@ -5,7 +5,7 @@ import '../../../../../../core/export_files/stock_by_provider_to_xlsx.dart';
 import '../../../../../../core/reports/menu/modal_bottom_menu_export_options.dart';
 import '../../../../../../core/reports/tables/android_custom_provider_data_table.dart';
 import '../../../../../../core/ui/states/base_state.dart';
-import '../../../../../../core/ui/user_tips/tipsController.dart';
+import '../../../../../../core/ui/user_tips/tips_controller.dart';
 import '../../../../../../core/ui/user_tips/report_tutorial_dialog.dart';
 import '../../../../../../core/widget_to_image/repaint_boundary_widget_key.dart';
 import '../../../../../../core/widget_to_image/transform_widget_to_image.dart';

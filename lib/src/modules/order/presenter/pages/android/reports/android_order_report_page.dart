@@ -1,4 +1,4 @@
-import 'package:controle_pedidos/src/core/ui/user_tips/tipsController.dart';
+import 'package:controle_pedidos/src/core/ui/user_tips/tips_controller.dart';
 import 'package:controle_pedidos/src/core/ui/user_tips/report_tutorial_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
