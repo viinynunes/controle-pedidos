@@ -93,18 +93,11 @@ class ProviderFirebaseDatasourceImpl implements IProviderDatasource {
   Future<List<ProviderModel>> getProviderListByEnabled() async {
     List<ProviderModel> providerList = [];
 
-    const cacheField = 'updatedAt';
-    final cacheDocRef = providerCollection.doc(cacheDocument);
-
-    final query = providerCollection
+    final snap = await providerCollection
         .where('enabled', isEqualTo: true)
-        .orderBy('name', descending: false);
-
-    final snap = await FirestoreCache.getDocuments(
-            query: query,
-            cacheDocRef: cacheDocRef,
-            firestoreCacheField: cacheField)
-        .onError((error, stackTrace) => throw ExternalException(
+        .orderBy('name', descending: false)
+        .get()
+        .catchError((error, stackTrace) => throw ExternalException(
             error: error.toString(), stackTrace: stackTrace));
 
     for (var i in snap.docs) {
