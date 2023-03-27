@@ -198,8 +198,8 @@ abstract class _OrderRegistrationControllerBase with Store {
     initOrderItem();
 
     if (!formKey.currentState!.validate() || selectedOrderItem == null) {
-      error = optionOf(
-          OrderInfoException('Nenhum produto selecionado ou quantidade invalida'));
+      error = optionOf(OrderInfoException(
+          'Nenhum produto selecionado ou quantidade invalida'));
       return;
     }
 
@@ -250,10 +250,15 @@ abstract class _OrderRegistrationControllerBase with Store {
 
   @action
   editProductFromOrderItemList(Product product) {
-    var item =
-        orderItemList.singleWhere((element) => element.product.id == product.id);
+    var item = orderItemList
+        .singleWhere((element) => element.product.id == product.id);
 
     item.product = product;
+
+    final oldItem = oldOrderItemList
+        .singleWhere((element) => element.product.id == product.id);
+
+    oldItem.product = product;
   }
 
   @action
@@ -339,7 +344,7 @@ abstract class _OrderRegistrationControllerBase with Store {
     if (increase) {
       item.quantity++;
     } else {
-      if(item.quantity > 1) {
+      if (item.quantity > 1) {
         item.quantity--;
       }
     }
