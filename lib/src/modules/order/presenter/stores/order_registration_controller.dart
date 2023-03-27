@@ -251,7 +251,7 @@ abstract class _OrderRegistrationControllerBase with Store {
   @action
   editProductFromOrderItemList(Product product) {
     var item =
-        orderItemList.singleWhere((element) => element.product == product);
+        orderItemList.singleWhere((element) => element.product.id == product.id);
 
     item.product = product;
   }

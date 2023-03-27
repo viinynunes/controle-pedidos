@@ -266,7 +266,6 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState<
                                           context: context,
                                           builder: (_) => OrderRegistrationMenu(
                                             onEditProduct: () async {
-                                              Navigator.of(context).pop();
                                               final result = await Navigator.of(
                                                       context)
                                                   .push(CustomPageRoute(
@@ -283,6 +282,8 @@ class AndroidOrderRegistrationPageState extends IOrderRegistrationPageState<
                                                     .editProductFromOrderItemList(
                                                         result);
                                               }
+
+                                              Navigator.of(context).pop();
                                             },
                                             onRemoveProduct: () {
                                               Navigator.of(context).pop();
